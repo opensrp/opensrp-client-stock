@@ -56,6 +56,10 @@ script:
 after_failure:
  - pandoc opensrp-stock/build/reports/tests/index.html -t plain
 
+licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
 
 notifications:
   slack:
