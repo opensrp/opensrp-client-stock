@@ -10,8 +10,9 @@ public class StockLibrary {
     private static StockLibrary instance;
     private static Context context;
 
-    public static void init(Context context) {
+    public static void init(Context context_) {
         if (instance == null) {
+            context = context_;
             instance = new StockLibrary(context);
         }
     }
@@ -26,4 +27,5 @@ public class StockLibrary {
     private StockLibrary(Context context) {
         this.context = context;
     }
+
 }

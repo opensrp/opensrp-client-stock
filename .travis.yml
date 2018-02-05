@@ -13,15 +13,11 @@ env:
     - ADB_INSTALL_TIMEOUT=10
     - MALLOC_ARENA_MAX=2
 
-before_install:
-- yes | sdkmanager "platforms;android-26"
-
 android:
   components:
     # tools required
     - tools
     # The BuildTools version used by your project
-    - build-tools-26.0.1
     - build-tools-26.0.2
     # The SDK version used to compile your projects
     - android-22
@@ -58,11 +54,6 @@ script:
 
 after_failure:
  - pandoc opensrp-stock/build/reports/tests/index.html -t plain
-
-licenses:
-    - 'android-sdk-preview-license-.+'
-    - 'android-sdk-license-.+'
-    - 'google-gdk-license-.+'
 
 notifications:
   slack:
