@@ -1,2 +1,2 @@
-# opensrp-client-enketo
+# opensrp-client-stock
 OpenSRP Client Stock Library
