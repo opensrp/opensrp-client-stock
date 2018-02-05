@@ -13,6 +13,9 @@ env:
     - ADB_INSTALL_TIMEOUT=10
     - MALLOC_ARENA_MAX=2
 
+before_install:
+- yes | sdkmanager "platforms;android-26"
+
 android:
   components:
     # tools required
