@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">OpenSRP Client Stock</string>
+    <string name="stock_title"> Stock Control</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

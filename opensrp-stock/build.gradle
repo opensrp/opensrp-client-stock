@@ -3,11 +3,11 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 22
     buildToolsVersion "26.0.2"
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 26
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -38,12 +38,20 @@ dependencies {
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
 
+    compile('org.smartregister:opensrp-client-native-form:1.0.4-SNAPSHOT@aar') {
+        transitive = true
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.android.support:appcompat-v7:26.+'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile('com.android.support:design:22.2.1') {
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
+
+    compile 'com.jjoe64:graphview:4.2.1'
 
     testCompile 'junit:junit:4.12'
     testCompile "org.robolectric:robolectric:2.4"

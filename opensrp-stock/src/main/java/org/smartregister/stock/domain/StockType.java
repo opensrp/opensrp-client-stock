@@ -9,19 +9,19 @@ import java.io.Serializable;
 public class StockType implements Serializable {
 
     private Long id;
-    private int doses;
+    private int quantity;
     private String name;
     private String openmrs_parent_entity_id;
     private String openmrs_date_concept_id;
-    private String openmrs_dose_concept_id;
+    private String openmrs_quantity_concept_id;
 
-    public StockType(Long id, int doses, String name, String openmrs_parent_entity_id, String openmrs_date_concept_id, String openmrs_dose_concept_id) {
+    public StockType(Long id, int quantity, String name, String openmrs_parent_entity_id, String openmrs_date_concept_id, String openmrs_quantity_concept_id) {
         this.id = id;
-        this.doses = doses;
+        this.quantity = quantity;
         this.name = name;
         this.openmrs_parent_entity_id = openmrs_parent_entity_id;
         this.openmrs_date_concept_id = openmrs_date_concept_id;
-        this.openmrs_dose_concept_id = openmrs_dose_concept_id;
+        this.openmrs_quantity_concept_id = openmrs_quantity_concept_id;
     }
 
     public Long getId() {
@@ -32,12 +32,12 @@ public class StockType implements Serializable {
         this.id = id;
     }
 
-    public int getDoses() {
-        return doses;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setDoses(int doses) {
-        this.doses = doses;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public String getName() {
@@ -56,12 +56,12 @@ public class StockType implements Serializable {
         this.openmrs_parent_entity_id = openmrs_parent_entity_id;
     }
 
-    public String getOpenmrs_dose_concept_id() {
-        return openmrs_dose_concept_id;
+    public String getOpenmrs_quantity_concept_id() {
+        return openmrs_quantity_concept_id;
     }
 
-    public void setOpenmrs_dose_concept_id(String openmrs_dose_concept_id) {
-        this.openmrs_dose_concept_id = openmrs_dose_concept_id;
+    public void setOpenmrs_quantity_concept_id(String openmrs_quantity_concept_id) {
+        this.openmrs_quantity_concept_id = openmrs_quantity_concept_id;
     }
 
     public String getOpenmrs_date_concept_id() {

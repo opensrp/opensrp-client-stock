@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="silver">#A9A9A9</color>
+
+    <color name="status_bar_bg_dark_grey">#494949</color>
+    <color name="bluetext">#3D9EC9</color>
+
+    <color name="actionbar">#208CC5</color>
+    <color name="client_list_grey">#737373</color>
 </resources>

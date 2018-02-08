@@ -10,7 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Stock;
+import org.smartregister.stock.domain.StockType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,7 +33,7 @@ public class StockRepository extends BaseRepository {
             "to_from VARCHAR NULL," +
             "sync_status VARCHAR," +
             "date_updated INTEGER NULL)";
-    public static final String stock_TABLE_NAME = "Stock";
+    public static final String stock_TABLE_NAME = "stocks";
     private static final String ID_COLUMN = "_id";
     public static final String STOCK_TYPE_ID = "stock_type_id";
     public static final String TRANSACTION_TYPE = "transaction_type";
@@ -50,7 +52,7 @@ public class StockRepository extends BaseRepository {
         super(repository);
     }
 
-    protected static void createTable(SQLiteDatabase database) {
+    public static void createTable(SQLiteDatabase database) {
         database.execSQL(stock_SQL);
     }
 
@@ -286,4 +288,47 @@ public class StockRepository extends BaseRepository {
             add(stockToAdd);
         }
     }
+
+
+    public int getBalanceFromNameAndDate(String name, Long updatedAt) {
+        SQLiteDatabase database = getReadableDatabase();
+        StockTypeRepository stockTypeRepository = StockLibrary.getInstance().getStockTypeRepository();
+        ArrayList<StockType> stockTypes = (ArrayList) stockTypeRepository.findIDByName(name);
+        String id = "";
+        if (stockTypes.size() > 0) {
+            id = "" + stockTypes.get(0).getId();
+        }
+        Cursor c = database.rawQuery("Select sum(value) from Stocks Where date_created <=" + updatedAt + " and " + STOCK_TYPE_ID + " = " + id, null);
+        if (c.getCount() == 0) {
+            c.close();
+            return 0;
+        } else {
+            c.moveToFirst();
+            if (c.getString(0) != null) {
+                int toreturn = Integer.parseInt(c.getString(0));
+                c.close();
+                return toreturn;
+            } else {
+                c.close();
+                return 0;
+            }
+        }
+    }
+
+    public int getCurrentStockNumber(StockType stockType) {
+        net.sqlcipher.database.SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("Select sum(value) from Stocks where " + StockRepository.DATE_CREATED + " <= " + new DateTime(System.currentTimeMillis()).toDate().getTime() + " and " + StockRepository.STOCK_TYPE_ID + " = " + stockType.getId(), null);
+        String stockValue = "0";
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            if (c.getString(0) != null && !StringUtils.isBlank(c.getString(0))) {
+                stockValue = c.getString(0);
+            }
+            c.close();
+        } else {
+            c.close();
+        }
+        return Integer.parseInt(stockValue);
+    }
+
 }

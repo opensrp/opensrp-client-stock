@@ -9,10 +9,8 @@ import android.database.Cursor;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
-import org.smartregister.service.AlertService;
 import org.smartregister.stock.domain.StockType;
 
 import java.util.ArrayList;
@@ -21,9 +19,8 @@ import java.util.List;
 import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
 
 public class StockTypeRepository extends BaseRepository {
-    private static final String TAG = StockTypeRepository.class.getCanonicalName();
     private static final String STOCK_Type_SQL = "CREATE TABLE stock_types (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,quantity INTEGER,name VARCHAR NOT NULL,openmrs_parent_entity_id VARCHAR NULL,openmrs_date_concept_id VARCHAR NULL,openmrs_quantity_concept_id VARCHAR)";
-    public static final String STOCK_Type_TABLE_NAME = "stock_type";
+    public static final String STOCK_Type_TABLE_NAME = "stock_types";
     public static final String ID_COLUMN = "_id";
     public static final String QUANTITY = "quantity";
     public static final String NAME = "name";
@@ -34,13 +31,8 @@ public class StockTypeRepository extends BaseRepository {
     public static final String[] STOCK_Type_TABLE_COLUMNS = {ID_COLUMN, QUANTITY, NAME, OPENMRS_PARENT_ENTITIY_ID, OPENMRS_DATE_CONCEPT_ID, OPENMRS_QUANTITY_CONCEPT_ID};
 
 
-    private CommonFtsObject commonFtsObject;
-    private AlertService alertService;
-
-    public StockTypeRepository(Repository repository, CommonFtsObject commonFtsObject, AlertService alertService) {
+    public StockTypeRepository(Repository repository) {
         super(repository);
-        this.commonFtsObject = commonFtsObject;
-        this.alertService = alertService;
     }
 
     public static void createTable(SQLiteDatabase database) {
@@ -88,7 +80,7 @@ public class StockTypeRepository extends BaseRepository {
         int dosesperstock = 1;
         ArrayList<StockType> stockTypes = (ArrayList<StockType>) findIDByName(name);
         for (int i = 0; i < stockTypes.size(); i++) {
-            dosesperstock = stockTypes.get(0).getDoses();
+            dosesperstock = stockTypes.get(0).getQuantity();
         }
         return dosesperstock;
     }
@@ -127,9 +119,9 @@ public class StockTypeRepository extends BaseRepository {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, stockType.getId());
         values.put(NAME, stockType.getName());
-        values.put(QUANTITY, stockType.getDoses());
+        values.put(QUANTITY, stockType.getQuantity());
         values.put(OPENMRS_DATE_CONCEPT_ID, stockType.getOpenmrs_date_concept_id());
-        values.put(OPENMRS_QUANTITY_CONCEPT_ID, stockType.getOpenmrs_dose_concept_id());
+        values.put(OPENMRS_QUANTITY_CONCEPT_ID, stockType.getOpenmrs_quantity_concept_id());
         values.put(OPENMRS_PARENT_ENTITIY_ID, stockType.getOpenmrs_parent_entity_id());
         return values;
     }
@@ -157,4 +149,5 @@ public class StockTypeRepository extends BaseRepository {
             }
         }
     }
+
 }
