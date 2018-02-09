@@ -16,6 +16,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="org.smartregister.stock.activity.StockControlActivity"
+            android:label="@string/title_activity_stock_control"
+            android:theme="@style/AppThemeNoTitle.NoActionBar" />
+
+        <activity
+            android:name="org.smartregister.stock.activity.StockJsonFormActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
     </application>
 
 </manifest>

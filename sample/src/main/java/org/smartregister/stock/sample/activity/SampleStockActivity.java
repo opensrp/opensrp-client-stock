@@ -1,18 +1,17 @@
 package org.smartregister.stock.sample.activity;
 
-import android.os.Bundle;
-
 import org.smartregister.stock.activity.StockActivity;
+import org.smartregister.stock.activity.StockControlActivity;
 
 public class SampleStockActivity extends StockActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected String getLoggedInUserInitials() {
+        return "RW";
     }
 
     @Override
-    protected String getLoggedInUserInitials() {
-        return "RW";
+    protected Class getControlActivity() {
+        return StockControlActivity.class;
     }
 }

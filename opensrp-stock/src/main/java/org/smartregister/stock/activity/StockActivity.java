@@ -74,6 +74,9 @@ public abstract class StockActivity extends AppCompatActivity {
 
     protected abstract String getLoggedInUserInitials();
 
+
+    protected abstract Class getControlActivity();
+
     @SuppressWarnings("unchecked")
     private void refreshadapter() {
         ArrayList<StockType> allStockTypes = (ArrayList) StockLibrary.getInstance().getStockTypeRepository().getAllStockTypes(null);
@@ -135,7 +138,7 @@ public abstract class StockActivity extends AppCompatActivity {
                 gridView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(StockActivity.this, StockControlActivity.class);
+                        Intent intent = new Intent(StockActivity.this, getControlActivity());
                         intent.putExtra(ARG_STOCK_TYPE, stockType);
                         startActivity(intent);
                     }

@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,17 +25,16 @@ import org.smartregister.repository.Repository;
 import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.activity.StockControlActivity;
+import org.smartregister.stock.domain.ActiveChildrenStats;
 import org.smartregister.stock.domain.Stock;
 import org.smartregister.stock.repository.StockRepository;
+import org.smartregister.stock.repository.StockExternalRepository;
 import org.smartregister.stock.util.StockUtils;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -155,8 +153,8 @@ public class PlanningStockFragment extends Fragment {
 
     private void wasteRateCalculate(View view) {
         double wastepercent = 0.0;
-        StockRepository stockRepository = StockLibrary.getInstance().getStockRepository();
-        int vaccinegiven = stockRepository.getStockUsedUntilDate(System.currentTimeMillis(), ((StockControlActivity) getActivity()).stockType.getName().toLowerCase().trim());
+        StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
+        int vaccinegiven = stockExternalRepository.getVaccinesUsedUntilDate(System.currentTimeMillis(), ((StockControlActivity) getActivity()).stockType.getName().toLowerCase().trim());
         int vaccineissued = -1 * getStockIssuedIntimeFrame(DateTime.now().yearOfEra().withMinimumValue(), DateTime.now()) * (((StockControlActivity) getActivity()).stockType.getQuantity());
         if (vaccinegiven == 0 || vaccinegiven > vaccineissued) {
             wastepercent = 0.0;
@@ -392,7 +390,8 @@ public class PlanningStockFragment extends Fragment {
         TextView difference_total = (TextView) view.findViewById(R.id.difference_total);
         String stringDifference0to11 = "";
         String stringDifference12to59 = "";
-        ActiveChildrenStats activeChildrenStats = getActivechildrenStat();
+        StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
+        ActiveChildrenStats activeChildrenStats = stockExternalRepository.getActiveChildrenStat();
 
 
         zerotoelevenlastmonth.setText("" + activeChildrenStats.getChildrenLastMonthZeroToEleven());
@@ -448,107 +447,6 @@ public class PlanningStockFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    private ActiveChildrenStats getActivechildrenStat() {
-        ActiveChildrenStats activeChildrenStats = new ActiveChildrenStats();
-        Repository repo = StockLibrary.getInstance().getRepository();
-        net.sqlcipher.database.SQLiteDatabase db = repo.getReadableDatabase();
-        Cursor c = db.rawQuery("Select dob,client_reg_date from ec_child where inactive != 'true' and lost_to_follow_up != 'true' ", null);
-        c.moveToFirst();
-        boolean thismonth = false;
-
-        while (!c.isAfterLast()) {
-            thismonth = false;
-            String dobString = c.getString(0);
-            String createdString = c.getString(1);
-            if (!TextUtils.isEmpty(dobString)) {
-                DateTime dateTime = new DateTime(dobString);
-                Date dob = dateTime.toDate();
-                DateTime dateTime2 = new DateTime(createdString);
-                Date createddate = dateTime.toDate();
-                DateTime now = new DateTime(System.currentTimeMillis());
-                if (now.getMonthOfYear() == dateTime2.getMonthOfYear() && now.getYear() == dateTime2.getYear()) {
-                    thismonth = true;
-                }
-
-
-                long timeDiff = Calendar.getInstance().getTimeInMillis() - dob.getTime();
-                long createdtimeDiff = Calendar.getInstance().getTimeInMillis() - createddate.getTime();
-
-                if (timeDiff >= 0) {
-                    long days = TimeUnit.DAYS.convert(timeDiff, TimeUnit.MILLISECONDS);
-                    int months = (int) Math.floor((float) timeDiff /
-                            TimeUnit.MILLISECONDS.convert(30, TimeUnit.DAYS));
-                    int weeks = (int) Math.floor((float) (timeDiff - TimeUnit.MILLISECONDS.convert(
-                            months * 30, TimeUnit.DAYS)) /
-                            TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS));
-
-                    if (weeks >= 4) {
-                        weeks = 0;
-                        months++;
-                    }
-                    if (months < 12) {
-                        if (thismonth) {
-                            activeChildrenStats.setChildrenThisMonthZeroToEleven(activeChildrenStats.getChildrenThisMonthZeroToEleven() + 1);
-                        } else {
-                            activeChildrenStats.setChildrenLastMonthZeroToEleven(activeChildrenStats.getChildrenLastMonthZeroToEleven() + 1);
-                        }
-                    } else if (months > 11 && months < 60) {
-                        if (thismonth) {
-                            activeChildrenStats.setChildrenThisMonthtwelveTofiftyNine(activeChildrenStats.getChildrenThisMonthtwelveTofiftyNine() + 1);
-                        } else {
-                            activeChildrenStats.setChildrenLastMonthtwelveTofiftyNine(activeChildrenStats.getChildrenLastMonthtwelveTofiftyNine() + 1);
-                        }
-                    }
-                }
-//                if (createdtimeDiff >= 0) {
-//                    long daysSinceCreated = TimeUnit.DAYS.convert(createdtimeDiff, TimeUnit.MILLISECONDS);
-//                }
-            }
-            c.moveToNext();
-        }
-        c.close();
-        return activeChildrenStats;
-    }
-
-    private class ActiveChildrenStats {
-        private Long childrenLastMonthZeroToEleven = 0l;
-        private Long childrenLastMonthtwelveTofiftyNine = 0l;
-        private Long childrenThisMonthZeroToEleven = 0l;
-        private Long childrenThisMonthtwelveTofiftyNine = 0l;
-
-        public Long getChildrenLastMonthZeroToEleven() {
-            return childrenLastMonthZeroToEleven;
-        }
-
-        public void setChildrenLastMonthZeroToEleven(Long childrenLastMonthZeroToEleven) {
-            this.childrenLastMonthZeroToEleven = childrenLastMonthZeroToEleven;
-        }
-
-        public Long getChildrenLastMonthtwelveTofiftyNine() {
-            return childrenLastMonthtwelveTofiftyNine;
-        }
-
-        public void setChildrenLastMonthtwelveTofiftyNine(Long childrenLastMonthtwelveTofiftyNine) {
-            this.childrenLastMonthtwelveTofiftyNine = childrenLastMonthtwelveTofiftyNine;
-        }
-
-        public Long getChildrenThisMonthZeroToEleven() {
-            return childrenThisMonthZeroToEleven;
-        }
-
-        public void setChildrenThisMonthZeroToEleven(Long childrenThisMonthZeroToEleven) {
-            this.childrenThisMonthZeroToEleven = childrenThisMonthZeroToEleven;
-        }
-
-        public Long getChildrenThisMonthtwelveTofiftyNine() {
-            return childrenThisMonthtwelveTofiftyNine;
-        }
-
-        public void setChildrenThisMonthtwelveTofiftyNine(Long childrenThisMonthtwelveTofiftyNine) {
-            this.childrenThisMonthtwelveTofiftyNine = childrenThisMonthtwelveTofiftyNine;
-        }
     }
 
     /**

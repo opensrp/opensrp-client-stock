@@ -21,7 +21,7 @@ import org.smartregister.stock.fragment.PlanningStockFragment;
 
 import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
 
-public abstract class StockControlActivity extends AppCompatActivity {
+public class StockControlActivity extends AppCompatActivity {
 
     /**
      * The {@link ViewPager} that will host the section contents.

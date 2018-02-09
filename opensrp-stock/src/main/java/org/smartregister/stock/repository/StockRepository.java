@@ -24,7 +24,7 @@ import java.util.List;
 
 public class StockRepository extends BaseRepository {
     private static final String TAG = StockRepository.class.getCanonicalName();
-    private static final String stock_SQL = "CREATE TABLE Stock (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+    private static final String stock_SQL = "CREATE TABLE stocks (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             "stock_type_id VARCHAR NOT NULL," +
             "transaction_type VARCHAR NULL," +
             "providerid VARCHAR NOT NULL," +
@@ -200,40 +200,9 @@ public class StockRepository extends BaseRepository {
         return stocks;
     }
 
-    public int getStockUsedToday(Long date, String stockName) {
-        int stockUsed = 0;
-        DateTime thedate = new DateTime(date);
-        DateTime startofday = thedate.withTimeAtStartOfDay();
-        DateTime endofday = thedate.plusDays(1).withTimeAtStartOfDay();
-        SQLiteDatabase database = getReadableDatabase();
-        Cursor c = database.rawQuery("Select count(*) from stocks where date >= " + startofday.getMillis() + " and date < " + endofday.getMillis() + " and name like '%" + stockName + "%'", null);
-        c.moveToFirst();
-        if (c.getCount() > 0 && !StringUtils.isBlank(c.getString(0))) {
-            stockUsed = Integer.parseInt(c.getString(0));
-        }
-
-        c.close();
-        return stockUsed;
-    }
-
-    public int getStockUsedUntilDate(Long date, String stockName) {
-        int stockUsed = 0;
-        DateTime thedate = new DateTime(date);
-        SQLiteDatabase database = getReadableDatabase();
-        Cursor c = database.rawQuery("Select count(*) from stocks where date <= " + thedate.getMillis() + " and name like '%" + stockName + "%'", null);
-        c.moveToFirst();
-        if (c.getCount() > 0 && !StringUtils.isBlank(c.getString(0))) {
-            stockUsed = Integer.parseInt(c.getString(0));
-        }
-
-        c.close();
-        return stockUsed;
-    }
-
-
     public int getBalanceBefore(Stock stock) {
         SQLiteDatabase database = getReadableDatabase();
-        Cursor c = database.rawQuery("Select sum(value) from Stock Where date_updated <" + stock.getUpdatedAt() + " and date_created <=" + new DateTime(stock.getDateCreated()).toDate().getTime() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
+        Cursor c = database.rawQuery("Select sum(value) from stocks Where date_updated <" + stock.getUpdatedAt() + " and date_created <=" + new DateTime(stock.getDateCreated()).toDate().getTime() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
         if (c.getCount() == 0) {
             c.close();
             return 0;
@@ -254,7 +223,7 @@ public class StockRepository extends BaseRepository {
         int sum = 0;
         SQLiteDatabase database = getReadableDatabase();
 
-        Cursor c = database.rawQuery("Select sum(value) from Stock Where date_created = " + stock.getDateCreated() + " and date_updated <" + stock.getUpdatedAt() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
+        Cursor c = database.rawQuery("Select sum(value) from stocks Where date_created = " + stock.getDateCreated() + " and date_updated <" + stock.getUpdatedAt() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
         if (c.getCount() == 0) {
             sum = 0;
         } else {
@@ -266,7 +235,7 @@ public class StockRepository extends BaseRepository {
             }
         }
         c.close();
-        c = database.rawQuery("Select sum(value) from Stock Where date_created <" + stock.getDateCreated() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
+        c = database.rawQuery("Select sum(value) from stocks Where date_created <" + stock.getDateCreated() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
         if (c.getCount() == 0) {
             sum = sum + 0;
         } else {
@@ -298,7 +267,7 @@ public class StockRepository extends BaseRepository {
         if (stockTypes.size() > 0) {
             id = "" + stockTypes.get(0).getId();
         }
-        Cursor c = database.rawQuery("Select sum(value) from Stocks Where date_created <=" + updatedAt + " and " + STOCK_TYPE_ID + " = " + id, null);
+        Cursor c = database.rawQuery("Select sum(value) from stocks Where date_created <=" + updatedAt + " and " + STOCK_TYPE_ID + " = " + id, null);
         if (c.getCount() == 0) {
             c.close();
             return 0;
@@ -317,7 +286,7 @@ public class StockRepository extends BaseRepository {
 
     public int getCurrentStockNumber(StockType stockType) {
         net.sqlcipher.database.SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("Select sum(value) from Stocks where " + StockRepository.DATE_CREATED + " <= " + new DateTime(System.currentTimeMillis()).toDate().getTime() + " and " + StockRepository.STOCK_TYPE_ID + " = " + stockType.getId(), null);
+        Cursor c = db.rawQuery("Select sum(value) from stocks where " + StockRepository.DATE_CREATED + " <= " + new DateTime(System.currentTimeMillis()).toDate().getTime() + " and " + StockRepository.STOCK_TYPE_ID + " = " + stockType.getId(), null);
         String stockValue = "0";
         if (c.getCount() > 0) {
             c.moveToFirst();

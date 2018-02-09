@@ -6,11 +6,12 @@ import android.util.Log;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.AllConstants;
-import org.smartregister.repository.AlertRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockTypeRepository;
+import org.smartregister.stock.util.StockUtils;
 
 /**
  * Created by samuelgithengi on 2/8/18.
@@ -40,9 +41,7 @@ public class SampleRepository extends Repository {
 
         StockRepository.createTable(database);
         StockTypeRepository.createTable(database);
-
-        database.execSQL(AlertRepository.ALTER_ADD_OFFLINE_COLUMN);
-        database.execSQL(AlertRepository.OFFLINE_INDEX);
+        StockUtils.populateStockTypesFromAssets(context, StockLibrary.getInstance().getStockTypeRepository(), database);
 
         onUpgrade(database, 1, 2);
 
@@ -58,7 +57,7 @@ public class SampleRepository extends Repository {
         while (upgradeTo <= newVersion) {
             switch (upgradeTo) {
                 case 2:
-                    upgradeToVersion2(db);
+                    //upgradeToVersion2(db);
                     break;
                 default:
                     break;
@@ -117,8 +116,4 @@ public class SampleRepository extends Repository {
         super.close();
     }
 
-
-    private void upgradeToVersion2(SQLiteDatabase db) {
-        //upgrade to v2
-    }
 }

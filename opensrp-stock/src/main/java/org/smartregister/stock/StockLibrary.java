@@ -1,10 +1,10 @@
 package org.smartregister.stock;
 
 import org.smartregister.Context;
-import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockTypeRepository;
+import org.smartregister.stock.repository.StockExternalRepository;
 
 /**
  * Created by ndegwamartin on 05/02/2018.
@@ -13,15 +13,22 @@ import org.smartregister.stock.repository.StockTypeRepository;
 public class StockLibrary {
     private static StockLibrary instance;
     private static Context context;
-    private static CommonFtsObject commonFtsObject;
     private Repository repository;
     private StockRepository stockRepository;
     private StockTypeRepository stockTypeRepository;
+    private StockExternalRepository stockExternalRepository;
 
     public static void init(Context context_, Repository repository) {
         if (instance == null) {
             context = context_;
-            instance = new StockLibrary(context, repository);
+            instance = new StockLibrary(context, repository, null);
+        }
+    }
+
+    public static void init(Context context_, Repository repository, StockExternalRepository stockExternalRepository) {
+        if (instance == null) {
+            context = context_;
+            instance = new StockLibrary(context, repository, stockExternalRepository);
         }
     }
 
@@ -32,9 +39,10 @@ public class StockLibrary {
         return instance;
     }
 
-    private StockLibrary(Context context, Repository repository) {
+    private StockLibrary(Context context, Repository repository, StockExternalRepository stockExternalRepository) {
         this.context = context;
         this.repository = repository;
+        this.stockExternalRepository = stockExternalRepository;
     }
 
     public Context getContext() {
@@ -59,4 +67,7 @@ public class StockLibrary {
         return stockTypeRepository;
     }
 
+    public StockExternalRepository getStockExternalRepository() {
+        return stockExternalRepository;
+    }
 }

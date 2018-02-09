@@ -26,8 +26,7 @@ import static org.smartregister.stock.util.Constants.VACCINES_JSON_FILE;
 public class StockUtils {
     private static String TAG = StockUtils.class.getName();
 
-    public void populateStockTypesFromAssets(Context context, StockTypeRepository stockTypeRepository) {
-        SQLiteDatabase db = stockTypeRepository.getWritableDatabase();
+    public static void populateStockTypesFromAssets(Context context, StockTypeRepository stockTypeRepository, SQLiteDatabase db) {
         if (stockTypeRepository.getAllStockTypes(db).size() < 1) {
             String stockTypeJson = Utils.readAssetContents(context, Constants.STOCK_TYPE_JSON_FILE);
             try {
@@ -38,7 +37,7 @@ public class StockUtils {
                     stockTypeRepository.add(vtObject, db);
                 }
             } catch (JSONException e) {
-                Log.e(TAG, "populaterStockTypes: ", e);
+                Log.e(TAG, "populateStockTypes: ", e);
             }
         }
     }

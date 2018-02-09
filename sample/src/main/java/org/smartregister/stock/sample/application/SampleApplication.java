@@ -5,6 +5,7 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.sample.repository.SampleRepository;
+import org.smartregister.stock.sample.repository.StockHelperRepository;
 import org.smartregister.view.activity.DrishtiApplication;
 
 import static org.smartregister.util.Log.logError;
@@ -25,7 +26,8 @@ public class SampleApplication extends DrishtiApplication {
         context.updateApplicationContext(getApplicationContext());
         //Initialize Modules
         CoreLibrary.init(context);
-        StockLibrary.init(context, getRepository());
+        //Initialize and pass optional stock helper repository for external db functions
+        StockLibrary.init(context, getRepository(), new StockHelperRepository(getRepository()));
 
     }
 

@@ -247,8 +247,10 @@ public class CurrentStock extends Fragment implements
         Intent intent = new Intent(getActivity().getApplicationContext(), StockJsonFormActivity.class);
         try {
             JSONObject form = FormUtils.getInstance(getActivity().getApplicationContext()).getFormJson("stock_adjustment_form");
-            String vaccine_name = ((StockControlActivity) getActivity()).stockType.getName();
+            StockControlActivity activity = ((StockControlActivity) getActivity());
+            String vaccine_name = activity.stockType.getName();
             String formmetadata = form.toString().replace("[vaccine]", vaccine_name);
+            intent.putExtra("json", formmetadata);
             intent.putExtra("json", formmetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {

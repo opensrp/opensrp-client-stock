@@ -17,6 +17,7 @@ import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.fragment.StockJsonFormFragment;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockTypeRepository;
+import org.smartregister.stock.repository.StockExternalRepository;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.Date;
 /**
  * Created by keyman on 11/04/2017.
  */
-public abstract class StockJsonFormActivity extends JsonFormActivity {
+public class StockJsonFormActivity extends JsonFormActivity {
 
     private int generatedId = -1;
     private MaterialEditText balancetextview;
@@ -103,8 +104,8 @@ public abstract class StockJsonFormActivity extends JsonFormActivity {
                                             encounterDate = dateTime;
                                         }
                                     }
-
-                                    currentBalance = str.getStockUsedToday(encounterDate.getTime(), checkifmeasles(vaccineName.toLowerCase()));
+                                    StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
+                                    currentBalance = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkifmeasles(vaccineName.toLowerCase()));
                                 }
                             }
 
@@ -203,7 +204,8 @@ public abstract class StockJsonFormActivity extends JsonFormActivity {
                                         }
                                     }
                                     existingbalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
-                                    currentBalanceVaccineUsed = str.getStockUsedToday(encounterDate.getTime(), checkifmeasles(vaccineName.toLowerCase()));
+                                    StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
+                                    currentBalanceVaccineUsed = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkifmeasles(vaccineName.toLowerCase()));
 
                                 }
                             }
@@ -287,7 +289,8 @@ public abstract class StockJsonFormActivity extends JsonFormActivity {
                                 }
 
                                 existingbalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
-                                currentBalanceVaccineUsed = str.getStockUsedToday(encounterDate.getTime(), checkifmeasles(vaccineName.toLowerCase()));
+                                StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
+                                currentBalanceVaccineUsed = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkifmeasles(vaccineName.toLowerCase()));
                             }
 
                             if (questions.getString("key").equalsIgnoreCase("Vials_Issued")) {
