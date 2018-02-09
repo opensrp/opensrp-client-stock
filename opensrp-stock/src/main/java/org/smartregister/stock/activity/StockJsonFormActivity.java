@@ -28,7 +28,6 @@ import java.util.Date;
  */
 public class StockJsonFormActivity extends JsonFormActivity {
 
-    private int generatedId = -1;
     private MaterialEditText balancetextview;
     private StockJsonFormFragment pathJsonFormFragment;
 
@@ -75,17 +74,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     if (balancetextview == null) {
                         ArrayList<View> views = getFormDataViews();
                         for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText) {
-                                if (((String) views.get(i).getTag(com.vijay.jsonwizard.R.id.key)).equalsIgnoreCase("Vials_Issued")) {
-                                    balancetextview = (MaterialEditText) views.get(i);
-                                }
+                            if (views.get(i) instanceof MaterialEditText &&
+                                    ((String) views.get(i).getTag(com.vijay.jsonwizard.R.id.key)).equalsIgnoreCase("Vials_Issued")) {
+                                balancetextview = (MaterialEditText) views.get(i);
                             }
                         }
                     }
                     String label = "";
                     int currentBalance = 0;
-                    int displaybalance = 0;
-                    int existingbalance = 0;
                     int newBalance = 0;
                     Date encounterDate = new Date();
                     String vialsvalue = "";
@@ -186,7 +182,6 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     int displaybalance = 0;
                     int newBalance = 0;
                     Date encounterDate = new Date();
-                    String vialsvalue = "";
                     String wastedvials = "0";
                     String vaccineName = object.getString("title").replace("Stock Issued", "").trim();
                     int existingbalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
@@ -336,60 +331,49 @@ public class StockJsonFormActivity extends JsonFormActivity {
     private void stockDateEnteredinReceivedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
-            if (object.getString("title").contains("Stock Received")) {
-                if (key.equalsIgnoreCase("Date_Stock_Received") && value != null && !value.equalsIgnoreCase("")) {
-//                    if(balancetextview == null) {
-//                        ArrayList<View> views = getFormDataViews();
-//                        for (int i = 0; i < views.size(); i++) {
-//                            if (views.get(i) instanceof MaterialEditText) {
-//                                if (((String) views.get(i).getTag(com.vijay.jsonwizard.R.id.key)).equalsIgnoreCase("Vials_Received")) {
-//                                    balancetextview = (MaterialEditText) views.get(i);
-//                                }
-//                            }
-//                        }
-//                    }
-                    String label = "";
-                    int currentBalance = 0;
-                    int displaybalance = 0;
-                    String vialsvalue = "";
-                    JSONArray fields = object.getJSONArray("fields");
-                    for (int i = 0; i < fields.length(); i++) {
-                        JSONObject questions = fields.getJSONObject(i);
-                        if (questions.has("key")) {
-                            if (questions.getString("key").equalsIgnoreCase("Date_Stock_Received")) {
-                                if (questions.has("value")) {
-                                    Date encounterDate = new Date();
-                                    label = questions.getString("value");
-                                    if (label != null && StringUtils.isNotBlank(label)) {
-                                        Date dateTime = JsonFormUtils.formatDate(label, false);
-                                        if (dateTime != null) {
-                                            encounterDate = dateTime;
-                                        }
-                                    }
+            if (object.getString("title").contains("Stock Received") && key.equalsIgnoreCase("Date_Stock_Received") && value != null && !value.equalsIgnoreCase("")) {
 
-                                    String vaccineName = object.getString("title").replace("Stock Received", "").trim();
-                                    StockRepository str = StockLibrary.getInstance().getStockRepository();
-                                    currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
+                String label = "";
+                int currentBalance = 0;
+                int displaybalance = 0;
+                String vialsvalue = "";
+                JSONArray fields = object.getJSONArray("fields");
+                for (int i = 0; i < fields.length(); i++) {
+                    JSONObject questions = fields.getJSONObject(i);
+                    if (questions.has("key")) {
+                        if (questions.getString("key").equalsIgnoreCase("Date_Stock_Received")) {
+                            if (questions.has("value")) {
+                                Date encounterDate = new Date();
+                                label = questions.getString("value");
+                                if (label != null && StringUtils.isNotBlank(label)) {
+                                    Date dateTime = JsonFormUtils.formatDate(label, false);
+                                    if (dateTime != null) {
+                                        encounterDate = dateTime;
+                                    }
                                 }
+
+                                String vaccineName = object.getString("title").replace("Stock Received", "").trim();
+                                StockRepository str = StockLibrary.getInstance().getStockRepository();
+                                currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                             }
-                            if (questions.getString("key").equalsIgnoreCase("Vials_Received")) {
-                                if (questions.has("value")) {
-                                    label = questions.getString("value");
-                                    vialsvalue = label;
-                                }
+                        }
+                        if (questions.getString("key").equalsIgnoreCase("Vials_Received")) {
+                            if (questions.has("value")) {
+                                label = questions.getString("value");
+                                vialsvalue = label;
                             }
-                            if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && StringUtils.isNumeric(vialsvalue)) {
-                                displaybalance = currentBalance + Integer.parseInt(vialsvalue);
+                        }
+                        if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && StringUtils.isNumeric(vialsvalue)) {
+                            displaybalance = currentBalance + Integer.parseInt(vialsvalue);
 //                                if (balancetextview != null) {
 //                                    balancetextview.setErrorColor(getResources().getColor(R.color.dark_grey));
 //                                    balancetextview.setError("New balance : " + displaybalance);
 //                                }
-                                pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
+                            pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
 
-                            } else {
-                                pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                        } else {
+                            pathJsonFormFragment.getLabelViewFromTag("Balance", "");
 
-                            }
                         }
                     }
                 }
@@ -465,60 +449,49 @@ public class StockJsonFormActivity extends JsonFormActivity {
     private void stockDateEnteredinAdjustmentForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
-            if (object.getString("title").contains("Stock Loss/Adjustment")) {
-                if (key.equalsIgnoreCase("Date_Stock_loss_adjustment") && value != null && !value.equalsIgnoreCase("")) {
-//                    if(balancetextview == null) {
-//                        ArrayList<View> views = getFormDataViews();
-//                        for (int i = 0; i < views.size(); i++) {
-//                            if (views.get(i) instanceof MaterialEditText) {
-//                                if (((String) views.get(i).getTag(com.vijay.jsonwizard.R.id.key)).equalsIgnoreCase("Vials_Received")) {
-//                                    balancetextview = (MaterialEditText) views.get(i);
-//                                }
-//                            }
-//                        }
-//                    }
-                    String label = "";
-                    int currentBalance = 0;
-                    int displaybalance = 0;
-                    String vialsvalue = "";
-                    JSONArray fields = object.getJSONArray("fields");
-                    for (int i = 0; i < fields.length(); i++) {
-                        JSONObject questions = fields.getJSONObject(i);
-                        if (questions.has("key")) {
-                            if (questions.getString("key").equalsIgnoreCase("Date_Stock_loss_adjustment")) {
-                                if (questions.has("value")) {
-                                    Date encounterDate = new Date();
-                                    label = questions.getString("value");
-                                    if (label != null && StringUtils.isNotBlank(label)) {
-                                        Date dateTime = JsonFormUtils.formatDate(label, false);
-                                        if (dateTime != null) {
-                                            encounterDate = dateTime;
-                                        }
+            if (object.getString("title").contains("Stock Loss/Adjustment") &&
+                    key.equalsIgnoreCase("Date_Stock_loss_adjustment") && value != null && !value.equalsIgnoreCase("")) {
+                String label = "";
+                int currentBalance = 0;
+                int displaybalance = 0;
+                String vialsvalue = "";
+                JSONArray fields = object.getJSONArray("fields");
+                for (int i = 0; i < fields.length(); i++) {
+                    JSONObject questions = fields.getJSONObject(i);
+                    if (questions.has("key")) {
+                        if (questions.getString("key").equalsIgnoreCase("Date_Stock_loss_adjustment")) {
+                            if (questions.has("value")) {
+                                Date encounterDate = new Date();
+                                label = questions.getString("value");
+                                if (label != null && StringUtils.isNotBlank(label)) {
+                                    Date dateTime = JsonFormUtils.formatDate(label, false);
+                                    if (dateTime != null) {
+                                        encounterDate = dateTime;
                                     }
+                                }
 
-                                    String vaccineName = object.getString("title").replace("Stock Loss/Adjustment", "").trim();
-                                    StockRepository str = StockLibrary.getInstance().getStockRepository();
-                                    currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
-                                }
+                                String vaccineName = object.getString("title").replace("Stock Loss/Adjustment", "").trim();
+                                StockRepository str = StockLibrary.getInstance().getStockRepository();
+                                currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                             }
-                            if (questions.getString("key").equalsIgnoreCase("Vials_Adjustment")) {
-                                if (questions.has("value")) {
-                                    label = questions.getString("value");
-                                    vialsvalue = label;
-                                }
+                        }
+                        if (questions.getString("key").equalsIgnoreCase("Vials_Adjustment")) {
+                            if (questions.has("value")) {
+                                label = questions.getString("value");
+                                vialsvalue = label;
                             }
-                            if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && StringUtils.isNumeric(vialsvalue)) {
-                                displaybalance = currentBalance + Integer.parseInt(vialsvalue);
+                        }
+                        if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && StringUtils.isNumeric(vialsvalue)) {
+                            displaybalance = currentBalance + Integer.parseInt(vialsvalue);
 //                                if (balancetextview != null) {
 //                                    balancetextview.setErrorColor(getResources().getColor(R.color.dark_grey));
 //                                    balancetextview.setError("New balance : " + displaybalance);
 //                                }
-                                pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
+                            pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
 
-                            } else {
-                                pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                        } else {
+                            pathJsonFormFragment.getLabelViewFromTag("Balance", "");
 
-                            }
                         }
                     }
                 }

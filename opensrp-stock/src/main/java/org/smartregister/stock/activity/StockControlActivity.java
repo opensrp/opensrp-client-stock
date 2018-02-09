@@ -78,9 +78,6 @@ public class StockControlActivity extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        public PlaceholderFragment() {
-        }
-
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -123,8 +120,9 @@ public class StockControlActivity extends AppCompatActivity {
                 case 1:
                     planningStockFragment = PlanningStockFragment.newInstance("", "");
                     return planningStockFragment;
+                default:
+                    return null;
             }
-            return null;
         }
 
         @Override

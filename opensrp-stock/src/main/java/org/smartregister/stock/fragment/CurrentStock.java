@@ -27,7 +27,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.Context;
-import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.R;
@@ -70,11 +69,9 @@ public class CurrentStock extends Fragment implements
     private static int currentoffset = 0;
     private String mainSelect;
     private final String filters = "";
-    private String mainCondition = "";
     private String Sortqueries;
     private String tablename;
     private String countSelect;
-    private final String joinTable = "";
 
     private static final int LOADER_ID = 0;
     private StockRepository stockRepository;
@@ -106,10 +103,6 @@ public class CurrentStock extends Fragment implements
 
     public void setClientsAdapter(StockPaginatedCursorAdapter clientsAdapter) {
         this.clientAdapter = clientsAdapter;
-    }
-
-    public CurrentStock() {
-        // Required empty public constructor
     }
 
     /**
@@ -203,22 +196,10 @@ public class CurrentStock extends Fragment implements
         SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
         countqueryBUilder.SelectInitiateMainTableCounts(tableName);
         countSelect = countqueryBUilder.mainCondition("stocks." + StockRepository.STOCK_TYPE_ID + " = " + ((StockControlActivity) getActivity()).stockType.getId());
-        mainCondition = "";
         countExecute();
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
         queryBUilder.setSelectquery("Select * FROM stocks Where stocks." + StockRepository.STOCK_TYPE_ID + " = " + ((StockControlActivity) getActivity()).stockType.getId());
         queryBUilder.orderbyCondition(StockRepository.DATE_CREATED + " DESC, " + StockRepository.DATE_UPDATED + " DESC");
-//        queryBUilder.SelectInitiateMainTable(tableName, new String[]{
-//                tableName + "._id",
-//                tableName + ".vaccine_type_id",
-//                tableName + ".transaction_type",
-//                tableName + ".providerid",
-//                tableName + ".value",
-//                tableName + ".date_created",
-//                tableName + ".to_from",
-//                tableName + ".date_updated"
-//        });
-//        queryBUilder.customJoin("LEFT JOIN " + parentTableName + " ON  " + tableName + ".relational_id =  " + parentTableName + ".id");
         mainSelect = queryBUilder.mainCondition("");
         Sortqueries = "";
 
@@ -457,7 +438,7 @@ public class CurrentStock extends Fragment implements
     }
 
     private void gotoNextPage() {
-        if (!(currentoffset + currentlimit > totalcount)) {
+        if (currentoffset + currentlimit < totalcount) {
             currentoffset = currentoffset + currentlimit;
             filterandSortExecute();
         }
@@ -498,11 +479,11 @@ public class CurrentStock extends Fragment implements
 
     private void showProgressView() {
         if (clientsProgressView.getVisibility() == INVISIBLE) {
-            clientsProgressView.setVisibility(View.VISIBLE);
+            clientsProgressView.setVisibility(VISIBLE);
         }
 
         if (clientsView.getVisibility() == VISIBLE) {
-            clientsView.setVisibility(View.INVISIBLE);
+            clientsView.setVisibility(INVISIBLE);
         }
     }
 
@@ -558,13 +539,6 @@ public class CurrentStock extends Fragment implements
                 c.close();
             }
         }
-    }
-
-    private boolean isValidFilterForFts(CommonRepository commonRepository) {
-        return false;
-//        return commonRepository.isFts() && filters != null
-//                && !StringUtils.containsIgnoreCase(filters, "like")
-//                && !StringUtils.startsWithIgnoreCase(filters.trim(), "and ");
     }
 
 

@@ -285,7 +285,7 @@ public class StockRepository extends BaseRepository {
     }
 
     public int getCurrentStockNumber(StockType stockType) {
-        net.sqlcipher.database.SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("Select sum(value) from stocks where " + StockRepository.DATE_CREATED + " <= " + new DateTime(System.currentTimeMillis()).toDate().getTime() + " and " + StockRepository.STOCK_TYPE_ID + " = " + stockType.getId(), null);
         String stockValue = "0";
         if (c.getCount() > 0) {

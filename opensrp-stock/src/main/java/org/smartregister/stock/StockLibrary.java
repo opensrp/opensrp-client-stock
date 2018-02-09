@@ -19,10 +19,7 @@ public class StockLibrary {
     private StockExternalRepository stockExternalRepository;
 
     public static void init(Context context_, Repository repository) {
-        if (instance == null) {
-            context = context_;
-            instance = new StockLibrary(context, repository, null);
-        }
+        init(context_, repository, null);
     }
 
     public static void init(Context context_, Repository repository, StockExternalRepository stockExternalRepository) {

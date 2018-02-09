@@ -120,9 +120,9 @@ public class StockTypeRepository extends BaseRepository {
         values.put(ID_COLUMN, stockType.getId());
         values.put(NAME, stockType.getName());
         values.put(QUANTITY, stockType.getQuantity());
-        values.put(OPENMRS_DATE_CONCEPT_ID, stockType.getOpenmrs_date_concept_id());
-        values.put(OPENMRS_QUANTITY_CONCEPT_ID, stockType.getOpenmrs_quantity_concept_id());
-        values.put(OPENMRS_PARENT_ENTITIY_ID, stockType.getOpenmrs_parent_entity_id());
+        values.put(OPENMRS_DATE_CONCEPT_ID, stockType.getOpenmrsDateConceptId());
+        values.put(OPENMRS_QUANTITY_CONCEPT_ID, stockType.getOpenmrsQuantityConceptId());
+        values.put(OPENMRS_PARENT_ENTITIY_ID, stockType.getOpenmrsParentEntityId());
         return values;
     }
 

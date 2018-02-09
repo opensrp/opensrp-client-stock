@@ -3,7 +3,6 @@ package org.smartregister.stock.provider;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.smartregister.stock.R;
@@ -75,8 +74,7 @@ public class StockRowSmartClientsProvider implements StockProviderForCursorAdapt
     }
 
     @Override
-    public void onServiceModeSelected(ServiceModeOption serviceModeOption) {
-
+    public void onServiceModeSelected(ServiceModeOption serviceModeOption) {//parent method hook not required
     }
 
     @Override
@@ -87,7 +85,7 @@ public class StockRowSmartClientsProvider implements StockProviderForCursorAdapt
 
     @Override
     public View inflatelayoutForCursorAdapter() {
-        return (ViewGroup) inflater().inflate(R.layout.smart_register_stock_control_client, null);
+        return inflater().inflate(R.layout.smart_register_stock_control_client, null);
     }
 
     public LayoutInflater inflater() {
