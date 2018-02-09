@@ -426,13 +426,15 @@ public class CurrentStock extends Fragment implements
             paginationViewHandler.getPaginationView().setVisibility(VISIBLE);
             pageInfoView.setVisibility(VISIBLE);
             nextPageView.setVisibility(VISIBLE);
-            previousPageView.setVisibility(VISIBLE);
         } else {
             paginationViewHandler.getPaginationView().setVisibility(INVISIBLE);
             pageInfoView.setVisibility(INVISIBLE);
             nextPageView.setVisibility(INVISIBLE);
-            previousPageView.setVisibility(INVISIBLE);
         }
+        if (hasPreviousPage())
+            previousPageView.setVisibility(VISIBLE);
+        else
+            previousPageView.setVisibility(INVISIBLE);
     }
 
     private boolean hasNextPage() {

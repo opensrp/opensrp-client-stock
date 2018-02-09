@@ -1,7 +1,12 @@
 package org.smartregister.stock;
 
+import org.junit.Rule;
 import org.junit.Test;
-import org.robolectric.Robolectric;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.smartregister.Context;
+import org.smartregister.repository.Repository;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
@@ -11,10 +16,17 @@ import static junit.framework.Assert.assertNull;
  */
 
 public class StockLibraryTest extends BaseUnitTest {
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
+    @Mock
+    private Repository repository;
+
+    private Context context = Context.getInstance();
 
     @Test
     public void callingGetInstanceOfStockLibraryDoesNotReturnNull() {
-        StockLibrary.init(Robolectric.application);
+        StockLibrary.init(context, repository);
         StockLibrary library = StockLibrary.getInstance();
         assertNotNull(library);
 
