@@ -422,10 +422,17 @@ public class CurrentStock extends Fragment implements
                 format(getResources().getString(R.string.str_page_info),
                         getCurrentPageCount(),
                         getTotalcount()));
-        paginationViewHandler.getPaginationView().setVisibility(hasNextPage() ? VISIBLE : INVISIBLE);
-        pageInfoView.setVisibility(hasNextPage() ? VISIBLE : INVISIBLE);
-        nextPageView.setVisibility(hasNextPage() ? VISIBLE : INVISIBLE);
-        previousPageView.setVisibility(hasPreviousPage() ? VISIBLE : INVISIBLE);
+        if (hasNextPage()) {
+            paginationViewHandler.getPaginationView().setVisibility(VISIBLE);
+            pageInfoView.setVisibility(VISIBLE);
+            nextPageView.setVisibility(VISIBLE);
+            previousPageView.setVisibility(VISIBLE);
+        } else {
+            paginationViewHandler.getPaginationView().setVisibility(INVISIBLE);
+            pageInfoView.setVisibility(INVISIBLE);
+            nextPageView.setVisibility(INVISIBLE);
+            previousPageView.setVisibility(INVISIBLE);
+        }
     }
 
     private boolean hasNextPage() {

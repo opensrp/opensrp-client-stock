@@ -138,8 +138,9 @@ public class StockControlActivity extends AppCompatActivity {
                     return "Current Stock";
                 case 1:
                     return "Stock Planning";
+                default:
+                    return null;
             }
-            return null;
         }
     }
 }
