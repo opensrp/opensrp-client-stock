@@ -1,37 +1,15 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 configure(allprojects) { project ->
+    buildscript {
 
-    version = VERSION_NAME
-    group = GROUP
-}
+        version = VERSION_NAME
+        group = GROUP
 
-buildscript {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-        maven { url "https://maven.google.com" }
-        mavenLocal()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.3.1'
-        classpath 'org.robolectric:robolectric-gradle-plugin:1.1.0'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
-
-
-allprojects {
-    repositories {
-        jcenter()
-        mavenCentral()
-        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-        maven { url "https://maven.google.com" }
-        mavenLocal()
+        repositories {
+            jcenter()
+            mavenCentral()
+            maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+            mavenLocal()
+        }
     }
 }
 
@@ -41,11 +19,11 @@ subprojects {
 
     group = 'org.smartregister'
 
-    ext.androidToolsBuildGradle     = '21.1.2'
-    ext.androidBuildToolsVersion    = '26.0.0'
-    ext.androidMinSdkVersion        = 16
-    ext.androidCompileSdkVersion    = 21
-    ext.androidTargetSdkVersion     = 21
+    ext.androidToolsBuildGradle = '21.1.2'
+    ext.androidBuildToolsVersion = '26.0.0'
+    ext.androidMinSdkVersion = 16
+    ext.androidCompileSdkVersion = 21
+    ext.androidTargetSdkVersion = 21
 
     ext.androidAnnotationsVersion = '3.0.1';
     ext.androidAnnotationsAPIVersion = '3.0.1';
@@ -64,7 +42,7 @@ subprojects {
             url "${projectDir}/opensrp-stock/../libs/"
         }
         maven {
-            url "${projectDir}/opensrp-tbr-it/../libs/"
+            url "${projectDir}/opensrp-stock-it/../libs/"
         }
         mavenLocal()
     }
@@ -72,7 +50,7 @@ subprojects {
     // Improve build server performance by allowing disabling of pre-dexing
     // (see http://tools.android.com/tech-docs/new-build-system/tips#TOC-Improving-Build-Server-performance.)
     project.plugins.whenPluginAdded { plugin ->
-        if("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
         } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
@@ -80,9 +58,15 @@ subprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+apply plugin: 'java'
+apply plugin: 'build-dashboard'
+
+buildDashboard {
+    reports.html.destination = "build/"
 }
+
+test.reports.html.enabled = false
+test.reports.junitXml.enabled = false
 
 def isReleaseBuild() {
     return version.contains("SNAPSHOT") == false
