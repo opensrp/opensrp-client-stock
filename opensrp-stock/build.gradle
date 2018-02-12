@@ -5,12 +5,15 @@ apply plugin: 'com.github.kt3k.coveralls'
 android {
     compileSdkVersion 22
     buildToolsVersion "26.0.2"
+
+    defaultPublishConfig !isReleaseBuild() ? "debug" : "release"
+
     defaultConfig {
         multiDexEnabled true
         minSdkVersion 18
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode Integer.parseInt(project.VERSION_CODE)
+        versionName project.VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,11 +26,33 @@ android {
         }
     }
     testOptions {
-        unitTests.all {
+        /*unitTests.all {
             jacoco {
                 includeNoLocationClasses = true
             }
-        }
+        }*/
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    // avoid errors with message 'Duplicate files copied in APK ...'
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'LICENSE.txt'
     }
 }
 
@@ -44,10 +69,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
 
-   /* androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })*/
-
     compile('com.android.support:design:22.2.1') {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
@@ -55,7 +76,17 @@ dependencies {
     compile 'com.jjoe64:graphview:4.2.1'
 
     testCompile 'junit:junit:4.12'
+
     testCompile "org.robolectric:robolectric:2.4"
+
+    // PowerMock
+    def powerMockVersion = '1.7.3'
+    testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
 }
 
 afterEvaluate {
@@ -86,3 +117,6 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"
 }
+
+
+apply from: '../maven.gradle'
