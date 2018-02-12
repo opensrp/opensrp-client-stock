@@ -13,11 +13,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.fragment.StockJsonFormFragment;
+import org.smartregister.stock.repository.StockExternalRepository;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockTypeRepository;
-import org.smartregister.stock.repository.StockExternalRepository;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
     public void initializeFormFragment() {
         pathJsonFormFragment = StockJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME);
         getSupportFragmentManager().beginTransaction()
-                .add(com.vijay.jsonwizard.R.id.container, pathJsonFormFragment).commit();
+                .add(R.id.container, pathJsonFormFragment).commit();
     }
 
     @Override
@@ -75,7 +76,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                         ArrayList<View> views = getFormDataViews();
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText &&
-                                    ((String) views.get(i).getTag(com.vijay.jsonwizard.R.id.key)).equalsIgnoreCase("Vials_Issued")) {
+                                    ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
                                 balancetextview = (MaterialEditText) views.get(i);
                             }
                         }
@@ -169,7 +170,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                         ArrayList<View> views = getFormDataViews();
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText &&
-                                    ((String) views.get(i).getTag(com.vijay.jsonwizard.R.id.key)).equalsIgnoreCase("Vials_Issued")) {
+                                    ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
                                 balancetextview = (MaterialEditText) views.get(i);
                             }
                         }
@@ -246,7 +247,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     if (balancetextview == null) {
                         ArrayList<View> views = getFormDataViews();
                         for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText && ((String) views.get(i).getTag(com.vijay.jsonwizard.R.id.key)).equalsIgnoreCase("Vials_Issued")) {
+                            if (views.get(i) instanceof MaterialEditText && ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
                                 balancetextview = (MaterialEditText) views.get(i);
                             }
                         }
@@ -378,7 +379,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
 //                        ArrayList<View> views = getFormDataViews();
 //                        for (int i = 0; i < views.size(); i++) {
 //                            if (views.get(i) instanceof MaterialEditText) {
-//                                if (((String) views.get(i).getTag(com.vijay.jsonwizard.R.id.key)).equalsIgnoreCase(key)) {
+//                                if (((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {
 //                                    balancetextview = (MaterialEditText) views.get(i);
 //                                }
 //                            }
@@ -495,7 +496,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
 //                        ArrayList<View> views = getFormDataViews();
 //                        for (int i = 0; i < views.size(); i++) {
 //                            if (views.get(i) instanceof MaterialEditText) {
-//                                if (((String) views.get(i).getTag(com.vijay.jsonwizard.R.id.key)).equalsIgnoreCase(key)) {
+//                                if (((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {
 //                                    balancetextview = (MaterialEditText) views.get(i);
 //                                }
 //                            }

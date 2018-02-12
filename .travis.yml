@@ -33,7 +33,7 @@ android:
   licenses:
       - 'android-sdk-license-.+'
       - '.+'
-      
+
 addons:
   apt_packages:
   - pandoc

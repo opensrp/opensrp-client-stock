@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 
+import org.smartregister.stock.R;
 import org.smartregister.stock.util.Constants;
 
 /**
@@ -35,7 +36,7 @@ public class StockJsonFormFragment extends JsonFormFragment {
                 View view = mMainView.getChildAt(i);
                 if (view instanceof TextView) {
                     TextView textView = (TextView) view;
-                    String key = (String) textView.getTag(com.vijay.jsonwizard.R.id.key);
+                    String key = (String) textView.getTag(R.id.key);
                     if (key.equals(currentKey)) {
                         textView.setText(textString);
                     }
@@ -52,7 +53,7 @@ public class StockJsonFormFragment extends JsonFormFragment {
                 View view = getMainView().getChildAt(i);
                 if (view instanceof TextView) {
                     TextView textView = (TextView) view;
-                    String key = (String) textView.getTag(com.vijay.jsonwizard.R.id.key);
+                    String key = (String) textView.getTag(R.id.key);
                     if (key.equals(currentKey)) {
                         toreturn = textView.getText().toString();
                     }
