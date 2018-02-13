@@ -1,6 +1,8 @@
 package org.smartregister.stock.sample.activity;
 
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ public class SampleStockActivity extends StockActivity {
         NavigationView view = (NavigationView) getLayoutInflater().inflate(R.layout.nav_view, null);
         view.findViewById(R.id.logout_b).setOnClickListener(customNavbarListener);
         view.findViewById(R.id.child_register).setOnClickListener(customNavbarListener);
+        view.findViewById(R.id.stock_control).setOnClickListener(customNavbarListener);
         return view;
     }
 
@@ -54,7 +57,13 @@ public class SampleStockActivity extends StockActivity {
                     Toast.makeText(SampleStockActivity.this, "Logout clicked", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.child_register:
-                    Toast.makeText(SampleStockActivity.this, "Zeir App clicked ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SampleStockActivity.this, R.string.app_name + " clicked ", Toast.LENGTH_SHORT).show();
+                    ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawer(GravityCompat.START);
+                    finish();
+                    break;
+                case R.id.stock_control:
+                    Toast.makeText(SampleStockActivity.this, "Stock Module clicked ", Toast.LENGTH_SHORT).show();
+                    ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawer(GravityCompat.START);
                     break;
             }
         }

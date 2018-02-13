@@ -299,7 +299,6 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else {
                         pathJsonFormFragment.getLabelViewFromTag("Balance", "");
                     }
-                    int DosesPerVial = 0;
                     int vialsused = 0;
                     StockTypeRepository vaccine_typesRepository = StockLibrary.getInstance().getStockTypeRepository();
                     int dosesPerVial = vaccine_typesRepository.getDosesPerVial(vaccineName);
@@ -392,21 +391,19 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     for (int i = 0; i < fields.length(); i++) {
                         JSONObject questions = fields.getJSONObject(i);
                         if (questions.has("key")) {
-                            if (questions.getString("key").equalsIgnoreCase("Date_Stock_Received")) {
-                                if (questions.has("value")) {
-                                    Date encounterDate = new Date();
-                                    label = questions.getString("value");
-                                    if (label != null && StringUtils.isNotBlank(label)) {
-                                        Date dateTime = JsonFormUtils.formatDate(label, false);
-                                        if (dateTime != null) {
-                                            encounterDate = dateTime;
-                                        }
+                            if (questions.getString("key").equalsIgnoreCase("Date_Stock_Received") && questions.has("value")) {
+                                Date encounterDate = new Date();
+                                label = questions.getString("value");
+                                if (label != null && StringUtils.isNotBlank(label)) {
+                                    Date dateTime = JsonFormUtils.formatDate(label, false);
+                                    if (dateTime != null) {
+                                        encounterDate = dateTime;
                                     }
-
-                                    String vaccineName = object.getString("title").replace("Stock Received", "").trim();
-                                    StockRepository str = StockLibrary.getInstance().getStockRepository();
-                                    currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                                 }
+
+                                String vaccineName = object.getString("title").replace("Stock Received", "").trim();
+                                StockRepository str = StockLibrary.getInstance().getStockRepository();
+                                currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                             }
 
                             if (StringUtils.isNotBlank(value) && StringUtils.isNumeric(value)) {

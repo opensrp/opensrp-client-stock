@@ -49,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        LinearLayout childRegister = (LinearLayout) drawer.findViewById(R.id.child_register);
+        childRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.closeDrawer(GravityCompat.START);
+
+            }
+        });
     }
 
 }
