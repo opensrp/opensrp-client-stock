@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">opensrp-stock-sample</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Stock Sample App</string>
 </resources>

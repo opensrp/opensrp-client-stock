@@ -20,7 +20,6 @@ allprojects {
 
 apply plugin: 'com.android.library'
 apply plugin: 'jacoco'
-//jacoco { toolVersion = '0.7.6.201602180812' }
 apply plugin: 'com.github.kt3k.coveralls'
 
 android {

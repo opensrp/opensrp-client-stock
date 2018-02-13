@@ -3,16 +3,19 @@ package org.smartregister.stock.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.smartregister.stock.R;
@@ -28,7 +31,7 @@ import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
  * Created by raihan on 5/23/17.
  */
 public abstract class StockActivity extends AppCompatActivity {
-    protected GridView stockGrid;
+    private GridView stockGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,18 +50,25 @@ public abstract class StockActivity extends AppCompatActivity {
         TextView nameInitials = (TextView) findViewById(R.id.name_inits);
         nameInitials.setText(getLoggedInUserInitials());
 
-        final DrawerLayout drawer = getDrawer();
+        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final NavigationView drawer = getNavigationView();
         if (drawer != null) {
+            DrawerLayout.LayoutParams lp = new DrawerLayout.LayoutParams(
+                    getNavigationViewWith(), LinearLayout.LayoutParams.MATCH_PARENT);
+            lp.gravity = Gravity.START;
+            drawerLayout.addView(drawer, lp);
             final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
+                    this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawerLayout.setDrawerListener(toggle);
             toggle.syncState();
+
+            drawer.setNavigationItemSelectedListener(getNavigationViewListener());
         }
         nameInitials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (drawer != null && !drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.openDrawer(GravityCompat.START);
+                if (drawer != null && !drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.openDrawer(GravityCompat.START);
                 } else
                     finish();
             }
@@ -70,11 +80,16 @@ public abstract class StockActivity extends AppCompatActivity {
         }
 
         stockGrid = (GridView) findViewById(R.id.stockgrid);
+
     }
 
     protected abstract String getLoggedInUserInitials();
 
-    protected abstract DrawerLayout getDrawer();
+    protected abstract NavigationView getNavigationView();
+
+    protected abstract NavigationView.OnNavigationItemSelectedListener getNavigationViewListener();
+
+    protected abstract int getNavigationViewWith();
 
     protected abstract Class getControlActivity();
 
