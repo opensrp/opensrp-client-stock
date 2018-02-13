@@ -67,8 +67,8 @@ android {
 }
 
 dependencies {
-    //compile project(':opensrp-stock')
-    compile('org.smartregister:opensrp-client-core:1.1.6-SNAPSHOT@aar') {
+    compile project(':opensrp-stock')
+    /*compile('org.smartregister:opensrp-client-core:1.1.6-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
     }
@@ -78,7 +78,7 @@ dependencies {
     }
     compile('org.smartregister:opensrp-client-stock:1.0.0-SNAPSHOT@aar') {
         transitive = true
-    }
+    }*/
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

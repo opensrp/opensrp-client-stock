@@ -28,7 +28,7 @@ import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
  * Created by raihan on 5/23/17.
  */
 public abstract class StockActivity extends AppCompatActivity {
-    private GridView stockGrid;
+    protected GridView stockGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,36 +44,37 @@ public abstract class StockActivity extends AppCompatActivity {
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("Stock Control");
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
         TextView nameInitials = (TextView) findViewById(R.id.name_inits);
         nameInitials.setText(getLoggedInUserInitials());
+
+        final DrawerLayout drawer = getDrawer();
+        if (drawer != null) {
+            final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
+        }
         nameInitials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                if (!drawer.isDrawerOpen(GravityCompat.START)) {
+                if (drawer != null && !drawer.isDrawerOpen(GravityCompat.START)) {
                     drawer.openDrawer(GravityCompat.START);
-                }
+                } else
+                    finish();
             }
         });
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Stock Control");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
 
         stockGrid = (GridView) findViewById(R.id.stockgrid);
     }
 
     protected abstract String getLoggedInUserInitials();
 
+    protected abstract DrawerLayout getDrawer();
 
     protected abstract Class getControlActivity();
 
