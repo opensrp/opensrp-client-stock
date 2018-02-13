@@ -442,27 +442,23 @@ public class StockJsonFormActivity extends JsonFormActivity {
                 for (int i = 0; i < fields.length(); i++) {
                     JSONObject questions = fields.getJSONObject(i);
                     if (questions.has("key")) {
-                        if (questions.getString("key").equalsIgnoreCase("Date_Stock_loss_adjustment")) {
-                            if (questions.has("value")) {
-                                Date encounterDate = new Date();
-                                label = questions.getString("value");
-                                if (label != null && StringUtils.isNotBlank(label)) {
-                                    Date dateTime = JsonFormUtils.formatDate(label, false);
-                                    if (dateTime != null) {
-                                        encounterDate = dateTime;
-                                    }
+                        if (questions.getString("key").equalsIgnoreCase("Date_Stock_loss_adjustment") && questions.has("value")) {
+                            Date encounterDate = new Date();
+                            label = questions.getString("value");
+                            if (label != null && StringUtils.isNotBlank(label)) {
+                                Date dateTime = JsonFormUtils.formatDate(label, false);
+                                if (dateTime != null) {
+                                    encounterDate = dateTime;
                                 }
+                            }
 
-                                String vaccineName = object.getString("title").replace("Stock Loss/Adjustment", "").trim();
-                                StockRepository str = StockLibrary.getInstance().getStockRepository();
-                                currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
-                            }
+                            String vaccineName = object.getString("title").replace("Stock Loss/Adjustment", "").trim();
+                            StockRepository str = StockLibrary.getInstance().getStockRepository();
+                            currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                         }
-                        if (questions.getString("key").equalsIgnoreCase("Vials_Adjustment")) {
-                            if (questions.has("value")) {
-                                label = questions.getString("value");
-                                vialsvalue = label;
-                            }
+                        if (questions.getString("key").equalsIgnoreCase("Vials_Adjustment") && (questions.has("value"))) {
+                            label = questions.getString("value");
+                            vialsvalue = label;
                         }
                         if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && StringUtils.isNumeric(vialsvalue)) {
                             displaybalance = currentBalance + Integer.parseInt(vialsvalue);
