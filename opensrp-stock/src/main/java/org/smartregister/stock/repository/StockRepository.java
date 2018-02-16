@@ -300,4 +300,12 @@ public class StockRepository extends BaseRepository {
         return Integer.parseInt(stockValue);
     }
 
+    public static void migrateFromOldStockRepository(SQLiteDatabase database, String oldTableName) {
+        database.execSQL("ALTER TABLE " + oldTableName + " RENAME TO old_" + oldTableName);
+        createTable(database);
+        String sql = "INSERT INTO " + stock_TABLE_NAME + " SELECT * FROM old_" + oldTableName;
+        database.execSQL(sql);
+        database.execSQL("DROP TABLE IF EXISTS old_" + oldTableName);
+    }
+
 }

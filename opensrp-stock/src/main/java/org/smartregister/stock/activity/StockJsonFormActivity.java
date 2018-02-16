@@ -30,7 +30,7 @@ import java.util.Date;
 public class StockJsonFormActivity extends JsonFormActivity {
 
     private MaterialEditText balancetextview;
-    private StockJsonFormFragment pathJsonFormFragment;
+    private StockJsonFormFragment stockJsonFormFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +39,9 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
     @Override
     public void initializeFormFragment() {
-        pathJsonFormFragment = StockJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME);
+        stockJsonFormFragment = StockJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, pathJsonFormFragment).commit();
+                .add(R.id.container, stockJsonFormFragment).commit();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
         super.onFormFinish();
     }
 
-    private void refreshCalculateLogic(String key, String value) {
+    protected void refreshCalculateLogic(String key, String value) {
         stockVialsenteredinReceivedForm(key, value);
         stockDateEnteredinReceivedForm(key, value);
         stockDateEnteredinIssuedForm(key, value);
@@ -120,7 +120,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                         vialsvalue = questions.getString("value");
                                     }
                                 } else {
-                                    pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                                 }
                             }
 
@@ -128,7 +128,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     }
                     if (!StringUtils.isBlank(vialsvalue) && StringUtils.isNumeric(vialsvalue) && StringUtils.isNumeric(wastedvials)) {
                         newBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()) - Integer.parseInt(vialsvalue) - Integer.parseInt(wastedvials);
-                        pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance);
+                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance);
                     }
 
                     int vialsused = 0;
@@ -213,14 +213,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
                         }
                     }
-                    pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
 
                     if (value != null && !StringUtils.isBlank(value) && StringUtils.isNumeric(value) && StringUtils.isNumeric(wastedvials)) {
 
                         newBalance = existingbalance - Integer.parseInt(value) - Integer.parseInt(wastedvials);
-                        pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance);
+                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance);
                     } else {
-                        pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                        stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                     }
                     int vialsused = 0;
                     StockTypeRepository vaccineTypeRepository = StockLibrary.getInstance().getStockTypeRepository();
@@ -288,16 +288,16 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             }
                         }
                     }
-                    pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                     if (wastedvials == null || StringUtils.isBlank(wastedvials)) {
                         wastedvials = "0";
                     }
                     if (vialsvalue != null && !StringUtils.isBlank(vialsvalue) && StringUtils.isNumeric(wastedvials)) {
 
                         newBalance = existingbalance - Integer.parseInt(vialsvalue) - Integer.parseInt(wastedvials);
-                        pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance);
+                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance);
                     } else {
-                        pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                        stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                     }
                     int vialsused = 0;
                     StockTypeRepository vaccine_typesRepository = StockLibrary.getInstance().getStockTypeRepository();
@@ -354,10 +354,10 @@ public class StockJsonFormActivity extends JsonFormActivity {
 //                                    balancetextview.setErrorColor(getResources().getColor(R.color.dark_grey));
 //                                    balancetextview.setError("New balance : " + displaybalance);
 //                                }
-                            pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
+                            stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
 
                         } else {
-                            pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                            stockJsonFormFragment.getLabelViewFromTag("Balance", "");
 
                         }
                     }
@@ -408,15 +408,15 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
                             if (StringUtils.isNotBlank(value) && StringUtils.isNumeric(value)) {
                                 displaybalance = currentBalance + Integer.parseInt(value);
-                                pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
+                                stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
 
                             } else {
-                                pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                                stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                             }
                         }
                     }
                 } else {
-                    pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                 }
             }
         } catch (
@@ -466,10 +466,10 @@ public class StockJsonFormActivity extends JsonFormActivity {
 //                                    balancetextview.setErrorColor(getResources().getColor(R.color.dark_grey));
 //                                    balancetextview.setError("New balance : " + displaybalance);
 //                                }
-                            pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
+                            stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
 
                         } else {
-                            pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                            stockJsonFormFragment.getLabelViewFromTag("Balance", "");
 
                         }
                     }
@@ -524,15 +524,15 @@ public class StockJsonFormActivity extends JsonFormActivity {
 //                                    balancetextview.setErrorColor(Color.BLACK);
 //                                    balancetextview.setError("New balance : " + displaybalance);
 //                                }
-                                pathJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
+                                stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
 
                             } else {
-                                pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                                stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                             }
                         }
                     }
                 } else {
-                    pathJsonFormFragment.getLabelViewFromTag("Balance", "");
+                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                 }
             }
         } catch (JSONException e) {
@@ -547,47 +547,5 @@ public class StockJsonFormActivity extends JsonFormActivity {
         return vaccineName;
     }
 
-    public boolean checkIfBalanceNegative() {
-        boolean balancecheck = true;
-        String balancestring = pathJsonFormFragment.getRelevantTextViewString("Balance");
-
-        if (balancestring.contains("New balance") && StringUtils.isNumeric(balancestring)) {
-            int balance = Integer.parseInt(balancestring.replace("New balance:", "").trim());
-            if (balance < 0) {
-                balancecheck = false;
-            }
-        }
-
-        return balancecheck;
-    }
-
-    public boolean checkIfAtLeastOneServiceGiven() {
-        JSONObject object = getStep("step1");
-        try {
-            if (object.getString("title").contains("Record out of catchment area service")) {
-                JSONArray fields = object.getJSONArray("fields");
-                for (int i = 0; i < fields.length(); i++) {
-                    JSONObject vaccineGroup = fields.getJSONObject(i);
-                    if (vaccineGroup.has("key") && vaccineGroup.has("is_vaccine_group")) {
-                        if (vaccineGroup.getBoolean("is_vaccine_group") && vaccineGroup.has("options")) {
-                            JSONArray vaccineOptions = vaccineGroup.getJSONArray("options");
-                            for (int j = 0; j < vaccineOptions.length(); j++) {
-                                JSONObject vaccineOption = vaccineOptions.getJSONObject(j);
-                                if (vaccineOption.has("value") && vaccineOption.getBoolean("value")) {
-                                    return true;
-                                }
-                            }
-                        }
-                    } else if (vaccineGroup.has("key") && vaccineGroup.getString("key").equals("Weight_Kg") && vaccineGroup.has("value") && vaccineGroup.getString("value").length() > 0) {
-                        return true;
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
 }
 
