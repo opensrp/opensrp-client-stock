@@ -38,9 +38,6 @@ public class StockControlActivity extends AppCompatActivity {
 
         setTitle("");
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.location_switching_toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -55,6 +52,10 @@ public class StockControlActivity extends AppCompatActivity {
 
         ((TextView) toolbar.findViewById(R.id.title)).setText("Stock Control > " + stockType.getName());
 
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -66,6 +67,12 @@ public class StockControlActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     /**
