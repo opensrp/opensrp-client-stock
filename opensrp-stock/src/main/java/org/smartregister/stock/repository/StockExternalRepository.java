@@ -1,5 +1,6 @@
 package org.smartregister.stock.repository;
 
+import org.json.JSONObject;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.domain.ActiveChildrenStats;
@@ -19,4 +20,6 @@ public abstract class StockExternalRepository extends BaseRepository {
     public abstract int getVaccinesUsedToday(Long date, String vaccineName);
 
     public abstract ActiveChildrenStats getActiveChildrenStat();
+
+    public abstract int getVaccinesDueBasedOnSchedule(JSONObject vaccineobject);
 }

@@ -314,42 +314,12 @@ public class PlanningStockFragment extends Fragment {
         }
         ArrayList<JSONObject> vaccineArray = readvaccineFileAndReturnVaccinesofSameType(vaccinename);
         for (int i = 0; i < vaccineArray.size(); i++) {
-            vaccinesDueNextMonth = vaccinesDueNextMonth + getVaccinesDueBasedOnSchedule(vaccineArray.get(i));
+            vaccinesDueNextMonth = vaccinesDueNextMonth + StockLibrary.getInstance()
+                    .getStockExternalRepository().getVaccinesDueBasedOnSchedule(vaccineArray.get(i));
         }
         return vaccinesDueNextMonth;
     }
 
-    private int getVaccinesDueBasedOnSchedule(JSONObject vaccineobject) {
-        int countofNextMonthVaccineDue = 0;
-        try {
-            Repository repo = StockLibrary.getInstance().getRepository();
-            net.sqlcipher.database.SQLiteDatabase db = repo.getReadableDatabase();
-
-            DateTime today = new DateTime(System.currentTimeMillis());
-
-            //////////////////////next month///////////////////////////////////////////////////////////
-            DateTime startofNextMonth = today.plusMonths(1).dayOfMonth().withMinimumValue();
-//            DateTime EndofNextMonth = today.plusMonths(1).dayOfMonth().withMaximumValue();
-            DecimalFormat mFormat = new DecimalFormat("00");
-            String monthstring = mFormat.format(startofNextMonth.getMonthOfYear());
-            mFormat = new DecimalFormat("0000");
-
-            String yearstring = mFormat.format(startofNextMonth.getYear());
-            String nextmonthdateString = yearstring + "-" + monthstring;
-
-            Cursor c = db.rawQuery("Select count(*) from alerts where scheduleName = '" + vaccineobject.getString("name") + "' and startDate like '%" + nextmonthdateString + "%'", null);
-            c.moveToFirst();
-            if (c.getCount() > 0) {
-                countofNextMonthVaccineDue = Integer.parseInt(c.getString(0));
-            }
-            c.close();
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return countofNextMonthVaccineDue;
-    }
 
     private ArrayList<JSONObject> readvaccineFileAndReturnVaccinesofSameType(String vaccinetypename) {
         ArrayList<JSONObject> vaccinesofsametype = new ArrayList<>();

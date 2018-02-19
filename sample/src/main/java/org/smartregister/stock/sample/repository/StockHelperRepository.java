@@ -1,5 +1,6 @@
 package org.smartregister.stock.sample.repository;
 
+import org.json.JSONObject;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.domain.ActiveChildrenStats;
 import org.smartregister.stock.repository.StockExternalRepository;
@@ -34,5 +35,10 @@ public class StockHelperRepository extends StockExternalRepository {
         childrenStats.setChildrenThisMonthZeroToEleven(14l);
         childrenStats.setChildrenThisMonthtwelveTofiftyNine(61l);
         return childrenStats;
+    }
+
+    @Override
+    public int getVaccinesDueBasedOnSchedule(JSONObject vaccineobject) {
+        return 7;
     }
 }
