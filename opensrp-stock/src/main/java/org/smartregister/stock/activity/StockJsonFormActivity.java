@@ -493,10 +493,9 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     if (balancetextview == null) {
                         ArrayList<View> views = getFormDataViews();
                         for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText) {
-                                if (((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {
-                                    balancetextview = (MaterialEditText) views.get(i);
-                                }
+                            if (views.get(i) instanceof MaterialEditText &&
+                                    ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {q
+                                balancetextview = (MaterialEditText) views.get(i);
                             }
                         }
                     }
