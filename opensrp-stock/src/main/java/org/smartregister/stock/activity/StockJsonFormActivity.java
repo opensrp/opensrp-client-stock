@@ -8,6 +8,7 @@ import android.view.View;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.activities.JsonFormActivity;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.validators.edittext.MinNumericValidator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -33,6 +34,8 @@ public class StockJsonFormActivity extends JsonFormActivity {
     private MaterialEditText balancetextview;
     private StockJsonFormFragment stockJsonFormFragment;
 
+    private MinNumericValidator negativeBalanceValidator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
         stockJsonFormFragment = StockJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, stockJsonFormFragment).commit();
+        negativeBalanceValidator = new MinNumericValidator(getResources().getString(R.string.negative_balance), 0);
     }
 
     @Override
@@ -463,10 +467,10 @@ public class StockJsonFormActivity extends JsonFormActivity {
                         }
                         if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && StringUtils.isNumeric(vialsvalue)) {
                             displaybalance = currentBalance + Integer.parseInt(vialsvalue);
-//                                if (balancetextview != null) {
-//                                    balancetextview.setErrorColor(getResources().getColor(R.color.dark_grey));
-//                                    balancetextview.setError("New balance : " + displaybalance);
-//                                }
+                            if (balancetextview != null && displaybalance < 0) {
+                                balancetextview.addValidator(negativeBalanceValidator);
+                            } else if (balancetextview != null && displaybalance >= 0)
+                                balancetextview.getValidators().remove(negativeBalanceValidator);
                             stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
 
                         } else {
@@ -486,16 +490,16 @@ public class StockJsonFormActivity extends JsonFormActivity {
         try {
             if (object.getString("title").contains("Stock Loss/Adjustment")) {
                 if (key.equalsIgnoreCase("Vials_Adjustment") && value != null && !value.equalsIgnoreCase("")) {
-//                    if(balancetextview == null) {
-//                        ArrayList<View> views = getFormDataViews();
-//                        for (int i = 0; i < views.size(); i++) {
-//                            if (views.get(i) instanceof MaterialEditText) {
-//                                if (((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {
-//                                    balancetextview = (MaterialEditText) views.get(i);
-//                                }
-//                            }
-//                        }
-//                    }
+                    if (balancetextview == null) {
+                        ArrayList<View> views = getFormDataViews();
+                        for (int i = 0; i < views.size(); i++) {
+                            if (views.get(i) instanceof MaterialEditText) {
+                                if (((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {
+                                    balancetextview = (MaterialEditText) views.get(i);
+                                }
+                            }
+                        }
+                    }
                     String label = "";
                     int currentBalance = 0;
                     int displaybalance = 0;
@@ -519,10 +523,10 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             }
                             if (StringUtils.isNotBlank(value) && !value.equalsIgnoreCase("-") && NumberUtils.isNumber(value)) {
                                 displaybalance = currentBalance + Integer.parseInt(value);
-//                                if (balancetextview != null) {
-//                                    balancetextview.setErrorColor(Color.BLACK);
-//                                    balancetextview.setError("New balance : " + displaybalance);
-//                                }
+                                if (balancetextview != null && displaybalance < 0) {
+                                    balancetextview.addValidator(negativeBalanceValidator);
+                                } else if (balancetextview != null && displaybalance >= 0)
+                                    balancetextview.getValidators().remove(negativeBalanceValidator);
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + displaybalance);
 
                             } else {

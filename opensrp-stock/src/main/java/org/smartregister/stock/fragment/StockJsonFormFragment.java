@@ -52,21 +52,4 @@ public class StockJsonFormFragment extends JsonFormFragment {
         }
     }
 
-    public String getRelevantTextViewString(String currentKey) {
-        String toreturn = "";
-        if (getMainView() != null) {
-            int childCount = getMainView().getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View view = getMainView().getChildAt(i);
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
-                    String key = (String) textView.getTag(R.id.key);
-                    if (key.equals(currentKey)) {
-                        toreturn = textView.getText().toString();
-                    }
-                }
-            }
-        }
-        return toreturn;
-    }
 }
