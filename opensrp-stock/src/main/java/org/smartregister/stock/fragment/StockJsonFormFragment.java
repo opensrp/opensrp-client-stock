@@ -6,8 +6,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
+import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 
 import org.smartregister.stock.R;
+import org.smartregister.stock.interactor.StockJsonFormInteractor;
 import org.smartregister.stock.util.Constants;
 
 /**
@@ -15,6 +17,11 @@ import org.smartregister.stock.util.Constants;
  */
 
 public class StockJsonFormFragment extends JsonFormFragment {
+
+    @Override
+    protected JsonFormFragmentPresenter createPresenter() {
+        return new JsonFormFragmentPresenter(this, StockJsonFormInteractor.getInstance());
+    }
 
     public static StockJsonFormFragment getFormFragment(String stepName) {
         StockJsonFormFragment jsonFormFragment = new StockJsonFormFragment();
