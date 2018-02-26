@@ -10,6 +10,7 @@ import com.vijay.jsonwizard.activities.JsonFormActivity;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -516,7 +517,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                                 currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                             }
-                            if (StringUtils.isNotBlank(value) && !value.equalsIgnoreCase("-") && StringUtils.isNumeric(value)) {
+                            if (StringUtils.isNotBlank(value) && !value.equalsIgnoreCase("-") && NumberUtils.isNumber(value)) {
                                 displaybalance = currentBalance + Integer.parseInt(value);
 //                                if (balancetextview != null) {
 //                                    balancetextview.setErrorColor(Color.BLACK);
