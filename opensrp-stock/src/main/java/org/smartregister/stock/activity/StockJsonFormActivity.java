@@ -465,7 +465,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             label = questions.getString("value");
                             vialsvalue = label;
                         }
-                        if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && StringUtils.isNumeric(vialsvalue)) {
+                        if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && NumberUtils.isNumber(vialsvalue)) {
                             displaybalance = currentBalance + Integer.parseInt(vialsvalue);
                             if (balancetextview != null && displaybalance < 0) {
                                 balancetextview.addValidator(negativeBalanceValidator);
