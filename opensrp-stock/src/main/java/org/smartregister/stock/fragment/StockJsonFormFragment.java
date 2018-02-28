@@ -6,8 +6,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
+import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 
 import org.smartregister.stock.R;
+import org.smartregister.stock.interactor.StockJsonFormInteractor;
 import org.smartregister.stock.util.Constants;
 
 /**
@@ -15,6 +17,11 @@ import org.smartregister.stock.util.Constants;
  */
 
 public class StockJsonFormFragment extends JsonFormFragment {
+
+    @Override
+    protected JsonFormFragmentPresenter createPresenter() {
+        return new JsonFormFragmentPresenter(this, StockJsonFormInteractor.getInstance());
+    }
 
     public static StockJsonFormFragment getFormFragment(String stepName) {
         StockJsonFormFragment jsonFormFragment = new StockJsonFormFragment();
@@ -45,21 +52,4 @@ public class StockJsonFormFragment extends JsonFormFragment {
         }
     }
 
-    public String getRelevantTextViewString(String currentKey) {
-        String toreturn = "";
-        if (getMainView() != null) {
-            int childCount = getMainView().getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                View view = getMainView().getChildAt(i);
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
-                    String key = (String) textView.getTag(R.id.key);
-                    if (key.equals(currentKey)) {
-                        toreturn = textView.getText().toString();
-                    }
-                }
-            }
-        }
-        return toreturn;
-    }
 }

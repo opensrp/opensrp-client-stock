@@ -10,6 +10,5 @@ public class Constants {
     public static final String ARG_STOCK_TYPE = "stock_type";
     public static final String STEPNAME = "stepName";
 
-    public static final String VACCINES_USED_UNTIL_DATE = "intentVaccinesUsedUntilDate";
-    public static final String VACCINES_USED_TODAY = "intentVaccineUsedToday";
+    public static final String NUMBER_PICKER = "number_picker";
 }
