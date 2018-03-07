@@ -16,6 +16,29 @@ public class Order {
     private String locationId;
     private String providerId;
     private long dateCreatedByClient;
+    private boolean synced;
+
+    public Order(String id, String revision, String type, long dateCreated, long dateEdited,
+                 long serverVersion, String locationId, String providerId, long dateCreatedByClient, boolean synced) {
+        this.id = id;
+        this.revision = revision;
+        this.type = type;
+        this.dateCreated = dateCreated;
+        this.dateEdited = dateEdited;
+        this.serverVersion = serverVersion;
+        this.locationId = locationId;
+        this.providerId = providerId;
+        this.dateCreatedByClient = dateCreatedByClient;
+        this.synced = synced;
+    }
+
+    public boolean isSynced() {
+        return synced;
+    }
+
+    public void setSynced(boolean synced) {
+        this.synced = synced;
+    }
 
     public String getId() {
         return id;
