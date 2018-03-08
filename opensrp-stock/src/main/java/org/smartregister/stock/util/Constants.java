@@ -23,6 +23,7 @@ public class Constants {
         public static final String PROCESSING_PERIOD_START_DATE = "processing_period_start_date";
         public static final String PROCESSING_PERIOD_END_DATE = "processing_period_end_date";
         public static final String SHIPMENT_ACCEPT_STATUS = "shipment_accept_status";
+        public static final String SERVER_VERSION = "server_version";
         public static final String SYNCED = "synced";
 
         public static final String ACCEPT_STATUS_REJECTED = "REJECTED";
