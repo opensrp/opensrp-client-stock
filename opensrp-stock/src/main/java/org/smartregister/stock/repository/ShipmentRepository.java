@@ -9,6 +9,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Shipment;
 import org.smartregister.stock.domain.ShipmentLineItem;
 import org.smartregister.stock.util.Constants;
@@ -51,7 +52,7 @@ public class ShipmentRepository extends BaseRepository {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         sqLiteDatabase.insert(SHIPMENT_TABLE, null, createValuesForShipment(shipment));
 
-        ShipmentLineItemRepository shipmentLineItemRepository = new ShipmentLineItemRepository(getRepository());
+        ShipmentLineItemRepository shipmentLineItemRepository = StockLibrary.getInstance().getShipmentLineItemRepository();
         for(ShipmentLineItem shipmentLineItem: shipment.getShipmentLineItems()) {
             shipmentLineItemRepository.addShipmentLineItem(shipmentLineItem);
         }
