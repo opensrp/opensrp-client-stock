@@ -2,6 +2,7 @@ package org.smartregister.stock;
 
 import org.smartregister.Context;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.repository.OrderRepository;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockTypeRepository;
 import org.smartregister.stock.repository.StockExternalRepository;
@@ -17,6 +18,7 @@ public class StockLibrary {
     private StockRepository stockRepository;
     private StockTypeRepository stockTypeRepository;
     private StockExternalRepository stockExternalRepository;
+    private OrderRepository orderRepository;
 
     public static void init(Context context_, Repository repository) {
         init(context_, repository, null);
@@ -66,5 +68,13 @@ public class StockLibrary {
 
     public StockExternalRepository getStockExternalRepository() {
         return stockExternalRepository;
+    }
+
+    public OrderRepository getOrderRepository() {
+        if (orderRepository == null) {
+            orderRepository = new OrderRepository(getRepository());
+        }
+
+        return orderRepository;
     }
 }
