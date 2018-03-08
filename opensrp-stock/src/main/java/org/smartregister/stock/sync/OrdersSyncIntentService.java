@@ -8,6 +8,11 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,29 +83,27 @@ public class OrdersSyncIntentService extends IntentService {
         OrderRepository orderRepository = StockLibrary.getInstance().getOrderRepository();
 
         List<Order> ordersList = orderRepository.getAllUnSyncedOrders();
-        JSONArray ordersJSONArray = createJSONArrayFromOrders(ordersList);
+        JsonArray ordersJSONArray = createJSONArrayFromOrders(ordersList);
 
         String baseUrl = StockLibrary.getInstance().getContext().configuration().dristhiBaseURL();
         if (baseUrl.endsWith(context.getString(R.string.url_separator))) {
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
         }
 
-        JSONObject jsonPayload = new JSONObject();
-        try {
-            jsonPayload.put("orders", ordersJSONArray);
-            String fullUrl = MessageFormat.format("{0}/{1}", baseUrl, ADD_ORDERS_URL);
+        JsonObject jsonPayload = new JsonObject();
 
-            Response<String> response = httpAgent.post(fullUrl, jsonPayload.toString());
+        jsonPayload.add("orders", ordersJSONArray);
+        String fullUrl = MessageFormat.format("{0}/{1}", baseUrl, ADD_ORDERS_URL);
 
-            if (response.isFailure()) {
-                Log.e(TAG, "Server error occured trying to push orders");
-                return;
-            }
+        Response<String> response = httpAgent.post(fullUrl, jsonPayload.toString());
 
-            orderRepository.setOrderStatusToSynced(ordersList);
-        } catch (JSONException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+        if (response.isFailure()) {
+            Log.e(TAG, "Server error occured trying to push orders");
+            return;
         }
+
+        orderRepository.setOrderStatusToSynced(ordersList);
+
     }
 
     private void pullOrdersFromServer() {
@@ -129,7 +132,8 @@ public class OrdersSyncIntentService extends IntentService {
             JSONObject jsonPayload = new JSONObject(responsePayload);
             JSONArray ordersJSONArray = jsonPayload.getJSONArray("orders");
 
-            ArrayList<Order> ordersList = createOrdersListFromJSONArray(ordersJSONArray);
+            Gson gson = new Gson();
+            ArrayList<Order> ordersList = gson.fromJson(ordersJSONArray.toString(), new TypeToken<ArrayList<Order>>() {}.getType());
 
             for(Order order: ordersList) {
                 if (order.getServerVersion() > lastServerVersion) {
@@ -147,61 +151,9 @@ public class OrdersSyncIntentService extends IntentService {
     }
 
 
-    private JSONArray createJSONArrayFromOrders(List<Order> orders) {
-        JSONArray jsonArray = new JSONArray();
-
-        try {
-            for (Order order : orders) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(Constants.Order.ID, order.getId());
-                jsonObject.put(Constants.Order.REVISION, order.getRevision());
-                jsonObject.put(Constants.Order.TYPE, order.getType());
-                jsonObject.put(Constants.Order.DATE_CREATED, order.getDateCreated());
-                jsonObject.put(Constants.Order.DATE_EDITED, order.getDateEdited());
-                jsonObject.put(Constants.Order.SERVER_VERSION, order.getServerVersion());
-                jsonObject.put(Constants.Order.LOCATION_ID, order.getLocationId());
-                jsonObject.put(Constants.Order.PROVIDER_ID, order.getProviderId());
-                jsonObject.put(Constants.Order.DATE_CREATED_BY_CLIENT, order.getDateCreatedByClient());
-
-                jsonArray.put(jsonObject);
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        }
-
-        return jsonArray;
-    }
-
-    private ArrayList<Order> createOrdersListFromJSONArray(JSONArray jsonArray) {
-        ArrayList<Order> ordersList = new ArrayList<>();
-        int count = jsonArray.length();
-
-        for(int i = 0; i < count; i++) {
-            try {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Order order = createOrderFromJSONObject(jsonObject);
-                ordersList.add(order);
-            } catch (JSONException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
-            }
-        }
-
-        return ordersList;
-    }
-
-    private Order createOrderFromJSONObject(JSONObject jsonObject) throws JSONException {
-        Order order = new Order();
-        order.setId(jsonObject.getString(Constants.Order.ID));
-        order.setRevision(jsonObject.getString(Constants.Order.REVISION));
-        order.setType(jsonObject.getString(Constants.Order.TYPE));
-        order.setDateCreated(jsonObject.getLong(Constants.Order.DATE_CREATED));
-        order.setDateEdited(jsonObject.getLong(Constants.Order.DATE_EDITED));
-        order.setServerVersion(jsonObject.getLong(Constants.Order.SERVER_VERSION));
-        order.setLocationId(jsonObject.getString(Constants.Order.LOCATION_ID));
-        order.setProviderId(jsonObject.getString(Constants.Order.PROVIDER_ID));
-        order.setDateCreatedByClient(jsonObject.getLong(Constants.Order.DATE_CREATED_BY_CLIENT));
-
-        return order;
+    private JsonArray createJSONArrayFromOrders(List<Order> orders) {
+        Gson gson = new Gson();
+        return (JsonArray) gson.toJsonTree(orders, new TypeToken<List<Order>>() {}.getType());
     }
 
     private long getLastOrderServerVersion() {

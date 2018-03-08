@@ -8,6 +8,9 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,7 +92,10 @@ public class ShipmentSyncIntentService extends IntentService {
         try {
             JSONObject jsonObject = new JSONObject(stringPayload);
             JSONArray shipmentsJSONArray = jsonObject.getJSONArray("shipments");
-            List<Shipment> shipments = getShipmentFromJSONArray(shipmentsJSONArray);
+
+            Gson gson = new Gson();
+            List<Shipment> shipments = gson.fromJson(shipmentsJSONArray.toString(), new TypeToken<ArrayList<Shipment>>() {}.getType());
+
             for (Shipment shipment : shipments) {
                 shipmentRepository.addShipment(shipment);
                 if (lastServerVersion < shipment.getServerVersion()) {
@@ -100,33 +106,6 @@ public class ShipmentSyncIntentService extends IntentService {
         } catch (JSONException e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
-    }
-
-    private ArrayList<Shipment> getShipmentFromJSONArray(JSONArray shipmentsJSONArray) {
-        ArrayList<Shipment> shipments = new ArrayList<>();
-        for (int i = 0; i < shipmentsJSONArray.length(); i++) {
-            try {
-                JSONObject shipmentJSONObject = shipmentsJSONArray.getJSONObject(i);
-                Shipment shipment = new Shipment(
-                        shipmentJSONObject.getString(Constants.Shipment.ORDER_CODE),
-                        getDateFromJsonFormat(shipmentJSONObject.getString(Constants.Shipment.ORDERED_DATE)),
-                        shipmentJSONObject.getString(Constants.Shipment.RECEIVING_FACILITY_CODE),
-                        shipmentJSONObject.getString(Constants.Shipment.RECEIVING_FACILITY_NAME),
-                        shipmentJSONObject.getString(Constants.Shipment.SUPPLYING_FACILITY_CODE),
-                        shipmentJSONObject.getString(Constants.Shipment.SUPPLYING_FACILITY_NAME),
-                        getDateFromJsonFormat(shipmentJSONObject.getString(Constants.Shipment.PROCESSING_PERIOD_START_DATE)),
-                        getDateFromJsonFormat(shipmentJSONObject.getString(Constants.Shipment.PROCESSING_PERIOD_END_DATE)),
-                        shipmentJSONObject.getString(Constants.Shipment.SHIPMENT_ACCEPT_STATUS),
-                        shipmentJSONObject.getLong(Constants.Shipment.SERVER_VERSION),
-                        shipmentJSONObject.getBoolean(Constants.Shipment.SYNCED)
-                );
-                shipments.add(shipment);
-            } catch (JSONException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
-
-            }
-        }
-        return  shipments;
     }
 
     private long getLastShipmentServerVersion() {
