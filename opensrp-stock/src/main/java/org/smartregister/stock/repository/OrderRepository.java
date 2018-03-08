@@ -10,7 +10,6 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.domain.Order;
-import org.smartregister.stock.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +24,8 @@ import static org.smartregister.stock.util.Constants.Order.*;
 public class OrderRepository extends BaseRepository {
     private static final String TAG = OrderRepository.class.getName();
     private static final String ORDER_TABLE = "orders";
-    private String[] ORDER_TABLE_COLUMNS = {Constants.Order.ID, Constants.Order.REVISION, Constants.Order.TYPE,
-            Constants.Order.DATE_CREATED, Constants.Order.DATE_EDITED, Constants.Order.SERVER_VERSION,
-            Constants.Order.LOCATION_ID, Constants.Order.PROVIDER_ID, DATE_CREATED_BY_CLIENT, SYNCED};
+    private String[] ORDER_TABLE_COLUMNS = {ID, REVISION, TYPE, DATE_CREATED, DATE_EDITED, SERVER_VERSION,
+            LOCATION_ID, PROVIDER_ID, DATE_CREATED_BY_CLIENT, SYNCED};
     private static final String CREATE_ORDER_TABLE_QUERY = "CREATE TABLE orders(" +
             "id VARCHAR PRIMARY KEY," +
             "revision VARCHAR," +
@@ -72,7 +70,7 @@ public class OrderRepository extends BaseRepository {
         return values;
     }
 
-    private Order getOrderById(String id) {
+    public Order getOrderById(String id) {
         Cursor cursor = getReadableDatabase().query(ORDER_TABLE, ORDER_TABLE_COLUMNS,
                 ID  + " = ?", new String[]{id}, null, null, null, "1");
         List<Order> orders = readOrders(cursor);
@@ -83,10 +81,30 @@ public class OrderRepository extends BaseRepository {
         return null;
     }
 
-    private List<Order> getAllOrders() {
+    public List<Order> getAllOrders() {
         Cursor cursor = getReadableDatabase().rawQuery("select * from " + ORDER_TABLE + " order by date_created_by_client", null);
         List<Order> orders = readOrders(cursor);
         return orders;
+    }
+
+    public List<Order> getAllUnSyncedOrders(){
+        List<Order> orders = new ArrayList<>();
+        Cursor cursor = getReadableDatabase().query(ORDER_TABLE, ORDER_TABLE_COLUMNS,
+                SYNCED + " = 1", null, null, null, null);
+        orders = readOrders(cursor);
+        return orders;
+    }
+
+    public void setOrderStatusToSynced(ArrayList<Order> orders) {
+        for (Order order : orders) {
+            order.setSynced(true);
+            updateOrder(order);
+        }
+    }
+
+    private void updateOrder(Order order) {
+        getReadableDatabase().update(ORDER_TABLE, createValuesForOrder(order), "ID = ?",
+                new String[]{order.getId()});
     }
 
     private List<Order> readOrders(Cursor cursor) {
@@ -95,18 +113,19 @@ public class OrderRepository extends BaseRepository {
         try {
             if (cursor != null && cursor.getCount() > 0  && cursor.moveToFirst()) {
                 while(!cursor.isAfterLast()) {
-                    orders.add(new Order (
-                            cursor.getString(cursor.getColumnIndex(ID)),
-                            cursor.getString(cursor.getColumnIndex(REVISION)),
-                            cursor.getString(cursor.getColumnIndex(TYPE)),
-                            cursor.getLong(cursor.getColumnIndex(DATE_CREATED)),
-                            cursor.getLong(cursor.getColumnIndex(DATE_EDITED)),
-                            cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)),
-                            cursor.getString(cursor.getColumnIndex(LOCATION_ID)),
-                            cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
-                            cursor.getLong(cursor.getColumnIndex(DATE_CREATED_BY_CLIENT)),
-                            (cursor.getInt(cursor.getColumnIndex(SYNCED)) == 1)
-                    ));
+                    Order currOrder = new Order();
+                    currOrder.setId(cursor.getString(cursor.getColumnIndex(ID)));
+                    currOrder.setRevision(cursor.getString(cursor.getColumnIndex(REVISION)));
+                    currOrder.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
+                    currOrder.setDateCreated(cursor.getLong(cursor.getColumnIndex(DATE_CREATED)));
+                    currOrder.setDateEdited(cursor.getLong(cursor.getColumnIndex(DATE_EDITED)));
+                    currOrder.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
+                    currOrder.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
+                    currOrder.setProviderId(cursor.getString(cursor.getColumnIndex(PROVIDER_ID)));
+                    currOrder.setDateCreatedByClient(cursor.getLong(cursor.getColumnIndex(DATE_CREATED_BY_CLIENT)));
+                    currOrder.setSynced(cursor.getInt(cursor.getColumnIndex(SYNCED)) == 1);
+
+                    orders.add(currOrder);
                     cursor.moveToNext();
                 }
             }
