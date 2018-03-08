@@ -77,19 +77,25 @@ public class ShipmentRepository extends BaseRepository {
     }
 
     public Shipment getShipmentAtRow(@NonNull Cursor cursor) {
-        return new Shipment(
-                cursor.getString(cursor.getColumnIndex(Constants.Shipment.ORDER_CODE)),
-                getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.ORDERED_DATE))),
-                cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_CODE)),
-                cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_NAME)),
-                cursor.getString(cursor.getColumnIndex(Constants.Shipment.SUPPLYING_FACILITY_CODE)),
-                cursor.getString(cursor.getColumnIndex(Constants.Shipment.SUPPLYING_FACILITY_NAME)),
-                getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.PROCESSING_PERIOD_START_DATE))),
-                getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.PROCESSING_PERIOD_END_DATE))),
-                cursor.getString(cursor.getColumnIndex(Constants.Shipment.SHIPMENT_ACCEPT_STATUS)),
-                cursor.getLong(cursor.getColumnIndex(Constants.Shipment.SERVER_VERSION)),
-                (cursor.getInt(cursor.getColumnIndex(Constants.Shipment.SYNCED)) == 1)
-        );
+        String orderCode = cursor.getString(cursor.getColumnIndex(Constants.Shipment.ORDER_CODE));
+
+        if (orderCode != null) {
+            return new Shipment(
+                    orderCode,
+                    getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.ORDERED_DATE))),
+                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_CODE)),
+                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_NAME)),
+                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.SUPPLYING_FACILITY_CODE)),
+                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.SUPPLYING_FACILITY_NAME)),
+                    getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.PROCESSING_PERIOD_START_DATE))),
+                    getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.PROCESSING_PERIOD_END_DATE))),
+                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.SHIPMENT_ACCEPT_STATUS)),
+                    cursor.getLong(cursor.getColumnIndex(Constants.Shipment.SERVER_VERSION)),
+                    (cursor.getInt(cursor.getColumnIndex(Constants.Shipment.SYNCED)) == 1)
+            );
+        } else {
+            return null;
+        }
     }
 
     private String getSQLiteFriendlyDateString(Date date) {

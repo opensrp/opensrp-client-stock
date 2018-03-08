@@ -9,7 +9,11 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Order;
+import org.smartregister.stock.domain.OrderShipment;
+import org.smartregister.stock.domain.Shipment;
+import org.smartregister.stock.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +97,15 @@ public class OrderRepository extends BaseRepository {
         return orders;
     }
 
+    public List<OrderShipment> getAllOrdersWithShipments() {
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT " + ORDER_TABLE + ".*, "
+                + ShipmentRepository.SHIPMENT_TABLE + ".* FROM " + ORDER_TABLE + " INNER JOIN "
+                + ShipmentRepository.SHIPMENT_TABLE + " ON " + ORDER_TABLE + "." + Constants.Order.ID
+                + " = " + ShipmentRepository.SHIPMENT_TABLE + "." + Constants.Shipment.ORDER_CODE, null);
+
+        return readOrderShipments(cursor);
+    }
+
     public List<Order> getAllUnSyncedOrders(){
         List<Order> orders = new ArrayList<>();
         Cursor cursor = getReadableDatabase().query(ORDER_TABLE, ORDER_TABLE_COLUMNS,
@@ -143,5 +156,45 @@ public class OrderRepository extends BaseRepository {
             }
         }
         return  orders;
+    }
+
+    public List<OrderShipment> readOrderShipments(Cursor cursor) {
+        List<OrderShipment> orderShipmentsList = new ArrayList<>();
+
+        try {
+            if (cursor != null && cursor.getCount() > 0  && cursor.moveToFirst()) {
+                while(!cursor.isAfterLast()) {
+                    Order currOrder = new Order();
+                    currOrder.setId(cursor.getString(cursor.getColumnIndex(ID)));
+                    currOrder.setRevision(cursor.getString(cursor.getColumnIndex(REVISION)));
+                    currOrder.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
+                    currOrder.setDateCreated(cursor.getLong(cursor.getColumnIndex(DATE_CREATED)));
+                    currOrder.setDateEdited(cursor.getLong(cursor.getColumnIndex(DATE_EDITED)));
+                    currOrder.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
+                    currOrder.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
+                    currOrder.setProviderId(cursor.getString(cursor.getColumnIndex(PROVIDER_ID)));
+                    currOrder.setDateCreatedByClient(cursor.getLong(cursor.getColumnIndex(DATE_CREATED_BY_CLIENT)));
+                    currOrder.setSynced(cursor.getInt(cursor.getColumnIndex(SYNCED)) == 1);
+
+                    Shipment shipment = StockLibrary.getInstance().getShipmentRepository()
+                            .getShipmentAtRow(cursor);
+
+                    OrderShipment orderShipment = new OrderShipment();
+                    orderShipment.setOrder(currOrder);
+                    orderShipment.setShipment(shipment);
+
+                    cursor.moveToNext();
+
+                    orderShipmentsList.add(orderShipment);
+                }
+            }
+        } catch(Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return  orderShipmentsList;
     }
 }
