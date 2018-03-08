@@ -46,10 +46,16 @@ public class OrderRepository extends BaseRepository {
         database.execSQL(CREATE_ORDER_TABLE_QUERY);
     }
 
-    public void addOrder(@NonNull Order order) {
+    public void addOrUpdateOrder(@NonNull Order order) {
         try {
-            SQLiteDatabase database = getWritableDatabase();
-            database.insert(ORDER_TABLE, null, createValuesForOrder(order));
+            Order existingOrder = getOrderById(order.getId());
+
+            if (existingOrder == null) {
+                SQLiteDatabase database = getWritableDatabase();
+                database.insert(ORDER_TABLE, null, createValuesForOrder(order));
+            } else {
+                updateOrder(order);
+            }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
@@ -95,7 +101,7 @@ public class OrderRepository extends BaseRepository {
         return orders;
     }
 
-    public void setOrderStatusToSynced(ArrayList<Order> orders) {
+    public void setOrderStatusToSynced(List<Order> orders) {
         for (Order order : orders) {
             order.setSynced(true);
             updateOrder(order);
