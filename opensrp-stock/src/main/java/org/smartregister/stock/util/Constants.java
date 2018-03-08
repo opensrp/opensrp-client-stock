@@ -24,6 +24,14 @@ public class Constants {
         public static final String PROCESSING_PERIOD_END_DATE = "processing_period_end_date";
         public static final String SHIPMENT_ACCEPT_STATUS = "shipment_accept_status";
         public static final String SYNCED = "synced";
+
+        public static final String ACCEPT_STATUS_REJECTED = "REJECTED";
+        public static final String ACCEPT_STATUS_NO_ACTION = null;
+
+        // This means that all ShipmentLineItems in this shipment were accepted
+        public static final String ACCEPT_STATUS_FULLY_ACCEPTED = "FULLY_ACCEPTED";
+        // This means that only some ShipmentLineItems in this shipment were accepted
+        public static final String ACCEPT_STATUS_PARTIALLY_ACCEPTED = "PARTIALLY_ACCEPTED";
     }
 
     public static class ShipmentLineItem {
