@@ -17,8 +17,34 @@ public class Shipment {
     private Date processingPeriodStartDate;
     private Date processingPeriodEndDate;
     private String shipmentAcceptStatus;
+    private long serverVersion;
     private boolean synced;
     private ShipmentLineItem[] shipmentLineItems;
+
+    public Shipment(String orderCode, Date orderedDate, String receivingFacilityCode,
+                    String receivingFacilityName, String supplyingFacilityCode, String supplyingFacilityName,
+                    Date processingPeriodStartDate, Date processingPeriodEndDate, String shipmentAcceptStatus,
+                    long serverVersion, boolean synced) {
+        this.orderCode = orderCode;
+        this.orderedDate = orderedDate;
+        this.receivingFacilityCode = receivingFacilityCode;
+        this.receivingFacilityName = receivingFacilityName;
+        this.supplyingFacilityCode = supplyingFacilityCode;
+        this.supplyingFacilityName = supplyingFacilityName;
+        this.processingPeriodStartDate = processingPeriodStartDate;
+        this.processingPeriodEndDate = processingPeriodEndDate;
+        this.shipmentAcceptStatus = shipmentAcceptStatus;
+        this.serverVersion = serverVersion;
+        this.synced = synced;
+    }
+
+    public long getServerVersion() {
+        return serverVersion;
+    }
+
+    public void setServerVersion(long serverVersion) {
+        this.serverVersion = serverVersion;
+    }
 
     public String getOrderCode() {
         return orderCode;
