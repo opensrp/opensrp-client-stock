@@ -2,6 +2,8 @@ package org.smartregister.stock;
 
 import org.smartregister.Context;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.repository.ShipmentLineItemRepository;
+import org.smartregister.stock.repository.ShipmentRepository;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockTypeRepository;
 import org.smartregister.stock.repository.StockExternalRepository;
@@ -17,6 +19,8 @@ public class StockLibrary {
     private StockRepository stockRepository;
     private StockTypeRepository stockTypeRepository;
     private StockExternalRepository stockExternalRepository;
+    private ShipmentRepository shipmentRepository;
+    private ShipmentLineItemRepository shipmentLineItemRepository;
 
     public static void init(Context context_, Repository repository) {
         init(context_, repository, null);
@@ -66,5 +70,21 @@ public class StockLibrary {
 
     public StockExternalRepository getStockExternalRepository() {
         return stockExternalRepository;
+    }
+
+    public ShipmentRepository getShipmentRepository() {
+        if (shipmentRepository == null) {
+            shipmentRepository = new ShipmentRepository(getRepository());
+        }
+
+        return shipmentRepository;
+    }
+
+    public ShipmentLineItemRepository getShipmentLineItemRepository() {
+        if (shipmentLineItemRepository == null) {
+            shipmentLineItemRepository = new ShipmentLineItemRepository(getRepository());
+        }
+
+        return shipmentLineItemRepository;
     }
 }
