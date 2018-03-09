@@ -20,21 +20,6 @@ public class Shipment {
     private boolean synced;
     private ShipmentLineItem[] shipmentLineItems;
 
-    public Shipment(String orderCode, Date orderedDate, String receivingFacilityCode,
-                    String receivingFacilityName, String supplyingFacilityCode, String supplyingFacilityName,
-                    Date processingPeriodStartDate, Date processingPeriodEndDate, String shipmentAcceptStatus, boolean synced) {
-        this.orderCode = orderCode;
-        this.orderedDate = orderedDate;
-        this.receivingFacilityCode = receivingFacilityCode;
-        this.receivingFacilityName = receivingFacilityName;
-        this.supplyingFacilityCode = supplyingFacilityCode;
-        this.supplyingFacilityName = supplyingFacilityName;
-        this.processingPeriodStartDate = processingPeriodStartDate;
-        this.processingPeriodEndDate = processingPeriodEndDate;
-        this.shipmentAcceptStatus = shipmentAcceptStatus;
-        this.synced = synced;
-    }
-
     public String getOrderCode() {
         return orderCode;
     }
