@@ -88,9 +88,9 @@ public class OrderListAdapter extends BaseAdapter {
         }
 
         if (acceptStatus.equals(Constants.Shipment.ACCEPT_STATUS_NO_ACTION)) {
-            return "Shipped"
+            return "Shipped";
         }
 
-        return toReturn;
+        return "Awaiting Shipment";
     }
 }
