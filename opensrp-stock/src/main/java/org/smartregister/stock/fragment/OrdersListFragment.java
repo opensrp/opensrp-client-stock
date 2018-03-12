@@ -81,6 +81,14 @@ public class OrdersListFragment extends Fragment {
         ListView ordersListView = (ListView) mainView.findViewById(R.id.lv_orders_ordersList);
         ordersListView.setAdapter(orderListAdapter);
 
+
+        ordersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
         return mainView;
     }
 
