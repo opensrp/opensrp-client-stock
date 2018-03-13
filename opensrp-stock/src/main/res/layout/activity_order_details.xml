@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.smartregister.stock.activity.OrderDetailsActivity">
+
+    <include layout="@layout/toolbar_order_shipment" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/btn_orderDetails_receiveShipment">
+
+        <TextView
+            android:id="@+id/tv_orderDetails_orderCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Order code here" />
+
+        <TextView
+            android:id="@+id/tv_orderDetails_orderedDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Ordered: " />
+
+        <TextView
+            android:id="@+id/tv_orderDetails_shippedDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Shipped: " />
+
+        <TextView
+            android:id="@+id/tv_orderDetails_supplyingFacilityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="From: " />
+
+        <TextView
+            android:id="@+id/tv_orderDetails_receivingFacilityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="To: " />
+
+        <TextView
+            android:id="@+id/tv_orderDetails_processingPeriodStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Processing Period Start Date: " />
+
+        <TextView
+            android:id="@+id/tv_orderDetails_processingPeriodEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Processing Period End Date: " />
+
+
+        <TableLayout
+            android:id="@+id/tl_orderDetails_tableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Stock Item" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ordered" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shipped" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Doses" />
+
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_orderDetails_receiveShipment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Receive"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

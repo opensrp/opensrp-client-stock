@@ -76,6 +76,8 @@ public class OrdersSyncIntentService extends IntentService {
             pushOrdersToServer();
             // Pull orders from server
             pullOrdersFromServer();
+
+            startService(new Intent(this, ShipmentSyncIntentService.class));
         }
     }
 

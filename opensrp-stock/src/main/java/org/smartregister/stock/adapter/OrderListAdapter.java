@@ -49,7 +49,7 @@ public class OrderListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context)
-                    .inflate(R.layout.order_item_row, parent);
+                    .inflate(R.layout.order_item_row, null);
         }
 
         TextView orderDate = (TextView) convertView.findViewById(R.id.tv_orderItemRow_orderDate);
@@ -69,7 +69,7 @@ public class OrderListAdapter extends BaseAdapter {
 
     private String getFriendlyDate(long longDate) {
         Date date = new Date(longDate);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMM YYYY");
         return simpleDateFormat.format(date);
     }
 

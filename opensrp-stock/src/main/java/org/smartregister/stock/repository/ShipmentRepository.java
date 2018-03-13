@@ -26,13 +26,13 @@ public class ShipmentRepository extends BaseRepository {
 
     private static final String TAG = ShipmentRepository.class.getName();
     public static final String SHIPMENT_TABLE = "shipments";
-    private static final String SHIPMENT_SQL = "create table " + SHIPMENT_TABLE +
+    private static final String SHIPMENT_SQL = "create table if not exists " + SHIPMENT_TABLE +
             "(order_code VARCHAR PRIMARY KEY," +
             "ordered_date DATE NOT NULL," +
             "receiving_facility_code VARCHAR NOT NULL," +
             "receiving_facility_name VARCHAR NOT NULL," +
             "supplying_facility_code VARCHAR NOT NULL," +
-            "supplying_facility_name VARCHAR NOT NULL" +
+            "supplying_facility_name VARCHAR NOT NULL," +
             "processing_period_start_date DATE  NOT NULL," +
             "processing_period_end_date DATE NOT NULL," +
             "shipment_accept_status VARCHAR," +

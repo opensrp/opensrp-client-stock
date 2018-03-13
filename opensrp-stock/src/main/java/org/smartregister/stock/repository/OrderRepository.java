@@ -30,12 +30,12 @@ public class OrderRepository extends BaseRepository {
     private static final String ORDER_TABLE = "orders";
     private String[] ORDER_TABLE_COLUMNS = {ID, REVISION, TYPE, DATE_CREATED, DATE_EDITED, SERVER_VERSION,
             LOCATION_ID, PROVIDER_ID, DATE_CREATED_BY_CLIENT, SYNCED};
-    private static final String CREATE_ORDER_TABLE_QUERY = "CREATE TABLE orders(" +
+    private static final String CREATE_ORDER_TABLE_QUERY = "CREATE TABLE if not exists orders(" +
             "id VARCHAR PRIMARY KEY," +
             "revision VARCHAR," +
             "type VARCHAR NOT NULL," +
             "date_created BIGINT," +
-            "date_edited BIGINT" +
+            "date_edited BIGINT," +
             "server_version BIGINT," +
             "location_id VARCHAR NOT NULL," +
             "provider_id VARCHAR NOT NULL," +
@@ -99,7 +99,7 @@ public class OrderRepository extends BaseRepository {
 
     public List<OrderShipment> getAllOrdersWithShipments() {
         Cursor cursor = getReadableDatabase().rawQuery("SELECT " + ORDER_TABLE + ".*, "
-                + ShipmentRepository.SHIPMENT_TABLE + ".* FROM " + ORDER_TABLE + " INNER JOIN "
+                + ShipmentRepository.SHIPMENT_TABLE + ".* FROM " + ORDER_TABLE + " LEFT JOIN "
                 + ShipmentRepository.SHIPMENT_TABLE + " ON " + ORDER_TABLE + "." + Constants.Order.ID
                 + " = " + ShipmentRepository.SHIPMENT_TABLE + "." + Constants.Shipment.ORDER_CODE, null);
 

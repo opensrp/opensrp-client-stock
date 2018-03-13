@@ -17,7 +17,7 @@ import org.smartregister.stock.util.Constants;
 public class ShipmentLineItemRepository extends BaseRepository {
 
     public static final String SHIPMENT_LINE_ITEM_TABLE = "shipment_line_items";
-    private static final String SHIPMENT_LINE_ITEM_SQL = "create table " + SHIPMENT_LINE_ITEM_TABLE +
+    private static final String SHIPMENT_LINE_ITEM_SQL = "create table if not exists " + SHIPMENT_LINE_ITEM_TABLE +
             "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "shipment_order_code VARCHAR NOT NULL," +
             "antigen_type VARCHAR NOT NULL," +

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import org.smartregister.stock.sample.R;
+import org.smartregister.stock.sync.OrdersSyncIntentService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 drawer.closeDrawer(GravityCompat.START);
 
+                startService(new Intent(MainActivity.this, OrdersSyncIntentService.class));
             }
         });
     }
