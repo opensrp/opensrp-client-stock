@@ -38,6 +38,10 @@ public class Shipment {
         this.synced = synced;
     }
 
+    public Shipment() {
+
+    }
+
     public long getServerVersion() {
         return serverVersion;
     }
