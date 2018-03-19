@@ -9,7 +9,7 @@ public class Order {
 
     private String id;
     private String revision;
-    private String type;
+    private String type = "Order";
     private long dateCreated;
     private long dateEdited;
     private long serverVersion;
