@@ -25,6 +25,8 @@ public class ShipmentLineItem {
         this.acceptedQuantity = acceptedQuantity;
     }
 
+    public ShipmentLineItem() {}
+
     public int getId() {
         return id;
     }
