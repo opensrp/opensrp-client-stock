@@ -11,4 +11,16 @@
 
     <color name="actionbar">#208CC5</color>
     <color name="client_list_grey">#737373</color>
+
+    <!-- SHIPMENT STATUS COLORS -->
+    <color name="accepted_shipment_status">#4CAF50</color>
+    <color name="part_accepted_shipment_status">#B2FF59</color>
+    <color name="rejected_accepted_shipment_status">#f44336</color>
+    <color name="shipped_shipment_status">#0099cc</color>
+    <color name="ordered_shipment_status">#33adff</color>
+    
+    <!-- SHIPMENT LINE ITEMS TABLE COLORS -->
+    <color name="shipment_line_item_table_row_1">#E9EBF4</color>
+    <color name="shipment_line_item_table_row_0">#D0D3E8</color>
+    <color name="shipment_line_item_table_header">#4D6FBC</color>
 </resources>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="org.smartregister.stock.activity.OrderDetailsActivity">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/btn_orderDetails_receiveShipment"
+        android:layout_alignTop="@+id/btn_orderDetails_receiveShipment"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/toolbar_order_shipment" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/btn_orderDetails_receiveShipment"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tv_orderDetails_orderedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:id="@+id/tv_orderDetails_shippedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:id="@+id/tv_orderDetails_supplyingFacilityName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:id="@+id/tv_orderDetails_receivingFacilityName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:id="@+id/tv_orderDetails_processingPeriodStartDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:textSize="22sp"
+                android:text="Processing Period Start Date: " />
+
+            <TextView
+                android:id="@+id/tv_orderDetails_processingPeriodEndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:textSize="22sp"
+                android:text="Processing Period End Date: " />
+
+
+            <TableLayout
+                android:id="@+id/tl_orderDetails_tableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:background="@color/shipment_line_item_table_header">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TableRowCellStyle"
+                        android:textColor="@color/white"
+                        android:text="@string/stock_item" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TableRowCellStyle"
+                        android:textColor="@color/white"
+                        android:text="@string/ordered" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TableRowCellStyle"
+                        android:textColor="@color/white"
+                        android:text="@string/shipped" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/TableRowCellStyle"
+                        android:textColor="@color/white"
+                        android:text="@string/total_doses" />
+
+                </TableRow>
+
+            </TableLayout>
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <Button
+        android:id="@+id/btn_orderDetails_receiveShipment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/receive"
+        android:visibility="gone"
+        style="@style/BlueButtonStyle"/>
+
+</RelativeLayout>

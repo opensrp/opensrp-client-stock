@@ -4,6 +4,9 @@ import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.StockLibrary;
+import org.smartregister.stock.repository.OrderRepository;
+import org.smartregister.stock.repository.ShipmentLineItemRepository;
+import org.smartregister.stock.repository.ShipmentRepository;
 import org.smartregister.stock.sample.repository.SampleRepository;
 import org.smartregister.stock.sample.repository.StockHelperRepository;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -29,6 +32,9 @@ public class SampleApplication extends DrishtiApplication {
         //Initialize and pass optional stock helper repository for external db functions
         StockLibrary.init(context, getRepository(), new StockHelperRepository(getRepository()));
 
+        OrderRepository.createTable(getRepository().getWritableDatabase());
+        ShipmentRepository.createTable(getRepository().getWritableDatabase());
+        ShipmentLineItemRepository.createTable(getRepository().getWritableDatabase());
     }
 
     public static synchronized SampleApplication getInstance() {
@@ -43,11 +49,9 @@ public class SampleApplication extends DrishtiApplication {
             }
         } catch (UnsatisfiedLinkError e) {
             logError("Error on getRepository: " + e);
-
         }
         return repository;
     }
-
 
     @Override
     public void logoutCurrentUser() {
