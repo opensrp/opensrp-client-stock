@@ -179,6 +179,7 @@ public class OrderDetailsActivity extends BasicOrderActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         rejectShipment(orderShipment);
                         disableReceiveButton();
+                        finish();
                     }
                 });
 
