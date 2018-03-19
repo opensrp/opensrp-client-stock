@@ -5,5 +5,16 @@
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:supportsRtl="true"/>
+        android:supportsRtl="true">
+        <activity
+            android:theme="@style/AppThemeNoTitle.NoActionBar"
+            android:name=".activity.OrderDetailsActivity" />
+        <activity
+            android:theme="@style/AppThemeNoTitle.NoActionBar"
+            android:name=".activity.OrderListActivity"></activity>
+
+        <service android:name=".sync.OrdersSyncIntentService"/>
+        <service android:name=".sync.ShipmentSyncIntentService"/>
+    </application>
+
 </manifest>
