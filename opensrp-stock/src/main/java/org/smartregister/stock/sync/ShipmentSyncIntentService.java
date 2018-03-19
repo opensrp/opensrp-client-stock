@@ -21,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.repository.AllSharedPreferences;
-import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Shipment;
@@ -46,7 +45,6 @@ import static org.smartregister.util.Log.logInfo;
 
 public class ShipmentSyncIntentService extends IntentService {
     private Context context;
-    private HTTPAgent httpAgent;
     private static final String TAG = ShipmentSyncIntentService.class.getName();
     private static final String GET_SHIPMENTS_URL = "rest/stockresource/shipment/getShipments";
     public static final String LAST_SHIPMENT_SERVER_VERSION_PREFERENCE = "LAST SHIPMENT SERVER VERSION";
@@ -58,7 +56,6 @@ public class ShipmentSyncIntentService extends IntentService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         context = getBaseContext();
-        httpAgent = StockLibrary.getInstance().getContext().getHttpAgent();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -91,14 +88,6 @@ public class ShipmentSyncIntentService extends IntentService {
 
         String fullUrl = MessageFormat.format("{0}/{1}?serverVersion={2}&receivingFacility.code={3}", baseUrl, GET_SHIPMENTS_URL, String.valueOf(lastServerVersion), locationId);
         Log.i(TAG, fullUrl);
-
-        /*Response<String> response = httpAgent.fetch(fullUrl);
-        if (response.isFailure()) {
-            Log.e(TAG, "Server error occured trying to fetch Shipments");
-            return;
-        } else {
-            Log.i(TAG, "Pull shipments from server was successful");
-        }*/
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, fullUrl, new com.android.volley.Response.Listener<String>() {
             @Override
