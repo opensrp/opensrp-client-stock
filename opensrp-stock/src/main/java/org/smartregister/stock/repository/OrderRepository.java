@@ -35,7 +35,7 @@ public class OrderRepository extends BaseRepository {
             "revision VARCHAR," +
             "type VARCHAR NOT NULL," +
             "date_created BIGINT," +
-            "date_edited BIGINT" +
+            "date_edited BIGINT," +
             "server_version BIGINT," +
             "location_id VARCHAR NOT NULL," +
             "provider_id VARCHAR NOT NULL," +
@@ -50,10 +50,16 @@ public class OrderRepository extends BaseRepository {
         database.execSQL(CREATE_ORDER_TABLE_QUERY);
     }
 
-    public void addOrder(@NonNull Order order) {
+    public void addOrUpdateOrder(@NonNull Order order) {
         try {
-            SQLiteDatabase database = getWritableDatabase();
-            database.insert(ORDER_TABLE, null, createValuesForOrder(order));
+            Order existingOrder = getOrderById(order.getId());
+
+            if (existingOrder == null) {
+                SQLiteDatabase database = getWritableDatabase();
+                database.insert(ORDER_TABLE, null, createValuesForOrder(order));
+            } else {
+                updateOrder(order);
+            }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
@@ -91,6 +97,15 @@ public class OrderRepository extends BaseRepository {
         return orders;
     }
 
+    public List<OrderShipment> getAllOrdersWithShipments() {
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT " + ORDER_TABLE + ".*, "
+                + ShipmentRepository.SHIPMENT_TABLE + ".* FROM " + ORDER_TABLE + " LEFT JOIN "
+                + ShipmentRepository.SHIPMENT_TABLE + " ON " + ORDER_TABLE + "." + Constants.Order.ID
+                + " = " + ShipmentRepository.SHIPMENT_TABLE + "." + Constants.Shipment.ORDER_CODE, null);
+
+        return readOrderShipments(cursor);
+    }
+
     public List<Order> getAllUnSyncedOrders(){
         List<Order> orders;
         Cursor cursor = getReadableDatabase().query(ORDER_TABLE, ORDER_TABLE_COLUMNS,
@@ -99,7 +114,7 @@ public class OrderRepository extends BaseRepository {
         return orders;
     }
 
-    public void setOrderStatusToSynced(ArrayList<Order> orders) {
+    public void setOrderStatusToSynced(List<Order> orders) {
         for (Order order : orders) {
             order.setSynced(true);
             updateOrder(order);
