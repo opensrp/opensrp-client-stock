@@ -58,6 +58,13 @@
                 android:background="@drawable/vertical_separator"
                 android:scaleType="fitXY"
                 android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/btn_stockControl_orders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Orders"
+                android:layout_gravity="end"/>
         </FrameLayout>
     </android.support.v7.widget.Toolbar>
 
