@@ -9,7 +9,11 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Order;
+import org.smartregister.stock.domain.OrderShipment;
+import org.smartregister.stock.domain.Shipment;
+import org.smartregister.stock.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +30,7 @@ public class OrderRepository extends BaseRepository {
     private static final String ORDER_TABLE = "orders";
     private String[] ORDER_TABLE_COLUMNS = {ID, REVISION, TYPE, DATE_CREATED, DATE_EDITED, SERVER_VERSION,
             LOCATION_ID, PROVIDER_ID, DATE_CREATED_BY_CLIENT, SYNCED};
-    private static final String CREATE_ORDER_TABLE_QUERY = "CREATE TABLE orders(" +
+    private static final String CREATE_ORDER_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " + ORDER_TABLE + "(" +
             "id VARCHAR PRIMARY KEY," +
             "revision VARCHAR," +
             "type VARCHAR NOT NULL," +
@@ -82,13 +86,13 @@ public class OrderRepository extends BaseRepository {
     }
 
     public List<Order> getAllOrders() {
-        Cursor cursor = getReadableDatabase().rawQuery("select * from " + ORDER_TABLE + " order by date_created_by_client", null);
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + ORDER_TABLE + " ORDER BY date_created_by_client", null);
         List<Order> orders = readOrders(cursor);
         return orders;
     }
 
     public List<Order> getAllUnSyncedOrders(){
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders;
         Cursor cursor = getReadableDatabase().query(ORDER_TABLE, ORDER_TABLE_COLUMNS,
                 SYNCED + " = 1", null, null, null, null);
         orders = readOrders(cursor);
@@ -103,7 +107,7 @@ public class OrderRepository extends BaseRepository {
     }
 
     private void updateOrder(Order order) {
-        getReadableDatabase().update(ORDER_TABLE, createValuesForOrder(order), "ID = ?",
+        getReadableDatabase().update(ORDER_TABLE, createValuesForOrder(order), Constants.Order.ID + " = ?",
                 new String[]{order.getId()});
     }
 
@@ -137,5 +141,45 @@ public class OrderRepository extends BaseRepository {
             }
         }
         return  orders;
+    }
+
+    public List<OrderShipment> readOrderShipments(Cursor cursor) {
+        List<OrderShipment> orderShipmentsList = new ArrayList<>();
+        ShipmentRepository shipmentRepository = StockLibrary.getInstance().getShipmentRepository();
+
+        try {
+            if (cursor != null && cursor.getCount() > 0  && cursor.moveToFirst()) {
+                while(!cursor.isAfterLast()) {
+                    Order currOrder = new Order();
+                    currOrder.setId(cursor.getString(cursor.getColumnIndex(ID)));
+                    currOrder.setRevision(cursor.getString(cursor.getColumnIndex(REVISION)));
+                    currOrder.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
+                    currOrder.setDateCreated(cursor.getLong(cursor.getColumnIndex(DATE_CREATED)));
+                    currOrder.setDateEdited(cursor.getLong(cursor.getColumnIndex(DATE_EDITED)));
+                    currOrder.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
+                    currOrder.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
+                    currOrder.setProviderId(cursor.getString(cursor.getColumnIndex(PROVIDER_ID)));
+                    currOrder.setDateCreatedByClient(cursor.getLong(cursor.getColumnIndex(DATE_CREATED_BY_CLIENT)));
+                    currOrder.setSynced(cursor.getInt(cursor.getColumnIndex(SYNCED)) == 1);
+
+                    Shipment shipment = shipmentRepository.getShipmentAtRow(cursor);
+
+                    OrderShipment orderShipment = new OrderShipment();
+                    orderShipment.setOrder(currOrder);
+                    orderShipment.setShipment(shipment);
+
+                    cursor.moveToNext();
+
+                    orderShipmentsList.add(orderShipment);
+                }
+            }
+        } catch(Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return  orderShipmentsList;
     }
 }
