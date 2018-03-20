@@ -104,6 +104,7 @@ public class OrdersSyncIntentService extends IntentService {
         jsonPayload.add("orders", ordersJSONArray);
         String fullUrl = MessageFormat.format("{0}/{1}", baseUrl, ADD_ORDERS_URL);
         Log.i(TAG, fullUrl);
+        Log.i(TAG, jsonPayload.toString());
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, fullUrl, jsonPayload.toString(), new com.android.volley.Response.Listener<JSONObject>() {
             @Override
@@ -208,6 +209,7 @@ public class OrdersSyncIntentService extends IntentService {
                     lastServerVersion = order.getServerVersion();
                 }
 
+                order.setSynced(true);
                 orderRepository.addOrUpdateOrder(order);
             }
 

@@ -109,7 +109,7 @@ public class OrderRepository extends BaseRepository {
     public List<Order> getAllUnSyncedOrders(){
         List<Order> orders;
         Cursor cursor = getReadableDatabase().query(ORDER_TABLE, ORDER_TABLE_COLUMNS,
-                SYNCED + " = 1", null, null, null, null);
+                SYNCED + " = 0", null, null, null, null);
         orders = readOrders(cursor);
         return orders;
     }
