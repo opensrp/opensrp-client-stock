@@ -22,6 +22,7 @@ import org.smartregister.stock.domain.Order;
 import org.smartregister.stock.domain.OrderShipment;
 import org.smartregister.stock.provider.OrderRowSmartClientsProvider;
 import org.smartregister.stock.repository.OrderRepository;
+import org.smartregister.stock.sync.OrdersSyncIntentService;
 
 import java.util.List;
 import java.util.UUID;
@@ -73,6 +74,7 @@ public class OrderListActivity extends BasicOrderActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         createNewOrder();
                         fetchOrdersShipmentsFromDbAndRender();
+                        startOrdersSyncService();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -100,6 +102,10 @@ public class OrderListActivity extends BasicOrderActivity {
 
         OrderRepository orderRepository = StockLibrary.getInstance().getOrderRepository();
         orderRepository.addOrUpdateOrder(order);
+    }
+
+    private void startOrdersSyncService() {
+        startService(new Intent(this, OrdersSyncIntentService.class));
     }
 
     protected String getLoggedInUserInitials() {
