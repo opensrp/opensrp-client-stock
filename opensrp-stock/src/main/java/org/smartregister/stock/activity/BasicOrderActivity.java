@@ -1,7 +1,6 @@
 package org.smartregister.stock.activity;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;

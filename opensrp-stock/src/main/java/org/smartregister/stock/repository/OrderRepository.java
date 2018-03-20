@@ -100,7 +100,7 @@ public class OrderRepository extends BaseRepository {
     public List<OrderShipment> getAllOrdersWithShipments() {
         Cursor cursor = getReadableDatabase().rawQuery("SELECT " + ORDER_TABLE + ".*, "
                 + ShipmentRepository.SHIPMENT_TABLE + ".* FROM " + ORDER_TABLE + " LEFT JOIN "
-                + ShipmentRepository.SHIPMENT_TABLE + " ON " + ORDER_TABLE + "." + Constants.Order.ID
+                + ShipmentRepository.SHIPMENT_TABLE + " ON " + ORDER_TABLE + "." + ID
                 + " = " + ShipmentRepository.SHIPMENT_TABLE + "." + Constants.Shipment.ORDER_CODE, null);
 
         return readOrderShipments(cursor);
@@ -122,7 +122,7 @@ public class OrderRepository extends BaseRepository {
     }
 
     private void updateOrder(Order order) {
-        getReadableDatabase().update(ORDER_TABLE, createValuesForOrder(order), Constants.Order.ID + " = ?",
+        getReadableDatabase().update(ORDER_TABLE, createValuesForOrder(order), ID + " = ?",
                 new String[]{order.getId()});
     }
 
