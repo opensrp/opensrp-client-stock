@@ -32,7 +32,9 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Order;
+import org.smartregister.stock.domain.StockType;
 import org.smartregister.stock.repository.OrderRepository;
+import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.util.NetworkUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -251,8 +253,31 @@ public class OrdersSyncIntentService extends IntentService {
 
 
     private JsonArray createJSONArrayFromOrders(List<Order> orders) {
+        JsonObject stockOnHand = getStockOnHand();
+
         Gson gson = new Gson();
-        return (JsonArray) gson.toJsonTree(orders, new TypeToken<List<Order>>() {}.getType());
+        JsonArray jsonArray = (JsonArray) gson.toJsonTree(orders, new TypeToken<List<Order>>() {}.getType());
+
+        int size = jsonArray.size();
+        for(int i = 0; i < size; i++) {
+            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+            jsonObject.add("stockOnHand", stockOnHand);
+        }
+
+        return jsonArray;
+    }
+
+    private JsonObject getStockOnHand() {
+        JsonObject stockOnHand = new JsonObject();
+        List<StockType> stockTypeList = StockLibrary.getInstance().getStockTypeRepository().getAllStockTypes(null);
+        StockRepository stockRepository = StockLibrary.getInstance().getStockRepository();
+
+        for(StockType stockType: stockTypeList) {
+            int count = stockRepository.getCurrentStockNumber(stockType);
+            stockOnHand.addProperty(stockType.getName(), count);
+        }
+
+        return stockOnHand;
     }
 
     private long getLastOrderServerVersion() {
