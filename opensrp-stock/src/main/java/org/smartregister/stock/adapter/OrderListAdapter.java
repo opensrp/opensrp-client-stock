@@ -1,6 +1,5 @@
 package org.smartregister.stock.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,9 @@ import java.util.List;
 public class OrderListAdapter extends BaseAdapter {
 
     private List<OrderShipment> orderShipmentList;
-    private Context context;
     private OrderRowSmartClientsProvider orderRowSmartClientsProvider;
 
-    public OrderListAdapter(@NonNull Context context, @NonNull List<OrderShipment> orderShipmentList, @NonNull OrderRowSmartClientsProvider orderRowSmartClientsProvider) {
-        this.context = context;
+    public OrderListAdapter(@NonNull List<OrderShipment> orderShipmentList, @NonNull OrderRowSmartClientsProvider orderRowSmartClientsProvider) {
         this.orderShipmentList = orderShipmentList;
         this.orderRowSmartClientsProvider = orderRowSmartClientsProvider;
     }

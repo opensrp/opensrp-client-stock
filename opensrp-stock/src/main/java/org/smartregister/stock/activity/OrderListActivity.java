@@ -40,8 +40,8 @@ public class OrderListActivity extends BasicOrderActivity {
         OrderRepository orderRepository = StockLibrary.getInstance().getOrderRepository();
         final List<OrderShipment> orderShipmentList = orderRepository.getAllOrdersWithShipments();
 
-        OrderRowSmartClientsProvider orderRowSmartClientsProvider = new OrderRowSmartClientsProvider(this, orderRepository);
-        OrderListAdapter orderListAdapter = new OrderListAdapter(this, orderShipmentList, orderRowSmartClientsProvider);
+        OrderRowSmartClientsProvider orderRowSmartClientsProvider = new OrderRowSmartClientsProvider(this);
+        OrderListAdapter orderListAdapter = new OrderListAdapter(orderShipmentList, orderRowSmartClientsProvider);
 
         ListView ordersListView = (ListView) findViewById(R.id.lv_orders_ordersList);
         ordersListView.setAdapter(orderListAdapter);
@@ -78,7 +78,7 @@ public class OrderListActivity extends BasicOrderActivity {
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        // This should just dismiss the dialog which it already does
                     }
                 });
 

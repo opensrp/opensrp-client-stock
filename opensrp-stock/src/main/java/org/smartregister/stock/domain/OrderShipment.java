@@ -2,7 +2,6 @@ package org.smartregister.stock.domain;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import org.smartregister.stock.R;
 import org.smartregister.stock.util.Constants;
