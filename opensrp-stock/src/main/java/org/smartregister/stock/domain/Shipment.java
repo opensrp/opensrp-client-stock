@@ -10,6 +10,7 @@ public class Shipment {
 
     private String orderCode;
     private Date orderedDate;
+    private String openlmisOrderCode;
     private String receivingFacilityCode;
     private String receivingFacilityName;
     private String supplyingFacilityCode;
@@ -21,11 +22,12 @@ public class Shipment {
     private boolean synced;
     private ShipmentLineItem[] shipmentLineItems;
 
-    public Shipment(String orderCode, Date orderedDate, String receivingFacilityCode,
+    public Shipment(String orderCode, String openlmisOrderCode, Date orderedDate, String receivingFacilityCode,
                     String receivingFacilityName, String supplyingFacilityCode, String supplyingFacilityName,
                     Date processingPeriodStartDate, Date processingPeriodEndDate, String shipmentAcceptStatus,
                     long serverVersion, boolean synced) {
         this.orderCode = orderCode;
+        this.openlmisOrderCode = openlmisOrderCode;
         this.orderedDate = orderedDate;
         this.receivingFacilityCode = receivingFacilityCode;
         this.receivingFacilityName = receivingFacilityName;
@@ -40,6 +42,14 @@ public class Shipment {
 
     public Shipment() {
 
+    }
+
+    public String getOpenlmisOrderCode() {
+        return openlmisOrderCode;
+    }
+
+    public void setOpenlmisOrderCode(String openlmisOrderCode) {
+        this.openlmisOrderCode = openlmisOrderCode;
     }
 
     public long getServerVersion() {

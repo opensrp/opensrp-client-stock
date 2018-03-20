@@ -152,6 +152,7 @@ public class ShipmentSyncIntentService extends IntentService {
 
         Shipment shipment = new Shipment();
         shipment.setOrderCode(jsonObject.getString("orderCode"));
+        shipment.setOpenlmisOrderCode(jsonObject.getString("openlmisOrderCode"));
         shipment.setOrderedDate(getDateFromJsonFormat(jsonObject.getString("orderedDate")));
         shipment.setServerVersion(jsonObject.getLong("serverVersion"));
         shipment.setSynced(true);

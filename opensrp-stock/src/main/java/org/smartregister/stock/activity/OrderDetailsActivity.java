@@ -78,13 +78,15 @@ public class OrderDetailsActivity extends BasicOrderActivity {
             orderShipmentJSON = bundle.getString(ORDER_SHIPMENT_JSON);
             orderShipment = new Gson()
                     .fromJson(orderShipmentJSON, OrderShipment.class);
-            String orderCode = orderShipment.getOrder().getId();
 
             initialiseViews();
 
             if (orderShipment.getShipment() != null) {
+                String openlmisOrderCode = orderShipment.getShipment().getOpenlmisOrderCode();
+                ((TextView) findViewById(R.id.title)).setText(getString(R.string.stock_title) + " > " + getString(R.string.orders) + " > " + openlmisOrderCode);
+
                 ShipmentLineItem[] shipmentLineItems = StockLibrary.getInstance().getShipmentLineItemRepository()
-                        .getShipmentLineItemsForShipment(orderCode);
+                        .getShipmentLineItemsForShipment(orderShipment.getShipment().getOrderCode());
                 Shipment shipment = orderShipment.getShipment();
                 shipment.setShipmentLineItems(shipmentLineItems);
 
@@ -99,7 +101,6 @@ public class OrderDetailsActivity extends BasicOrderActivity {
                 }
             }
 
-            ((TextView) findViewById(R.id.title)).setText(getString(R.string.stock_title) + " > " + getString(R.string.orders) + " > " + orderCode);
             populateViews();
         }
     }

@@ -29,6 +29,7 @@ public class Constants {
     public static class Shipment {
 
         public static final String ORDER_CODE = "order_code";
+        public static final String OPENLMIS_ORDER_CODE = "openlmis_order_code";
         public static final String ORDERED_DATE = "ordered_date";
         public static final String RECEIVING_FACILITY_CODE = "receiving_facility_code";
         public static final String RECEIVING_FACILITY_NAME = "receiving_facility_name";

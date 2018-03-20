@@ -30,6 +30,7 @@ public class ShipmentRepository extends BaseRepository {
     private static final String SHIPMENT_SQL = "CREATE TABLE IF NOT EXISTS " + SHIPMENT_TABLE +
             "(order_code VARCHAR PRIMARY KEY," +
             "ordered_date DATE," +
+            "openlmis_order_code VARCHAR NOT NULL," +
             "receiving_facility_code VARCHAR NOT NULL," +
             "receiving_facility_name VARCHAR NOT NULL," +
             "supplying_facility_code VARCHAR NOT NULL," +
@@ -88,6 +89,7 @@ public class ShipmentRepository extends BaseRepository {
     private ContentValues createValuesForShipment(Shipment shipment) {
         ContentValues shipmentContentValues = new ContentValues();
         shipmentContentValues.put(Constants.Shipment.ORDER_CODE, shipment.getOrderCode());
+        shipmentContentValues.put(Constants.Shipment.OPENLMIS_ORDER_CODE, shipment.getOpenlmisOrderCode());
         shipmentContentValues.put(Constants.Shipment.ORDERED_DATE, getSQLiteFriendlyDateString(shipment.getOrderedDate()));
         shipmentContentValues.put(Constants.Shipment.RECEIVING_FACILITY_CODE, shipment.getReceivingFacilityCode());
         shipmentContentValues.put(Constants.Shipment.RECEIVING_FACILITY_NAME, shipment.getReceivingFacilityName());
@@ -108,6 +110,7 @@ public class ShipmentRepository extends BaseRepository {
         if (orderCode != null) {
             return new Shipment(
                     orderCode,
+                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.OPENLMIS_ORDER_CODE)),
                     getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.ORDERED_DATE))),
                     cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_CODE)),
                     cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_NAME)),
