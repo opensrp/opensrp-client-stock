@@ -28,11 +28,12 @@ import static org.smartregister.stock.util.Constants.Order.*;
 public class OrderRepository extends BaseRepository {
     private static final String TAG = OrderRepository.class.getName();
     private static final String ORDER_TABLE = "orders";
-    private String[] ORDER_TABLE_COLUMNS = {ID, REVISION, TYPE, DATE_CREATED, DATE_EDITED, SERVER_VERSION,
+    private String[] ORDER_TABLE_COLUMNS = {ID, REVISION, FORM_SUBMISSION_ID, TYPE, DATE_CREATED, DATE_EDITED, SERVER_VERSION,
             LOCATION_ID, PROVIDER_ID, DATE_CREATED_BY_CLIENT, SYNCED};
     private static final String CREATE_ORDER_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " + ORDER_TABLE + "(" +
-            "id VARCHAR PRIMARY KEY," +
+            "id VARCHAR UNIQUE," +
             "revision VARCHAR," +
+            "form_submission_id VARCHAR PRIMARY KEY," +
             "type VARCHAR NOT NULL," +
             "date_created BIGINT," +
             "date_edited BIGINT," +
@@ -52,7 +53,7 @@ public class OrderRepository extends BaseRepository {
 
     public void addOrUpdateOrder(@NonNull Order order) {
         try {
-            Order existingOrder = getOrderById(order.getId());
+            Order existingOrder = getOrderByFormSubmissionId(order.getFormSubmissionId());
 
             if (existingOrder == null) {
                 SQLiteDatabase database = getWritableDatabase();
@@ -61,7 +62,7 @@ public class OrderRepository extends BaseRepository {
                 updateOrder(order);
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, Log.getStackTraceString(e));
         }
     }
 
@@ -69,6 +70,7 @@ public class OrderRepository extends BaseRepository {
         ContentValues values = new ContentValues();
         values.put(ID, order.getId());
         values.put(REVISION, order.getRevision());
+        values.put(FORM_SUBMISSION_ID, order.getFormSubmissionId());
         values.put(TYPE, order.getType());
         values.put(DATE_CREATED, order.getDateCreated());
         values.put(DATE_EDITED, order.getDateEdited());
@@ -80,9 +82,9 @@ public class OrderRepository extends BaseRepository {
         return values;
     }
 
-    public Order getOrderById(String id) {
+    public Order getOrderByFormSubmissionId(String formSubmissionId) {
         Cursor cursor = getReadableDatabase().query(ORDER_TABLE, ORDER_TABLE_COLUMNS,
-                ID  + " = ?", new String[]{id}, null, null, null, "1");
+                FORM_SUBMISSION_ID  + " = ?", new String[]{formSubmissionId}, null, null, null, "1");
         List<Order> orders = readOrders(cursor);
         if (orders.size() != 0) {
             return orders.get(0);
@@ -122,8 +124,8 @@ public class OrderRepository extends BaseRepository {
     }
 
     private void updateOrder(Order order) {
-        getReadableDatabase().update(ORDER_TABLE, createValuesForOrder(order), ID + " = ?",
-                new String[]{order.getId()});
+        getReadableDatabase().update(ORDER_TABLE, createValuesForOrder(order), FORM_SUBMISSION_ID + " = ?",
+                new String[]{order.getFormSubmissionId()});
     }
 
     private List<Order> readOrders(Cursor cursor) {
@@ -182,6 +184,7 @@ public class OrderRepository extends BaseRepository {
         Order currOrder = new Order();
         currOrder.setId(cursor.getString(cursor.getColumnIndex(ID)));
         currOrder.setRevision(cursor.getString(cursor.getColumnIndex(REVISION)));
+        currOrder.setFormSubmissionId(cursor.getString(cursor.getColumnIndex(FORM_SUBMISSION_ID)));
         currOrder.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
         currOrder.setDateCreated(cursor.getLong(cursor.getColumnIndex(DATE_CREATED)));
         currOrder.setDateEdited(cursor.getLong(cursor.getColumnIndex(DATE_EDITED)));
