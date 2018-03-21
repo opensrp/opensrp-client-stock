@@ -23,12 +23,12 @@
     <string name="create_new_order">New Order</string>
     <string name="new_order_dialog_title">Would you like to make a new order?</string>
 
-    <string name="new_order_dialog_message">Please confirm that you would like to order stock based on Ideal Stock Amounts for </string>
+    <string name="new_order_dialog_message">Please confirm that you would like to order stock based on Ideal Stock Amounts for&#032;</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
 
     <string name="receive_shipment_dialog_title">Are you sure you want to receive this stock?</string>
-    <string name="receive_shipment_dialog_message">Please confirm that you want to receive this shipment in your local shipment control</string>
+    <string name="receive_shipment_dialog_message">Please confirm that you want to receive this shipment in your local stock control</string>
     <string name="reject">Reject</string>
     <string name="orders">Orders</string>
     <string name="ordered">Ordered</string>
