@@ -252,7 +252,7 @@ public class OrderDetailsActivity extends BasicOrderActivity {
                     providerId,
                     shipmentLineItem.getAcceptedQuantity(),
                     timeNow,
-                    "shipment",
+                    "Shipment",
                     StockRepository.TYPE_Unsynced,
                     timeNow,
                     String.valueOf(stockType.getId()));
