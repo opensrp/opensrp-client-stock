@@ -132,17 +132,7 @@ public class OrderRepository extends BaseRepository {
         try {
             if (cursor != null && cursor.getCount() > 0  && cursor.moveToFirst()) {
                 while(!cursor.isAfterLast()) {
-                    Order currOrder = new Order();
-                    currOrder.setId(cursor.getString(cursor.getColumnIndex(ID)));
-                    currOrder.setRevision(cursor.getString(cursor.getColumnIndex(REVISION)));
-                    currOrder.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
-                    currOrder.setDateCreated(cursor.getLong(cursor.getColumnIndex(DATE_CREATED)));
-                    currOrder.setDateEdited(cursor.getLong(cursor.getColumnIndex(DATE_EDITED)));
-                    currOrder.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
-                    currOrder.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
-                    currOrder.setProviderId(cursor.getString(cursor.getColumnIndex(PROVIDER_ID)));
-                    currOrder.setDateCreatedByClient(cursor.getLong(cursor.getColumnIndex(DATE_CREATED_BY_CLIENT)));
-                    currOrder.setSynced(cursor.getInt(cursor.getColumnIndex(SYNCED)) == 1);
+                    Order currOrder = getOrderAtRow(cursor);
 
                     orders.add(currOrder);
                     cursor.moveToNext();
@@ -165,17 +155,7 @@ public class OrderRepository extends BaseRepository {
         try {
             if (cursor != null && cursor.getCount() > 0  && cursor.moveToFirst()) {
                 while(!cursor.isAfterLast()) {
-                    Order currOrder = new Order();
-                    currOrder.setId(cursor.getString(cursor.getColumnIndex(ID)));
-                    currOrder.setRevision(cursor.getString(cursor.getColumnIndex(REVISION)));
-                    currOrder.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
-                    currOrder.setDateCreated(cursor.getLong(cursor.getColumnIndex(DATE_CREATED)));
-                    currOrder.setDateEdited(cursor.getLong(cursor.getColumnIndex(DATE_EDITED)));
-                    currOrder.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
-                    currOrder.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
-                    currOrder.setProviderId(cursor.getString(cursor.getColumnIndex(PROVIDER_ID)));
-                    currOrder.setDateCreatedByClient(cursor.getLong(cursor.getColumnIndex(DATE_CREATED_BY_CLIENT)));
-                    currOrder.setSynced(cursor.getInt(cursor.getColumnIndex(SYNCED)) == 1);
+                    Order currOrder = getOrderAtRow(cursor);
 
                     Shipment shipment = shipmentRepository.getShipmentAtRow(cursor);
 
@@ -196,5 +176,21 @@ public class OrderRepository extends BaseRepository {
             }
         }
         return  orderShipmentsList;
+    }
+
+    private Order getOrderAtRow(@NonNull Cursor cursor) {
+        Order currOrder = new Order();
+        currOrder.setId(cursor.getString(cursor.getColumnIndex(ID)));
+        currOrder.setRevision(cursor.getString(cursor.getColumnIndex(REVISION)));
+        currOrder.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
+        currOrder.setDateCreated(cursor.getLong(cursor.getColumnIndex(DATE_CREATED)));
+        currOrder.setDateEdited(cursor.getLong(cursor.getColumnIndex(DATE_EDITED)));
+        currOrder.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
+        currOrder.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
+        currOrder.setProviderId(cursor.getString(cursor.getColumnIndex(PROVIDER_ID)));
+        currOrder.setDateCreatedByClient(cursor.getLong(cursor.getColumnIndex(DATE_CREATED_BY_CLIENT)));
+        currOrder.setSynced(cursor.getInt(cursor.getColumnIndex(SYNCED)) == 1);
+
+        return currOrder;
     }
 }
