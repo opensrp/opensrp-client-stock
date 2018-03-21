@@ -94,7 +94,7 @@ public class OrderListActivity extends BasicOrderActivity {
         String locationId = allSharedPreferences.fetchDefaultLocalityId(providerId);
 
         Order order = new Order();
-        order.setId(UUID.randomUUID().toString());
+        order.setFormSubmissionId(UUID.randomUUID().toString());
         order.setLocationId(locationId);
         order.setProviderId(providerId);
         order.setDateCreatedByClient(System.currentTimeMillis());

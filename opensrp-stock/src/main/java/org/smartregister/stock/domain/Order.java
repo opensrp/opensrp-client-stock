@@ -9,6 +9,7 @@ public class Order {
 
     private String id;
     private String revision;
+    private String formSubmissionId;
     private String type = "Order";
     private long dateCreated;
     private long dateEdited;
@@ -40,6 +41,14 @@ public class Order {
 
     public void setRevision(String revision) {
         this.revision = revision;
+    }
+
+    public String getFormSubmissionId() {
+        return formSubmissionId;
+    }
+
+    public void setFormSubmissionId(String formSubmissionId) {
+        this.formSubmissionId = formSubmissionId;
     }
 
     public String getType() {

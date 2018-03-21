@@ -16,6 +16,7 @@ public class Constants {
 
         public static final String ID = "id";
         public static final String REVISION = "revision";
+        public static final String FORM_SUBMISSION_ID = "form_submission_id";
         public static final String TYPE = "type";
         public static final String DATE_CREATED = "date_created";
         public static final String DATE_EDITED = "date_edited";

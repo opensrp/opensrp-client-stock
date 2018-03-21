@@ -232,6 +232,7 @@ public class OrdersSyncIntentService extends IntentService {
 
                 Order order = new Order();
                 order.setId(jsonObject.getString("id"));
+                order.setFormSubmissionId(jsonObject.getString("formSubmissionId"));
                 order.setSynced(true);
                 order.setType("Order");
                 order.setDateCreatedByClient(jsonObject.getLong("dateCreatedByClient"));
