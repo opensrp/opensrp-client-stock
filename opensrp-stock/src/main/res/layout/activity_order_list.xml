@@ -29,24 +29,35 @@
                 android:layout_height="wrap_content"
                 android:text="@string/date"
                 android:layout_marginLeft="20dp"
+                android:layout_marginBottom="20dp"
                 android:textSize="22sp"
+                android:textColor="@android:color/black"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/status"
-                android:layout_marginRight="20dp"
+                android:text="@string/status_capitalized"
+                android:layout_marginRight="32dp"
                 android:textSize="22sp"
+                android:textColor="@android:color/black"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@id/tv_orders_dateHeader"/>
+
 
             <ListView
                 android:id="@+id/lv_orders_ordersList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_below="@id/tv_orders_dateHeader"/>
 
         </RelativeLayout>

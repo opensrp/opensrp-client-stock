@@ -42,7 +42,7 @@ public class OrderListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         OrderShipment orderShipment = (OrderShipment) getItem(position);
-        return orderRowSmartClientsProvider.getView(convertView, orderShipment);
+        return orderRowSmartClientsProvider.getView(convertView, orderShipment, isEnabled(position));
     }
 
     @Override
