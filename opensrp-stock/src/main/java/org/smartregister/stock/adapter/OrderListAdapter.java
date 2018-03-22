@@ -44,4 +44,14 @@ public class OrderListAdapter extends BaseAdapter {
         OrderShipment orderShipment = (OrderShipment) getItem(position);
         return orderRowSmartClientsProvider.getView(convertView, orderShipment);
     }
+
+    @Override
+    public boolean isEnabled(int position) {
+        OrderShipment orderShipment = (OrderShipment) getItem(position);
+        if (orderShipment.getShipment() == null) {
+            return false;
+        }
+
+        return true;
+    }
 }
