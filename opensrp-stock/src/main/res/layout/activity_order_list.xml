@@ -20,13 +20,34 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="10dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <TextView
+                android:id="@+id/tv_orders_dateHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date"
+                android:layout_marginLeft="20dp"
+                android:textSize="22sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status"
+                android:layout_marginRight="20dp"
+                android:textSize="22sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"/>
 
             <ListView
                 android:id="@+id/lv_orders_ordersList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"/>
+                android:layout_marginTop="8dp"
+                android:layout_below="@id/tv_orders_dateHeader"/>
 
         </RelativeLayout>
 
