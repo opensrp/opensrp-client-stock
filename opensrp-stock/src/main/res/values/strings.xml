@@ -23,7 +23,7 @@
     <string name="create_new_order">New Order</string>
     <string name="new_order_dialog_title">Would you like to make a new order?</string>
 
-    <string name="new_order_dialog_message">Please confirm that you would like to order stock based on Ideal Stock Amounts for&#032;</string>
+    <string name="new_order_dialog_message">Please confirm that you would like to order stock based on Ideal Stock Amounts for\u0020</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
 
