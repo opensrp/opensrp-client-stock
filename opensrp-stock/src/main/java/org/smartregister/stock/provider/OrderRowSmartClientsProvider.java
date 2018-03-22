@@ -27,7 +27,7 @@ public class OrderRowSmartClientsProvider {
         this.context = context;
     }
 
-    public View getView(View convertView, @NonNull OrderShipment orderShipment) {
+    public View getView(View convertView, @NonNull OrderShipment orderShipment, boolean isEnabled) {
         if (convertView == null) {
             convertView = inflateLayoutForCursorAdapter();
         }
@@ -41,6 +41,12 @@ public class OrderRowSmartClientsProvider {
 
         orderStatus.setText(orderShipment.getOrderStatus(context));
         orderStatus.setBackgroundResource(orderShipment.getStatusResource());
+
+        if (isEnabled) {
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.transparent));
+        } else {
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.disabled_color));
+        }
 
         return convertView;
     }
