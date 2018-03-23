@@ -94,7 +94,7 @@ public class OrderRepository extends BaseRepository {
     }
 
     public List<Order> getAllOrders() {
-        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + ORDER_TABLE + " ORDER BY date_created_by_client", null);
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + ORDER_TABLE + " ORDER BY date_created_by_client DESC", null);
         List<Order> orders = readOrders(cursor);
         return orders;
     }
@@ -103,7 +103,7 @@ public class OrderRepository extends BaseRepository {
         Cursor cursor = getReadableDatabase().rawQuery("SELECT " + ORDER_TABLE + ".*, "
                 + ShipmentRepository.SHIPMENT_TABLE + ".* FROM " + ORDER_TABLE + " LEFT JOIN "
                 + ShipmentRepository.SHIPMENT_TABLE + " ON " + ORDER_TABLE + "." + ID
-                + " = " + ShipmentRepository.SHIPMENT_TABLE + "." + Constants.Shipment.ORDER_CODE, null);
+                + " = " + ShipmentRepository.SHIPMENT_TABLE + "." + Constants.Shipment.ORDER_CODE + " ORDER BY " + ORDER_TABLE + "." + DATE_CREATED_BY_CLIENT + " DESC", null);
 
         return readOrderShipments(cursor);
     }
