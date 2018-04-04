@@ -65,6 +65,36 @@
         }
       },
       {
+        "key":"DateCount",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "openmrs_data_type": "text",
+        "type":"label",
+        "text":"[DateCount]"
+      },
+      {
+        "key": "Vials_Issued",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "openmrs_data_type": "text",
+        "type": "edit_text",
+        "hint": "Vials [vaccine] issued *",
+        "v_min": {
+          "value": "1",
+          "err": "issued vials must be greater than 0"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Enter a valid vial number"
+        },
+        "v_required": {
+          "value": "true",
+          "err": "Enter the Vials Issued"
+        }
+      },
+      {
         "key": "Issued_Stock_To",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -105,27 +135,6 @@
             "type": "string",
             "ex": "equalTo(., \"Other\")"
           }
-        }
-      },
-      {
-        "key": "Vials_Issued",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "openmrs_data_type": "text",
-        "type": "edit_text",
-        "hint": "Vials [vaccine] issued *",
-        "v_min": {
-          "value": "1",
-          "err": "issued vials must be greater than 0"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Enter a valid vial number"
-        },
-        "v_required": {
-          "value": "true",
-          "err": "Enter the Vials Issued"
         }
       },
       {

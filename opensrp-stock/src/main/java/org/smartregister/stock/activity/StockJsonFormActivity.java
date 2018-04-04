@@ -1,7 +1,5 @@
 package org.smartregister.stock.activity;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 
@@ -33,7 +31,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
     private MaterialEditText balancetextview;
     private StockJsonFormFragment stockJsonFormFragment;
-
+    private MaterialEditText childrenVaccinatedTextView;
     private MinNumericValidator negativeBalanceValidator;
 
     @Override
@@ -83,9 +81,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
                                 balancetextview = (MaterialEditText) views.get(i);
+                            } else if (views.get(i) instanceof MaterialEditText &&
+                                    ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Date_Stock_Issued")) {
+                                childrenVaccinatedTextView = (MaterialEditText) views.get(i);
                             }
                         }
                     }
+
+
                     String label = "";
                     int currentBalance = 0;
                     int newBalance = 0;
@@ -133,7 +136,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     }
                     if (!StringUtils.isBlank(vialsvalue) && StringUtils.isNumeric(vialsvalue) && StringUtils.isNumeric(wastedvials)) {
                         newBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()) - Integer.parseInt(vialsvalue) - Integer.parseInt(wastedvials);
-                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance);
+                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance+"\nWasted doses: " + wastedvials);
                     }
 
                     int vialsused = 0;
@@ -144,24 +147,11 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalance != 0) {
                         vialsused = (currentBalance / dosesPerVial) + 1;
                     }
-                    initializeBalanceTextView(currentBalance, vialsused, balancetextview);
+                    initializeChildrenVaccinatedTextView(currentBalance, vialsused, balancetextview);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void initializeBalanceTextView(int currentBalance, int vialsUsed, MaterialEditText balanceTextView) {
-        if (balanceTextView != null) {
-            balanceTextView.setErrorColor(Color.BLACK);
-            if (currentBalance != 0) {
-                Typeface typeFace = Typeface.create(balanceTextView.getTypeface(), Typeface.ITALIC);
-                balanceTextView.setAccentTypeface(typeFace);
-                balanceTextView.setError(currentBalance + " child(ren) vaccinated today. Assuming " + vialsUsed + " vial(s) used.");
-            } else {
-                balanceTextView.setError("");
-            }
         }
     }
 
@@ -223,7 +213,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     if (value != null && !StringUtils.isBlank(value) && StringUtils.isNumeric(value) && StringUtils.isNumeric(wastedvials)) {
 
                         newBalance = existingbalance - Integer.parseInt(value) - Integer.parseInt(wastedvials);
-                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance);
+                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance+"\nWasted doses: " + wastedvials);
                     } else {
                         stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                     }
@@ -235,7 +225,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalanceVaccineUsed != 0) {
                         vialsused = (currentBalanceVaccineUsed / dosesPerVial) + 1;
                     }
-                    initializeBalanceTextView(currentBalanceVaccineUsed, vialsused, balancetextview);
+                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                 }
             }
         } catch (JSONException e) {
@@ -300,7 +290,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     if (vialsvalue != null && !StringUtils.isBlank(vialsvalue) && StringUtils.isNumeric(wastedvials)) {
 
                         newBalance = existingbalance - Integer.parseInt(vialsvalue) - Integer.parseInt(wastedvials);
-                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance);
+                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance+"\nWasted doses: " + wastedvials);
                     } else {
                         stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                     }
@@ -312,7 +302,6 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalanceVaccineUsed != 0) {
                         vialsused = (currentBalanceVaccineUsed / dosesPerVial) + 1;
                     }
-                    initializeBalanceTextView(currentBalanceVaccineUsed, vialsused, balancetextview);
                 }
             }
         } catch (JSONException e) {
@@ -549,5 +538,11 @@ public class StockJsonFormActivity extends JsonFormActivity {
         return vaccineName;
     }
 
+    void initializeChildrenVaccinatedTextView(int childrenVaccinated, int vialsUsed, MaterialEditText vialsUsedText) {
+        String updateChildrenVaccinated = "Children vaccinated on this date: " + childrenVaccinated;
+        String updateEstimatedVials = "Estimated vials issued on this date: " + vialsUsed;
+        stockJsonFormFragment.getLabelViewFromTag("DateCount", updateChildrenVaccinated + "\n" + updateEstimatedVials);
+        vialsUsedText.setText(String.valueOf(vialsUsed));
+    }
 }
 

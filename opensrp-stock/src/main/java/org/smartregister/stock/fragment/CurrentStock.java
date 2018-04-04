@@ -216,8 +216,8 @@ public class CurrentStock extends Fragment implements
         try {
             JSONObject form = FormUtils.getInstance(getActivity().getApplicationContext()).getFormJson("stock_received_form");
             String vaccine_name = ((StockControlActivity) getActivity()).stockType.getName();
-            String formmetadata = form.toString().replace("[vaccine]", vaccine_name);
-            intent.putExtra("json", formmetadata);
+            String formMetadata = form.toString().replace("[vaccine]", vaccine_name);
+            intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
             e.printStackTrace();
@@ -244,8 +244,9 @@ public class CurrentStock extends Fragment implements
         try {
             JSONObject form = FormUtils.getInstance(getActivity().getApplicationContext()).getFormJson("stock_issued_form");
             String vaccine_name = ((StockControlActivity) getActivity()).stockType.getName();
-            String formmetadata = form.toString().replace("[vaccine]", vaccine_name);
-            intent.putExtra("json", formmetadata);
+            String formMetadata = form.toString().replace("[vaccine]", vaccine_name);
+            formMetadata = formMetadata.replace("[DateCount]", getResources().getString(R.string.initial_vaccine_issue_count));
+            intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
             e.printStackTrace();
