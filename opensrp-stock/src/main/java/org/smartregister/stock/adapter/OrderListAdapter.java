@@ -48,10 +48,6 @@ public class OrderListAdapter extends BaseAdapter {
     @Override
     public boolean isEnabled(int position) {
         OrderShipment orderShipment = (OrderShipment) getItem(position);
-        if (orderShipment.getShipment() == null) {
-            return false;
-        }
-
-        return true;
+        return (orderShipment.getShipment() != null);
     }
 }

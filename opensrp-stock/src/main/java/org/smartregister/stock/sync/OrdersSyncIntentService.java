@@ -197,7 +197,8 @@ public class OrdersSyncIntentService extends IntentService {
         requestQueue.add(stringRequest);
     }
 
-    private void processResponsePayload(OrderRepository orderRepository, long lastServerVersion, String responsePayload) {
+    private void processResponsePayload(OrderRepository orderRepository, long serverVersion, String responsePayload) {
+        long lastServerVersion = serverVersion;
         try {
             JSONObject jsonPayload = new JSONObject(responsePayload);
             JSONArray ordersJSONArray = jsonPayload.getJSONArray("orders");

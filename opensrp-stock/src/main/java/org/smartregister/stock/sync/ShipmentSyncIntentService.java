@@ -114,7 +114,8 @@ public class ShipmentSyncIntentService extends IntentService {
         requestQueue.add(stringRequest);
     }
 
-    private void processResponsePayload(String stringPayload, long lastServerVersion, ShipmentRepository shipmentRepository) {
+    private void processResponsePayload(String stringPayload, long serverVersion, ShipmentRepository shipmentRepository) {
+        long lastServerVersion = serverVersion;
         try {
             JSONObject jsonObject = new JSONObject(stringPayload);
             JSONArray shipmentsJSONArray = jsonObject.getJSONArray("shipments");

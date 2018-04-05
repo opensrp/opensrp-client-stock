@@ -27,7 +27,8 @@ public class OrderRowSmartClientsProvider {
         this.context = context;
     }
 
-    public View getView(View convertView, @NonNull OrderShipment orderShipment, boolean isEnabled) {
+    public View getView(View view, @NonNull OrderShipment orderShipment, boolean isEnabled) {
+        View convertView = view;
         if (convertView == null) {
             convertView = inflateLayoutForCursorAdapter();
         }
