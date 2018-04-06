@@ -162,6 +162,61 @@
         "openmrs_data_type": "text",
         "type":"label",
         "text":""
+      },
+      {
+        "key": "Vials_Balance",
+        "type": "label",
+        "text": "New [vaccine] Balance: 0 vials",
+        "has_bg": true,
+        "top_padding": "10dp",
+        "left_padding": "20dp",
+        "right_padding": "20dp",
+        "text_size": "14sp",
+        "text_color": "#000000",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "Vials_Balance_Note",
+        "type": "label",
+        "text": "Compare this number with stock on hand",
+        "has_bg": true,
+        "text_size": "12sp",
+        "text_color": "#737373",
+        "left_padding": "20dp",
+        "right_padding": "20dp",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "Doses_wasted",
+        "type": "label",
+        "text": "Total wasted doses: 0 doses",
+        "has_bg": true,
+        "left_padding": "20dp",
+        "right_padding": "20dp",
+        "text_size": "14sp",
+        "text_color": "#000000",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "Doses_Wasted_Note",
+        "type": "label",
+        "text": "Unused doses in issued vials + wasted vials(10 doses/vial)",
+        "has_bg": true,
+        "text_size": "12sp",
+        "text_color": "#737373",
+        "bottom_padding": "20dp",
+        "bottom_margin": "20dp",
+        "left_padding": "20dp",
+        "right_padding": "20dp",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
       }
     ]
   }
