@@ -198,7 +198,13 @@
         "text_color": "#000000",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
-        "openmrs_entity_id": ""
+        "openmrs_entity_id": "",
+        "relevance": {
+          "step1:Date_Stock_Issued": {
+            "type": "string",
+            "ex": "notEqualTo(.,\"\")"
+          }
+        }
       },
       {
         "key": "Vials_Balance_Note",
@@ -212,7 +218,13 @@
         "bottom_padding": "10dp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
-        "openmrs_entity_id": ""
+        "openmrs_entity_id": "",
+        "relevance": {
+          "step1:Date_Stock_Issued": {
+            "type": "string",
+            "ex": "notEqualTo(.,\"\")"
+          }
+        }
       },
       {
         "key": "Doses_wasted",
@@ -226,7 +238,13 @@
         "text_color": "#000000",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
-        "openmrs_entity_id": ""
+        "openmrs_entity_id": "",
+        "relevance": {
+          "step1:Date_Stock_Issued": {
+            "type": "string",
+            "ex": "notEqualTo(.,\"\")"
+          }
+        }
       },
       {
         "key": "Doses_Wasted_Note",
@@ -241,7 +259,13 @@
         "right_padding": "20dp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
-        "openmrs_entity_id": ""
+        "openmrs_entity_id": "",
+        "relevance": {
+          "step1:Date_Stock_Issued": {
+            "type": "string",
+            "ex": "notEqualTo(.,\"\")"
+          }
+        }
       }
     ]
   }
