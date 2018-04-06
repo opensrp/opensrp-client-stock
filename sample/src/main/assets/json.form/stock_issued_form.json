@@ -74,6 +74,28 @@
         "text":"[DateCount]"
       },
       {
+        "key": "Children_Vaccinated_Count",
+        "type": "label",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "text": "Children vaccinated on this date: <Enter date to calculate>",
+        "text_color": "#000000",
+        "text_size": "10sp",
+        "hint_on_text": true
+      },
+      {
+        "key": "Vials_Issued_Count",
+        "type": "label",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "text": "Estimated vials issued on this date: <Enter date to calculate>",
+        "text_color": "#000000",
+        "text_size": "10sp",
+        "hint_on_text": true
+      },
+      {
         "key": "Vials_Issued",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -166,11 +188,12 @@
       {
         "key": "Vials_Balance",
         "type": "label",
-        "text": "New [vaccine] Balance: 0 vials",
+        "text": "End [vaccine] Balance: 0 vials",
         "has_bg": true,
-        "top_padding": "10dp",
+        "top_padding": "30dp",
         "left_padding": "20dp",
         "right_padding": "20dp",
+        "bottom_padding": "0dp",
         "text_size": "14sp",
         "text_color": "#000000",
         "openmrs_entity_parent": "",
@@ -186,6 +209,7 @@
         "text_color": "#737373",
         "left_padding": "20dp",
         "right_padding": "20dp",
+        "bottom_padding": "10dp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": ""
@@ -197,6 +221,7 @@
         "has_bg": true,
         "left_padding": "20dp",
         "right_padding": "20dp",
+        "bottom_padding": "0dp",
         "text_size": "14sp",
         "text_color": "#000000",
         "openmrs_entity_parent": "",
@@ -206,11 +231,11 @@
       {
         "key": "Doses_Wasted_Note",
         "type": "label",
-        "text": "Unused doses in issued vials + wasted vials(10 doses/vial)",
+        "text": "Unused doses in issued vials + wasted vials (10 doses/vial)",
         "has_bg": true,
         "text_size": "12sp",
         "text_color": "#737373",
-        "bottom_padding": "20dp",
+        "bottom_padding": "30dp",
         "bottom_margin": "20dp",
         "left_padding": "20dp",
         "right_padding": "20dp",
