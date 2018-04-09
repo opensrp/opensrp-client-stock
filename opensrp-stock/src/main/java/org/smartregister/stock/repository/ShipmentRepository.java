@@ -108,20 +108,21 @@ public class ShipmentRepository extends BaseRepository {
         String orderCode = cursor.getString(cursor.getColumnIndex(Constants.Shipment.ORDER_CODE));
 
         if (orderCode != null) {
-            return new Shipment(
-                    orderCode,
-                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.OPENLMIS_ORDER_CODE)),
-                    getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.ORDERED_DATE))),
-                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_CODE)),
-                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_NAME)),
-                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.SUPPLYING_FACILITY_CODE)),
-                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.SUPPLYING_FACILITY_NAME)),
-                    getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.PROCESSING_PERIOD_START_DATE))),
-                    getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.PROCESSING_PERIOD_END_DATE))),
-                    cursor.getString(cursor.getColumnIndex(Constants.Shipment.SHIPMENT_ACCEPT_STATUS)),
-                    cursor.getLong(cursor.getColumnIndex(Constants.Shipment.SERVER_VERSION)),
-                    (cursor.getInt(cursor.getColumnIndex(Constants.Shipment.SYNCED)) == 1)
-            );
+            Shipment shipment = new Shipment();
+            shipment.setOrderCode(orderCode);
+            shipment.setOpenlmisOrderCode(cursor.getString(cursor.getColumnIndex(Constants.Shipment.OPENLMIS_ORDER_CODE)));
+            shipment.setOrderedDate(getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.ORDERED_DATE))));
+            shipment.setReceivingFacilityCode(cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_CODE)));
+            shipment.setReceivingFacilityName(cursor.getString(cursor.getColumnIndex(Constants.Shipment.RECEIVING_FACILITY_NAME)));
+            shipment.setSupplyingFacilityCode(cursor.getString(cursor.getColumnIndex(Constants.Shipment.SUPPLYING_FACILITY_CODE)));
+            shipment.setSupplyingFacilityName(cursor.getString(cursor.getColumnIndex(Constants.Shipment.SUPPLYING_FACILITY_NAME)));
+            shipment.setProcessingPeriodStartDate(getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.PROCESSING_PERIOD_START_DATE))));
+            shipment.setProcessingPeriodEndDate(getDateFromSQLiteFriendlyDateString(cursor.getString(cursor.getColumnIndex(Constants.Shipment.PROCESSING_PERIOD_END_DATE))));
+            shipment.setShipmentAcceptStatus(cursor.getString(cursor.getColumnIndex(Constants.Shipment.SHIPMENT_ACCEPT_STATUS)));
+            shipment.setServerVersion(cursor.getLong(cursor.getColumnIndex(Constants.Shipment.SERVER_VERSION)));
+            shipment.setSynced((cursor.getInt(cursor.getColumnIndex(Constants.Shipment.SYNCED)) == 1));
+
+            return shipment;
         } else {
             return null;
         }
