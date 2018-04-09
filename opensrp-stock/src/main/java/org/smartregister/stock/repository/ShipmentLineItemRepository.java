@@ -70,12 +70,12 @@ public class ShipmentLineItemRepository extends BaseRepository {
         Cursor cursor = sqLiteDatabase.query(SHIPMENT_LINE_ITEM_TABLE, SHIPMENT_LINE_ITEM_TABLE_COLUMNS,
                 Constants.ShipmentLineItem.SHIPMENT_ORDER_CODE + " = ?", new String[]{orderCode}, null, null, null);
 
-        ArrayList<ShipmentLineItem> shipmentLineItemArrayList = getShipments(cursor);
+        ArrayList<ShipmentLineItem> shipmentLineItemArrayList = getShipmentLineItems(cursor);
 
         return shipmentLineItemArrayList.toArray(new ShipmentLineItem[shipmentLineItemArrayList.size()]);
     }
 
-    private ArrayList<ShipmentLineItem> getShipments(Cursor cursor) {
+    private ArrayList<ShipmentLineItem> getShipmentLineItems(Cursor cursor) {
         ArrayList<ShipmentLineItem> shipmentLineItemArrayList = new ArrayList<>();
 
         if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
@@ -92,7 +92,7 @@ public class ShipmentLineItemRepository extends BaseRepository {
         return shipmentLineItemArrayList;
     }
 
-    public ShipmentLineItem getShipmentLineItemAtRow(Cursor cursor) {
+    public ShipmentLineItem getShipmentLineItemAtRow(@NonNull Cursor cursor) {
         ShipmentLineItem shipmentLineItem = new ShipmentLineItem();
 
         shipmentLineItem.setId(cursor.getInt(cursor.getColumnIndex(Constants.ShipmentLineItem.ID)));

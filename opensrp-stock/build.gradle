@@ -98,6 +98,9 @@ dependencies {
     // PowerMock
     def powerMockVersion = '1.7.3'
     testCompile "org.powermock:powermock-module-junit4:$powerMockVersion"
+    testCompile "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
+    testCompile "org.powermock:powermock-api-mockito2:$powerMockVersion"
+    testCompile("org.powermock:powermock-classloading-xstream:$powerMockVersion")
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
