@@ -143,7 +143,19 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "text",
         "type":"label",
-        "text":""
+        "text":"",
+        "has_bg": true,
+        "top_margin": "20dp",
+        "top_padding": "20dp",
+        "bottom_padding": "20dp",
+        "left_padding": "20dp",
+        "right_padding": "20dp",
+        "relevance": {
+          "step1:Vials_Received": {
+            "type": "string",
+            "ex": "notEqualTo(.,\"\")"
+          }
+        }
       }
     ]
   }

@@ -69,32 +69,37 @@ public class StockJsonFormActivity extends JsonFormActivity {
         if (form.has(JsonFormConstants.FIRST_STEP_NAME)) {
             try {
                 JSONObject step1 = form.getJSONObject(JsonFormConstants.FIRST_STEP_NAME);
-                if (step1.has(JsonFormConstants.FIELDS)) {
-                    JSONArray fields = step1.getJSONArray(JsonFormConstants.FIELDS);
+                String title = (step1.has("title")) ? step1.getString("title") : null;
+                if (!TextUtils.isEmpty(title) && (title.contains("Stock Issued") || title.contains("Stock Loss/Adjustment")
+                        || title.contains("Stock Received"))) {
+                    if (step1.has(JsonFormConstants.FIELDS)) {
+                        JSONArray fields = step1.getJSONArray(JsonFormConstants.FIELDS);
 
-                    int size = fields.length();
+                        int size = fields.length();
 
-                    boolean foundDateField = false;
-                    for(int i = 0; i < size; i++) {
-                        JSONObject currField = fields.getJSONObject(i);
+                        boolean foundDateField = false;
+                        for (int i = 0; i < size; i++) {
+                            JSONObject currField = fields.getJSONObject(i);
 
-                        if (!foundDateField && JsonFormConstants.DATE_PICKER.equals(currField.getString(JsonFormConstants.TYPE))) {
-                            mainDateFieldKey = currField.optString(JsonFormConstants.KEY, null);
-                            continue;
-                        }
-
-                        String key = currField.optString(JsonFormConstants.KEY, null);
-                        if (!TextUtils.isEmpty(key)) {
-                            if (currField.has(JsonFormConstants.READ_ONLY)) {
-                                previousReadOnlyValues.put(key, currField.getBoolean(JsonFormConstants.READ_ONLY));
+                            if (!foundDateField && JsonFormConstants.DATE_PICKER.equals(currField.getString(JsonFormConstants.TYPE))) {
+                                mainDateFieldKey = currField.optString(JsonFormConstants.KEY, null);
+                                continue;
                             }
+
+                            String key = currField.optString(JsonFormConstants.KEY, null);
+                            if (!TextUtils.isEmpty(key)) {
+                                if (currField.has(JsonFormConstants.READ_ONLY)) {
+                                    previousReadOnlyValues.put(key, currField.getBoolean(JsonFormConstants.READ_ONLY));
+                                }
+                            }
+                            currField.put(JsonFormConstants.READ_ONLY, true);
                         }
-                        currField.put(JsonFormConstants.READ_ONLY, true);
                     }
                 }
             } catch (JSONException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
             }
+
         }
     }
 
