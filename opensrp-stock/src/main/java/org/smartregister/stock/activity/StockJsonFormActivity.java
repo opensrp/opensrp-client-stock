@@ -240,7 +240,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                         vialsvalue = questions.getString("value");
                                     }
                                 } else {
-                                    refreshDosesWasted(balancetextview, vialsused, Integer.parseInt(wastedvials), dosesPerVial);
+                                    refreshDosesWasted(balancetextview, currentBalance, Integer.parseInt(wastedvials), dosesPerVial);
                                     refreshVialsBalance(vaccineName, str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()));
                                 }
                             }
@@ -259,7 +259,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     }
                     balancetextview.setText(String.valueOf(vialsused));
                     refreshVialsBalance(vaccineName, calculateNewStock(str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()), vialsused));
-                    refreshDosesWasted(balancetextview, vialsused, Integer.parseInt(wastedvials), dosesPerVial);
+                    refreshDosesWasted(balancetextview, currentBalance, Integer.parseInt(wastedvials), dosesPerVial);
 
                 }
             }
