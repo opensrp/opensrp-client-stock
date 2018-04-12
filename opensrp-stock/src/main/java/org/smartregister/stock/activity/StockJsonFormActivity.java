@@ -1,6 +1,9 @@
 package org.smartregister.stock.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -23,20 +26,76 @@ import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by keyman on 11/04/2017.
  */
 public class StockJsonFormActivity extends JsonFormActivity {
 
+    private static final String TAG = StockJsonFormActivity.class.getName();
     private MaterialEditText balancetextview;
     private StockJsonFormFragment stockJsonFormFragment;
 
     private MinNumericValidator negativeBalanceValidator;
 
+    private String mainDateFieldKey;
+    private boolean otherStockFieldsEnabled = false;
+
+    private HashMap<String, Boolean> previousReadOnlyValues = new HashMap<>();
+    private ArrayList<View> labels = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void init(String json) {
+        super.init(json);
+        disableAllFieldsExceptDateField(getmJSONObject());
+    }
+
+    /**
+     * Disables(Read_only kind) other fields in stock forms Received, Issued & Loss/Adjustment other
+     * than the first date_picker. This in essence is supposed to restrict the user from filling other
+     * fields without entering the date first
+     *
+     * @param form
+     * @return JSONObject
+     */
+    private void disableAllFieldsExceptDateField(@NonNull JSONObject form) {
+        if (form.has(JsonFormConstants.FIRST_STEP_NAME)) {
+            try {
+                JSONObject step1 = form.getJSONObject(JsonFormConstants.FIRST_STEP_NAME);
+                if (step1.has(JsonFormConstants.FIELDS)) {
+                    JSONArray fields = step1.getJSONArray(JsonFormConstants.FIELDS);
+
+                    int size = fields.length();
+
+                    boolean foundDateField = false;
+                    for(int i = 0; i < size; i++) {
+                        JSONObject currField = fields.getJSONObject(i);
+
+                        if (!foundDateField && JsonFormConstants.DATE_PICKER.equals(currField.getString(JsonFormConstants.TYPE))) {
+                            mainDateFieldKey = currField.optString(JsonFormConstants.KEY, null);
+                            continue;
+                        }
+
+                        String key = currField.optString(JsonFormConstants.KEY, null);
+                        if (!TextUtils.isEmpty(key)) {
+                            if (currField.has(JsonFormConstants.READ_ONLY)) {
+                                previousReadOnlyValues.put(key, currField.getBoolean(JsonFormConstants.READ_ONLY));
+                            }
+                        }
+                        currField.put(JsonFormConstants.READ_ONLY, true);
+                    }
+                }
+            } catch (JSONException e) {
+                Log.e(TAG, Log.getStackTraceString(e));
+            }
+        }
     }
 
     @Override
@@ -52,6 +111,55 @@ public class StockJsonFormActivity extends JsonFormActivity {
         super.writeValue(stepName, key, value, openMrsEntityParent, openMrsEntity, openMrsEntityId);
         refreshCalculateLogic(key, value);
 
+        // Should run on when the first date field is changed i.e. the only field not disabled
+        if (!TextUtils.isEmpty(mainDateFieldKey) && mainDateFieldKey.equals(key) && !otherStockFieldsEnabled) {
+            if (!TextUtils.isEmpty(value)) {
+                ArrayList<View> views = getFormDataViews();
+
+                Iterator<View> viewIterator = views.iterator();
+                while(viewIterator.hasNext()) {
+                    View view = viewIterator.next();
+                    String viewKey = (String) view.getTag(R.id.key);
+
+                    if (viewKey == null || (!TextUtils.isEmpty(viewKey) && !mainDateFieldKey.equals(viewKey))) {
+                        String address = (String) view.getTag(R.id.address);
+                        if (!TextUtils.isEmpty(address)) {
+                            JSONObject jsonObject = getObjectUsingAddress(address.split(":"));
+                            boolean previousValue = false;
+
+                            if (previousReadOnlyValues.containsKey(viewKey)) {
+                                previousValue = previousReadOnlyValues.get(viewKey);
+                            }
+
+                            jsonObject.put(JsonFormConstants.READ_ONLY, previousValue);
+                            toggleViewVisibility(view, !previousValue);
+
+                        } else {
+                            toggleViewVisibility(view, true);
+                        }
+
+                        if (view instanceof MaterialEditText) {
+                            view.setFocusable(true);
+                        }
+
+                        // Re-hide fields not relevant, since they will be enabled
+                        if (!TextUtils.isEmpty(viewKey)) {
+                            refreshSkipLogic(viewKey, null);
+                        }
+                    }
+                }
+
+                Iterator<View> labelViewsIterator = labels.iterator();
+
+                // Re-enable labels which are not part of form-data-elements
+                while(labelViewsIterator.hasNext()) {
+                    View label = labelViewsIterator.next();
+                    label.setEnabled(true);
+                }
+
+                otherStockFieldsEnabled = true;
+            }
+        }
     }
 
     @Override
@@ -577,5 +685,9 @@ public class StockJsonFormActivity extends JsonFormActivity {
             return "measles";
         }
         return vaccineName;
+    }
+
+    public void addLabel(View view) {
+        labels.add(view);
     }
 }
