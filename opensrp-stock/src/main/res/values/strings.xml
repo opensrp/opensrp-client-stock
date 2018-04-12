@@ -17,5 +17,4 @@
     <string name="date_updated_key">date_updated</string>
     <string name="stock_type_id_key">vaccine_type_id</string>
     <string name="negative_balance">New balance cannot be negative.</string>
-    <string name="initial_vaccine_issue_count">Children vaccinated on this date: &lt;Enter date to calculate&gt;\nEstimated vials issued on this date: &lt;Enter date to calculate&gt; </string>
 </resources>

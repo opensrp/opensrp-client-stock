@@ -65,15 +65,6 @@
         }
       },
       {
-        "key":"DateCount",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "openmrs_data_type": "text",
-        "type":"label",
-        "text":"[DateCount]"
-      },
-      {
         "key": "Children_Vaccinated_Count",
         "type": "label",
         "openmrs_entity_parent": "",
@@ -102,7 +93,7 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "text",
         "type": "edit_text",
-        "hint": "Number of [vaccine] vials issued *",
+        "hint": "Number of [vaccine] Vials issued *",
         "v_min": {
           "value": "1",
           "err": "issued vials must be greater than 0"
@@ -166,7 +157,7 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "text",
         "type": "edit_text",
-        "hint": "Number of wasted vials (e.g. damaged vials)",
+        "hint": "Number of wasted Vials (e.g. Damaged Vials)",
         "v_min": {
           "value": "0",
           "err": "value cannot be less than zero"
@@ -188,7 +179,7 @@
       {
         "key": "Vials_Balance",
         "type": "label",
-        "text": "New [vaccine] Balance: 0 vials",
+        "text": "NEW [vaccine] Balance: 0 vials",
         "has_bg": true,
         "top_padding": "30dp",
         "left_padding": "20dp",
@@ -249,7 +240,7 @@
       {
         "key": "Doses_Wasted_Note",
         "type": "label",
-        "text": "Unused doses in issued vials + wasted vials (10 doses/vial)",
+        "text": "Unused doses in issued vials + wasted vials ([number_of_doses] doses/vial)",
         "has_bg": true,
         "text_size": "12sp",
         "text_color": "#737373",

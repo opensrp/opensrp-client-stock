@@ -31,7 +31,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
     private MaterialEditText balancetextview;
     private StockJsonFormFragment stockJsonFormFragment;
-    private MaterialEditText childrenVaccinatedTextView;
+
     private MinNumericValidator negativeBalanceValidator;
 
     @Override
@@ -73,6 +73,9 @@ public class StockJsonFormActivity extends JsonFormActivity {
         JSONObject object = getStep("step1");
         try {
             if (object.getString("title").contains("Stock Issued")) {
+                String vaccineName = object.getString("title").replace("Stock Issued", "").trim();
+                StockTypeRepository vaccineTypeRepository = StockLibrary.getInstance().getStockTypeRepository();
+                int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccineName);
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Date_Stock_Issued") && value != null && !value.equalsIgnoreCase("")) {
                     if (balancetextview == null) {
@@ -81,22 +84,18 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
                                 balancetextview = (MaterialEditText) views.get(i);
-                            } else if (views.get(i) instanceof MaterialEditText &&
-                                    ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Date_Stock_Issued")) {
-                                childrenVaccinatedTextView = (MaterialEditText) views.get(i);
                             }
                         }
                     }
-
-
                     String label = "";
                     int currentBalance = 0;
                     int newBalance = 0;
                     Date encounterDate = new Date();
                     String vialsvalue = "";
                     String wastedvials = "0";
-                    String vaccineName = object.getString("title").replace("Stock Issued", "").trim();
+
                     JSONArray fields = object.getJSONArray("fields");
+                    int vialsused = 0;
                     for (int i = 0; i < fields.length(); i++) {
                         JSONObject questions = fields.getJSONObject(i);
                         if (questions.has("key")) {
@@ -128,7 +127,8 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                         vialsvalue = questions.getString("value");
                                     }
                                 } else {
-                                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                                    refreshDosesWasted(balancetextview, vialsused, Integer.parseInt(wastedvials), dosesPerVial);
+                                    refreshVialsBalance(vaccineName, str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()));
                                 }
                             }
 
@@ -136,23 +136,44 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     }
                     if (!StringUtils.isBlank(vialsvalue) && StringUtils.isNumeric(vialsvalue) && StringUtils.isNumeric(wastedvials)) {
                         newBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()) - Integer.parseInt(vialsvalue) - Integer.parseInt(wastedvials);
-                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance+"\nWasted doses: " + wastedvials);
+                        refreshVialsBalance(vaccineName, newBalance);
                     }
 
-                    int vialsused = 0;
-                    StockTypeRepository vaccineTypeRepository = StockLibrary.getInstance().getStockTypeRepository();
-                    int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccineName);
                     if (currentBalance % dosesPerVial == 0) {
                         vialsused = currentBalance / dosesPerVial;
                     } else if (currentBalance != 0) {
                         vialsused = (currentBalance / dosesPerVial) + 1;
                     }
-                    initializeChildrenVaccinatedTextView(currentBalance, vialsused, balancetextview);
+                    balancetextview.setText(String.valueOf(vialsused));
+                    refreshVialsBalance(vaccineName, calculateNewStock(str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()), vialsused));
+                    refreshDosesWasted(balancetextview, vialsused, Integer.parseInt(wastedvials), dosesPerVial);
+
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private int calculateNewStock(int currentStock, int issuedStock) {
+        if (issuedStock != 0) {
+            return currentStock - issuedStock;
+        }
+        return currentStock;
+    }
+
+    private int calculateDosesWasted(int childrenVaccinated, int vialsIssued, int wastedVials, int dosesPerVial) {
+        if (childrenVaccinated != 0 && vialsIssued != 0 && wastedVials != 0) {
+            return ((vialsIssued * dosesPerVial) - childrenVaccinated) + (wastedVials * dosesPerVial);
+        } else if (childrenVaccinated != 0 && vialsIssued != 0) {
+            return ((vialsIssued * dosesPerVial) - childrenVaccinated);
+        }
+        return 0;
+    }
+
+    private void displayChildrenVialsUsed(int childrenVaccinated, int vialsUsed, int vialsWasted) {
+        stockJsonFormFragment.getLabelViewFromTag("Children_Vaccinated_Count", "Children vaccinated on this date: " + childrenVaccinated);
+        stockJsonFormFragment.getLabelViewFromTag("Vials_Issued_Count", "Estimated vials issued on this date: " + vialsUsed);
     }
 
     private void stockVialsEnteredinIssuedForm(String key, String value) {
@@ -208,14 +229,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
                         }
                     }
-                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
-
+                    refreshVialsBalance(vaccineName, existingbalance);
                     if (value != null && !StringUtils.isBlank(value) && StringUtils.isNumeric(value) && StringUtils.isNumeric(wastedvials)) {
-
                         newBalance = existingbalance - Integer.parseInt(value) - Integer.parseInt(wastedvials);
-                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance+"\nWasted doses: " + wastedvials);
+                        refreshVialsBalance(vaccineName, newBalance);
+
                     } else {
-                        stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                        refreshVialsBalance(vaccineName, existingbalance);
+
                     }
                     int vialsused = 0;
                     StockTypeRepository vaccineTypeRepository = StockLibrary.getInstance().getStockTypeRepository();
@@ -225,12 +246,31 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalanceVaccineUsed != 0) {
                         vialsused = (currentBalanceVaccineUsed / dosesPerVial) + 1;
                     }
-                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                    refreshDosesWasted(balancetextview, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
+                    displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, Integer.parseInt(wastedvials));
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void refreshDosesWasted(MaterialEditText issuedVials, int currentBalanceVaccineUsed, int vialsWasted, int dosesPerVial) {
+        int vialsIssued = 0;
+        if (issuedVials != null && issuedVials.getText() != null && !issuedVials.getText().toString().trim().equals("")) {
+            try {
+                vialsIssued = Integer.parseInt(issuedVials.getText().toString());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        int wastedDoses = calculateDosesWasted(currentBalanceVaccineUsed, vialsIssued, vialsWasted, dosesPerVial);
+        stockJsonFormFragment.getLabelViewFromTag("Doses_wasted", "Total wasted doses: " + wastedDoses + " doses");
+    }
+
+
+    public void refreshVialsBalance(String vaccineName, int newBalance) {
+        stockJsonFormFragment.getLabelViewFromTag("Vials_Balance", "New " + vaccineName + " Balance: " + newBalance + " vials");
     }
 
     private void stockWastedVialsEnteredinIssuedForm(String key, String value) {
@@ -283,16 +323,16 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             }
                         }
                     }
-                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                    refreshVialsBalance(vaccineName, existingbalance);
                     if (wastedvials == null || StringUtils.isBlank(wastedvials)) {
                         wastedvials = "0";
                     }
                     if (vialsvalue != null && !StringUtils.isBlank(vialsvalue) && StringUtils.isNumeric(wastedvials)) {
 
                         newBalance = existingbalance - Integer.parseInt(vialsvalue) - Integer.parseInt(wastedvials);
-                        stockJsonFormFragment.getLabelViewFromTag("Balance", "New balance: " + newBalance+"\nWasted doses: " + wastedvials);
+                        refreshVialsBalance(vaccineName, newBalance);
                     } else {
-                        stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                        refreshVialsBalance(vaccineName, existingbalance);
                     }
                     int vialsused = 0;
                     StockTypeRepository vaccine_typesRepository = StockLibrary.getInstance().getStockTypeRepository();
@@ -302,6 +342,8 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalanceVaccineUsed != 0) {
                         vialsused = (currentBalanceVaccineUsed / dosesPerVial) + 1;
                     }
+                    displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, Integer.parseInt(wastedvials));
+                    refreshDosesWasted(balancetextview, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
                 }
             }
         } catch (JSONException e) {
@@ -315,7 +357,6 @@ public class StockJsonFormActivity extends JsonFormActivity {
             if (object.getString("title").contains("Stock Received")
                     && key.equalsIgnoreCase("Date_Stock_Received")
                     && value != null && !value.equalsIgnoreCase("")) {
-
                 String label = "";
                 int currentBalance = 0;
                 int displaybalance = 0;
@@ -537,12 +578,4 @@ public class StockJsonFormActivity extends JsonFormActivity {
         }
         return vaccineName;
     }
-
-    void initializeChildrenVaccinatedTextView(int childrenVaccinated, int vialsUsed, MaterialEditText vialsUsedText) {
-        String updateChildrenVaccinated = "Children vaccinated on this date: " + childrenVaccinated;
-        String updateEstimatedVials = "Estimated vials issued on this date: " + vialsUsed;
-        stockJsonFormFragment.getLabelViewFromTag("DateCount", updateChildrenVaccinated + "\n" + updateEstimatedVials);
-        vialsUsedText.setText(String.valueOf(vialsUsed));
-    }
 }
-
