@@ -37,6 +37,7 @@ import org.smartregister.stock.adapter.StockPaginatedCursorAdapter;
 import org.smartregister.stock.domain.Stock;
 import org.smartregister.stock.provider.StockRowSmartClientsProvider;
 import org.smartregister.stock.repository.StockRepository;
+import org.smartregister.stock.repository.StockTypeRepository;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
 
@@ -53,57 +54,33 @@ import static java.text.MessageFormat.format;
  */
 public class CurrentStock extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
+    ///////////////////////////////////////block for list///////////////////
+    public static final String DIALOG_TAG = "dialog";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final int REQUEST_CODE_GET_JSON = 3432;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    ///////////////////////////////////////block for list///////////////////
-    public static final String DIALOG_TAG = "dialog";
-    private boolean refreshList;
-    private ListView clientsView;
-    private ProgressBar clientsProgressView;
+    private static final int LOADER_ID = 0;
     private static int totalcount = 0;
     private static int currentlimit = 20;
     private static int currentoffset = 0;
-    private String mainSelect;
     private final String filters = "";
+    private final PaginationViewHandler paginationViewHandler = new PaginationViewHandler();
+    private boolean refreshList;
+    private ListView clientsView;
+    private ProgressBar clientsProgressView;
+    private String mainSelect;
     private String Sortqueries;
     private String tablename;
     private String countSelect;
-
-    private static final int LOADER_ID = 0;
     private StockRepository stockRepository;
-
     private StockPaginatedCursorAdapter clientAdapter;
-
     private View mView;
-
     private boolean isPaused;
-
     private TextView pageInfoView;
     private Button nextPageView;
     private Button previousPageView;
-
-    private final PaginationViewHandler paginationViewHandler = new PaginationViewHandler();
-
-    public String getTablename() {
-        return tablename;
-    }
-
-    private void setTablename(String tablename) {
-        this.tablename = tablename;
-    }
-
-
-    public StockPaginatedCursorAdapter getClientsCursorAdapter() {
-        return clientAdapter;
-    }
-
-    public void setClientsAdapter(StockPaginatedCursorAdapter clientsAdapter) {
-        this.clientAdapter = clientsAdapter;
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -121,6 +98,22 @@ public class CurrentStock extends Fragment implements
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public String getTablename() {
+        return tablename;
+    }
+
+    private void setTablename(String tablename) {
+        this.tablename = tablename;
+    }
+
+    public StockPaginatedCursorAdapter getClientsCursorAdapter() {
+        return clientAdapter;
+    }
+
+    public void setClientsAdapter(StockPaginatedCursorAdapter clientsAdapter) {
+        this.clientAdapter = clientsAdapter;
     }
 
     @Override
@@ -216,8 +209,8 @@ public class CurrentStock extends Fragment implements
         try {
             JSONObject form = FormUtils.getInstance(getActivity().getApplicationContext()).getFormJson("stock_received_form");
             String vaccine_name = ((StockControlActivity) getActivity()).stockType.getName();
-            String formmetadata = form.toString().replace("[vaccine]", vaccine_name);
-            intent.putExtra("json", formmetadata);
+            String formMetadata = form.toString().replace("[vaccine]", vaccine_name);
+            intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,10 +235,13 @@ public class CurrentStock extends Fragment implements
     private void launchIssuedForm() {
         Intent intent = new Intent(getActivity().getApplicationContext(), StockJsonFormActivity.class);
         try {
+            StockTypeRepository vaccineTypeRepository = StockLibrary.getInstance().getStockTypeRepository();
             JSONObject form = FormUtils.getInstance(getActivity().getApplicationContext()).getFormJson("stock_issued_form");
             String vaccine_name = ((StockControlActivity) getActivity()).stockType.getName();
-            String formmetadata = form.toString().replace("[vaccine]", vaccine_name);
-            intent.putExtra("json", formmetadata);
+            String formMetadata = form.toString().replace("[vaccine]", vaccine_name);
+            int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccine_name);
+            formMetadata = formMetadata.replace("[number_of_doses]", String.valueOf(dosesPerVial));
+            intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
             e.printStackTrace();
@@ -597,12 +593,12 @@ public class CurrentStock extends Fragment implements
         return refreshList;
     }
 
-    protected Context context() {
-        return StockLibrary.getInstance().getContext();
-    }
-
     private void setRefreshList(boolean refreshList) {
         this.refreshList = refreshList;
+    }
+
+    protected Context context() {
+        return StockLibrary.getInstance().getContext();
     }
 
     private boolean isPaused() {

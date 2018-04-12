@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rey.material.util.ViewUtil;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.JsonApi;
@@ -49,6 +50,12 @@ public class StockEditTextFactory extends EditTextFactory {
             Button plusbutton = (Button) rootLayout.findViewById(R.id.addbutton);
             Button minusbutton = (Button) rootLayout.findViewById(R.id.minusbutton);
 
+            plusbutton.setId(ViewUtil.generateViewId());
+            minusbutton.setId(ViewUtil.generateViewId());
+
+            canvasIds.put(plusbutton.getId());
+            canvasIds.put(minusbutton.getId());
+
             plusbutton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -77,12 +84,27 @@ public class StockEditTextFactory extends EditTextFactory {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER |
                     InputType.TYPE_NUMBER_FLAG_SIGNED);
 
+            if (jsonObject.has(JsonFormConstants.READ_ONLY)) {
+                boolean readOnly = jsonObject.getBoolean(JsonFormConstants.READ_ONLY);
+
+                editText.setEnabled(!readOnly);
+                editText.setFocusable(!readOnly);
+
+                plusbutton.setEnabled(!readOnly);
+                minusbutton.setEnabled(!readOnly);
+            }
+
+            editText.setTag(R.id.canvas_ids, canvasIds.toString());
+
 
             return views;
         } else {
             return super.getViewsFromJson(stepName, context, formFragment, jsonObject, listener);
         }
+    }
 
-
+    @Override
+    protected int getLayout() {
+        return R.layout.stock_native_form_item_date_picker;
     }
 }

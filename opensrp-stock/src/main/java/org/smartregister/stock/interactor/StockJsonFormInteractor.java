@@ -3,6 +3,7 @@ package org.smartregister.stock.interactor;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 
+import org.smartregister.stock.widget.StockDatePickerFactory;
 import org.smartregister.stock.widget.StockEditTextFactory;
 
 /**
@@ -21,6 +22,7 @@ public class StockJsonFormInteractor extends JsonFormInteractor {
     protected void registerWidgets() {
         super.registerWidgets();
         map.put(JsonFormConstants.EDIT_TEXT, new StockEditTextFactory());
+        map.put(JsonFormConstants.DATE_PICKER, new StockDatePickerFactory());
     }
 
     public static JsonFormInteractor getInstance() {
