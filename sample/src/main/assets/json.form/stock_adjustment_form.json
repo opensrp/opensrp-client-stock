@@ -65,6 +65,14 @@
         }
       },
       {
+        "key": "divider1",
+        "type": "h_line",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "bottom_margin": "30dp"
+      },
+      {
         "key": "Reason_for_adjustment",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
