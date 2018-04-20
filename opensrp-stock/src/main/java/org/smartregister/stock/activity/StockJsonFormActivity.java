@@ -257,7 +257,9 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalance != 0) {
                         vialsused = (currentBalance / dosesPerVial) + 1;
                     }
-                    balancetextview.setText(String.valueOf(vialsused));
+                    if(StringUtils.isBlank(balancetextview.getText().toString())) {
+                        balancetextview.setText(String.valueOf(vialsused));
+                    }
                     refreshVialsBalance(vaccineName, calculateNewStock(str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()), vialsused));
                     refreshDosesWasted(balancetextview, currentBalance, Integer.parseInt(wastedvials), dosesPerVial);
 
