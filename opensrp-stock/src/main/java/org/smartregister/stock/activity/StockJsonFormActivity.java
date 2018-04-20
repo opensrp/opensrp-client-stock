@@ -278,12 +278,10 @@ public class StockJsonFormActivity extends JsonFormActivity {
     }
 
     private int calculateDosesWasted(int childrenVaccinated, int vialsIssued, int wastedVials, int dosesPerVial) {
-        if (childrenVaccinated != 0 && vialsIssued != 0 && wastedVials != 0) {
+        if (childrenVaccinated <= (vialsIssued * dosesPerVial)) {
             return ((vialsIssued * dosesPerVial) - childrenVaccinated) + (wastedVials * dosesPerVial);
-        } else if (childrenVaccinated != 0 && vialsIssued != 0) {
-            return ((vialsIssued * dosesPerVial) - childrenVaccinated);
         }
-        return 0;
+        return (wastedVials * dosesPerVial);
     }
 
     private void displayChildrenVialsUsed(int childrenVaccinated, int vialsUsed, int vialsWasted) {
