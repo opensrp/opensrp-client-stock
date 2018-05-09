@@ -48,6 +48,7 @@ public class ShipmentSyncIntentService extends IntentService {
     private static final String TAG = ShipmentSyncIntentService.class.getName();
     private static final String GET_SHIPMENTS_URL = "rest/stockresource/shipment/getShipments";
     public static final String LAST_SHIPMENT_SERVER_VERSION_PREFERENCE = "LAST SHIPMENT SERVER VERSION";
+    public static int DEFAULT_SERVER_PULL_LIMIT = 25;
 
     public ShipmentSyncIntentService(){
         super(ShipmentSyncIntentService.class.getName());
@@ -128,6 +129,11 @@ public class ShipmentSyncIntentService extends IntentService {
                     lastServerVersion = shipment.getServerVersion();
                 }
             }
+
+            if (shipments.size() < DEFAULT_SERVER_PULL_LIMIT) {
+                lastServerVersion += 1;
+            }
+
             setLastShipmentServerVersion(lastServerVersion);
         } catch (JSONException e) {
             Log.e(TAG, Log.getStackTraceString(e));
