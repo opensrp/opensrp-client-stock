@@ -221,7 +221,7 @@ public class OrdersSyncIntentService extends IntentService {
                 orderRepository.addOrUpdateOrder(order);
             }
 
-            if (ordersList.size() < DEFAULT_SERVER_PULL_LIMIT) {
+            if (ordersList.size() > 0 && ordersList.size() < DEFAULT_SERVER_PULL_LIMIT) {
                 lastServerVersion += 1;
             }
 
