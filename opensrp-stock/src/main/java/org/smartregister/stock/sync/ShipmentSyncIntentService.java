@@ -130,7 +130,8 @@ public class ShipmentSyncIntentService extends IntentService {
                 }
             }
 
-            if (shipments.size() < DEFAULT_SERVER_PULL_LIMIT) {
+            int shipmentsSize = shipments.size();
+            if (shipmentsSize > 0 && shipmentsSize < DEFAULT_SERVER_PULL_LIMIT) {
                 lastServerVersion += 1;
             }
 
