@@ -62,6 +62,7 @@ public class OrdersSyncIntentService extends IntentService {
     private static final String GET_ORDERS_URL = "rest/stockresource/order/getOrders";
 
     public static final String LAST_ORDER_SERVER_VERSION_PREFERENCE = "LAST ORDER SERVER VERSION";
+    public static int DEFAULT_SERVER_PULL_LIMIT = 25;
     private RequestQueue requestQueue;
 
     public OrdersSyncIntentService() {
@@ -113,7 +114,6 @@ public class OrdersSyncIntentService extends IntentService {
             public void onResponse(JSONObject response) {
                 if (response != null) {
                     Log.i(TAG, response.toString());
-                    orderRepository.setOrderStatusToSynced(ordersList);
                 } else {
                     Log.i(TAG, "Push orders: The response was empty. This is okay");
                 }
@@ -139,6 +139,11 @@ public class OrdersSyncIntentService extends IntentService {
                     );
 
                     if (json.length() == 0) {
+                        // This is where we can check the status code
+                        if (response.statusCode == 201) {
+                            orderRepository.setOrderStatusToSynced(ordersList);
+                        }
+
                         return com.android.volley.Response.success(
                                 null,
                                 HttpHeaderParser.parseCacheHeaders(response)
@@ -214,6 +219,10 @@ public class OrdersSyncIntentService extends IntentService {
 
                 order.setSynced(true);
                 orderRepository.addOrUpdateOrder(order);
+            }
+
+            if (ordersList.size() < DEFAULT_SERVER_PULL_LIMIT) {
+                lastServerVersion += 1;
             }
 
             setLastOrderServerVersion(lastServerVersion);
