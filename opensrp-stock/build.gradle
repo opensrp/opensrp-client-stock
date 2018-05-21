@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 22
+        targetSdkVersion 27
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
         multiDexEnabled true
@@ -77,25 +77,25 @@ android {
 }
 
 dependencies {
-    implementation ('org.smartregister:opensrp-client-native-form:1.2.0-SNAPSHOT@aar') {
+    implementation ('org.smartregister:opensrp-client-native-form:1.2.1-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'org.jacoco', module: 'org.jacoco.agent'
     }
 
-    implementation ('org.smartregister:opensrp-client-core:1.3.0-SNAPSHOT@aar') {
+    implementation ('org.smartregister:opensrp-client-core:1.3.1-SNAPSHOT@aar') {
         transitive true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'org.jacoco', module: 'org.jacoco.agent'
     }
 
-    implementation ('com.android.support:design:22.2.1') {
+    implementation ('com.android.support:design:27.1.1') {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
 
     implementation 'com.jjoe64:graphview:4.2.1'
     testImplementation 'junit:junit:4.12'
-    testImplementation "org.robolectric:robolectric:2.4"
+    testImplementation "org.robolectric:robolectric:3.8"
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
 
     // PowerMock
