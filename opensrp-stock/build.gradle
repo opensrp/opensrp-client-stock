@@ -70,6 +70,16 @@ android {
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
 }
 
 dependencies {
