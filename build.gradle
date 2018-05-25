@@ -20,6 +20,7 @@ configure(allprojects) { project ->
             mavenCentral()
             maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
             mavenLocal()
+            google()
         }
     }
 }
@@ -31,10 +32,10 @@ subprojects {
     group = 'org.smartregister'
 
     ext.androidToolsBuildGradle = '21.1.2'
-    ext.androidBuildToolsVersion = '26.0.0'
+    ext.androidBuildToolsVersion = '27.0.3'
     ext.androidMinSdkVersion = 16
-    ext.androidCompileSdkVersion = 21
-    ext.androidTargetSdkVersion = 21
+    ext.androidCompileSdkVersion = 27
+    ext.androidTargetSdkVersion = 27
 
     ext.androidAnnotationsVersion = '3.0.1';
     ext.androidAnnotationsAPIVersion = '3.0.1';
@@ -43,19 +44,12 @@ subprojects {
         jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        maven { url "${projectDir}/libs/" }
         maven { url "http://nexus.motechproject.org/content/repositories/drishti" }
         maven { url "http://nexus.motechproject.org/content/repositories/snapshots" }
         maven { url "http://acra.googlecode.com/svn/repository/releases" }
         maven { url "http://repo.maven.apache.org/maven2" }
-        maven { url "http://cloudant.github.io/cloudant-sync-eap/repository" }
-        maven {
-            url "${projectDir}/opensrp-stock/../libs/"
-        }
-        maven {
-            url "${projectDir}/opensrp-stock-it/../libs/"
-        }
         mavenLocal()
+        google()
     }
 
     // Improve build server performance by allowing disabling of pre-dexing
@@ -74,7 +68,7 @@ apply plugin: 'build-dashboard'
 apply plugin: 'io.codearte.nexus-staging'
 
 buildDashboard {
-    reports.html.destination = "build/"
+    reports.html.setDestination(file("build/"))
 }
 
 test.reports.html.enabled = false
