@@ -1,6 +1,7 @@
 package org.smartregister.stock.management.domain;
 
-public class TradeItemClassification {
+public class TradeItemClassification extends BaseEntity {
+
     private TradeItem tradeItem;
     private String classificationSystem;
     private String classificationId;

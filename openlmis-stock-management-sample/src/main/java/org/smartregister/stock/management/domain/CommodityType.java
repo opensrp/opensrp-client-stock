@@ -2,9 +2,8 @@ package org.smartregister.stock.management.domain;
 
 import java.util.UUID;
 
-public class CommodityType {
+public class CommodityType extends BaseEntity {
 
-    private UUID id;
     private String name;
     private CommodityType parent;
     private String classificationSystem;
