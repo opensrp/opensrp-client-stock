@@ -45,6 +45,70 @@ public class Program extends BaseEntity {
     public int hashCode() {
         return code.hashCode();
     }
+
+    public Code getCode() {
+        return code;
+    }
+
+    public void setCode(Code code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Boolean getPeriodsSkippable() {
+        return periodsSkippable;
+    }
+
+    public void setPeriodsSkippable(Boolean periodsSkippable) {
+        this.periodsSkippable = periodsSkippable;
+    }
+
+    public Boolean getSkipAuthorization() {
+        return skipAuthorization;
+    }
+
+    public void setSkipAuthorization(Boolean skipAuthorization) {
+        this.skipAuthorization = skipAuthorization;
+    }
+
+    public Boolean getShowNonFullSupplyTab() {
+        return showNonFullSupplyTab;
+    }
+
+    public void setShowNonFullSupplyTab(Boolean showNonFullSupplyTab) {
+        this.showNonFullSupplyTab = showNonFullSupplyTab;
+    }
+
+    public Boolean getEnableDatePhysicalStockCountCompleted() {
+        return enableDatePhysicalStockCountCompleted;
+    }
+
+    public void setEnableDatePhysicalStockCountCompleted(Boolean enableDatePhysicalStockCountCompleted) {
+        this.enableDatePhysicalStockCountCompleted = enableDatePhysicalStockCountCompleted;
+    }
 }
 
 
