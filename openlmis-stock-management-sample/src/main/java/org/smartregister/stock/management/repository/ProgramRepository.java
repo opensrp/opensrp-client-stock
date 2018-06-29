@@ -1,4 +1,4 @@
-package org.smartregister.stock.management;
+package org.smartregister.stock.management.repository;
 
 import android.content.ContentValues;
 import android.util.Log;
@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+
+import static org.smartregister.stock.management.util.Utils.INSERT_OR_REPLACE;
 
 public class ProgramRepository extends BaseRepository {
 
@@ -49,7 +51,7 @@ public class ProgramRepository extends BaseRepository {
                 + DATE_UPDATED + " INTEGER"
             + ")";
 
-    public final String INSERT_OR_REPLACE = "INSERT OR REPLACE INTO %s VALUES ";
+
 
     public ProgramRepository(Repository repository) { super(repository); }
 
