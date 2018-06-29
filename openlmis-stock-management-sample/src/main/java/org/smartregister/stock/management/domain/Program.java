@@ -4,14 +4,15 @@ import java.util.UUID;
 
 public class Program extends BaseEntity {
 
-    Code code;
-    String name;
-    String description;
-    Boolean active;
-    Boolean periodsSkippable;
-    Boolean skipAuthorization;
-    Boolean showNonFullSupplyTab;
-    Boolean enableDatePhysicalStockCountCompleted;
+    private Code code;
+    private String name;
+    private String description;
+    private Boolean active;
+    private Boolean periodsSkippable;
+    private Boolean skipAuthorization;
+    private Boolean showNonFullSupplyTab;
+    private Boolean enableDatePhysicalStockCountCompleted;
+    private Long dateUpdated;
 
     public Program() {
         code = null;
@@ -23,6 +24,20 @@ public class Program extends BaseEntity {
 
     public Program(String programCode) {
         this.code = Code.code(programCode);
+    }
+
+    public Program(UUID id, Code code, String name, String description, Boolean active, Boolean periodsSkippable, Boolean skipAuthorization,
+                   Boolean showNonFullSupplyTab, Boolean enableDatePhysicalStockCountCompleted, Long dateUpdated) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.description = description;
+        this.active = active;
+        this.periodsSkippable = periodsSkippable;
+        this.skipAuthorization = skipAuthorization;
+        this.showNonFullSupplyTab = showNonFullSupplyTab;
+        this.enableDatePhysicalStockCountCompleted = enableDatePhysicalStockCountCompleted;
+        this.dateUpdated = dateUpdated;
     }
 
     /**
@@ -108,6 +123,14 @@ public class Program extends BaseEntity {
 
     public void setEnableDatePhysicalStockCountCompleted(Boolean enableDatePhysicalStockCountCompleted) {
         this.enableDatePhysicalStockCountCompleted = enableDatePhysicalStockCountCompleted;
+    }
+
+    public Long getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Long dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 }
 
