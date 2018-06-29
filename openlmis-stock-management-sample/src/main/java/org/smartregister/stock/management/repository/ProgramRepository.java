@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.smartregister.stock.management.util.Utils.INSERT_OR_REPLACE;
+import static org.smartregister.stock.management.util.Utils.convertIntToBoolean;
 
 public class ProgramRepository extends BaseRepository {
 
@@ -80,23 +81,7 @@ public class ProgramRepository extends BaseRepository {
         }
     }
 
-    private String formatTableValues(Program program) {
-
-        String values = "";
-        values += program.getId().toString() + ",";
-        values += program.getCode().toString() + ",";
-        values += program.getName() + ",";
-        values += program.getDescription() + ",";
-        values += program.getActive() + ",";
-        values += program.getPeriodsSkippable() + ",";
-        values += program.getSkipAuthorization() + ",";
-        values += program.getShowNonFullSupplyTab() + ",";
-        values += program.getEnableDatePhysicalStockCountCompleted();
-
-        return values;
-    }
-
-    private List<Program> findStock(String id, String code, String name, String active) {
+    public List<Program> findPrograms(String id, String code, String name, String active) {
 
         List<Program> programs = new ArrayList<>();
         Cursor cursor = null;
@@ -104,7 +89,7 @@ public class ProgramRepository extends BaseRepository {
             String query = ID + "=?" + " AND " + CODE  + "=?" + " AND " + NAME + "=?" + " AND " + ACTIVE + "=?";
             String[] values = new String[]{id, code, name, active};
             cursor = getReadableDatabase().query(PROGRAM_TABLE, PROGRAM_TABLE_COLUMNS, query, values, null, null, null);
-            programs = readPrograms(cursor);
+            programs = readProgramsFromCursor(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         } finally {
@@ -115,7 +100,7 @@ public class ProgramRepository extends BaseRepository {
         return programs;
     }
 
-    private List<Program> readPrograms(Cursor cursor) {
+    private List<Program> readProgramsFromCursor(Cursor cursor) {
 
         List<Program> programs = new ArrayList<>();
         try {
@@ -151,23 +136,19 @@ public class ProgramRepository extends BaseRepository {
         );
     }
 
-    private Boolean convertIntToBoolean(int i) {
-        return i > 0;
-    }
+    private String formatTableValues(Program program) {
 
-    private ContentValues createContentValues(Program program) {
+        String values = "";
+        values += program.getId().toString() + ",";
+        values += program.getCode().toString() + ",";
+        values += program.getName() + ",";
+        values += program.getDescription() + ",";
+        values += program.getActive() + ",";
+        values += program.getPeriodsSkippable() + ",";
+        values += program.getSkipAuthorization() + ",";
+        values += program.getShowNonFullSupplyTab() + ",";
+        values += program.getEnableDatePhysicalStockCountCompleted();
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ID, program.getId().toString());
-        contentValues.put(CODE, program.getCode().toString());
-        contentValues.put(NAME, program.getName());
-        contentValues.put(DESCRIPTION, program.getDescription());
-        contentValues.put(ACTIVE, program.getActive());
-        contentValues.put(PERIODS_SKIPPABLE, program.getPeriodsSkippable());
-        contentValues.put(SKIP_AUTHORIZATION, program.getSkipAuthorization());
-        contentValues.put(SHOW_NON_FULL_SUPPLY_TAB, program.getShowNonFullSupplyTab());
-        contentValues.put(ENABLE_DATE_PHYSICAL_STOCK_COUNT_COMPLETED, program.getEnableDatePhysicalStockCountCompleted());
-
-        return contentValues;
+        return values;
     }
 }
