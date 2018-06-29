@@ -1,6 +1,5 @@
 package org.smartregister.stock.management.repository;
 
-import android.content.ContentValues;
 import android.util.Log;
 
 import net.sqlcipher.Cursor;
