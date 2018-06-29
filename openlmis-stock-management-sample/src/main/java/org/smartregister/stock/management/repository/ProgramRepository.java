@@ -118,11 +118,11 @@ public class ProgramRepository extends BaseRepository {
     private List<Program> readPrograms(Cursor cursor) {
 
         List<Program> programs = new ArrayList<>();
-
         try {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-
+                    programs.add(createProgramFromCursor(cursor));
+                    cursor.moveToNext();
                 }
             }
         } catch (Exception e) {
