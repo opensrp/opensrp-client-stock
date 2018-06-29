@@ -21,7 +21,7 @@ import static org.smartregister.stock.management.util.Utils.INSERT_OR_REPLACE;
 public class ProgramRepository extends BaseRepository {
 
     public static final String TAG = ProgramRepository.class.getName();
-    public static final String PROGRAM_TABLE_NAME = "programs";
+    public static final String PROGRAM_TABLE = "programs";
     public static final String ID = "id";
     public static final String CODE = "code";
     public static final String NAME = "name";
@@ -37,7 +37,7 @@ public class ProgramRepository extends BaseRepository {
 
     public static final String CREATE_PROGRAM_TABLE =
 
-            "CREATE TABLE " + PROGRAM_TABLE_NAME
+            "CREATE TABLE " + PROGRAM_TABLE
             + "("
                 + ID + " VARCHAR NOT NULL,"
                 + CODE + " VARCHAR NOT NULL,"
@@ -72,7 +72,7 @@ public class ProgramRepository extends BaseRepository {
         try {
             SQLiteDatabase database = getWritableDatabase();
 
-            String sql = String.format(INSERT_OR_REPLACE, PROGRAM_TABLE_NAME);
+            String sql = String.format(INSERT_OR_REPLACE, PROGRAM_TABLE);
             sql += "(" + formatTableValues(program) + ")";
             database.execSQL(sql);
         } catch (Exception e) {
@@ -103,7 +103,7 @@ public class ProgramRepository extends BaseRepository {
         try {
             String query = ID + "=?" + " AND " + CODE  + "=?" + " AND " + NAME + "=?" + " AND " + ACTIVE + "=?";
             String[] values = new String[]{id, code, name, active};
-            cursor = getReadableDatabase().query(PROGRAM_TABLE_NAME, PROGRAM_TABLE_COLUMNS, query, values, null, null, null);
+            cursor = getReadableDatabase().query(PROGRAM_TABLE, PROGRAM_TABLE_COLUMNS, query, values, null, null, null);
             programs = readPrograms(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
