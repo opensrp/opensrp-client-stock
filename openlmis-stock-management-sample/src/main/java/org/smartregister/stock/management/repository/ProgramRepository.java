@@ -72,9 +72,9 @@ public class ProgramRepository extends BaseRepository {
         try {
             SQLiteDatabase database = getWritableDatabase();
 
-            String sql = String.format(INSERT_OR_REPLACE, PROGRAM_TABLE);
-            sql += "(" + formatTableValues(program) + ")";
-            database.execSQL(sql);
+            String query = String.format(INSERT_OR_REPLACE, PROGRAM_TABLE);
+            query += "(" + formatTableValues(program) + ")";
+            database.execSQL(query);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -86,8 +86,8 @@ public class ProgramRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String query = ID + "=?" + " AND " + CODE  + "=?" + " AND " + NAME + "=?" + " AND " + ACTIVE + "=?";
-            String[] values = new String[]{id, code, name, active};
-            cursor = getReadableDatabase().query(PROGRAM_TABLE, PROGRAM_TABLE_COLUMNS, query, values, null, null, null);
+            String[] selectionArgs = new String[]{id, code, name, active};
+            cursor = getReadableDatabase().query(PROGRAM_TABLE, PROGRAM_TABLE_COLUMNS, query, selectionArgs, null, null, null);
             programs = readProgramsFromCursor(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));

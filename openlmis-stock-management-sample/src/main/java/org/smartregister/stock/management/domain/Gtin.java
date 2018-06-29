@@ -12,7 +12,7 @@ public class Gtin {
      * Creates a new Gtin value.
      * @param gtin the gtin
      */
-    public Gtin(String gtin) throws  Exception {
+    public Gtin(String gtin) throws Exception {
         if (!StringUtils.isNumeric(gtin)) {
             throw new Exception("GTIN should be numeric");
         }

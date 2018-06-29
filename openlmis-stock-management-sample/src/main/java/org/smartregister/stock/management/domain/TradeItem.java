@@ -7,7 +7,15 @@ public class TradeItem extends BaseEntity {
 
     private Gtin gtin;
     private String manufacturerOfTradeItem;
-    List<TradeItemClassification> classifications;
+    private List<TradeItemClassification> classifications;
+    private Long dateUpdated;
+
+    public TradeItem(UUID id, Gtin gtin, String manufacturerOfTradeItem, Long dateUpdated) {
+        this.gtin = gtin;
+        this.manufacturerOfTradeItem = manufacturerOfTradeItem;
+        this.classifications = classifications;
+        this.dateUpdated = dateUpdated;
+    }
 
     public TradeItem(String manufacturerOfTradeItem, List<TradeItemClassification> classifications) {
         this.manufacturerOfTradeItem = manufacturerOfTradeItem;
@@ -63,5 +71,37 @@ public class TradeItem extends BaseEntity {
             }
         }
         return null;
+    }
+
+    public Gtin getGtin() {
+        return gtin;
+    }
+
+    public void setGtin(Gtin gtin) {
+        this.gtin = gtin;
+    }
+
+    public String getManufacturerOfTradeItem() {
+        return manufacturerOfTradeItem;
+    }
+
+    public void setManufacturerOfTradeItem(String manufacturerOfTradeItem) {
+        this.manufacturerOfTradeItem = manufacturerOfTradeItem;
+    }
+
+    public List<TradeItemClassification> getClassifications() {
+        return classifications;
+    }
+
+    public void setClassifications(List<TradeItemClassification> classifications) {
+        this.classifications = classifications;
+    }
+
+    public Long getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Long dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 }

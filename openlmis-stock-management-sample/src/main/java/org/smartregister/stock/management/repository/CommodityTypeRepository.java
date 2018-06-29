@@ -59,9 +59,9 @@ public class CommodityTypeRepository extends BaseRepository {
         try {
             SQLiteDatabase database = getWritableDatabase();
 
-            String sql = String.format(INSERT_OR_REPLACE, COMMODITY_TYPE_TABLE);
-            sql += "(" + formatTableValues(commodityType) + ")";
-            database.execSQL(sql);
+            String query = String.format(INSERT_OR_REPLACE, COMMODITY_TYPE_TABLE);
+            query += "(" + formatTableValues(commodityType) + ")";
+            database.execSQL(query);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -73,8 +73,8 @@ public class CommodityTypeRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String query = ID + "=?" + " AND " + NAME + "=?" + " AND " + PARENT + "=?" + " AND " + CLASSIFICATION_SYSTEM + "?" + " AND " + CLASSIFICATION_ID + "?";
-            String[] values = new String[]{id, name, parent, classificationSystem, classificationId};
-            cursor = getReadableDatabase().query(COMMODITY_TYPE_TABLE, COMMODITY_TYPE_TABLE_COLUMNS, query, values, null, null, null);
+            String[] selectionArgs = new String[]{id, name, parent, classificationSystem, classificationId};
+            cursor = getReadableDatabase().query(COMMODITY_TYPE_TABLE, COMMODITY_TYPE_TABLE_COLUMNS, query, selectionArgs, null, null, null);
             commodityTypes = readCommodityTypesFromCursor(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -107,6 +107,7 @@ public class CommodityTypeRepository extends BaseRepository {
     }
 
     private CommodityType createCommodityTypeFromCursor(Cursor cursor) {
+
         return new CommodityType(
                 UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
                 cursor.getString(cursor.getColumnIndex(NAME)),
