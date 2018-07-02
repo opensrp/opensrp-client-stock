@@ -1,14 +1,25 @@
 package org.smartregister.stock.management.domain;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class ProgramOrderable extends BaseEntity {
 
     private Program program;
-    private Orderable product;
+    private Orderable orderable;
     private Integer dosesPerPatient;
     private boolean active;
     private boolean fullSupply;
+    private Long dateUpdated;
+
+    public ProgramOrderable(UUID id, Program program, Orderable orderable, Integer dosesPerPatient, boolean active, boolean fullSupply) {
+        this.id = id;
+        this.program = program;
+        this.orderable = orderable;
+        this.dosesPerPatient = dosesPerPatient;
+        this.active = active;
+        this.fullSupply = fullSupply;
+    }
 
     /**
      * Returns true if this association is for given Program.
@@ -34,15 +45,59 @@ public class ProgramOrderable extends BaseEntity {
         ProgramOrderable otherProgProduct = (ProgramOrderable) other;
 
         return Objects.equals(program, otherProgProduct.program)
-                && Objects.equals(product, otherProgProduct.product);
+                && Objects.equals(orderable, otherProgProduct.orderable);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(program, product);
+        return Objects.hash(program, orderable);
     }
 
     public boolean isActive() {
         return active;
+    }
+
+    public Program getProgram() {
+        return program;
+    }
+
+    public Orderable getOrderable() {
+        return orderable;
+    }
+
+    public Integer getDosesPerPatient() {
+        return dosesPerPatient;
+    }
+
+    public boolean isFullSupply() {
+        return fullSupply;
+    }
+
+    public Long getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Long dateUpdated) {
+        this.dateUpdated = dateUpdated;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+    }
+
+    public void setOrderable(Orderable orderable) {
+        this.orderable = orderable;
+    }
+
+    public void setDosesPerPatient(Integer dosesPerPatient) {
+        this.dosesPerPatient = dosesPerPatient;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setFullSupply(boolean fullSupply) {
+        this.fullSupply = fullSupply;
     }
 }
