@@ -21,6 +21,9 @@ public class Orderable extends BaseEntity {
     private Map<String, String> identifiers;
     private Map<String, String> extraData;
 
+    public Orderable(UUID id) {
+        this.id = id;
+    }
 
     public Orderable(UUID id, Code productCode, String fullProductCode, long netContent, long packRoundingThreshold, boolean roundToZero, String tradeItemId, String commodityTypeId) {
         this.id = id;
