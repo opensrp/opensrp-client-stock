@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.smartregister.stock.management.util.Utils.INSERT_OR_REPLACE;
+import static org.smartregister.stock.management.util.Utils.convertBooleanToInt;
 import static org.smartregister.stock.management.util.Utils.convertIntToBoolean;
 
 public class ProgramRepository extends BaseRepository {
@@ -142,11 +143,12 @@ public class ProgramRepository extends BaseRepository {
         values += program.getCode().toString() + ",";
         values += program.getName() + ",";
         values += program.getDescription() + ",";
-        values += program.getActive() + ",";
-        values += program.getPeriodsSkippable() + ",";
-        values += program.getSkipAuthorization() + ",";
-        values += program.getShowNonFullSupplyTab() + ",";
-        values += program.getEnableDatePhysicalStockCountCompleted();
+        values += convertBooleanToInt(program.getActive()) + ",";
+        values += convertBooleanToInt(program.getPeriodsSkippable()) + ",";
+        values += convertBooleanToInt(program.getSkipAuthorization()) + ",";
+        values += convertBooleanToInt(program.getShowNonFullSupplyTab()) + ",";
+        values += convertBooleanToInt(program.getEnableDatePhysicalStockCountCompleted()) + ",";
+        values += program.getDateUpdated();
 
         return values;
     }

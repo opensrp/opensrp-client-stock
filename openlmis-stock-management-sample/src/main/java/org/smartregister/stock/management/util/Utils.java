@@ -7,4 +7,11 @@ public class Utils {
     public static Boolean convertIntToBoolean(int i) {
         return i > 0;
     }
+
+    public static int convertBooleanToInt(Boolean isTrue) {
+        if (isTrue) {
+            return 1;
+        }
+        return 0;
+    }
 }

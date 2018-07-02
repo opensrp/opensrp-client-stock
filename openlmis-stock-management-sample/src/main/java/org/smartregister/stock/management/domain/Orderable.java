@@ -3,6 +3,7 @@ package org.smartregister.stock.management.domain;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Orderable extends BaseEntity {
 
@@ -14,10 +15,23 @@ public class Orderable extends BaseEntity {
     private long netContent;
     private long packRoundingThreshold;
     private boolean roundToZero;
+    private Dispensable dispensable;
+    private Long dateUpdated;
     private List<ProgramOrderable> programOrderables;
     private Map<String, String> identifiers;
     private Map<String, String> extraData;
-    private Dispensable dispensable;
+
+
+    public Orderable(UUID id, Code productCode, String fullProductCode, long netContent, long packRoundingThreshold, boolean roundToZero, String tradeItemId, String commodityTypeId) {
+        this.id = id;
+        this.productCode = productCode;
+        this.fullProductCode = fullProductCode;
+        this.netContent = netContent;
+        this.packRoundingThreshold = packRoundingThreshold;
+        this.roundToZero = roundToZero;
+        identifiers.put(TRADE_ITEM, tradeItemId);
+        identifiers.put(COMMODITY_TYPE, commodityTypeId);
+    }
 
     /**
      * Get the association to a {@link Program}.
@@ -72,6 +86,14 @@ public class Orderable extends BaseEntity {
         return this.dispensable.equals(dispensable);
     }
 
+    public Long getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Long dateUpdated) {
+        this.dateUpdated = dateUpdated;
+    }
+
     /**
      * Determines equality based on product codes.
      * @param object another Orderable, ideally.
@@ -87,5 +109,77 @@ public class Orderable extends BaseEntity {
     @Override
     public final int hashCode() {
         return Objects.hashCode(productCode);
+    }
+
+    public Code getProductCode() {
+        return productCode;
+    }
+
+    public void setProductCode(Code productCode) {
+        this.productCode = productCode;
+    }
+
+    public String getFullProductCode() {
+        return fullProductCode;
+    }
+
+    public void setFullProductCode(String fullProductCode) {
+        this.fullProductCode = fullProductCode;
+    }
+
+    public long getNetContent() {
+        return netContent;
+    }
+
+    public void setNetContent(long netContent) {
+        this.netContent = netContent;
+    }
+
+    public long getPackRoundingThreshold() {
+        return packRoundingThreshold;
+    }
+
+    public void setPackRoundingThreshold(long packRoundingThreshold) {
+        this.packRoundingThreshold = packRoundingThreshold;
+    }
+
+    public boolean isRoundToZero() {
+        return roundToZero;
+    }
+
+    public void setRoundToZero(boolean roundToZero) {
+        this.roundToZero = roundToZero;
+    }
+
+    public Dispensable getDispensable() {
+        return dispensable;
+    }
+
+    public void setDispensable(Dispensable dispensable) {
+        this.dispensable = dispensable;
+    }
+
+    public List<ProgramOrderable> getProgramOrderables() {
+        return programOrderables;
+    }
+
+    public void setProgramOrderables(List<ProgramOrderable> programOrderables) {
+        this.programOrderables = programOrderables;
+    }
+
+    public Map<String, String> getIdentifiers() {
+        return identifiers;
+    }
+
+    public void setIdentifiers(Map<String, String> identifiers) {
+        this.identifiers = identifiers;
+    }
+
+    public Map<String, String> getExtraData() {
+        return extraData;
+    }
+
+    public void setExtraData(Map<String, String> extraData) {
+        this.extraData = extraData;
     }
 }
