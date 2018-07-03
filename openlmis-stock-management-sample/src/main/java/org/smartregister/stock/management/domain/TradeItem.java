@@ -10,6 +10,11 @@ public class TradeItem extends BaseEntity {
     private List<TradeItemClassification> classifications;
     private Long dateUpdated;
 
+    public TradeItem(UUID id) {
+        this.id = id;
+    }
+
+
     public TradeItem(UUID id, Gtin gtin, String manufacturerOfTradeItem, Long dateUpdated) {
         this.gtin = gtin;
         this.manufacturerOfTradeItem = manufacturerOfTradeItem;
