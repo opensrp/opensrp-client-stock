@@ -7,6 +7,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.AllConstants;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.management.domain.CommodityType;
 
 public class StockManagementRepository extends Repository {
 
@@ -26,6 +27,7 @@ public class StockManagementRepository extends Repository {
 
     public static void createTables(SQLiteDatabase database) {
         OrderableRepository.createTable(database);
+        CommodityTypeRepository.createTable(database);
     }
 
     @Override

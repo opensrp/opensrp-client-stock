@@ -1,6 +1,7 @@
 package org.smartregister.stock.management.repository;
 
 import android.util.Log;
+import android.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -27,6 +28,7 @@ public class CommodityTypeRepository extends BaseRepository {
     public static final String CLASSIFICATION_ID = "classification_id";
     public static final String DATE_UPDATED = "date_updated";
     public static final String[] COMMODITY_TYPE_TABLE_COLUMNS = {ID, NAME, PARENT, CLASSIFICATION_SYSTEM, CLASSIFICATION_ID, DATE_UPDATED};
+    public static final String[] SELECT_TABLE_COLUMNS = {ID, NAME, PARENT, CLASSIFICATION_SYSTEM, CLASSIFICATION_ID};
 
     public static final String CREATE_COMMODITY_TYPE_TABLE =
 
@@ -60,22 +62,26 @@ public class CommodityTypeRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, COMMODITY_TYPE_TABLE);
-            query += "(" + formatTableValues(commodityType) + ")";
+            query += "(" + createQueryValues(commodityType) + ")";
             database.execSQL(query);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
     }
 
-    public List<CommodityType> findCommodityType(String id, String name, String parent, String classificationSystem, String classificationId) {
+    public List<CommodityType> findCommodityTypes(String id, String name, String parent, String classificationSystem, String classificationId) {
 
         List<CommodityType> commodityTypes = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String query = ID + "=?" + " AND " + NAME + "=?" + " AND " + PARENT + "=?" + " AND " + CLASSIFICATION_SYSTEM + "?" + " AND " + CLASSIFICATION_ID + "?";
             String[] selectionArgs = new String[]{id, name, parent, classificationSystem, classificationId};
-            cursor = getReadableDatabase().query(COMMODITY_TYPE_TABLE, COMMODITY_TYPE_TABLE_COLUMNS, query, selectionArgs, null, null, null);
-            commodityTypes = readCommodityTypesFromCursor(cursor);
+            Pair<String, String[]> query= createQuery(selectionArgs);
+
+            String querySelectString =  query.first;
+            selectionArgs = query.second;
+
+            cursor = getReadableDatabase().query(COMMODITY_TYPE_TABLE, COMMODITY_TYPE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
+            commodityTypes = readCommodityTypes(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         } finally {
@@ -86,13 +92,46 @@ public class CommodityTypeRepository extends BaseRepository {
         return commodityTypes;
     }
 
-    private List<CommodityType> readCommodityTypesFromCursor(Cursor cursor) {
+    /**
+     *
+     * This method takes an array of {@param columnValues} and returns a {@code Pair} comprising of
+     * the query string select statement and the query string arguments array.
+     *
+     * It assumes that {@param columnValues} is the same size as {@link SELECT_TABLE_COLUMNS} and
+     * that select arguments are in the same order as {@link SELECT_TABLE_COLUMNS} column values.
+     *
+     * @param columnValues
+     * @return
+     */
+    private Pair<String, String[]> createQuery(String[] columnValues) {
+
+        String queryString = "";
+        List<String> selectionArgs = new ArrayList<>();
+        for (int i = 0; i < columnValues.length; i++) {
+            if (columnValues[i] == null) {
+                continue;
+            }
+
+            queryString += SELECT_TABLE_COLUMNS[i] + "=?";
+            if (i != columnValues.length - 1) {
+                queryString += " AND ";
+            }
+            selectionArgs.add(columnValues[i]);
+        }
+
+        String[] args = new String[selectionArgs.size()];
+        args = selectionArgs.toArray(args);
+
+        return new Pair<>(queryString, args);
+    }
+
+    private List<CommodityType> readCommodityTypes(Cursor cursor) {
 
         List<CommodityType> commodityTypes = new ArrayList<>();
         try {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    commodityTypes.add(createCommodityTypeFromCursor(cursor));
+                    commodityTypes.add(createCommodityType(cursor));
                     cursor.moveToNext();
                 }
             }
@@ -106,7 +145,7 @@ public class CommodityTypeRepository extends BaseRepository {
         return commodityTypes;
     }
 
-    private CommodityType createCommodityTypeFromCursor(Cursor cursor) {
+    private CommodityType createCommodityType(Cursor cursor) {
 
         return new CommodityType(
                 UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
@@ -118,14 +157,14 @@ public class CommodityTypeRepository extends BaseRepository {
         );
     }
 
-    private String formatTableValues(CommodityType commodityType) {
+    private String createQueryValues(CommodityType commodityType) {
 
         String values = "";
-        values += commodityType.getId().toString() + ",";
-        values += commodityType.getName() + ",";
-        values += commodityType.getParent() + ",";
-        values += commodityType.getClassificationSystem() + ",";
-        values += commodityType.getClassificationId() + ",";
+        values += "'" + commodityType.getId().toString() + "'" + ",";
+        values += "'" + commodityType.getName() + "'"  + ",";
+        values += "'" + commodityType.getParentId() + "'"  + ",";
+        values += "'" + commodityType.getClassificationSystem() + "'"  + ",";
+        values += "'" + commodityType.getClassificationId() + "'"  + ",";
         values += commodityType.getDateUpdated();
 
         return values;

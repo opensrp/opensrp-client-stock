@@ -28,18 +28,19 @@ import static org.smartregister.stock.management.util.Utils.DATABASE_NAME;
 
 public class OrderableRepositoryTest extends BaseRepositoryTest {
 
+    private static Context context;
     private static Repository mainRepository;
     private OrderableRepository database;
 
     @BeforeClass
     public static void bootStrap() {
-        Application.setAppContext(InstrumentationRegistry.getTargetContext());
+        context = InstrumentationRegistry.getTargetContext();
+        Application.setAppContext(context);
         mainRepository = Application.getInstance().getRepository();
     }
 
     @Before
     public void setUp() {
-        Context context = InstrumentationRegistry.getTargetContext();
         context.deleteDatabase(DATABASE_NAME);
         database = new OrderableRepository(mainRepository);
     }
@@ -138,7 +139,7 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindOrderablesShouldNotReturnAnyMatchingRows() {
 
-        // insert new orderables
+        // insert Orderables
         Orderable orderable = new Orderable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
                 new Code("orderable_code"),
@@ -165,7 +166,7 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(orderable);
 
-        // get orderable with non-existing dispensable ID
+        // fetch orderable with non-existing dispensable ID
         List<Orderable> orderables = database.findOrderables(null, "orderable_code",
                 "full_product_code", "10", "123e4567-e89b-42d3-a456-556642590068","trade_item_id", "commodity_type_id");
 
