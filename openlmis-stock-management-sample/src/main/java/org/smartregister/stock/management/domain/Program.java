@@ -28,6 +28,7 @@ public class Program extends BaseEntity {
 
     public Program(UUID id, Code code, String name, String description, Boolean active, Boolean periodsSkippable, Boolean skipAuthorization,
                    Boolean showNonFullSupplyTab, Boolean enableDatePhysicalStockCountCompleted, Long dateUpdated) {
+
         this.id = id;
         this.code = code;
         this.name = name;

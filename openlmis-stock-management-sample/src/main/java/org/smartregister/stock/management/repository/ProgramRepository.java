@@ -1,6 +1,7 @@
 package org.smartregister.stock.management.repository;
 
 import android.util.Log;
+import android.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -35,6 +36,7 @@ public class ProgramRepository extends BaseRepository {
     public static final String DATE_UPDATED = "date_updated";
     public static final String[] PROGRAM_TABLE_COLUMNS = {ID, CODE, NAME, DESCRIPTION, ACTIVE, PERIODS_SKIPPABLE,
             SKIP_AUTHORIZATION, SHOW_NON_FULL_SUPPLY_TAB, ENABLE_DATE_PHYSICAL_STOCK_COUNT_COMPLETED, DATE_UPDATED};
+    public static final String[] SELECT_TABLE_COLUMNS = {ID, CODE, NAME, ACTIVE};
 
     public static final String CREATE_PROGRAM_TABLE =
 
@@ -86,9 +88,13 @@ public class ProgramRepository extends BaseRepository {
         List<Program> programs = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String query = ID + "=?" + " AND " + CODE  + "=?" + " AND " + NAME + "=?" + " AND " + ACTIVE + "=?";
             String[] selectionArgs = new String[]{id, code, name, active};
-            cursor = getReadableDatabase().query(PROGRAM_TABLE, PROGRAM_TABLE_COLUMNS, query, selectionArgs, null, null, null);
+            Pair<String, String[]> query= createQuery(selectionArgs);
+
+            String querySelectString =  query.first;
+            selectionArgs = query.second;
+
+            cursor = getReadableDatabase().query(PROGRAM_TABLE, PROGRAM_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
             programs = readProgramsFromCursor(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -98,6 +104,39 @@ public class ProgramRepository extends BaseRepository {
             }
         }
         return programs;
+    }
+
+    /**
+     *
+     * This method takes an array of {@param columnValues} and returns a {@code Pair} comprising of
+     * the query string select statement and the query string arguments array.
+     *
+     * It assumes that {@param columnValues} is the same size as {@link SELECT_TABLE_COLUMNS} and
+     * that select arguments are in the same order as {@link SELECT_TABLE_COLUMNS} column values.
+     *
+     * @param columnValues
+     * @return
+     */
+    private Pair<String, String[]> createQuery(String[] columnValues) {
+
+        String queryString = "";
+        List<String> selectionArgs = new ArrayList<>();
+        for (int i = 0; i < columnValues.length; i++) {
+            if (columnValues[i] == null) {
+                continue;
+            }
+
+            queryString += SELECT_TABLE_COLUMNS[i] + "=?";
+            if (i != columnValues.length - 1) {
+                queryString += " AND ";
+            }
+            selectionArgs.add(columnValues[i]);
+        }
+
+        String[] args = new String[selectionArgs.size()];
+        args = selectionArgs.toArray(args);
+
+        return new Pair<>(queryString, args);
     }
 
     private List<Program> readProgramsFromCursor(Cursor cursor) {
@@ -139,10 +178,10 @@ public class ProgramRepository extends BaseRepository {
     private String formatTableValues(Program program) {
 
         String values = "";
-        values += program.getId().toString() + ",";
-        values += program.getCode().toString() + ",";
-        values += program.getName() + ",";
-        values += program.getDescription() + ",";
+        values += "'" + program.getId().toString() + "'" + ",";
+        values += "'" + program.getCode().toString() + "'"  + ",";
+        values += "'" + program.getName() + "'"  + ",";
+        values += "'" + program.getDescription() + "'"  + ",";
         values += convertBooleanToInt(program.getActive()) + ",";
         values += convertBooleanToInt(program.getPeriodsSkippable()) + ",";
         values += convertBooleanToInt(program.getSkipAuthorization()) + ",";
