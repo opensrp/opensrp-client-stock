@@ -154,4 +154,3 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         assertEquals(commodityTypes.size(), 0);
     }
 }
-d
