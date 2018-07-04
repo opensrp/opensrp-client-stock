@@ -1,6 +1,7 @@
 package org.smartregister.stock.management.repository;
 
 import android.util.Log;
+import android.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -8,6 +9,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.domain.Code;
+import org.smartregister.stock.management.domain.Dispensable;
 import org.smartregister.stock.management.domain.Orderable;
 
 import java.util.ArrayList;
@@ -30,11 +32,12 @@ public class OrderableRepository extends BaseRepository {
     public static final String PACK_ROUNDING_THRESHOLD = "pack_rounding_threshold";
     public static final String ROUND_TO_ZERO = "round_to_zero";
     public static final String DISPENSABLE = "dispensable";
-    public static final String DATE_UPDATED = "date_updated";
     public static final String TRADE_ITEM_ID = "trade_item_id";
     public static final String COMMODITY_TYPE_ID = "commodity_type_id";
+    public static final String DATE_UPDATED = "date_updated";
     public static final String[] ORDERABLE_TABLE_COLUMNS = {ID, CODE, FULL_PRODUCT_CODE, NET_CONTENT, 
-            PACK_ROUNDING_THRESHOLD, ROUND_TO_ZERO, DISPENSABLE, DATE_UPDATED, TRADE_ITEM_ID, COMMODITY_TYPE_ID};
+            PACK_ROUNDING_THRESHOLD, ROUND_TO_ZERO, DISPENSABLE, TRADE_ITEM_ID, COMMODITY_TYPE_ID, DATE_UPDATED};
+    public static final String[] SELECT_TABLE_COLUMNS = {ID, CODE, FULL_PRODUCT_CODE, NET_CONTENT, DISPENSABLE, TRADE_ITEM_ID, COMMODITY_TYPE_ID};
     
     public static final String CREATE_ORDERABLE_TABLE =
 
@@ -47,9 +50,9 @@ public class OrderableRepository extends BaseRepository {
                     + PACK_ROUNDING_THRESHOLD + " INTEGER,"
                     + ROUND_TO_ZERO + " TINYINT,"
                     + DISPENSABLE + " INTEGER,"
-                    + DATE_UPDATED + " INTEGER,"
                     + TRADE_ITEM_ID + " INTEGER,"
-                    + COMMODITY_TYPE_ID + " INTEGER"
+                    + COMMODITY_TYPE_ID + " INTEGER,"
+                    + DATE_UPDATED + " INTEGER"
              + ")";
     
     public OrderableRepository(Repository repository) { super(repository); }
@@ -72,7 +75,7 @@ public class OrderableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, ORDERABLE_TABLE);
-            query += "(" + formatTableValues(orderable) + ")";
+            query += "(" + createQueryValues(orderable) + ")";
             database.execSQL(query);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -84,11 +87,14 @@ public class OrderableRepository extends BaseRepository {
         List<Orderable> orderables = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String query = ID + "=?" + " AND " + CODE  + "=?" + " AND " +  FULL_PRODUCT_CODE + "=?" 
-                    + " AND " + NET_CONTENT + "=?" + " AND " +  DISPENSABLE + "=?" + " AND " + TRADE_ITEM_ID + "=?" + " AND " + COMMODITY_TYPE_ID + "=?";
             String[] selectionArgs = new String[]{id, code, fullProductCode, netContent, dispensable, tradeItemId, commodityTypeId};
-            cursor = getReadableDatabase().query(ORDERABLE_TABLE, ORDERABLE_TABLE_COLUMNS, query, selectionArgs, null, null, null);
-            orderables = readOrderablesFromCursor(cursor);
+            Pair<String, String[]> query= createQuery(selectionArgs);
+
+            String querySelectString =  query.first;
+            selectionArgs = query.second;
+
+            cursor = getReadableDatabase().query(ORDERABLE_TABLE, ORDERABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
+            orderables = readOrderables(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         } finally {
@@ -99,13 +105,46 @@ public class OrderableRepository extends BaseRepository {
         return orderables;
     }
 
-    private List<Orderable> readOrderablesFromCursor(Cursor cursor) {
+    /**
+     *
+     * This method takes an array of {@param columnValues} and returns a {@code Pair} comprising of
+     * the query string select statement and the query string arguments array.
+     *
+     * It assumes that {@param columnValues} is the same size as {@link SELECT_TABLE_COLUMNS} and
+     * that select arguments are in the same order as {@link SELECT_TABLE_COLUMNS} column values.
+     *
+     * @param columnValues
+     * @return
+     */
+    private Pair<String, String[]> createQuery(String[] columnValues) {
+
+        String queryString = "";
+        List<String> selectionArgs = new ArrayList<>();
+        for (int i = 0; i < columnValues.length; i++) {
+            if (columnValues[i] == null) {
+                continue;
+            }
+
+            queryString += SELECT_TABLE_COLUMNS[i] + "=?";
+            if (i != columnValues.length - 1) {
+                queryString += " AND ";
+            }
+            selectionArgs.add(columnValues[i]);
+        }
+
+        String[] args = new String[selectionArgs.size()];
+        args = selectionArgs.toArray(args);
+
+        return new Pair<>(queryString, args);
+    }
+
+    private List<Orderable> readOrderables(Cursor cursor) {
 
         List<Orderable> orderables = new ArrayList<>();
         try {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    orderables.add(createOrderableFromCursor(cursor));
+                    orderables.add(createOrderable(cursor));
                     cursor.moveToNext();
                 }
             }
@@ -119,7 +158,8 @@ public class OrderableRepository extends BaseRepository {
         return orderables;
     }
 
-    private Orderable createOrderableFromCursor(Cursor cursor) {
+    private Orderable createOrderable(Cursor cursor) {
+
         return new Orderable(
             UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
             new Code(cursor.getString(cursor.getColumnIndex(CODE))), 
@@ -127,22 +167,24 @@ public class OrderableRepository extends BaseRepository {
             cursor.getLong(cursor.getColumnIndex(NET_CONTENT)),
             cursor.getLong(cursor.getColumnIndex(PACK_ROUNDING_THRESHOLD)),
             convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ROUND_TO_ZERO))),
+            new Dispensable(UUID.fromString(cursor.getString(cursor.getColumnIndex(DISPENSABLE)))),
             cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
             cursor.getString(cursor.getColumnIndex(COMMODITY_TYPE_ID))
         );
     }
 
-    private String formatTableValues(Orderable orderable) {
+    private String createQueryValues(Orderable orderable) {
 
         String values = "";
-        values += orderable.getId().toString() + ",";
-        values += orderable.getProductCode().toString() + ",";
-        values += orderable.getFullProductCode() + ",";
+        values += "'" + orderable.getId().toString() + "'" + ",";
+        values += "'" + orderable.getProductCode().toString() +  "'" + ",";
+        values += "'" + orderable.getFullProductCode() + "'" + ",";
         values += orderable.getNetContent() + ",";
         values += orderable.getPackRoundingThreshold() + ",";
         values += convertBooleanToInt(orderable.isRoundToZero()) + ",";
-        values += orderable.getTradeItemIdentifier() + ",";
-        values += orderable.getCommodityTypeIdentifier() + ",";
+        values += "'" + orderable.getDispensable().getId().toString() + "'" + ",";
+        values += "'" + orderable.getTradeItemIdentifier() + "'" + ",";
+        values += "'" + orderable.getCommodityTypeIdentifier() + "'" + ",";
         values += orderable.getDateUpdated();
 
         return values;

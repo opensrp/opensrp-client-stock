@@ -1,4 +1,4 @@
-package org.smartregister.stock;
+package org.smartregister.stock.management;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

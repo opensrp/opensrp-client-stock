@@ -17,6 +17,11 @@ public class Dispensable extends BaseEntity {
         attributes = new HashMap<>();
     }
 
+    public Dispensable(UUID id) {
+        this.id = id;
+        attributes = new HashMap<>();
+    }
+
     public Dispensable(UUID id, String keyDispensingUnit, String keySizeCode, String keyRouteOfAdministration) {
         this.id = id;
         attributes = new HashMap<>();

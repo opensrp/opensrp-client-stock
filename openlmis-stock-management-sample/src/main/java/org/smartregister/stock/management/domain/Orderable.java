@@ -1,5 +1,6 @@
 package org.smartregister.stock.management.domain;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -25,13 +26,18 @@ public class Orderable extends BaseEntity {
         this.id = id;
     }
 
-    public Orderable(UUID id, Code productCode, String fullProductCode, long netContent, long packRoundingThreshold, boolean roundToZero, String tradeItemId, String commodityTypeId) {
+    public Orderable(UUID id, Code productCode, String fullProductCode, long netContent, long packRoundingThreshold,
+                     boolean roundToZero, Dispensable dispensable, String tradeItemId, String commodityTypeId) {
+
         this.id = id;
         this.productCode = productCode;
         this.fullProductCode = fullProductCode;
         this.netContent = netContent;
         this.packRoundingThreshold = packRoundingThreshold;
         this.roundToZero = roundToZero;
+        this.dispensable = dispensable;
+
+        identifiers = new HashMap<>();
         identifiers.put(TRADE_ITEM, tradeItemId);
         identifiers.put(COMMODITY_TYPE, commodityTypeId);
     }

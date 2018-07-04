@@ -1,4 +1,4 @@
-package org.smartregister.stock;
+package org.smartregister.stock.management;
 
 import org.junit.Test;
 
