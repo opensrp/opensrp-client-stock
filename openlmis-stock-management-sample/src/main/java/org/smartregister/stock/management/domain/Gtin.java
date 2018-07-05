@@ -21,4 +21,9 @@ public class Gtin {
         }
         this.gtin = gtin;
     }
+
+    @Override
+    public String toString() {
+       return gtin;
+    }
 }

@@ -32,6 +32,7 @@ public class StockManagementRepository extends Repository {
         ProgramRepository.createTable(database);
         TradeItemClassificationRepository.createTable(database);
         ProgramOrderableRepository.createTable(database);
+        TradeItemRepository.createTable(database);
     }
 
     @Override

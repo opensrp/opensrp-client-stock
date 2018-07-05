@@ -16,6 +16,7 @@ public class TradeItem extends BaseEntity {
 
 
     public TradeItem(UUID id, Gtin gtin, String manufacturerOfTradeItem, Long dateUpdated) {
+        this.id = id;
         this.gtin = gtin;
         this.manufacturerOfTradeItem = manufacturerOfTradeItem;
         this.classifications = classifications;

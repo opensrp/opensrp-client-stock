@@ -1,6 +1,7 @@
 package org.smartregister.stock.management.repository;
 
 import android.util.Log;
+import android.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -26,14 +27,16 @@ public class TradeItemRepository extends BaseRepository {
     public static final String MANUFACTURER_OF_TRADE_ITEM = "manufacturer_of_trade_item";
     public static final String DATE_UPDATED = "date_updated";
     public static final String[] TRADE_ITEM_TABLE_COLUMNS = new String[]{ID, GTIN, MANUFACTURER_OF_TRADE_ITEM, DATE_UPDATED};
+    private static final String[] SELECT_TABLE_COLUMNS = new String[]{ID, GTIN, MANUFACTURER_OF_TRADE_ITEM};
 
     public static final String CREATE_TRADE_ITEM_TABLE =
 
             "CREATE TABLE " + TRADE_ITEM_TABLE
             + "("
-                    + ID + " VARCHAR NOT NULL,"
+                    + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + GTIN + " VARCHAR NOT NULL,"
-                    + MANUFACTURER_OF_TRADE_ITEM + " VARCHAR NOT NULL"
+                    + MANUFACTURER_OF_TRADE_ITEM + " VARCHAR NOT NULL,"
+                    + DATE_UPDATED + " INTEGER"
             + ")";
 
     public TradeItemRepository(Repository repository) { super(repository); }
@@ -62,23 +65,63 @@ public class TradeItemRepository extends BaseRepository {
         }
     }
 
-    public List<TradeItem> findTradeItem(String id, String gtin, String manufacturerOfTradeItem) {
+    public List<TradeItem> findTradeItems(String id, String gtin, String manufacturerOfTradeItem) {
 
         List<TradeItem> tradeItems = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String query = ID + "=?" + " AND " + GTIN + "=?" + " AND " + MANUFACTURER_OF_TRADE_ITEM + "=?";
             String[] selectionArgs = new String[]{id, gtin, manufacturerOfTradeItem};
-            cursor = getReadableDatabase().query(TRADE_ITEM_TABLE, TRADE_ITEM_TABLE_COLUMNS, query, selectionArgs, null, null, null);
+            Pair<String, String[]> query= createQuery(selectionArgs);
+
+            String querySelectString =  query.first;
+            selectionArgs = query.second;
+
+            cursor = getReadableDatabase().query(TRADE_ITEM_TABLE, TRADE_ITEM_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
             tradeItems = readTradeItemsFromCursor(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         } finally {
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
 
         return tradeItems;
     }
+
+    /**
+     *
+     * This method takes an array of {@param columnValues} and returns a {@code Pair} comprising of
+     * the query string select statement and the query string arguments array.
+     *
+     * It assumes that {@param columnValues} is the same size as {@link SELECT_TABLE_COLUMNS} and
+     * that select arguments are in the same order as {@link SELECT_TABLE_COLUMNS} column values.
+     *
+     * @param columnValues
+     * @return
+     */
+    private Pair<String, String[]> createQuery(String[] columnValues) {
+
+        String queryString = "";
+        List<String> selectionArgs = new ArrayList<>();
+        for (int i = 0; i < columnValues.length; i++) {
+            if (columnValues[i] == null) {
+                continue;
+            }
+
+            queryString += SELECT_TABLE_COLUMNS[i] + "=?";
+            if (i != columnValues.length - 1) {
+                queryString += " AND ";
+            }
+            selectionArgs.add(columnValues[i]);
+        }
+
+        String[] args = new String[selectionArgs.size()];
+        args = selectionArgs.toArray(args);
+
+        return new Pair<>(queryString, args);
+    }
+
 
     private List<TradeItem> readTradeItemsFromCursor(Cursor cursor) {
 
@@ -118,9 +161,9 @@ public class TradeItemRepository extends BaseRepository {
     private String formatTableValues(TradeItem tradeItem) {
 
         String values = "";
-        values += tradeItem.getId().toString() + ",";
-        values += tradeItem.getGtin().toString() + ",";
-        values += tradeItem.getManufacturerOfTradeItem() + ",";
+        values += "'" + tradeItem.getId().toString() + "'" + ",";
+        values += "'" + tradeItem.getGtin().toString() + "'" +  ",";
+        values += "'" + tradeItem.getManufacturerOfTradeItem() + "'" + ",";
         values += tradeItem.getDateUpdated();
 
         return values;
