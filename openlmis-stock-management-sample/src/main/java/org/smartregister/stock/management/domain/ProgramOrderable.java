@@ -12,13 +12,14 @@ public class ProgramOrderable extends BaseEntity {
     private boolean fullSupply;
     private Long dateUpdated;
 
-    public ProgramOrderable(UUID id, Program program, Orderable orderable, Integer dosesPerPatient, boolean active, boolean fullSupply) {
+    public ProgramOrderable(UUID id, Program program, Orderable orderable, Integer dosesPerPatient, boolean active, boolean fullSupply, long dateUpdated) {
         this.id = id;
         this.program = program;
         this.orderable = orderable;
         this.dosesPerPatient = dosesPerPatient;
         this.active = active;
         this.fullSupply = fullSupply;
+        this.dateUpdated = dateUpdated;
     }
 
     /**

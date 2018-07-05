@@ -19,6 +19,12 @@ import java.util.UUID;
 import static junit.framework.Assert.assertEquals;
 import static org.smartregister.stock.management.util.Utils.DATABASE_NAME;
 
+/************** test naming convention followed *****************
+ *
+ *   testMethodNameShouldExpectedBehaviorIfStateUnderTest
+ *
+ ****************************************************************/
+
 public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
 
     private static Context context;

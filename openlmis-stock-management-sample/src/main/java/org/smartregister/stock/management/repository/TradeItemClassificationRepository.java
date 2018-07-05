@@ -76,10 +76,10 @@ public class TradeItemClassificationRepository extends BaseRepository {
             String[] selectionArgs = new String[]{id, tradeItem, classificationSystem, classificationId};
             Pair<String, String[]> query= createQuery(selectionArgs);
 
-            String queryString = query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
-            cursor = getReadableDatabase().query(TRADE_ITEM_CLASSIFICATION_TABLE, TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS, queryString, selectionArgs, null, null, null);
+            cursor = getReadableDatabase().query(TRADE_ITEM_CLASSIFICATION_TABLE, TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
             tradeItemClassifications = readTradeItemClassificationsFromCursor(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));

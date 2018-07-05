@@ -1,6 +1,7 @@
 package org.smartregister.stock.management.repository;
 
 import android.util.Log;
+import android.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -30,7 +31,9 @@ public class ProgramOrderableRepository extends BaseRepository {
     public static final String DOSES_PER_PATIENT = "doses_per_patient";
     public static final String ACTIVE = "active";
     public static final String FULL_SUPPLY = "full_supply";
-    public static final String[] PROGRAM_ORDERABLE_TABLE_COLUMNS = {ID, PROGRAM, ORDERABLE, DOSES_PER_PATIENT, ACTIVE, FULL_SUPPLY};
+    public static final String DATE_UPDATED = "date_updated";
+    public static final String[] PROGRAM_ORDERABLE_TABLE_COLUMNS = {ID, PROGRAM, ORDERABLE, DOSES_PER_PATIENT, ACTIVE, FULL_SUPPLY, DATE_UPDATED};
+    public static final String[] SELECT_TABLE_COLUMNS = {ID, PROGRAM, ORDERABLE, DOSES_PER_PATIENT, ACTIVE, FULL_SUPPLY};
 
     public static final String CREATE_PROGRAM_ORDERABLE_TABLE =
 
@@ -41,7 +44,8 @@ public class ProgramOrderableRepository extends BaseRepository {
                     + ORDERABLE + " VARCHAR NOT NULL,"
                     + DOSES_PER_PATIENT + " INTEGER,"
                     + ACTIVE + " TINYINT,"
-                    + FULL_SUPPLY + " TINYINT"
+                    + FULL_SUPPLY + " TINYINT,"
+                    + DATE_UPDATED + " INTEGER"
             + ")";
 
     public ProgramOrderableRepository(Repository repository) { super(repository); }
@@ -76,9 +80,13 @@ public class ProgramOrderableRepository extends BaseRepository {
         List<ProgramOrderable> programs = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String query = ID + "=?" + " AND " + PROGRAM + "=?" + " AND " + ORDERABLE + "=?" + " AND " + DOSES_PER_PATIENT + "=?" + " AND " +  ACTIVE + "=?" + " AND " + FULL_SUPPLY + "=?";
             String[] selectionArgs = new String[]{id, program, orderable, dosesPerPatient, active, fullSupply};
-            cursor = getReadableDatabase().query(PROGRAM_ORDERABLE_TABLE, PROGRAM_ORDERABLE_TABLE_COLUMNS, query, selectionArgs, null, null, null);
+            Pair<String, String[]> query= createQuery(selectionArgs);
+
+            String querySelectString =  query.first;
+            selectionArgs = query.second;
+
+            cursor = getReadableDatabase().query(PROGRAM_ORDERABLE_TABLE, PROGRAM_ORDERABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
             programs = readProgramOrderablesFromCursor(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -88,6 +96,39 @@ public class ProgramOrderableRepository extends BaseRepository {
             }
         }
         return programs;
+    }
+
+    /**
+     *
+     * This method takes an array of {@param columnValues} and returns a {@code Pair} comprising of
+     * the query string select statement and the query string arguments array.
+     *
+     * It assumes that {@param columnValues} is the same size as {@link SELECT_TABLE_COLUMNS} and
+     * that select arguments are in the same order as {@link SELECT_TABLE_COLUMNS} column values.
+     *
+     * @param columnValues
+     * @return
+     */
+    private Pair<String, String[]> createQuery(String[] columnValues) {
+
+        String queryString = "";
+        List<String> selectionArgs = new ArrayList<>();
+        for (int i = 0; i < columnValues.length; i++) {
+            if (columnValues[i] == null) {
+                continue;
+            }
+
+            queryString += SELECT_TABLE_COLUMNS[i] + "=?";
+            if (i != columnValues.length - 1) {
+                queryString += " AND ";
+            }
+            selectionArgs.add(columnValues[i]);
+        }
+
+        String[] args = new String[selectionArgs.size()];
+        args = selectionArgs.toArray(args);
+
+        return new Pair<>(queryString, args);
     }
 
     private List<ProgramOrderable> readProgramOrderablesFromCursor(Cursor cursor) {
@@ -118,16 +159,17 @@ public class ProgramOrderableRepository extends BaseRepository {
                 new Orderable(UUID.fromString(cursor.getString(cursor.getColumnIndex(ORDERABLE)))),
                 cursor.getInt(cursor.getColumnIndex(DOSES_PER_PATIENT)),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE))),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(FULL_SUPPLY)))
+                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(FULL_SUPPLY))),
+                cursor.getLong(cursor.getColumnIndex(DATE_UPDATED))
         );
     }
 
     private String formatTableValues(ProgramOrderable programOrderable) {
 
         String values = "";
-        values += programOrderable.getId().toString() + ",";
-        values += programOrderable.getProgram().getCode().toString() + ",";
-        values += programOrderable.getOrderable().getId().toString() + ",";
+        values += "'" + programOrderable.getId().toString() + "'" + ",";
+        values += "'" + programOrderable.getProgram().getId().toString() + "'"  + ",";
+        values += "'" + programOrderable.getOrderable().getId().toString() + "'"  + ",";
         values += programOrderable.getDosesPerPatient() + ",";
         values += convertBooleanToInt(programOrderable.isActive()) + ",";
         values += convertBooleanToInt(programOrderable.isFullSupply()) + ",";
