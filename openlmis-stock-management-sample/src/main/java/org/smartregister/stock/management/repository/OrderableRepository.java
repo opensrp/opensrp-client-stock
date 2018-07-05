@@ -21,6 +21,7 @@ import static org.smartregister.stock.management.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.management.util.Utils.convertBooleanToInt;
 import static org.smartregister.stock.management.util.Utils.convertIntToBoolean;
 
+
 public class OrderableRepository extends BaseRepository {
 
     public static final String TAG = BaseRepository.class.getName();

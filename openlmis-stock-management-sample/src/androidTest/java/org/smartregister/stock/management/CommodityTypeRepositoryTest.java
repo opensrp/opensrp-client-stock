@@ -20,7 +20,7 @@ import static org.smartregister.stock.management.util.Utils.DATABASE_NAME;
 
 /************** test naming convention followed *****************
  *
- *   testMethodNameShouldExpectedBehaviorIfStateUnderTest
+ *   testMethodNameShouldExpectedBehavior[IfStateUnderTest]
  *
  ****************************************************************/
 
