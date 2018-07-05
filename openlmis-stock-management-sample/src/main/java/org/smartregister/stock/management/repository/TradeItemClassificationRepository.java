@@ -1,6 +1,7 @@
 package org.smartregister.stock.management.repository;
 
 import android.util.Log;
+import android.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -20,13 +21,14 @@ import static org.smartregister.stock.management.util.Utils.INSERT_OR_REPLACE;
 public class TradeItemClassificationRepository extends BaseRepository {
 
     public static final String TAG = TradeItemClassificationRepository.class.getName();
-    public static final String TRADE_ITEM_CLASSIFICATION_TABLE = "trade_item_classificaton_table";
+    public static final String TRADE_ITEM_CLASSIFICATION_TABLE = "trade_item_classifications";
     public static final String ID = "id";
     public static final String TRADE_ITEM = "trade_item";
     public static final String CLASSIFICATION_SYSTEM = "classification_system";
     public static final String CLASSIFICATION_ID = "classification_id";
     public static final String DATE_UPDATED = "date_updated";
-    public static final String[] TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS = {ID, TRADE_ITEM, CLASSIFICATION_SYSTEM, CLASSIFICATION_ID};
+    public static final String[] TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS = {ID, TRADE_ITEM, CLASSIFICATION_SYSTEM, CLASSIFICATION_ID, DATE_UPDATED};
+    public static final String[] SELECT_TABLE_COLUMNS = {ID, TRADE_ITEM, CLASSIFICATION_SYSTEM, CLASSIFICATION_ID};
 
     public static final String CREATE_TRADE_ITEM_CLASSIFICATION_TABLE =
 
@@ -36,7 +38,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
                     + TRADE_ITEM + " VARCHAR NOT NULL,"
                     + CLASSIFICATION_SYSTEM + " VARCHAR,"
                     + CLASSIFICATION_ID + " VARCHAR,"
-                    + DATE_UPDATED + " VARCHAR"
+                    + DATE_UPDATED + " INTEGER"
             + ")";
 
     public TradeItemClassificationRepository(Repository repository) { super(repository); }
@@ -71,9 +73,13 @@ public class TradeItemClassificationRepository extends BaseRepository {
         List<TradeItemClassification> tradeItemClassifications = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String query = ID + "=?" + " AND " + TRADE_ITEM + "=?" + " AND " + CLASSIFICATION_SYSTEM + "=?" + " AND " + CLASSIFICATION_ID + "=?";
             String[] selectionArgs = new String[]{id, tradeItem, classificationSystem, classificationId};
-            cursor = getReadableDatabase().query(TRADE_ITEM_CLASSIFICATION_TABLE, TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS, query, selectionArgs, null, null, null);
+            Pair<String, String[]> query= createQuery(selectionArgs);
+
+            String queryString = query.first;
+            selectionArgs = query.second;
+
+            cursor = getReadableDatabase().query(TRADE_ITEM_CLASSIFICATION_TABLE, TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS, queryString, selectionArgs, null, null, null);
             tradeItemClassifications = readTradeItemClassificationsFromCursor(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -83,6 +89,40 @@ public class TradeItemClassificationRepository extends BaseRepository {
             }
         }
         return tradeItemClassifications;
+    }
+
+
+    /**
+     *
+     * This method takes an array of {@param columnValues} and returns a {@code Pair} comprising of
+     * the query string select statement and the query string arguments array.
+     *
+     * It assumes that {@param columnValues} is the same size as {@link SELECT_TABLE_COLUMNS} and
+     * that select arguments are in the same order as {@link SELECT_TABLE_COLUMNS} column values.
+     *
+     * @param columnValues
+     * @return
+     */
+    private Pair<String, String[]> createQuery(String[] columnValues) {
+
+        String queryString = "";
+        List<String> selectionArgs = new ArrayList<>();
+        for (int i = 0; i < columnValues.length; i++) {
+            if (columnValues[i] == null) {
+                continue;
+            }
+
+            queryString += SELECT_TABLE_COLUMNS[i] + "=?";
+            if (i != columnValues.length - 1) {
+                queryString += " AND ";
+            }
+            selectionArgs.add(columnValues[i]);
+        }
+
+        String[] args = new String[selectionArgs.size()];
+        args = selectionArgs.toArray(args);
+
+        return new Pair<>(queryString, args);
     }
 
     private List<TradeItemClassification> readTradeItemClassificationsFromCursor(Cursor cursor) {
@@ -119,11 +159,11 @@ public class TradeItemClassificationRepository extends BaseRepository {
     private String formatTableValues(TradeItemClassification tradeItemClassification) {
 
         String values = "";
-        values += ID + tradeItemClassification.getId().toString() + ",";
-        values += TRADE_ITEM + tradeItemClassification.getTradeItem().getId().toString() + ",";
-        values += CLASSIFICATION_SYSTEM + tradeItemClassification.getClassificationSystem() + ",";
-        values += CLASSIFICATION_ID + tradeItemClassification.getClassificationId() + ",";
-        values += DATE_UPDATED + tradeItemClassification.getDateUpdated();
+        values += "'" + tradeItemClassification.getId().toString() + "'" + ",";
+        values += "'" + tradeItemClassification.getTradeItem().getId().toString() + "'"  + ",";
+        values += "'" +  tradeItemClassification.getClassificationSystem() + "'"  + ",";
+        values += "'" + tradeItemClassification.getClassificationId() + "'"  + ",";
+        values += tradeItemClassification.getDateUpdated();
 
         return values;
     }
