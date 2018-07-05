@@ -27,7 +27,7 @@ public class Dispensable extends BaseEntity {
         attributes = new HashMap<>();
         attributes.put(KEY_DISPENSING_UNIT, keyDispensingUnit);
         attributes.put(KEY_SIZE_CODE, keySizeCode);
-        attributes.put(keyRouteOfAdministration, KEY_ROUTE_OF_ADMINISTRATION);
+        attributes.put(KEY_ROUTE_OF_ADMINISTRATION, keyRouteOfAdministration);
     }
 
     // public abstract boolean equals(Object object);
