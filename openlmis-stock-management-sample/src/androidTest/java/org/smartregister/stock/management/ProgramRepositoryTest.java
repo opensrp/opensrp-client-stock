@@ -1,14 +1,8 @@
 package org.smartregister.stock.management;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.smartregister.repository.Repository;
-import org.smartregister.stock.management.application.Application;
 import org.smartregister.stock.management.domain.Code;
 import org.smartregister.stock.management.domain.Program;
 import org.smartregister.stock.management.repository.ProgramRepository;
@@ -27,17 +21,7 @@ import static org.smartregister.stock.management.util.Utils.DATABASE_NAME;
 
 public class ProgramRepositoryTest extends BaseRepositoryTest {
 
-
-    private static Context context;
-    private static Repository mainRepository;
     private ProgramRepository database;
-
-    @BeforeClass
-    public static void bootStrap() {
-        context = InstrumentationRegistry.getTargetContext();
-        Application.setAppContext(context);
-        mainRepository = Application.getInstance().getRepository();
-    }
 
     @Before
     public void setUp() {
@@ -123,7 +107,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         // insert new Programs
         Program program = new Program(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
                 new Code("program_code"),
                 "program_name",
                 "program_description",
@@ -152,6 +136,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         List<Program> programs = database.findPrograms(null, "program_code",
                 "program_name", "1");
+
         assertEquals(programs.size(), 2);
     }
     

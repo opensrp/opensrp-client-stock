@@ -1,14 +1,8 @@
 package org.smartregister.stock.management;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.smartregister.repository.Repository;
-import org.smartregister.stock.management.application.Application;
 import org.smartregister.stock.management.domain.Code;
 import org.smartregister.stock.management.domain.Dispensable;
 import org.smartregister.stock.management.domain.Orderable;
@@ -28,16 +22,7 @@ import static org.smartregister.stock.management.util.Utils.DATABASE_NAME;
 
 public class OrderableRepositoryTest extends BaseRepositoryTest {
 
-    private static Context context;
-    private static Repository mainRepository;
     private OrderableRepository database;
-
-    @BeforeClass
-    public static void bootStrap() {
-        context = InstrumentationRegistry.getTargetContext();
-        Application.setAppContext(context);
-        mainRepository = Application.getInstance().getRepository();
-    }
 
     @Before
     public void setUp() {

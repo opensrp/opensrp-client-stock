@@ -26,16 +26,7 @@ import static org.smartregister.stock.management.util.Utils.DATABASE_NAME;
 
 public class DispensableRepositoryTest extends BaseRepositoryTest {
 
-    private static Context context;
-    private static Repository mainRepository;
     private DispensableRepository database;
-
-    @BeforeClass
-    public static void bootStrap() {
-        context = InstrumentationRegistry.getTargetContext();
-        Application.setAppContext(context);
-        mainRepository = Application.getInstance().getRepository();
-    }
 
     @Before
     public void setUp() {
