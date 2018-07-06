@@ -69,8 +69,8 @@ public class ProgramOrderableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, PROGRAM_ORDERABLE_TABLE);
-            query += "(" + createQueryValues(program) + ")";
-            database.execSQL(query);
+            query += "(" + "?,?,?,?,?,?,?" + ")";
+            database.execSQL(query, createQueryValues(program));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -132,16 +132,16 @@ public class ProgramOrderableRepository extends BaseRepository {
         );
     }
 
-    private String createQueryValues(ProgramOrderable programOrderable) {
+    private Object[] createQueryValues(ProgramOrderable programOrderable) {
 
-        String values = "";
-        values += "'" + programOrderable.getId().toString() + "'" + ",";
-        values += "'" + programOrderable.getProgram().getId().toString() + "'"  + ",";
-        values += "'" + programOrderable.getOrderable().getId().toString() + "'"  + ",";
-        values += programOrderable.getDosesPerPatient() + ",";
-        values += convertBooleanToInt(programOrderable.isActive()) + ",";
-        values += convertBooleanToInt(programOrderable.isFullSupply()) + ",";
-        values += programOrderable.getDateUpdated();
+        Object[] values = new Object[PROGRAM_ORDERABLE_TABLE_COLUMNS.length];
+        values[0] = programOrderable.getId().toString();
+        values[1] = programOrderable.getProgram().getId().toString();
+        values[2] = programOrderable.getOrderable().getId().toString();
+        values[3] = programOrderable.getDosesPerPatient();
+        values[4] = convertBooleanToInt(programOrderable.isActive());
+        values[5] = convertBooleanToInt(programOrderable.isFullSupply());
+        values[6] = programOrderable.getDateUpdated();
 
         return values;
     }

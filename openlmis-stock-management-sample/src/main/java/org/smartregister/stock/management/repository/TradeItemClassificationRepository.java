@@ -62,8 +62,8 @@ public class TradeItemClassificationRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, TRADE_ITEM_CLASSIFICATION_TABLE);
-            query += "(" + createQueryValues(tradeItemClassification) + ")";
-            database.execSQL(query);
+            query += "(" + "?,?,?,?,?" + ")";
+            database.execSQL(query, createQueryValues(tradeItemClassification));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -123,14 +123,14 @@ public class TradeItemClassificationRepository extends BaseRepository {
         );
     }
     
-    private String createQueryValues(TradeItemClassification tradeItemClassification) {
+    private Object[] createQueryValues(TradeItemClassification tradeItemClassification) {
 
-        String values = "";
-        values += "'" + tradeItemClassification.getId().toString() + "'" + ",";
-        values += "'" + tradeItemClassification.getTradeItem().getId().toString() + "'"  + ",";
-        values += "'" +  tradeItemClassification.getClassificationSystem() + "'"  + ",";
-        values += "'" + tradeItemClassification.getClassificationId() + "'"  + ",";
-        values += tradeItemClassification.getDateUpdated();
+        Object[] values = new Object[TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS.length];
+        values[0] = tradeItemClassification.getId().toString();
+        values[1] = tradeItemClassification.getTradeItem().getId().toString();
+        values[2] = tradeItemClassification.getClassificationSystem();
+        values[3] = tradeItemClassification.getClassificationId();
+        values[4] = tradeItemClassification.getDateUpdated();
 
         return values;
     }

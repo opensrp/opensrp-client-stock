@@ -77,8 +77,8 @@ public class ProgramRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, PROGRAM_TABLE);
-            query += "(" + createQueryValues(program) + ")";
-            database.execSQL(query);
+            query += "(" +  "?,?,?,?,?,?,?,?,?,?" + ")";
+            database.execSQL(query, createQueryValues(program));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -143,19 +143,19 @@ public class ProgramRepository extends BaseRepository {
         );
     }
 
-    private String createQueryValues(Program program) {
+    private Object[] createQueryValues(Program program) {
 
-        String values = "";
-        values += "'" + program.getId().toString() + "'" + ",";
-        values += "'" + program.getCode().toString() + "'"  + ",";
-        values += "'" + program.getName() + "'"  + ",";
-        values += "'" + program.getDescription() + "'"  + ",";
-        values += convertBooleanToInt(program.getActive()) + ",";
-        values += convertBooleanToInt(program.getPeriodsSkippable()) + ",";
-        values += convertBooleanToInt(program.getSkipAuthorization()) + ",";
-        values += convertBooleanToInt(program.getShowNonFullSupplyTab()) + ",";
-        values += convertBooleanToInt(program.getEnableDatePhysicalStockCountCompleted()) + ",";
-        values += program.getDateUpdated();
+        Object[] values = new Object[PROGRAM_TABLE_COLUMNS.length];
+        values[0] = program.getId().toString();
+        values[1] = program.getCode().toString();
+        values[2] = program.getName();
+        values[3] = program.getDescription();
+        values[4] = convertBooleanToInt(program.getActive());
+        values[5] = convertBooleanToInt(program.getPeriodsSkippable());
+        values[6] = convertBooleanToInt(program.getSkipAuthorization());
+        values[7] = convertBooleanToInt(program.getShowNonFullSupplyTab());
+        values[8] = convertBooleanToInt(program.getEnableDatePhysicalStockCountCompleted());
+        values[9] = program.getDateUpdated();
 
         return values;
     }

@@ -63,8 +63,8 @@ public class CommodityTypeRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, COMMODITY_TYPE_TABLE);
-            query += "(" + createQueryValues(commodityType) + ")";
-            database.execSQL(query);
+            query += "(" + "?,?,?,?,?,?"+ ")";
+            database.execSQL(query, createQueryValues(commodityType) );
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -125,15 +125,15 @@ public class CommodityTypeRepository extends BaseRepository {
         );
     }
 
-    private String createQueryValues(CommodityType commodityType) {
+    private Object[] createQueryValues(CommodityType commodityType) {
 
-        String values = "";
-        values += "'" + commodityType.getId().toString() + "'" + ",";
-        values += "'" + commodityType.getName() + "'"  + ",";
-        values += "'" + commodityType.getParentId() + "'"  + ",";
-        values += "'" + commodityType.getClassificationSystem() + "'"  + ",";
-        values += "'" + commodityType.getClassificationId() + "'"  + ",";
-        values += commodityType.getDateUpdated();
+        Object[] values = new Object[COMMODITY_TYPE_TABLE_COLUMNS.length];
+        values[0] = commodityType.getId().toString();
+        values[1] = commodityType.getName();
+        values[2] = commodityType.getParentId();
+        values[3] = commodityType.getClassificationSystem();
+        values[4] = commodityType.getClassificationId();
+        values[5] = commodityType.getDateUpdated();
 
         return values;
     }

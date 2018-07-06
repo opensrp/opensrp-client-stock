@@ -77,8 +77,8 @@ public class OrderableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, ORDERABLE_TABLE);
-            query += "(" + createQueryValues(orderable) + ")";
-            database.execSQL(query);
+            query += "(" + "?,?,?,?,?,?,?,?,?,?" + ")";
+            database.execSQL(query, createQueryValues(orderable));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -142,19 +142,19 @@ public class OrderableRepository extends BaseRepository {
         );
     }
 
-    private String createQueryValues(Orderable orderable) {
+    private Object[] createQueryValues(Orderable orderable) {
 
-        String values = "";
-        values += "'" + orderable.getId().toString() + "'" + ",";
-        values += "'" + orderable.getProductCode().toString() +  "'" + ",";
-        values += "'" + orderable.getFullProductCode() + "'" + ",";
-        values += orderable.getNetContent() + ",";
-        values += orderable.getPackRoundingThreshold() + ",";
-        values += convertBooleanToInt(orderable.isRoundToZero()) + ",";
-        values += "'" + orderable.getDispensable().getId().toString() + "'" + ",";
-        values += "'" + orderable.getTradeItemIdentifier() + "'" + ",";
-        values += "'" + orderable.getCommodityTypeIdentifier() + "'" + ",";
-        values += orderable.getDateUpdated();
+        Object[] values = new Object[ORDERABLE_TABLE_COLUMNS.length];
+        values[0] = orderable.getId().toString();
+        values[1] = orderable.getProductCode().toString();
+        values[2] = orderable.getFullProductCode();
+        values[3] = orderable.getNetContent();
+        values[4] = orderable.getPackRoundingThreshold();
+        values[5] = convertBooleanToInt(orderable.isRoundToZero());
+        values[6] = orderable.getDispensable().getId().toString();
+        values[7] = orderable.getTradeItemIdentifier();
+        values[8] = orderable.getCommodityTypeIdentifier();
+        values[9] = orderable.getDateUpdated();
 
         return values;
     }

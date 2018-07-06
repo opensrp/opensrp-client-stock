@@ -59,8 +59,8 @@ public class TradeItemRepository extends BaseRepository {
         try {
             SQLiteDatabase database = getWritableDatabase();
             String query = String.format(INSERT_OR_REPLACE, TRADE_ITEM_TABLE);
-            query += "(" + createQueryValues(tradeItem) + ")";
-            database.execSQL(query);
+            query += "(" +  "?,?,?,?" + ")";
+            database.execSQL(query, createQueryValues(tradeItem));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -126,13 +126,13 @@ public class TradeItemRepository extends BaseRepository {
         return  null;
     }
 
-    private String createQueryValues(TradeItem tradeItem) {
+    private Object[] createQueryValues(TradeItem tradeItem) {
 
-        String values = "";
-        values += "'" + tradeItem.getId().toString() + "'" + ",";
-        values += "'" + tradeItem.getGtin().toString() + "'" +  ",";
-        values += "'" + tradeItem.getManufacturerOfTradeItem() + "'" + ",";
-        values += tradeItem.getDateUpdated();
+        Object[] values = new Object[TRADE_ITEM_TABLE_COLUMNS.length];
+        values[0] = tradeItem.getId().toString();
+        values[1] = tradeItem.getGtin().toString();
+        values[2] = tradeItem.getManufacturerOfTradeItem();
+        values[3] = tradeItem.getDateUpdated();
 
         return values;
     }

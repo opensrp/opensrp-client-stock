@@ -64,8 +64,8 @@ public class DispensableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, DISPENSABLE_TABLE);
-            query += "(" + createQueryValues(dispensable) + ")";
-            database.execSQL(query);
+            query += "(" + "?,?,?,?,?" +  ")";
+            database.execSQL(query, createQueryValues(dispensable));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -124,14 +124,14 @@ public class DispensableRepository extends BaseRepository {
         );
     }
     
-    private String createQueryValues(Dispensable dispensable) {
+    private Object[] createQueryValues(Dispensable dispensable) {
 
-        String values = "";
-        values += "'" + dispensable.getId().toString() + "'" + ",";
-        values += "'" + dispensable.getAttributes().get(KEY_DISPENSING_UNIT) + "'" +  ",";
-        values += "'" + dispensable.getAttributes().get(KEY_SIZE_CODE) + "'" +  ",";
-        values += "'" + dispensable.getAttributes().get(KEY_ROUTE_OF_ADMINISTRATION) + "'" +  ",";
-        values += dispensable.getDateUpdated();
+        Object[] values = new Object[DISPENSABLE_TABLE_COLUMNS.length];
+        values[0] = dispensable.getId().toString();
+        values[1] = dispensable.getAttributes().get(KEY_DISPENSING_UNIT);
+        values[2] = dispensable.getAttributes().get(KEY_SIZE_CODE);
+        values[3] = dispensable.getAttributes().get(KEY_ROUTE_OF_ADMINISTRATION);
+        values[4] = dispensable.getDateUpdated();
 
         return values;
     }
