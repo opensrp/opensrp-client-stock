@@ -59,7 +59,7 @@ public class TradeItemRepository extends BaseRepository {
         try {
             SQLiteDatabase database = getWritableDatabase();
             String query = String.format(INSERT_OR_REPLACE, TRADE_ITEM_TABLE);
-            query += "(" + formatTableValues(tradeItem) + ")";
+            query += "(" + createQueryValues(tradeItem) + ")";
             database.execSQL(query);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -78,7 +78,7 @@ public class TradeItemRepository extends BaseRepository {
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(TRADE_ITEM_TABLE, TRADE_ITEM_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
-            tradeItems = readTradeItemsFromCursor(cursor);
+            tradeItems = readTradeItems(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         } finally {
@@ -91,13 +91,13 @@ public class TradeItemRepository extends BaseRepository {
     }
 
 
-    private List<TradeItem> readTradeItemsFromCursor(Cursor cursor) {
+    private List<TradeItem> readTradeItems(Cursor cursor) {
 
         List<TradeItem> tradeItems = new ArrayList<>();
         try {
             if (cursor != null && cursor.getCount() != 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    tradeItems.add(createTradeItemFromCursor(cursor));
+                    tradeItems.add(createTradeItem(cursor));
                     cursor.moveToNext();
                 }
             }
@@ -111,7 +111,7 @@ public class TradeItemRepository extends BaseRepository {
         return tradeItems;
     }
 
-    private TradeItem createTradeItemFromCursor(Cursor cursor) {
+    private TradeItem createTradeItem(Cursor cursor) {
 
         try {
             return new TradeItem(
@@ -126,7 +126,7 @@ public class TradeItemRepository extends BaseRepository {
         return  null;
     }
 
-    private String formatTableValues(TradeItem tradeItem) {
+    private String createQueryValues(TradeItem tradeItem) {
 
         String values = "";
         values += "'" + tradeItem.getId().toString() + "'" + ",";

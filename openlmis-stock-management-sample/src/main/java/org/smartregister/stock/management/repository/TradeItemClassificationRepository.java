@@ -62,7 +62,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, TRADE_ITEM_CLASSIFICATION_TABLE);
-            query += "(" + formatTableValues(tradeItemClassification) + ")";
+            query += "(" + createQueryValues(tradeItemClassification) + ")";
             database.execSQL(query);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -81,7 +81,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(TRADE_ITEM_CLASSIFICATION_TABLE, TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
-            tradeItemClassifications = readTradeItemClassificationsFromCursor(cursor);
+            tradeItemClassifications = readTradeItemClassifications(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         } finally {
@@ -92,13 +92,13 @@ public class TradeItemClassificationRepository extends BaseRepository {
         return tradeItemClassifications;
     }
 
-    private List<TradeItemClassification> readTradeItemClassificationsFromCursor(Cursor cursor) {
+    private List<TradeItemClassification> readTradeItemClassifications(Cursor cursor) {
 
         List<TradeItemClassification> tradeItemClassifications = new ArrayList<>();
         try {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    tradeItemClassifications.add(createTradeItemClassificationFromCursor(cursor));
+                    tradeItemClassifications.add(createTradeItemClassification(cursor));
                     cursor.moveToNext();
                 }
             }
@@ -112,7 +112,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
         return tradeItemClassifications;
     }
 
-    private TradeItemClassification createTradeItemClassificationFromCursor(Cursor cursor) {
+    private TradeItemClassification createTradeItemClassification(Cursor cursor) {
 
         return new TradeItemClassification(
                 UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
@@ -123,7 +123,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
         );
     }
     
-    private String formatTableValues(TradeItemClassification tradeItemClassification) {
+    private String createQueryValues(TradeItemClassification tradeItemClassification) {
 
         String values = "";
         values += "'" + tradeItemClassification.getId().toString() + "'" + ",";

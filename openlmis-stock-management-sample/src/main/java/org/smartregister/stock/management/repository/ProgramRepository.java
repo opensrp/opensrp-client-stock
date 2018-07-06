@@ -77,7 +77,7 @@ public class ProgramRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, PROGRAM_TABLE);
-            query += "(" + formatTableValues(program) + ")";
+            query += "(" + createQueryValues(program) + ")";
             database.execSQL(query);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -96,7 +96,7 @@ public class ProgramRepository extends BaseRepository {
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(PROGRAM_TABLE, PROGRAM_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
-            programs = readProgramsFromCursor(cursor);
+            programs = readPrograms(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         } finally {
@@ -107,13 +107,13 @@ public class ProgramRepository extends BaseRepository {
         return programs;
     }
 
-    private List<Program> readProgramsFromCursor(Cursor cursor) {
+    private List<Program> readPrograms(Cursor cursor) {
 
         List<Program> programs = new ArrayList<>();
         try {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    programs.add(createProgramFromCursor(cursor));
+                    programs.add(createProgram(cursor));
                     cursor.moveToNext();
                 }
             }
@@ -127,7 +127,7 @@ public class ProgramRepository extends BaseRepository {
         return programs;
     }
 
-    private Program createProgramFromCursor(Cursor cursor) {
+    private Program createProgram(Cursor cursor) {
 
         return new Program(
                 UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
@@ -143,7 +143,7 @@ public class ProgramRepository extends BaseRepository {
         );
     }
 
-    private String formatTableValues(Program program) {
+    private String createQueryValues(Program program) {
 
         String values = "";
         values += "'" + program.getId().toString() + "'" + ",";

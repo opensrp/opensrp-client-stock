@@ -69,7 +69,7 @@ public class ProgramOrderableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, PROGRAM_ORDERABLE_TABLE);
-            query += "(" + formatTableValues(program) + ")";
+            query += "(" + createQueryValues(program) + ")";
             database.execSQL(query);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -88,7 +88,7 @@ public class ProgramOrderableRepository extends BaseRepository {
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(PROGRAM_ORDERABLE_TABLE, PROGRAM_ORDERABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
-            programs = readProgramOrderablesFromCursor(cursor);
+            programs = readProgramOrderables(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         } finally {
@@ -99,13 +99,13 @@ public class ProgramOrderableRepository extends BaseRepository {
         return programs;
     }
 
-    private List<ProgramOrderable> readProgramOrderablesFromCursor(Cursor cursor) {
+    private List<ProgramOrderable> readProgramOrderables(Cursor cursor) {
 
         List<ProgramOrderable> programsOrderables = new ArrayList<>();
         try {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    programsOrderables.add(createProgramOrderableFromCursor(cursor));
+                    programsOrderables.add(createProgramOrderable(cursor));
                     cursor.moveToNext();
                 }
             }
@@ -119,7 +119,7 @@ public class ProgramOrderableRepository extends BaseRepository {
         return programsOrderables;
     }
 
-    private ProgramOrderable createProgramOrderableFromCursor(Cursor cursor) {
+    private ProgramOrderable createProgramOrderable(Cursor cursor) {
 
         return new ProgramOrderable(
                 UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
@@ -132,7 +132,7 @@ public class ProgramOrderableRepository extends BaseRepository {
         );
     }
 
-    private String formatTableValues(ProgramOrderable programOrderable) {
+    private String createQueryValues(ProgramOrderable programOrderable) {
 
         String values = "";
         values += "'" + programOrderable.getId().toString() + "'" + ",";

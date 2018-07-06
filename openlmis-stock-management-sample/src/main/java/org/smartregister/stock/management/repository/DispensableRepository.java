@@ -64,7 +64,7 @@ public class DispensableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, DISPENSABLE_TABLE);
-            query += "(" + formatTableValues(dispensable) + ")";
+            query += "(" + createQueryValues(dispensable) + ")";
             database.execSQL(query);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -83,7 +83,7 @@ public class DispensableRepository extends BaseRepository {
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(DISPENSABLE_TABLE, DISPENSABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
-            dispensables = readDispensablesFromCursor(cursor);
+            dispensables = readDispensables(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         } finally {
@@ -94,13 +94,13 @@ public class DispensableRepository extends BaseRepository {
         return dispensables;
     }
 
-    private List<Dispensable> readDispensablesFromCursor(Cursor cursor) {
+    private List<Dispensable> readDispensables(Cursor cursor) {
 
         List<Dispensable> dispensables = new ArrayList<>();
         try {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    dispensables.add(createDispensableFromCursor(cursor));
+                    dispensables.add(createDispensable(cursor));
                     cursor.moveToNext();
                 }
             }
@@ -114,7 +114,7 @@ public class DispensableRepository extends BaseRepository {
         return dispensables;
     }
 
-    private Dispensable createDispensableFromCursor(Cursor cursor) {
+    private Dispensable createDispensable(Cursor cursor) {
 
         return new Dispensable(
                 UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
@@ -124,7 +124,7 @@ public class DispensableRepository extends BaseRepository {
         );
     }
     
-    private String formatTableValues(Dispensable dispensable) {
+    private String createQueryValues(Dispensable dispensable) {
 
         String values = "";
         values += "'" + dispensable.getId().toString() + "'" + ",";
