@@ -31,7 +31,6 @@ android:
 
 addons:
   apt_packages:
-  - pandoc
 
 script:
   - echo "Travis branch is $TRAVIS_BRANCH"
