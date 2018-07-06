@@ -60,7 +60,7 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testAddOrUpdateShouldUpdateExistingOrderable() {
 
-        // add orderable
+        // insert new Orderable
         Orderable orderable = new Orderable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new Code("orderable_code"),
@@ -74,7 +74,7 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(orderable);
 
-        // update existing orderable
+        // update existing Orderable
        orderable = new Orderable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new Code("orderable_code"),
@@ -103,7 +103,7 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindOrderablesShouldReturnAllMatchingRows() {
 
-        // insert new orderables
+        // insert new Orderables
         Orderable orderable = new Orderable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
                 new Code("orderable_code"),
@@ -130,6 +130,7 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(orderable);
 
+        // ensure all matching rows are returned
         List<Orderable> orderables = database.findOrderables(null, "orderable_code",
                 "full_product_code", "10", "123e4567-e89b-42d3-a456-556642590067","trade_item_id", "commodity_type_id");
 

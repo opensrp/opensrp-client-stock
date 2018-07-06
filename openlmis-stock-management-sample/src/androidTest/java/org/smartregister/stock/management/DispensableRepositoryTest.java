@@ -92,7 +92,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindDispensablesShouldReturnAllMatchingRows() {
 
-        // insert new Dispensable
+        // insert new Dispensables
         Dispensable dispensable = new Dispensable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
                 "dispensing_unit",
@@ -101,7 +101,6 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(dispensable);
 
-        // update existing Dispensable
         dispensable = new Dispensable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 "dispensing_unit",
@@ -110,6 +109,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(dispensable);
 
+        // ensure all matching rows are returned
         List<Dispensable> dispensables = database.findDispensables(null, "dispensing_unit",
                 "size_code",   "route_of_administration");
 

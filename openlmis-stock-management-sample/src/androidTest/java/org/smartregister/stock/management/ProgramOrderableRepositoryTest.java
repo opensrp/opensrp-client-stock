@@ -58,7 +58,7 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testAddOrUpdateShouldUpdateExistingOrderable() {
 
-        // update existing programOrderable
+        // insert new ProgramOrderable
         ProgramOrderable programOrderable = new ProgramOrderable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440700")),
@@ -70,6 +70,7 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(programOrderable);
 
+        // update existing ProgramOrderable
         programOrderable = new ProgramOrderable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440800")),
@@ -95,7 +96,7 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindOrderablesShouldReturnAllMatchingRows() {
 
-        // insert new programOrderables
+        // insert new ProgramOrderables
         ProgramOrderable programOrderable = new ProgramOrderable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440700")),
@@ -118,6 +119,7 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(programOrderable);
 
+        // ensure all matching rows are returned
         List<ProgramOrderable> programOrderables = database.findProgramOrderables(null, "123e4567-e89b-42d3-a456-556642440700",
                 "123e4567-e89b-42d3-a456-556642440000", "10", "1","0");
 
@@ -127,7 +129,7 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindOrderablesShouldNotReturnAnyMatchingRows() {
 
-        // insert new programOrderables
+        // insert new ProgramOrderables
         ProgramOrderable programOrderable = new ProgramOrderable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440700")),

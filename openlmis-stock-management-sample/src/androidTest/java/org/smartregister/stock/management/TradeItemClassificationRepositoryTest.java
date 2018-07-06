@@ -37,7 +37,7 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testAddOrUpdateShouldAddNewTradeItemClassification() {
 
-        // insert new tradeItemClassification
+        // insert new TradeItemClassification
         TradeItemClassification tradeItemClassification = new TradeItemClassification(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440300")),
@@ -56,7 +56,7 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testAddOrUpdateShouldUpdateExistingTradeItemClassification() {
 
-        // update existing tradeItemClassification
+        // insert new TradeItemClassification
         TradeItemClassification tradeItemClassification = new TradeItemClassification(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440100")),
@@ -66,6 +66,7 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(tradeItemClassification);
 
+        // update existing TradeItemClassification
         tradeItemClassification = new TradeItemClassification(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440200")),
@@ -90,7 +91,7 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindTradeItemClassificationsShouldReturnAllMatchingRows() {
 
-        // insert new tradeItemClassifications
+        // insert new TradeItemClassifications
         TradeItemClassification tradeItemClassification = new TradeItemClassification(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440100")),
@@ -109,7 +110,7 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(tradeItemClassification);
 
-        // make sure new values exist
+        // ensure all matching rows are returned
         List<TradeItemClassification> tradeItemClassifications = database.findTradeItemClassifications(null, "123e4567-e89b-42d3-a456-556642440100",
                 "classification_system", "classification_id");
         assertEquals(tradeItemClassifications.size(), 2);
@@ -118,7 +119,7 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindTradeItemClassificationsShouldNotReturnAnyMatchingRows() {
 
-        // insert new tradeItemClassifications
+        // insert new TradeItemClassifications
         TradeItemClassification tradeItemClassification = new TradeItemClassification(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440100")),
@@ -137,7 +138,7 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(tradeItemClassification);
 
-        // fetch tradeItemClassification with non-existing classification system
+        // fetch TradeItemClassification with non-existing classification system
         List<TradeItemClassification> tradeItemClassifications = database.findTradeItemClassifications(null, "123e4567-e89b-42d3-a456-556642440100",
                 "classification_system_none", "classification_id");
 

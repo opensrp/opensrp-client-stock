@@ -62,7 +62,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testAddOrUpdateShouldUpdateExistingProgram() {
 
-        // update existing Program
+        // insert new Program
         Program program = new Program(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new Code("program_code"),
@@ -77,6 +77,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(program);
 
+        // update existing Program
         program = new Program(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
                 new Code("program_code"),
@@ -134,6 +135,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(program);
 
+        // ensure all matching rows are returned
         List<Program> programs = database.findPrograms(null, "program_code",
                 "program_name", "1");
 
@@ -173,7 +175,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(program);
 
 
-        // fetch program with non-existing program_name
+        // fetch Program with non-existing program_name
         List<Program> programs = database.findPrograms(null, "program_code",
                 "program_name_two", "1");
 

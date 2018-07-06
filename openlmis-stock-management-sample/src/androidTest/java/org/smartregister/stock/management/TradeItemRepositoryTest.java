@@ -33,7 +33,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testAddOrUpdateShouldAddNewTradeItem() {
 
-        // insert new tradeItem
+        // insert new TradeItem
         TradeItem tradeItem = null;
         try {
              tradeItem = new TradeItem(
@@ -57,7 +57,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testAddOrUpdateShouldUpdateExistingTradeItem() {
 
-        // insert TradeItem
+        // insert new TradeItem
         TradeItem tradeItem = null;
         try {
             tradeItem = new TradeItem(
@@ -72,7 +72,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
         }
         database.addOrUpdate(tradeItem);
 
-        // update TradeItem
+        // update existing TradeItem
         tradeItem = null;
         try {
             tradeItem = new TradeItem(
@@ -101,7 +101,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindTradeItemsShouldReturnAllMatchingRows() {
 
-        // insert new tradeItems
+        // insert new TradeItems
         TradeItem tradeItem = null;
         try {
             tradeItem = new TradeItem(
@@ -129,6 +129,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
         }
         database.addOrUpdate(tradeItem);
 
+        // ensure all matching rows are returned
         List<TradeItem> tradeItems = tradeItems = database.findTradeItems(null, "49312943891",
                 "manufacturer");
 
@@ -166,7 +167,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
         }
         database.addOrUpdate(tradeItem);
 
-        // fetch tradeItem with non-existing dispensable ID
+        // fetch TradeItem with non-existing dispensable ID
         List<TradeItem> tradeItems = tradeItems = database.findTradeItems(null, "49312943891",
                 "manufacturer_none");
 

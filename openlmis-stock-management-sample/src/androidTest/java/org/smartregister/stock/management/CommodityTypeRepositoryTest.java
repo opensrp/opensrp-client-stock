@@ -56,7 +56,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testAddOrUpdateShouldUpdateExistingCommodityType() {
 
-        // update existing CommodityType
+        // insert new CommodityType
         CommodityType commodityType = new CommodityType(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 "commodity",
@@ -92,7 +92,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindCommodityTypesShouldReturnAllMatchingRows() {
 
-        // insert CommodityTypes
+        // insert new CommodityTypes
         CommodityType commodityType = new CommodityType(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
                 "commodity",
@@ -113,6 +113,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(commodityType);
 
+        // ensure all matching rows are returned
         List<CommodityType> commodityTypes = database.findCommodityTypes(null, "commodity",
                 "123e4567-e89b-42d3-a456-556642440276", "classification_system", "classification_id");
 
@@ -122,7 +123,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testFindCommodityTypesShouldNotReturnAnyMatchingRows() {
 
-        // insert commodityTypes
+        // insert new CommodityTypes
         CommodityType commodityType = new CommodityType(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
                 "commodity",
