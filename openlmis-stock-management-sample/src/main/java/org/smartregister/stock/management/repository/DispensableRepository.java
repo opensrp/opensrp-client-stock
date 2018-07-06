@@ -19,6 +19,7 @@ import static org.smartregister.stock.management.domain.Dispensable.KEY_DISPENSI
 import static org.smartregister.stock.management.domain.Dispensable.KEY_ROUTE_OF_ADMINISTRATION;
 import static org.smartregister.stock.management.domain.Dispensable.KEY_SIZE_CODE;
 import static org.smartregister.stock.management.util.Utils.INSERT_OR_REPLACE;
+import static org.smartregister.stock.management.util.Utils.createQuery;
 
 public class DispensableRepository extends BaseRepository {
 
@@ -76,7 +77,7 @@ public class DispensableRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String[] selectionArgs = new String[]{id, dispensingUnit, sizeCode, routeOfAdministration};
-            Pair<String, String[]> query= createQuery(selectionArgs);
+            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
             String querySelectString =  query.first;
             selectionArgs = query.second;
@@ -92,40 +93,6 @@ public class DispensableRepository extends BaseRepository {
         }
         return dispensables;
     }
-
-    /**
-     *
-     * This method takes an array of {@param columnValues} and returns a {@code Pair} comprising of
-     * the query string select statement and the query string arguments array.
-     *
-     * It assumes that {@param columnValues} is the same size as {@link SELECT_TABLE_COLUMNS} and
-     * that select arguments are in the same order as {@link SELECT_TABLE_COLUMNS} column values.
-     *
-     * @param columnValues
-     * @return
-     */
-    private Pair<String, String[]> createQuery(String[] columnValues) {
-
-        String queryString = "";
-        List<String> selectionArgs = new ArrayList<>();
-        for (int i = 0; i < columnValues.length; i++) {
-            if (columnValues[i] == null) {
-                continue;
-            }
-
-            queryString += SELECT_TABLE_COLUMNS[i] + "=?";
-            if (i != columnValues.length - 1) {
-                queryString += " AND ";
-            }
-            selectionArgs.add(columnValues[i]);
-        }
-
-        String[] args = new String[selectionArgs.size()];
-        args = selectionArgs.toArray(args);
-
-        return new Pair<>(queryString, args);
-    }
-
 
     private List<Dispensable> readDispensablesFromCursor(Cursor cursor) {
 
