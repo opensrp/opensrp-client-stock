@@ -6,6 +6,7 @@ import android.util.Pair;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.domain.TradeItem;
@@ -62,7 +63,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, TRADE_ITEM_CLASSIFICATION_TABLE);
-            query += "(" + "?,?,?,?,?" + ")";
+            query += "(" + StringUtils.repeat("?", ",", TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(tradeItemClassification));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -125,13 +126,13 @@ public class TradeItemClassificationRepository extends BaseRepository {
     
     private Object[] createQueryValues(TradeItemClassification tradeItemClassification) {
 
-        Object[] values = new Object[TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS.length];
-        values[0] = tradeItemClassification.getId().toString();
-        values[1] = tradeItemClassification.getTradeItem().getId().toString();
-        values[2] = tradeItemClassification.getClassificationSystem();
-        values[3] = tradeItemClassification.getClassificationId();
-        values[4] = tradeItemClassification.getDateUpdated();
-
+        Object[] values = new Object[] {
+            tradeItemClassification.getId().toString(),
+            tradeItemClassification.getTradeItem().getId().toString(),
+            tradeItemClassification.getClassificationSystem(),
+            tradeItemClassification.getClassificationId(),
+            tradeItemClassification.getDateUpdated()
+        };
         return values;
     }
 }

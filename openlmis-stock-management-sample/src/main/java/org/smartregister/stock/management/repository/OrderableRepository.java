@@ -6,6 +6,7 @@ import android.util.Pair;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.domain.Code;
@@ -77,7 +78,7 @@ public class OrderableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, ORDERABLE_TABLE);
-            query += "(" + "?,?,?,?,?,?,?,?,?,?" + ")";
+            query += "(" + StringUtils.repeat("?", ",", ORDERABLE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(orderable));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -144,18 +145,18 @@ public class OrderableRepository extends BaseRepository {
 
     private Object[] createQueryValues(Orderable orderable) {
 
-        Object[] values = new Object[ORDERABLE_TABLE_COLUMNS.length];
-        values[0] = orderable.getId().toString();
-        values[1] = orderable.getProductCode().toString();
-        values[2] = orderable.getFullProductCode();
-        values[3] = orderable.getNetContent();
-        values[4] = orderable.getPackRoundingThreshold();
-        values[5] = convertBooleanToInt(orderable.isRoundToZero());
-        values[6] = orderable.getDispensable().getId().toString();
-        values[7] = orderable.getTradeItemIdentifier();
-        values[8] = orderable.getCommodityTypeIdentifier();
-        values[9] = orderable.getDateUpdated();
-
+        Object[] values = new Object[]{
+            orderable.getId().toString(),
+            orderable.getProductCode().toString(),
+            orderable.getFullProductCode(),
+            orderable.getNetContent(),
+            orderable.getPackRoundingThreshold(),
+            convertBooleanToInt(orderable.isRoundToZero()),
+            orderable.getDispensable().getId().toString(),
+            orderable.getTradeItemIdentifier(),
+            orderable.getCommodityTypeIdentifier(),
+            orderable.getDateUpdated()
+        };
         return values;
     }
 }

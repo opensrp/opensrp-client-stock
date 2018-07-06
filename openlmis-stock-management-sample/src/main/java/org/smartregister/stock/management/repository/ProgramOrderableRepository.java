@@ -6,6 +6,7 @@ import android.util.Pair;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.domain.Orderable;
@@ -69,7 +70,7 @@ public class ProgramOrderableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, PROGRAM_ORDERABLE_TABLE);
-            query += "(" + "?,?,?,?,?,?,?" + ")";
+            query += "(" + StringUtils.repeat("?", ",", PROGRAM_ORDERABLE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(program));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -134,15 +135,15 @@ public class ProgramOrderableRepository extends BaseRepository {
 
     private Object[] createQueryValues(ProgramOrderable programOrderable) {
 
-        Object[] values = new Object[PROGRAM_ORDERABLE_TABLE_COLUMNS.length];
-        values[0] = programOrderable.getId().toString();
-        values[1] = programOrderable.getProgram().getId().toString();
-        values[2] = programOrderable.getOrderable().getId().toString();
-        values[3] = programOrderable.getDosesPerPatient();
-        values[4] = convertBooleanToInt(programOrderable.isActive());
-        values[5] = convertBooleanToInt(programOrderable.isFullSupply());
-        values[6] = programOrderable.getDateUpdated();
-
+        Object[] values = new Object[] {
+            programOrderable.getId().toString(),
+            programOrderable.getProgram().getId().toString(),
+            programOrderable.getOrderable().getId().toString(),
+            programOrderable.getDosesPerPatient(),
+            convertBooleanToInt(programOrderable.isActive()),
+            convertBooleanToInt(programOrderable.isFullSupply()),
+            programOrderable.getDateUpdated()
+        };
         return values;
     }
 }

@@ -6,6 +6,7 @@ import android.util.Pair;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.domain.CommodityType;
@@ -63,7 +64,7 @@ public class CommodityTypeRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, COMMODITY_TYPE_TABLE);
-            query += "(" + "?,?,?,?,?,?"+ ")";
+            query += "(" + StringUtils.repeat("?", ",", COMMODITY_TYPE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(commodityType) );
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -127,14 +128,14 @@ public class CommodityTypeRepository extends BaseRepository {
 
     private Object[] createQueryValues(CommodityType commodityType) {
 
-        Object[] values = new Object[COMMODITY_TYPE_TABLE_COLUMNS.length];
-        values[0] = commodityType.getId().toString();
-        values[1] = commodityType.getName();
-        values[2] = commodityType.getParentId();
-        values[3] = commodityType.getClassificationSystem();
-        values[4] = commodityType.getClassificationId();
-        values[5] = commodityType.getDateUpdated();
-
+        Object[] values = new Object[] {
+            commodityType.getId().toString(),
+            commodityType.getName(),
+            commodityType.getParentId(),
+            commodityType.getClassificationSystem(),
+            commodityType.getClassificationId(),
+            commodityType.getDateUpdated()
+        };
         return values;
     }
 }

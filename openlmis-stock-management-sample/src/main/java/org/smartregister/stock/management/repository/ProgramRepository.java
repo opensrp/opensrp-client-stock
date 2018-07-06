@@ -6,6 +6,7 @@ import android.util.Pair;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.domain.Code;
@@ -77,7 +78,7 @@ public class ProgramRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, PROGRAM_TABLE);
-            query += "(" +  "?,?,?,?,?,?,?,?,?,?" + ")";
+            query += "(" + StringUtils.repeat("?", ",",PROGRAM_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(program));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -145,18 +146,18 @@ public class ProgramRepository extends BaseRepository {
 
     private Object[] createQueryValues(Program program) {
 
-        Object[] values = new Object[PROGRAM_TABLE_COLUMNS.length];
-        values[0] = program.getId().toString();
-        values[1] = program.getCode().toString();
-        values[2] = program.getName();
-        values[3] = program.getDescription();
-        values[4] = convertBooleanToInt(program.getActive());
-        values[5] = convertBooleanToInt(program.getPeriodsSkippable());
-        values[6] = convertBooleanToInt(program.getSkipAuthorization());
-        values[7] = convertBooleanToInt(program.getShowNonFullSupplyTab());
-        values[8] = convertBooleanToInt(program.getEnableDatePhysicalStockCountCompleted());
-        values[9] = program.getDateUpdated();
-
+        Object[] values = new Object[]{
+            program.getId().toString(),
+            program.getCode().toString(),
+            program.getName(),
+            program.getDescription(),
+            convertBooleanToInt(program.getActive()),
+            convertBooleanToInt(program.getPeriodsSkippable()),
+            convertBooleanToInt(program.getSkipAuthorization()),
+            convertBooleanToInt(program.getShowNonFullSupplyTab()),
+            convertBooleanToInt(program.getEnableDatePhysicalStockCountCompleted()),
+            program.getDateUpdated()
+        };
         return values;
     }
 }

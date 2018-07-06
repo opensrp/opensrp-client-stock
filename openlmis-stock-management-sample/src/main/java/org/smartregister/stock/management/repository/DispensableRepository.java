@@ -6,6 +6,7 @@ import android.util.Pair;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.domain.Dispensable;
@@ -64,7 +65,7 @@ public class DispensableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, DISPENSABLE_TABLE);
-            query += "(" + "?,?,?,?,?" +  ")";
+            query += "(" + StringUtils.repeat("?",",", DISPENSABLE_TABLE_COLUMNS.length) +  ")";
             database.execSQL(query, createQueryValues(dispensable));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -126,13 +127,13 @@ public class DispensableRepository extends BaseRepository {
     
     private Object[] createQueryValues(Dispensable dispensable) {
 
-        Object[] values = new Object[DISPENSABLE_TABLE_COLUMNS.length];
-        values[0] = dispensable.getId().toString();
-        values[1] = dispensable.getAttributes().get(KEY_DISPENSING_UNIT);
-        values[2] = dispensable.getAttributes().get(KEY_SIZE_CODE);
-        values[3] = dispensable.getAttributes().get(KEY_ROUTE_OF_ADMINISTRATION);
-        values[4] = dispensable.getDateUpdated();
-
+        Object[] values = new Object[] {
+            dispensable.getId().toString(),
+            dispensable.getAttributes().get(KEY_DISPENSING_UNIT),
+            dispensable.getAttributes().get(KEY_SIZE_CODE),
+            dispensable.getAttributes().get(KEY_ROUTE_OF_ADMINISTRATION),
+            dispensable.getDateUpdated()
+        };
         return values;
     }
 }
