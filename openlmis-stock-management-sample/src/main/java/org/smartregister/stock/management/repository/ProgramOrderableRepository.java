@@ -39,7 +39,7 @@ public class ProgramOrderableRepository extends BaseRepository {
 
             "CREATE TABLE " + PROGRAM_ORDERABLE_TABLE
             + "("
-                    + ID + " VARCHAR NOT NULL,"
+                    + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + PROGRAM + " VARCHAR NOT NULL,"
                     + ORDERABLE + " VARCHAR NOT NULL,"
                     + DOSES_PER_PATIENT + " INTEGER,"

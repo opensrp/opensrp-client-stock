@@ -93,13 +93,27 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(program);
 
+        program = new Program(
+                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                new Code("program_code"),
+                "program_name_two",
+                "program_description",
+                true,
+                false,
+                false,
+                false,
+                false,
+                4918234891L
+        );
+        database.addOrUpdate(program);
+
         // make sure old values are removed
         List<Program> programs = database.findPrograms("123e4567-e89b-42d3-a456-556642440200", "program_code",
                 "program_name", "1");
         assertEquals(programs.size(), 0);
 
         // make sure new values exist
-       programs = database.findPrograms("123e4567-e89b-42d3-a456-556642440200", "program_code",
+       programs = database.findPrograms("123e4567-e89b-42d3-a456-556642440100", "program_code",
                 "program_name_two", "1");
         assertEquals(programs.size(), 1);
     }

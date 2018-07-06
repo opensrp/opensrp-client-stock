@@ -82,14 +82,25 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(commodityType);
 
+        // update existing CommodityType
+        commodityType = new CommodityType(
+                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "commodity",
+                "123e4567-e89b-42d3-a456-556642440286",
+                "classification_system_two",
+                "classification_id",
+                421309130103L
+        );
+        database.addOrUpdate(commodityType);
+
         // make sure old values are removed
         List<CommodityType> commodityTypes = database.findCommodityTypes("123e4567-e89b-42d3-a456-556642440200", "commodity",
-                "123e4567-e89b-42d3-a456-556642440276", "classification_system", "classification_id");
+                "123e4567-e89b-42d3-a456-556642440286", "classification_system", "classification_id");
         assertEquals(commodityTypes.size(), 0);
 
         // make sure new values exist
         commodityTypes = database.findCommodityTypes("123e4567-e89b-42d3-a456-556642440200", "commodity",
-                "123e4567-e89b-42d3-a456-556642440286", "classification_system", "classification_id");
+                "123e4567-e89b-42d3-a456-556642440286", "classification_system_two", "classification_id");
         assertEquals(commodityTypes.size(), 1);
     }
 

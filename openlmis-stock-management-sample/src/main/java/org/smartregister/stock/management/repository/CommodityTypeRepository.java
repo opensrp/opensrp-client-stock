@@ -34,7 +34,7 @@ public class CommodityTypeRepository extends BaseRepository {
 
             "CREATE TABLE " + COMMODITY_TYPE_TABLE
             + "("
-                    + ID + " VARCHAR NOT NULL,"
+                    + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + NAME + " VARCHAR NOT NULL,"
                     + PARENT + " VARCHAR,"
                     + CLASSIFICATION_SYSTEM + " VARCHAR,"

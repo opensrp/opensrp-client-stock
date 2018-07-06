@@ -44,7 +44,7 @@ public class OrderableRepository extends BaseRepository {
 
             "CREATE TABLE " + ORDERABLE_TABLE
              + "("
-                    + ID + " VARCHAR NOT NULL,"
+                    + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + CODE + " VARCHAR NOT NULL,"
                     + FULL_PRODUCT_CODE + " VARCHAR NOT NULL,"
                     + NET_CONTENT + " INTEGER,"

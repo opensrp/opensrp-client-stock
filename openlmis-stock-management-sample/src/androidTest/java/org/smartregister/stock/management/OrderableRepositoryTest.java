@@ -75,7 +75,7 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testAddOrUpdateShouldUpdateExistingOrderable() {
 
-        // update existing orderable
+        // add orderable
         Orderable orderable = new Orderable(
                 UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
                 new Code("orderable_code"),
@@ -89,14 +89,29 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(orderable);
 
+        // update existing orderable
+       orderable = new Orderable(
+                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                new Code("orderable_code"),
+                "full_product_code",
+                10,
+                1,
+                false,
+                new Dispensable(UUID.fromString("123e4567-e89b-24d3-a456-556642590067")),
+                "trade_item_id",
+                "commodity_type_id_two"
+        );
+        database.addOrUpdate(orderable);
+
         // make sure old values are removed
         List<Orderable> orderables = database.findOrderables("123e4567-e89b-42d3-a456-556642440200", "orderable_code",
-                "full_product_code", "10", "123e4567-e89b-42d3-a456-556642590067","trade_item_id", "commodity_type_id");
+                "full_product_code", "10", "123e4567-e89b-24d3-a456-556642590067","trade_item_id", "commodity_type_id");
         assertEquals(orderables.size(), 0);
 
         // make sure new values exist
         orderables = database.findOrderables("123e4567-e89b-42d3-a456-556642440200", "orderable_code",
-                "full_product_code", "10", "123e4567-e89b-24d3-a456-556642590067","trade_item_id", "commodity_type_id");
+                "full_product_code", "10", "123e4567-e89b-24d3-a456-556642590067","trade_item_id", "commodity_type_id_two");
+
         assertEquals(orderables.size(), 1);
     }
 

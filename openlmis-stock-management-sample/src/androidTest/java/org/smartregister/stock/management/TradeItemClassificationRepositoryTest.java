@@ -81,13 +81,22 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(tradeItemClassification);
 
+        tradeItemClassification = new TradeItemClassification(
+                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440200")),
+                "classification_system",
+                "classification_id",
+                398143982349L
+        );
+        database.addOrUpdate(tradeItemClassification);
+
         // make sure old values are removed
-        List<TradeItemClassification> tradeItemClassifications = database.findTradeItemClassifications("123e4567-e89b-42d3-a456-556642440200", "123e4567-e89b-42d3-a456-556642440300",
+        List<TradeItemClassification> tradeItemClassifications = database.findTradeItemClassifications("123e4567-e89b-42d3-a456-556642440200", "123e4567-e89b-42d3-a456-556642440100",
                 "classification_system", "classification_id");
         assertEquals(tradeItemClassifications.size(), 0);
 
         // make sure new values exist
-        tradeItemClassifications = database.findTradeItemClassifications("123e4567-e89b-42d3-a456-556642440200", "123e4567-e89b-42d3-a456-556642440100",
+        tradeItemClassifications = database.findTradeItemClassifications("123e4567-e89b-42d3-a456-556642440200", "123e4567-e89b-42d3-a456-556642440200",
                 "classification_system", "classification_id");
 
         assertEquals(tradeItemClassifications.size(), 1);

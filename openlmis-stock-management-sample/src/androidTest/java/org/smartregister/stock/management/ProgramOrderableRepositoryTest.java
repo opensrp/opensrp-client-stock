@@ -85,13 +85,24 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(programOrderable);
 
+        programOrderable = new ProgramOrderable(
+                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440800")),
+                new Orderable(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")),
+                10,
+                true,
+                false,
+                4924004320L
+        );
+        database.addOrUpdate(programOrderable);
+
         // make sure old values are removed
-        List<ProgramOrderable> programOrderables = database.findProgramOrderables("123e4567-e89b-42d3-a456-556642440200", "123e4567-e89b-42d3-a456-556642440100",
+        List<ProgramOrderable> programOrderables = database.findProgramOrderables("123e4567-e89b-42d3-a456-556642440200", "123e4567-e89b-42d3-a456-556642440700",
                 "123e4567-e89b-42d3-a456-556642440000", "10", "1","0");
         assertEquals(programOrderables.size(), 0);
 
         // make sure new values exist
-        programOrderables = database.findProgramOrderables("123e4567-e89b-42d3-a456-556642440200", "123e4567-e89b-42d3-a456-556642440700",
+        programOrderables = database.findProgramOrderables("123e4567-e89b-42d3-a456-556642440200", "123e4567-e89b-42d3-a456-556642440800",
                 "123e4567-e89b-42d3-a456-556642440000", "10", "1","0");
         assertEquals(programOrderables.size(), 1);
     }

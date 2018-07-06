@@ -34,7 +34,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
 
             "CREATE TABLE " + TRADE_ITEM_CLASSIFICATION_TABLE
             + "("
-                    + ID + " VARCHAR NOT NULL,"
+                    + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + TRADE_ITEM + " VARCHAR NOT NULL,"
                     + CLASSIFICATION_SYSTEM + " VARCHAR,"
                     + CLASSIFICATION_ID + " VARCHAR,"

@@ -42,7 +42,7 @@ public class ProgramRepository extends BaseRepository {
 
             "CREATE TABLE " + PROGRAM_TABLE
             + "("
-                + ID + " VARCHAR NOT NULL,"
+                + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                 + CODE + " VARCHAR NOT NULL,"
                 + NAME + " VARCHAR NOT NULL,"
                 + DESCRIPTION + " VARCHAR,"
