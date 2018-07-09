@@ -10,7 +10,7 @@ import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.application.Application;
 
 @RunWith(AndroidJUnit4.class)
-public class BaseRepositoryTest {
+public abstract class BaseRepositoryTest {
 
     protected static Context context;
     protected static Repository mainRepository;
@@ -21,5 +21,4 @@ public class BaseRepositoryTest {
         Application.setAppContext(context);
         mainRepository = Application.getInstance().getRepository();
     }
-
 }
