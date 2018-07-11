@@ -1,15 +1,16 @@
-package org.smartregister.stock.management.application;
+package org.smartregister.stock.openlmis.mock;
 
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.repository.Repository;
-import org.smartregister.stock.openlmis.OpenLMISLibrary;
-import org.smartregister.stock.openlmis.repository.StockManagementRepository;
 import org.smartregister.view.activity.DrishtiApplication;
 
 import static org.smartregister.util.Log.logError;
 
-public class Application extends DrishtiApplication {
+/**
+ * Created by samuelgithengi on 7/10/18.
+ */
+public class TestApplication extends DrishtiApplication {
 
     @Override
     public void onCreate() {
@@ -19,21 +20,14 @@ public class Application extends DrishtiApplication {
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         CoreLibrary.init(context);
-
-        //Initialize OpenLMISLibrary
-        OpenLMISLibrary.init(context, getRepository());
-    }
-
-
-    public static synchronized Application getInstance() {
-        return (Application) mInstance;
     }
 
     @Override
     public Repository getRepository() {
         try {
             if (repository == null) {
-                repository = new StockManagementRepository(getApplicationContext(), context);
+                repository = new TestRepository(getApplicationContext(), context.session(), null,
+                        context.sharedRepositoriesArray());
             }
         } catch (UnsatisfiedLinkError e) {
             logError("Error on getRepository: " + e);
@@ -42,8 +36,12 @@ public class Application extends DrishtiApplication {
     }
 
     @Override
+    public String getPassword() {
+        return "Testing_Pass";
+    }
+
+    @Override
     public void logoutCurrentUser() {
 
     }
-
 }

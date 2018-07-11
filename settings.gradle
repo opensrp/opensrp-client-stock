@@ -1,1 +1,1 @@
-include ':opensrp-stock', ':sample', ':openlmis-stock-management-sample', ':openlmis-stock'
+include ':opensrp-stock', ':sample', ':openlmis-sample', ':openlmis-stock'
