@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis;
+package org.smartregister.stock.management;
 
 import android.util.Log;
 

@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis;
+package org.smartregister.stock.management;
 
 import org.junit.After;
 import org.junit.Before;
