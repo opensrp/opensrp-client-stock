@@ -1,12 +1,23 @@
 buildscript {
-    
-    repositories {
-        mavenCentral()
-    }
 
     dependencies {
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
     }
+
+    apply plugin: 'jacoco'
+    apply plugin: 'java'
+
+    jacoco {
+        toolVersion = '0.8.0'
+    }
+
+}
+plugins {
+    id "com.github.kt3k.coveralls" version "2.8.1"
+}
+
+repositories {
+    mavenCentral()
 }
 
 configure(allprojects) { project ->
@@ -25,9 +36,30 @@ configure(allprojects) { project ->
     }
 }
 
+apply plugin: 'build-dashboard'
+apply plugin: 'io.codearte.nexus-staging'
+
+buildDashboard {
+    reports.html.setDestination(file("build/"))
+}
+
+test.reports.html.enabled = false
+test.reports.junitXml.enabled = false
+
+def isReleaseBuild() {
+    return version.contains("SNAPSHOT") == false
+}
+
+/**
+ *  List of modules that don't require Jacoco
+ */
+def ignoredByJacoco = [
+        'sample'
+]
+
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 
-subprojects {
+subprojects { prj ->
 
     group = 'org.smartregister'
 
@@ -61,19 +93,78 @@ subprojects {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
         }
     }
+
+    // Apply Jacoco only if the project is not in the ignore list
+    if (!ignoredByJacoco.contains(prj.name)) {
+
+        apply plugin: 'jacoco'
+
+        jacoco {
+            toolVersion = '0.8.0'
+        }
+
+        task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+            reports {
+                xml.enabled = true
+                html.enabled = true
+            }
+
+            getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"))
+            getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
+
+            def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$ViewBinder*.*']
+            def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+            def mainSrc = "$project.projectDir/src/main/java"
+
+            sourceDirectories = files([mainSrc])
+            classDirectories = files([debugTree])
+            executionData = fileTree(dir: project.buildDir, includes: [
+                    'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+            ])
+        }
+
+    }
+
+
 }
 
-apply plugin: 'java'
-apply plugin: 'build-dashboard'
-apply plugin: 'io.codearte.nexus-staging'
+// Only report code coverage for projects that are distributed
+def publishedProjects = subprojects.findAll { it.path != ':sample' }
 
-buildDashboard {
-    reports.html.setDestination(file("build/"))
+task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
+    description = 'Generates an aggregate report from all subprojects'
+    dependsOn publishedProjects.jacocoTestReport
+
+    additionalSourceDirs = files(publishedProjects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(publishedProjects.sourceSets.main.allSource.srcDirs)
+    classDirectories = files(publishedProjects.sourceSets.main.output)
+    executionData = files(publishedProjects.jacocoTestReport.executionData)
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+    }
+
+    onlyIf = {
+        true
+    }
+
+    doFirst {
+        executionData = files(executionData.findAll {
+            it.exists()
+        })
+    }
 }
 
-test.reports.html.enabled = false
-test.reports.junitXml.enabled = false
-
-def isReleaseBuild() {
-    return version.contains("SNAPSHOT") == false
+coveralls {
+    sourceDirs = publishedProjects.sourceSets.main.allSource.srcDirs.flatten()
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
+
+tasks.coveralls {
+    group = 'Coverage reports'
+    description = 'Uploads the aggregated coverage report to Coveralls'
+    dependsOn jacocoRootReport
+}
+

@@ -28,9 +28,19 @@ android:
     - build-tools-27.0.3
     # The SDK version used to compile your projects
     - android-27
+    - android-24
+    #System image
+    - sys-img-armeabi-v7a-android-24
 
 addons:
   apt_packages:
+
+# Emulator Management: Create, Start and Wait
+before_script:
+  - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 
 script:
   - echo "Travis branch is $TRAVIS_BRANCH"
@@ -40,8 +50,8 @@ script:
   # Enable the line below once we get all the test passing, currently most of the tests are failing
   # so we'll just if the project compiles
   #Run All tests Unit and Instrumentation
-  - travis_wait ./gradlew opensrp-stock:jacocoTestReport coveralls --stacktrace
-
+  - travis_wait ./gradlew openlmis-sample:connectedDebugAndroidTest
+  - travis_wait ./gradlew opensrp-stock:jacocoTestReport opensrp-stock:coveralls --stacktrace
 after_failure:
  - pandoc opensrp-stock/build/reports/tests/index.html -t plain
 

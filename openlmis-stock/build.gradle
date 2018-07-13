@@ -1,4 +1,4 @@
-description = 'OpenSRP stock client library'
+description = 'OpenLMIS stock client library'
 
 buildscript {
     repositories {
@@ -83,35 +83,13 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    implementation ('org.smartregister:opensrp-client-native-form:1.2.1-SNAPSHOT@aar') {
-        transitive = true
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
-        exclude group: 'org.jacoco', module: 'org.jacoco.agent'
-        exclude group: 'org.android.support', module: 'cardview-v7'
-    }
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api ('org.smartregister:opensrp-client-core:1.3.2-SNAPSHOT@aar') {
-        transitive true
-        exclude group: 'com.github.bmelnychuk', module: 'atv'
-        exclude group: 'com.github.johnkil.print', module: 'print'
-    }
-
-    api 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-
-    implementation 'com.jjoe64:graphview:4.2.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     testImplementation 'junit:junit:4.12'
-    testImplementation "org.robolectric:robolectric:3.8"
-    testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    // PowerMock
-    def powerMockVersion = '1.7.3'
-    testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
-
-    androidTestImplementation ('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
+    api project(':opensrp-stock')
 }
 
-apply from: '../maven.gradle'
