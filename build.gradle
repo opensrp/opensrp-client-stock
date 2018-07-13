@@ -36,6 +36,20 @@ configure(allprojects) { project ->
     }
 }
 
+apply plugin: 'build-dashboard'
+apply plugin: 'io.codearte.nexus-staging'
+
+buildDashboard {
+    reports.html.setDestination(file("build/"))
+}
+
+test.reports.html.enabled = false
+test.reports.junitXml.enabled = false
+
+def isReleaseBuild() {
+    return version.contains("SNAPSHOT") == false
+}
+
 /**
  *  List of modules that don't require Jacoco
  */
@@ -90,8 +104,8 @@ subprojects { prj ->
                 html.enabled = true
             }
 
-            getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"))
-            getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
+            //getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"))
+            //getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
 
             def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$ViewBinder*.*']
             def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
@@ -109,63 +123,42 @@ subprojects { prj ->
 
 }
 
-def publishedProjects
+// Only report code coverage for projects that are distributed
+def publishedProjects = subprojects.findAll { it.path != ':sample' }
 
 task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
     description = 'Generates an aggregate report from all subprojects'
-
-    // Get list of projects which should be included in the report
-    publishedProjects = new ArrayList()
-    subprojects.each { prj ->
-        if (!ignoredByJacoco.contains(prj.name)) {
-            publishedProjects.add(prj)
-        }
-    }
-
-    dependsOn(publishedProjects.jacocoTestReport)
+    dependsOn publishedProjects.jacocoTestReport
 
     additionalSourceDirs = files(publishedProjects.sourceSets.main.allSource.srcDirs)
     sourceDirectories = files(publishedProjects.sourceSets.main.allSource.srcDirs)
     classDirectories = files(publishedProjects.sourceSets.main.output)
     executionData = files(publishedProjects.jacocoTestReport.executionData)
 
-    doFirst {
-        executionData = files(executionData.findAll { it.exists() })
+    reports {
+        html.enabled = true
+        xml.enabled = true
     }
 
-    reports {
-        html.enabled = true // human readable
-        xml.enabled = true // required by coveralls
+    onlyIf = {
+        true
+    }
+
+    doFirst {
+        executionData = files(executionData.findAll {
+            it.exists()
+        })
     }
 }
 
 coveralls {
     sourceDirs = publishedProjects.sourceSets.main.allSource.srcDirs.flatten()
-    jacocoReportPath = "**/reports/jacoco/jacocoRootReport/merged.xml"
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
 
 tasks.coveralls {
+    group = 'Coverage reports'
+    description = 'Uploads the aggregated coverage report to Coveralls'
     dependsOn jacocoRootReport
-}
-
-task jacocoMerge(type: JacocoMerge) {
-    publishedProjects.each { subproject ->
-        executionData = files(subproject.jacocoTestReport.executionData)
-    }
-}
-
-
-apply plugin: 'build-dashboard'
-apply plugin: 'io.codearte.nexus-staging'
-
-buildDashboard {
-    reports.html.setDestination(file("build/"))
-}
-
-test.reports.html.enabled = false
-test.reports.junitXml.enabled = false
-
-def isReleaseBuild() {
-    return version.contains("SNAPSHOT") == false
 }
 
