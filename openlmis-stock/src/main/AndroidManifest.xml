@@ -1,2 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.smartregister.stock.openlmis" />
+    package="org.smartregister.stock.openlmis">
+
+    <application>
+        <activity
+            android:name=".view.StockListActivity"
+            android:label="@string/title_activity_stock_list"
+            android:theme="@style/AppTheme"></activity>
+    </application>
+
+</manifest>

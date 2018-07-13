@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">openlmis-stock</string>
+    <string name="title_activity_stock_list">Stock Control</string>
+    <string name="stock_received">Received</string>
+    <string name="stock_issued">Issued</string>
+    <string name="stock_take">Stocktake</string>
 </resources>

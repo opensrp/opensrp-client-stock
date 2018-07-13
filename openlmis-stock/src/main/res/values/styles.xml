@@ -1,0 +1,5 @@
+<resources>
+    <style name="FloatingActionButton" parent="Theme.AppCompat.DayNight" >
+        <item name="backgroundTint">@color/colorPrimary</item>
+    </style>
+</resources>
