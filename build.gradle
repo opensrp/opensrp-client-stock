@@ -97,6 +97,12 @@ subprojects { prj ->
     // Apply Jacoco only if the project is not in the ignore list
     if (!ignoredByJacoco.contains(prj.name)) {
 
+        apply plugin: 'jacoco'
+
+        jacoco {
+            toolVersion = '0.8.0'
+        }
+
         task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
 
             reports {
@@ -104,8 +110,8 @@ subprojects { prj ->
                 html.enabled = true
             }
 
-            //getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"))
-            //getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
+            getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"))
+            getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
 
             def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$ViewBinder*.*']
             def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)

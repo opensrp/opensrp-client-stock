@@ -51,7 +51,7 @@ script:
   # so we'll just if the project compiles
   #Run All tests Unit and Instrumentation
   - travis_wait ./gradlew openlmis-sample:connectedDebugAndroidTest
-  - travis_wait ./gradlew opensrp-stock:jacocoTestReport coveralls --stacktrace
+  - travis_wait ./gradlew opensrp-stock:jacocoTestReport opensrp-stock:coveralls --stacktrace
 after_failure:
  - pandoc opensrp-stock/build/reports/tests/index.html -t plain
 
