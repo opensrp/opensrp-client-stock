@@ -5,4 +5,5 @@
     <string name="stock_issued">Issued</string>
     <string name="stock_take">Stocktake</string>
     <string name="view_history">View History</string>
+    <string name="stock_planning">Stock Planning</string>
 </resources>
