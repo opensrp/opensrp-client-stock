@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.adapter.StockListAdapter;
+import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 
 public class StockListActivity extends AppCompatActivity {
 
@@ -17,6 +19,8 @@ public class StockListActivity extends AppCompatActivity {
     private FloatingActionButton mfFloatingActionButton;
 
     private Toolbar toolbar;
+
+    private StockListPresenter stockListPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,11 @@ public class StockListActivity extends AppCompatActivity {
                 showPopupMenu(view);
             }
         });
+
+        mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
+
+        stockListPresenter = new StockListPresenter();
+        mRecyclerView.setAdapter(new StockListAdapter(stockListPresenter.getCommodityTypes()));
     }
 
     private void showPopupMenu(View view) {

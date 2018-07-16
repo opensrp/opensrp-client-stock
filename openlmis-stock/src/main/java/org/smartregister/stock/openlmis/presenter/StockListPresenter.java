@@ -13,8 +13,8 @@ public class StockListPresenter {
 
     private StockListInteractor stockListInteractor;
 
-    public StockListPresenter(StockListInteractor stockListInteractor) {
-        this.stockListInteractor = stockListInteractor;
+    public StockListPresenter() {
+        stockListInteractor = new StockListInteractor();
     }
 
     public List<Program> getPrograms() {
