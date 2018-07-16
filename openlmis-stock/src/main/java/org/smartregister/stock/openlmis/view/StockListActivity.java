@@ -28,7 +28,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_list);
-        toolbar = findViewById(R.id.location_switching_toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         stockListPresenter = new StockListPresenter(this);
 
