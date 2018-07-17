@@ -3,6 +3,7 @@ package org.smartregister.stock.openlmis.presenter;
 import android.view.View;
 
 import org.smartregister.stock.openlmis.domain.CommodityType;
+import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.interactor.StockListInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
@@ -32,5 +33,9 @@ public class StockListPresenter {
 
     public void stockActionClicked(View view) {
         stockListView.showStockActionMenu(view);
+    }
+
+    public List<TradeItem> getTradeItems(CommodityType commodityType) {
+        return stockListInteractor.getTradeItems(commodityType);
     }
 }

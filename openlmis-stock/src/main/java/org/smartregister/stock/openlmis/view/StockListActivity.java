@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import org.smartregister.stock.openlmis.R;
-import org.smartregister.stock.openlmis.adapter.StockListAdapter;
+import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
@@ -46,7 +46,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
-        mRecyclerView.setAdapter(new StockListAdapter(stockListPresenter.getCommodityTypes(), this));
+        mRecyclerView.setAdapter(new ListCommodityTypeAdapter(stockListPresenter, this));
 
         programsFilter = findViewById(R.id.filterPrograms);
         // Creating adapter for spinner
