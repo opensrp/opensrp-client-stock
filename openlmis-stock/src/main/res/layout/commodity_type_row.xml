@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/list_stock_cardview_separator"
+    android:layout_marginBottom="@dimen/list_stock_cardview_vertical_margin"
+    android:layout_marginEnd="@dimen/list_stock_cardview_horizontal_margin"
+    android:layout_marginStart="@dimen/list_stock_cardview_horizontal_margin"
+    android:layout_marginTop="@dimen/list_stock_cardview_vertical_margin"
     app:cardCornerRadius="@dimen/list_stock_cardview_corner">
 
     <LinearLayout
@@ -19,9 +22,9 @@
                 android:id="@+id/collapseExpandButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:scaleType="centerInside"
                 android:layout_gravity="center_horizontal"
                 android:padding="@dimen/list_stock_padding"
+                android:scaleType="centerInside"
                 android:src="@drawable/ic_keyboard_arrow_down" />
 
             <TextView

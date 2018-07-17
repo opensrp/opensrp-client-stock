@@ -3,7 +3,6 @@ package org.smartregister.stock.openlmis.presenter;
 import android.view.View;
 
 import org.smartregister.stock.openlmis.domain.CommodityType;
-import org.smartregister.stock.openlmis.domain.Program;
 import org.smartregister.stock.openlmis.interactor.StockListInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
@@ -23,7 +22,7 @@ public class StockListPresenter {
         stockListInteractor = new StockListInteractor();
     }
 
-    public List<Program> getPrograms() {
+    public List<String> getPrograms() {
         return stockListInteractor.getPrograms();
     }
 

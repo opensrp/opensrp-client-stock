@@ -6,4 +6,7 @@
     <string name="stock_take">Stocktake</string>
     <string name="view_history">View History</string>
     <string name="stock_planning">Stock Planning</string>
+    <string name="search">Search</string>
+    <string name="expand_all">Expand All</string>
+    <string name="collapse_all">Collapse All</string>
 </resources>

@@ -12,11 +12,15 @@ import java.util.UUID;
  */
 public class StockListInteractor {
 
-    public List<Program> getPrograms() {
-        List<Program> programs = new ArrayList<>();
+    public List<String> getPrograms() {
+        List<String> programs = new ArrayList<>();
         Program program = new Program();
         program.setName("Essential Drugs");
-        programs.add(program);
+        programs.add(program.getName());
+
+        program = new Program();
+        program.setName("Malaria Drugs");
+        programs.add(program.getName());
         return programs;
     }
 

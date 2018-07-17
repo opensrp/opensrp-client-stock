@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.StockListAdapter;
@@ -23,6 +25,8 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
     private Toolbar toolbar;
 
     private StockListPresenter stockListPresenter;
+
+    private Spinner programsFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,16 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
         mRecyclerView.setAdapter(new StockListAdapter(stockListPresenter.getCommodityTypes()));
+
+        programsFilter = findViewById(R.id.filterPrograms);
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stockListPresenter.getPrograms());
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        programsFilter.setAdapter(dataAdapter);
     }
 
     @Override
