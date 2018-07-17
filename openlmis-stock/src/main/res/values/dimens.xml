@@ -6,4 +6,5 @@
     <dimen name="list_stock_cardview_corner">2dp</dimen>
     <dimen name="list_stock_padding">8dp</dimen>
     <dimen name="list_stock_margin">10dp</dimen>
+    <dimen name="expand_collapse_margin">20dp</dimen>
 </resources>
