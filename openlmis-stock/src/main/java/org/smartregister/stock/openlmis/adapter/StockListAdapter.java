@@ -1,12 +1,8 @@
 package org.smartregister.stock.openlmis.adapter;
 
-import android.graphics.Typeface;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +20,11 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListViewHolder> 
 
     private List<CommodityType> commodityTypes;
 
-    public StockListAdapter(List<CommodityType> commodityTypes) {
+    private Context context;
+
+    public StockListAdapter(List<CommodityType> commodityTypes, Context context) {
         this.commodityTypes = commodityTypes;
+        this.context = context;
     }
 
     @NonNull
@@ -38,15 +37,8 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull StockListViewHolder holder, int position) {
         CommodityType commodityType = commodityTypes.get(position);
-        ForegroundColorSpan blackForegroundColorSpan = new ForegroundColorSpan(
-                holder.getCommodityTypeTextView().getContext().getResources().getColor(android.R.color.black));
-
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(commodityType.getName());
-        spannableStringBuilder.append(" (3)");
-        spannableStringBuilder.setSpan(blackForegroundColorSpan, 0, spannableStringBuilder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableStringBuilder.length(), 0);
-        spannableStringBuilder.append("\n\n1300 doses");
-        holder.getCommodityTypeTextView().setText(spannableStringBuilder);
+        holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter, commodityType.getName(), 3));
+        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, 1300));
 
     }
 

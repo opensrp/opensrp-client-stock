@@ -46,7 +46,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
-        mRecyclerView.setAdapter(new StockListAdapter(stockListPresenter.getCommodityTypes()));
+        mRecyclerView.setAdapter(new StockListAdapter(stockListPresenter.getCommodityTypes(), this));
 
         programsFilter = findViewById(R.id.filterPrograms);
         // Creating adapter for spinner

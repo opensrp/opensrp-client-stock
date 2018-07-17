@@ -20,6 +20,8 @@ public class StockListViewHolder extends RecyclerView.ViewHolder implements View
 
     private TextView commodityTypeTextView;
 
+    private TextView doseTextView;
+
     private ImageView collapseExpandButton;
 
     private FrameLayout tradeItemsView;
@@ -28,6 +30,7 @@ public class StockListViewHolder extends RecyclerView.ViewHolder implements View
         super(itemView);
         this.context = itemView.getContext();
         commodityTypeTextView = itemView.findViewById(R.id.commodityTypeTextView);
+        doseTextView = itemView.findViewById(R.id.doseTextView);
         collapseExpandButton = itemView.findViewById(R.id.collapseExpandButton);
         tradeItemsView = itemView.findViewById(R.id.tradeItemsView);
         collapseExpandButton.setOnClickListener(this);
@@ -57,4 +60,7 @@ public class StockListViewHolder extends RecyclerView.ViewHolder implements View
         return commodityTypeTextView;
     }
 
+    public TextView getDoseTextView() {
+        return doseTextView;
+    }
 }
