@@ -16,7 +16,7 @@ import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
-public class StockListActivity extends AppCompatActivity implements StockListView {
+public class StockListActivity extends AppCompatActivity implements StockListView, View.OnClickListener {
 
     private RecyclerView mRecyclerView;
 
@@ -28,6 +28,8 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
     private Spinner programsFilter;
 
+    private ListCommodityTypeAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,26 +39,26 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         stockListPresenter = new StockListPresenter(this);
 
         mfFloatingActionButton = findViewById(R.id.stockAction);
-        mfFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stockListPresenter.stockActionClicked(view);
-            }
-        });
+        mfFloatingActionButton.setOnClickListener(this);
 
         mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
-        mRecyclerView.setAdapter(new ListCommodityTypeAdapter(stockListPresenter, this));
+        adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
+        mRecyclerView.setAdapter(adapter);
+        stockListPresenter.setCommodityTypeAdapter(adapter);
 
         programsFilter = findViewById(R.id.filterPrograms);
-        // Creating adapter for spinner
+
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stockListPresenter.getPrograms());
 
-        // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // attaching data adapter to spinner
         programsFilter.setAdapter(dataAdapter);
+
+        findViewById(R.id.expandAll).setOnClickListener(this);
+
+        findViewById(R.id.collapseAll).setOnClickListener(this);
+
     }
 
     @Override
@@ -72,4 +74,13 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         return true;
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.stockAction)
+            stockListPresenter.stockActionClicked(view);
+        else if (view.getId() == R.id.expandAll)
+            stockListPresenter.expandAllClicked();
+        else if (view.getId() == R.id.collapseAll)
+            stockListPresenter.collapseAllClicked();
+    }
 }

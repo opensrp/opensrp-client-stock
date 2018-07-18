@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.CommodityType;
 import org.smartregister.stock.openlmis.domain.TradeItem;
+import org.smartregister.stock.openlmis.listener.ExpandCollapseListener;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.CommodityTypeViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -24,19 +26,24 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     private final StockListPresenter stockListPresenter;
     private List<CommodityType> commodityTypes;
 
+    private List<ExpandCollapseListener> expandCollapseListeners = new ArrayList<>();
+
     private Context context;
 
     public ListCommodityTypeAdapter(StockListPresenter stockListPresenter, Context context) {
         this.stockListPresenter = stockListPresenter;
         this.commodityTypes = stockListPresenter.getCommodityTypes();
         this.context = context;
+
     }
 
     @NonNull
     @Override
     public CommodityTypeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.commodity_type_row, parent, false);
-        return new CommodityTypeViewHolder(itemView);
+        CommodityTypeViewHolder holder = new CommodityTypeViewHolder(itemView);
+        expandCollapseListeners.add(holder);
+        return holder;
     }
 
     @Override
@@ -53,4 +60,15 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     public int getItemCount() {
         return commodityTypes.size();
     }
+
+    public void expandAllViews() {
+        for (ExpandCollapseListener listener : expandCollapseListeners)
+            listener.expandView();
+    }
+
+    public void collapseAllViews() {
+        for (ExpandCollapseListener listener : expandCollapseListeners)
+            listener.collapseView();
+    }
+
 }

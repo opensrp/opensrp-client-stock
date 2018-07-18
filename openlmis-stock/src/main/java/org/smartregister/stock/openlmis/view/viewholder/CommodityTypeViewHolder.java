@@ -9,11 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.listener.ExpandCollapseListener;
 
 /**
  * Created by samuelgithengi on 7/13/18.
  */
-public class CommodityTypeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class CommodityTypeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+        , ExpandCollapseListener {
 
     private Context context;
 
@@ -40,11 +42,9 @@ public class CommodityTypeViewHolder extends RecyclerView.ViewHolder implements 
     public void onClick(View view) {
         if (view.getId() == R.id.collapseExpandButton) {
             if (tradeItemsRecyclerView.getVisibility() == View.VISIBLE) {
-                tradeItemsRecyclerView.setVisibility(View.GONE);
-                collapseExpandButton.setImageResource(R.drawable.ic_keyboard_arrow_down);
+                collapseView();
             } else {
-                tradeItemsRecyclerView.setVisibility(View.VISIBLE);
-                collapseExpandButton.setImageResource(R.drawable.ic_keyboard_arrow_up);
+                expandView();
             }
 
         } else if (view.getId() == R.id.commodityTypeMore) {
@@ -65,5 +65,18 @@ public class CommodityTypeViewHolder extends RecyclerView.ViewHolder implements 
 
     public RecyclerView getTradeItemsRecyclerView() {
         return tradeItemsRecyclerView;
+    }
+
+    @Override
+    public void expandView() {
+        tradeItemsRecyclerView.setVisibility(View.VISIBLE);
+        collapseExpandButton.setImageResource(R.drawable.ic_keyboard_arrow_up);
+
+    }
+
+    @Override
+    public void collapseView() {
+        tradeItemsRecyclerView.setVisibility(View.GONE);
+        collapseExpandButton.setImageResource(R.drawable.ic_keyboard_arrow_down);
     }
 }
