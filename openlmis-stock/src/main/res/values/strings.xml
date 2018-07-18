@@ -9,7 +9,7 @@
     <string name="search">Search</string>
     <string name="expand_all">Expand All</string>
     <string name="collapse_all">Collapse All</string>
-    <string name="commodity_type_formatter">%1s \(%2d)</string>
+    <string name="commodity_type_formatter">%1s (%2d)</string>
     <string name="dose_formatter">%1d doses</string>
     <string name="lot_formatter">%1d lots</string>
     <string name="dispensable_formatter">%1d %2s</string>

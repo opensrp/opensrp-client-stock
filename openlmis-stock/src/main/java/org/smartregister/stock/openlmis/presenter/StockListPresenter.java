@@ -2,6 +2,8 @@ package org.smartregister.stock.openlmis.presenter;
 
 import android.view.View;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.domain.CommodityType;
 import org.smartregister.stock.openlmis.domain.TradeItem;
@@ -22,8 +24,13 @@ public class StockListPresenter {
     private ListCommodityTypeAdapter commodityTypeAdapter;
 
     public StockListPresenter(StockListView stockListView) {
+        this(stockListView, new StockListInteractor());
+    }
+
+    @VisibleForTesting
+    protected StockListPresenter(StockListView stockListView, StockListInteractor stockListInteractor) {
         this.stockListView = stockListView;
-        stockListInteractor = new StockListInteractor();
+        this.stockListInteractor = stockListInteractor;
     }
 
     public void setCommodityTypeAdapter(ListCommodityTypeAdapter commodityTypeAdapter) {
