@@ -16,7 +16,6 @@ import org.smartregister.stock.openlmis.view.viewholder.CommodityTypeViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by samuelgithengi on 7/13/18.
@@ -51,8 +50,7 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         CommodityType commodityType = commodityTypes.get(position);
         List<TradeItem> tradeItems = stockListPresenter.getTradeItems(commodityType);
         holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter, commodityType.getName(), tradeItems.size()));
-        Random random = new Random();
-        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, random.nextInt(2000)));
+        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, 1200));
         holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, context));
     }
 
@@ -71,4 +69,7 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
             listener.collapseView();
     }
 
+    public void registerExpandCollapseListeners(ExpandCollapseListener listener) {
+        expandCollapseListeners.add(listener);
+    }
 }
