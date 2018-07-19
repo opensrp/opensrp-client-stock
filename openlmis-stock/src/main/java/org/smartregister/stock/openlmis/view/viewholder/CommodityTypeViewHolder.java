@@ -25,6 +25,8 @@ public class CommodityTypeViewHolder extends RecyclerView.ViewHolder implements 
 
     private ImageView collapseExpandButton;
 
+    private ImageView commodityTypeMore;
+
     private RecyclerView tradeItemsRecyclerView;
 
     public CommodityTypeViewHolder(View itemView) {
@@ -34,6 +36,7 @@ public class CommodityTypeViewHolder extends RecyclerView.ViewHolder implements 
         doseTextView = itemView.findViewById(R.id.doseTextView);
         collapseExpandButton = itemView.findViewById(R.id.collapseExpandButton);
         tradeItemsRecyclerView = itemView.findViewById(R.id.tradeItemsView);
+        commodityTypeMore = itemView.findViewById(R.id.commodityTypeMore);
         collapseExpandButton.setOnClickListener(this);
         itemView.findViewById(R.id.commodityTypeMore).setOnClickListener(this);
     }
@@ -46,13 +49,16 @@ public class CommodityTypeViewHolder extends RecyclerView.ViewHolder implements 
             } else {
                 expandView();
             }
-
         } else if (view.getId() == R.id.commodityTypeMore) {
-            PopupMenu popupMenu = new PopupMenu(context, view, Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0);
-            popupMenu.inflate(R.menu.commodity_type_menu);
-            popupMenu.show();
+            showActionsMenu(view);
         }
 
+    }
+
+    protected void showActionsMenu(View view) {
+        PopupMenu stockActionsMenu = new PopupMenu(context, view, Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0);
+        stockActionsMenu.inflate(R.menu.commodity_type_menu);
+        stockActionsMenu.show();
     }
 
     public TextView getCommodityTypeTextView() {
@@ -65,6 +71,14 @@ public class CommodityTypeViewHolder extends RecyclerView.ViewHolder implements 
 
     public RecyclerView getTradeItemsRecyclerView() {
         return tradeItemsRecyclerView;
+    }
+
+    public ImageView getCollapseExpandButton() {
+        return collapseExpandButton;
+    }
+
+    public ImageView getCommodityTypeMore() {
+        return commodityTypeMore;
     }
 
     @Override

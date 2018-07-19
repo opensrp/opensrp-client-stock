@@ -17,4 +17,6 @@ import org.robolectric.annotation.Config;
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 public abstract class BaseUnitTest {
+
+    public static int ASYNC_TIMEOUT = 10000;
 }
