@@ -29,7 +29,7 @@ public class CommodityTypeViewHolderTest extends BaseUnitTest {
     private CommodityTypeViewHolder viewHolder;
 
     @Before
-    public void setup() {
+    public void setUp() {
         View view = LayoutInflater.from(context).inflate(R.layout.commodity_type_row, null);
         viewHolder = new CommodityTypeViewHolder(view);
     }

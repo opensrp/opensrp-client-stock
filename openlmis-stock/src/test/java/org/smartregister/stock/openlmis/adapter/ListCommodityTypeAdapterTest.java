@@ -49,7 +49,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
 
     @Before
-    public void setup() {
+    public void setUp() {
         List<CommodityType> expected = new ArrayList<>();
         expected.add(bcGCommodityType);
         expected.add(new CommodityType(UUID.randomUUID(), "OPV", "", null, null, System.currentTimeMillis()));

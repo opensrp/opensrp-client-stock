@@ -1,8 +1,8 @@
 package org.smartregister.stock.openlmis.view.viewholder;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
@@ -16,7 +16,6 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
     private TextView lotsTextView;
     private TextView expiringTextView;
     private TextView dispensableTextView;
-    private ImageView moreImageView;
 
 
     public TradeItemViewHolder(View itemView) {
@@ -25,13 +24,14 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
         lotsTextView = itemView.findViewById(R.id.lotsTextView);
         expiringTextView = itemView.findViewById(R.id.expiringTextView);
         dispensableTextView = itemView.findViewById(R.id.dispensableTextView);
-        moreImageView = itemView.findViewById(R.id.tradeItemsMore);
-        moreImageView.setOnClickListener(this);
+        itemView.findViewById(R.id.tradeItemsMore).setOnClickListener(this);
     }
 
     @Override
-    public void onClick(View v) {
-
+    public void onClick(View view) {
+        if (view.getId() == R.id.tradeItemsMore) {
+            Snackbar.make(view, "Opening Details ", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     public TextView getNameTextView() {

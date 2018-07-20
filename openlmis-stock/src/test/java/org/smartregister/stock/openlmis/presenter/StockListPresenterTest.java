@@ -47,7 +47,7 @@ public class StockListPresenterTest extends BaseUnitTest {
     private StockListPresenter stockListPresenter;
 
     @Before
-    public void setup() {
+    public void setUp() {
         stockListPresenter = new StockListPresenter(stockListView, stockListInteractor);
         stockListPresenter.setCommodityTypeAdapter(commodityTypeAdapter);
     }

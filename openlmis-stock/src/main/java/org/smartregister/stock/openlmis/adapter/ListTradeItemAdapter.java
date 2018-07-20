@@ -19,7 +19,7 @@ import java.util.Random;
  */
 public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHolder> {
 
-    List<TradeItem> tradeItems;
+    private List<TradeItem> tradeItems;
     private Context context;
 
     public ListTradeItemAdapter(List<TradeItem> tradeItems, Context context) {

@@ -18,36 +18,26 @@ import org.smartregister.stock.openlmis.view.contract.StockListView;
 
 public class StockListActivity extends AppCompatActivity implements StockListView, View.OnClickListener {
 
-    private RecyclerView mRecyclerView;
-
-    private FloatingActionButton mfFloatingActionButton;
-
-    private Toolbar toolbar;
-
     private StockListPresenter stockListPresenter;
-
-    private Spinner programsFilter;
-
-    private ListCommodityTypeAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_list);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         stockListPresenter = new StockListPresenter(this);
 
-        mfFloatingActionButton = findViewById(R.id.stockAction);
+        FloatingActionButton mfFloatingActionButton = findViewById(R.id.stockAction);
         mfFloatingActionButton.setOnClickListener(this);
 
-        mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
+        RecyclerView mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
-        adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
+        ListCommodityTypeAdapter adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
         mRecyclerView.setAdapter(adapter);
         stockListPresenter.setCommodityTypeAdapter(adapter);
 
-        programsFilter = findViewById(R.id.filterPrograms);
+        Spinner programsFilter = findViewById(R.id.filterPrograms);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stockListPresenter.getPrograms());
 
