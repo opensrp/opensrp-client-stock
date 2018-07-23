@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/list_stock_cardview_vertical_margin"
+    android:layout_marginEnd="@dimen/list_stock_cardview_horizontal_margin"
+    android:layout_marginStart="@dimen/list_stock_cardview_horizontal_margin"
+    android:layout_marginTop="@dimen/list_stock_cardview_vertical_margin"
+    app:cardCornerRadius="@dimen/list_stock_cardview_corner">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/itemNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/stockOnHandTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/itemNameTextView" />
+
+
+        <TextView
+            android:id="@+id/doseTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/stockOnHandTextView"
+            app:layout_constraintTop_toBottomOf="@id/itemNameTextView" />
+
+
+        <TextView
+            android:id="@+id/lastUpdatedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/doseTextView" />
+
+
+        <Button
+            android:id="@+id/received"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#F0F0F0"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/stock_plus"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
+            android:text=" @string/stock_received"
+            android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
+            android:textColor="@color/stock_list_light_text"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@id/issued"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView" />
+
+        <Button
+            android:id="@+id/issued"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#F0F0F0"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/stock_minus"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
+            android:text="@string/stock_issued"
+            android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
+            android:textColor="@color/stock_list_light_text"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@id/loss_adj"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/received"
+            app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView" />
+
+        <Button
+            android:id="@+id/loss_adj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#F0F0F0"
+            android:drawablePadding="15dp"
+            android:drawableStart="@drawable/stock_list"
+            android:paddingEnd="30dp"
+            android:paddingStart="30dp"
+            android:text="@string/stock_adjustment"
+            android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
+            android:textColor="@color/stock_list_light_text"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/issued"
+            app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>
