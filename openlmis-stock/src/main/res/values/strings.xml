@@ -14,4 +14,5 @@
     <string name="lot_formatter">%1d lots</string>
     <string name="dispensable_formatter">%1d %2s</string>
     <string name="expiring">Expiring</string>
+    <string name="stock_details_title">Stock Control -> %2s</string>
 </resources>
