@@ -58,11 +58,6 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         popupMenu.show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.stock_menu, menu);
-        return true;
-    }
 
     @Override
     public void onClick(View view) {
