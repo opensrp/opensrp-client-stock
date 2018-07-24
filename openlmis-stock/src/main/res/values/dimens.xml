@@ -8,4 +8,8 @@
     <dimen name="list_stock_margin">10dp</dimen>
     <dimen name="expand_collapse_margin">20dp</dimen>
     <dimen name="trade_item_margin_start">60dp</dimen>
+
+    <dimen name="details_buttom_padding">20dp</dimen>
+    <dimen name="drawable_buttom_padding">15dp</dimen>
+    <dimen name="buttom_text_size">16sp</dimen>
 </resources>

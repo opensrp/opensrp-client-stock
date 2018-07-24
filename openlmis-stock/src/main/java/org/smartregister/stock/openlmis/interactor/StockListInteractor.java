@@ -37,23 +37,27 @@ public class StockListInteractor {
     public List<TradeItem> getTradeItems(CommodityType commodityType) {
         List<TradeItem> tradeItems = new ArrayList<>();
         TradeItem tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setManufacturerOfTradeItem("Intervax " + commodityType.getName() + " 20");
+        tradeItem.setName("Intervax " + commodityType.getName() + " 20");
+        tradeItem.setDateUpdated(System.currentTimeMillis());
 
         tradeItems.add(tradeItem);
 
 
         tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setManufacturerOfTradeItem("BIntervax " + commodityType.getName() + " 30");
+        tradeItem.setName("BIntervax " + commodityType.getName() + " 30");
+        tradeItem.setDateUpdated(System.currentTimeMillis());
 
         tradeItems.add(tradeItem);
 
         tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setManufacturerOfTradeItem("Brand B " + commodityType.getName() + " 5");
+        tradeItem.setName("Brand B " + commodityType.getName() + " 5");
+        tradeItem.setDateUpdated(System.currentTimeMillis());
 
         tradeItems.add(tradeItem);
 
         tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setManufacturerOfTradeItem("Antervax " + commodityType.getName() + " 5");
+        tradeItem.setName("Antervax " + commodityType.getName() + " 5");
+        tradeItem.setDateUpdated(System.currentTimeMillis());
 
         tradeItems.add(tradeItem);
         return tradeItems;

@@ -37,7 +37,7 @@ public class ListTradeItemAdapterTest extends BaseUnitTest {
     public void setUp() throws Exception {
         List<TradeItem> expectedTradeItems = new ArrayList<>();
         TradeItem tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setManufacturerOfTradeItem("Intervax BCG 20");
+        tradeItem.setName("Intervax BCG 20");
         tradeItem.setGtin(new Gtin("305730154758"));
         expectedTradeItems.add(tradeItem);
         listTradeItemAdapter = new ListTradeItemAdapter(expectedTradeItems, context);

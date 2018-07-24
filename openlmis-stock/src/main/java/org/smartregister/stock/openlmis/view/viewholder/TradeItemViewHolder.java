@@ -2,12 +2,12 @@ package org.smartregister.stock.openlmis.view.viewholder;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.util.OpenLMISConstants;
 import org.smartregister.stock.openlmis.view.StockDetailsActivity;
 
@@ -37,7 +37,9 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
     public void onClick(View view) {
         if (view.getId() == R.id.tradeItemsMore) {
             Intent intent = new Intent(context, StockDetailsActivity.class);
-            intent.putExtra(OpenLMISConstants.tradeItem, nameTextView.getText());
+            TradeItemDto tradeItemDto = new TradeItemDto(nameTextView.getText().toString(),
+                    dispensableTextView.getText().toString(), Long.parseLong(nameTextView.getTag(R.id.trade_item_updated_key).toString()));
+            intent.putExtra(OpenLMISConstants.tradeItem, tradeItemDto);
             context.startActivity(intent);
         }
     }

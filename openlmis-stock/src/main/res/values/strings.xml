@@ -18,4 +18,5 @@
     <string name="lots">Lots</string>
     <string name="transaction_record">Transaction record</string>
     <string name="stock_adjustment">Loss/Adjust</string>
+    <string name="stock_on_hand">Stock on hand:</string>
 </resources>
