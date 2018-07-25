@@ -59,71 +59,95 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/stockOnHandTextView" />
 
-
-        <Button
+        <LinearLayout
             android:id="@+id/received"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/list_stock_margin"
+            android:layout_marginTop="@dimen/drawable_buttom_margin"
             android:background="#F0F0F0"
-            android:drawablePadding="@dimen/drawable_buttom_padding"
-            android:drawableStart="@drawable/stock_plus"
-            android:paddingEnd="@dimen/details_buttom_padding"
-            android:paddingStart="@dimen/details_buttom_padding"
-            android:text="@string/stock_received"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
-            android:textColor="@color/stock_list_dark_text"
-            android:textSize="@dimen/buttom_text_size"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@id/issued"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView" />
+            app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView">
 
-        <Button
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/stock_plus" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/drawable_buttom_margin"
+                android:text="@string/stock_received"
+                android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
+                android:textColor="@color/stock_list_dark_text"
+                android:textSize="@dimen/buttom_text_size" />
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/issued"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/details_buttom_padding"
-            android:layout_marginStart="@dimen/details_buttom_padding"
-            android:layout_marginTop="@dimen/list_stock_margin"
+            android:layout_marginEnd="@dimen/details_buttom_margin"
+            android:layout_marginStart="@dimen/details_buttom_margin"
+            android:layout_marginTop="@dimen/drawable_buttom_margin"
             android:background="#F0F0F0"
-            android:drawablePadding="@dimen/drawable_buttom_padding"
-            android:drawableStart="@drawable/stock_minus"
-            android:paddingEnd="@dimen/details_buttom_padding"
-            android:paddingStart="@dimen/details_buttom_padding"
-            android:text="@string/stock_issued"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
-            android:textColor="@color/stock_list_dark_text"
-            android:textSize="@dimen/buttom_text_size"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@id/loss_adj"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/received"
-            app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView" />
+            app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView">
 
-        <Button
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/stock_minus" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/drawable_buttom_margin"
+                android:text="@string/stock_issued"
+                android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
+                android:textColor="@color/stock_list_dark_text"
+                android:textSize="@dimen/buttom_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/loss_adj"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/list_stock_margin"
+            android:layout_marginTop="@dimen/drawable_buttom_margin"
             android:background="#F0F0F0"
-            android:drawablePadding="@dimen/drawable_buttom_padding"
-            android:drawableStart="@drawable/stock_list"
-            android:paddingEnd="@dimen/details_buttom_padding"
-            android:paddingStart="@dimen/details_buttom_padding"
-            android:text="@string/stock_adjustment"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
-            android:textColor="@color/stock_list_dark_text"
-            android:textSize="@dimen/buttom_text_size"
+            android:gravity="center"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/issued"
-            app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView" />
+            app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/stock_list" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/drawable_buttom_margin"
+                android:text="@string/stock_adjustment"
+                android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
+                android:textColor="@color/stock_list_dark_text"
+                android:textSize="@dimen/buttom_text_size" />
+        </LinearLayout>
 
 
     </android.support.constraint.ConstraintLayout>
