@@ -6,18 +6,21 @@
     android:layout_marginBottom="@dimen/list_stock_cardview_vertical_margin"
     android:layout_marginEnd="@dimen/list_stock_cardview_horizontal_margin"
     android:layout_marginStart="@dimen/list_stock_cardview_horizontal_margin"
-    android:layout_marginTop="@dimen/list_stock_cardview_vertical_margin"
+    android:layout_marginTop="@dimen/list_stock_cardview_horizontal_margin"
     app:cardCornerRadius="@dimen/list_stock_cardview_corner">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/stock_details_margin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lots"
             android:textColor="@color/text_black"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -56,6 +56,7 @@
         android:id="@+id/tradeItemsMore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/list_stock_margin"
         android:src="@drawable/ic_keyboard_arrow_right"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

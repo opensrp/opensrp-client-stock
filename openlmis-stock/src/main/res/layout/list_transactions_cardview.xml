@@ -6,19 +6,22 @@
     android:layout_marginBottom="@dimen/list_stock_cardview_vertical_margin"
     android:layout_marginEnd="@dimen/list_stock_cardview_horizontal_margin"
     android:layout_marginStart="@dimen/list_stock_cardview_horizontal_margin"
-    android:layout_marginTop="@dimen/list_stock_cardview_vertical_margin"
+    android:layout_marginTop="@dimen/list_stock_cardview_horizontal_margin"
     app:cardCornerRadius="@dimen/list_stock_cardview_corner">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/stock_details_margin"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/transaction_record"
             android:textColor="@color/text_black"
-            android:text="@string/transaction_record" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/transactionsRecyclerView"

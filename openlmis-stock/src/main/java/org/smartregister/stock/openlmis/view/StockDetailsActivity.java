@@ -35,7 +35,8 @@ public class StockDetailsActivity extends AppCompatActivity {
 
         TextView lastUpdatedTextView = findViewById(R.id.lastUpdatedTextView);
         Date lastUpdated = new Date(tradeItemName.getLastUpdated());
-        lastUpdatedTextView.setText(simpleDateFormat.format(lastUpdated));
+        lastUpdatedTextView.setText(getString(R.string.stock_last_updated,
+                simpleDateFormat.format(lastUpdated)));
 
     }
 }

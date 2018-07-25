@@ -6,13 +6,13 @@
     android:layout_marginBottom="@dimen/list_stock_cardview_vertical_margin"
     android:layout_marginEnd="@dimen/list_stock_cardview_horizontal_margin"
     android:layout_marginStart="@dimen/list_stock_cardview_horizontal_margin"
-    android:layout_marginTop="@dimen/list_stock_margin"
+    android:layout_marginTop="@dimen/list_stock_cardview_horizontal_margin"
     app:cardCornerRadius="@dimen/list_stock_cardview_corner">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp">
+        android:layout_margin="@dimen/stock_details_margin">
 
         <TextView
             android:id="@+id/itemNameTextView"
@@ -28,8 +28,7 @@
             android:id="@+id/stockOnHandTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/list_stock_margin"
-            android:layout_marginTop="@dimen/list_stock_margin"
+            android:layout_marginTop="5dp"
             android:text="@string/stock_on_hand"
             android:textColor="@color/text_black"
             android:textSize="18sp"
@@ -41,7 +40,7 @@
             android:id="@+id/doseTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/list_stock_margin"
+            android:layout_margin="5dp"
             android:textColor="@color/light_blue"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@id/stockOnHandTextView"
@@ -52,7 +51,7 @@
             android:id="@+id/lastUpdatedTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/list_stock_margin"
+            android:layout_marginTop="2dp"
             android:textColor="@color/stock_list_dark_text"
             android:textSize="14sp"
             android:textStyle="italic"
@@ -65,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/drawable_buttom_margin"
             android:background="#F0F0F0"
+            android:clickable="true"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@id/issued"
@@ -97,6 +97,7 @@
             android:layout_marginStart="@dimen/details_buttom_margin"
             android:layout_marginTop="@dimen/drawable_buttom_margin"
             android:background="#F0F0F0"
+            android:clickable="true"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@id/loss_adj"
@@ -126,6 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/drawable_buttom_margin"
             android:background="#F0F0F0"
+            android:clickable="true"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
