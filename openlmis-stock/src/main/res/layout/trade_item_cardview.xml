@@ -12,7 +12,7 @@
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp">
+        android:layout_margin="20dp">
 
         <TextView
             android:id="@+id/itemNameTextView"
@@ -62,7 +62,7 @@
 
         <Button
             android:id="@+id/received"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/list_stock_margin"
             android:background="#F0F0F0"
@@ -70,7 +70,9 @@
             android:drawableStart="@drawable/stock_plus"
             android:paddingEnd="@dimen/details_buttom_padding"
             android:paddingStart="@dimen/details_buttom_padding"
-            android:text=" @string/stock_received"
+            android:text="@string/stock_received"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
             android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
             android:textColor="@color/stock_list_dark_text"
             android:textSize="@dimen/buttom_text_size"
@@ -81,8 +83,10 @@
 
         <Button
             android:id="@+id/issued"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/details_buttom_padding"
+            android:layout_marginStart="@dimen/details_buttom_padding"
             android:layout_marginTop="@dimen/list_stock_margin"
             android:background="#F0F0F0"
             android:drawablePadding="@dimen/drawable_buttom_padding"
@@ -90,6 +94,8 @@
             android:paddingEnd="@dimen/details_buttom_padding"
             android:paddingStart="@dimen/details_buttom_padding"
             android:text="@string/stock_issued"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
             android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
             android:textColor="@color/stock_list_dark_text"
             android:textSize="@dimen/buttom_text_size"
@@ -100,7 +106,7 @@
 
         <Button
             android:id="@+id/loss_adj"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/list_stock_margin"
             android:background="#F0F0F0"
@@ -109,6 +115,8 @@
             android:paddingEnd="@dimen/details_buttom_padding"
             android:paddingStart="@dimen/details_buttom_padding"
             android:text="@string/stock_adjustment"
+            android:textAlignment="viewStart"
+            android:textAllCaps="false"
             android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
             android:textColor="@color/stock_list_dark_text"
             android:textSize="@dimen/buttom_text_size"
