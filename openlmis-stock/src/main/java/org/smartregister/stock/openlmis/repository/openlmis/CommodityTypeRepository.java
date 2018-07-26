@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.repository;
+package org.smartregister.stock.openlmis.repository.openlmis;
 
 import android.util.Log;
 import android.util.Pair;
@@ -9,7 +9,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
-import org.smartregister.stock.openlmis.domain.CommodityType;
+import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 
 import java.util.ArrayList;
 import java.util.Calendar;

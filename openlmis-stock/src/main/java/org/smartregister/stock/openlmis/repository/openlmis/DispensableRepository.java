@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.repository;
+package org.smartregister.stock.openlmis.repository.openlmis;
 
 import android.util.Log;
 import android.util.Pair;
@@ -9,16 +9,13 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
-import org.smartregister.stock.openlmis.domain.Dispensable;
+import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-import static org.smartregister.stock.openlmis.domain.Dispensable.KEY_DISPENSING_UNIT;
-import static org.smartregister.stock.openlmis.domain.Dispensable.KEY_ROUTE_OF_ADMINISTRATION;
-import static org.smartregister.stock.openlmis.domain.Dispensable.KEY_SIZE_CODE;
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.createQuery;
 
@@ -37,15 +34,17 @@ public class DispensableRepository extends BaseRepository {
     public static final String CREATE_DISPENSABLE_TABLE =
 
             "CREATE TABLE " + DISPENSABLE_TABLE
-            + "("
+                    + "("
                     + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + DISPENSING_UNIT + " VARCHAR,"
                     + SIZE_CODE + " VARCHAR,"
                     + ROUTE_OF_ADMINISTRATION + " VARCHAR,"
                     + DATE_UPDATED + " INTEGER"
-            + ")";
+                    + ")";
 
-    public DispensableRepository(Repository repository) { super(repository); }
+    public DispensableRepository(Repository repository) {
+        super(repository);
+    }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_DISPENSABLE_TABLE);
@@ -65,7 +64,7 @@ public class DispensableRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, DISPENSABLE_TABLE);
-            query += "(" + StringUtils.repeat("?",",", DISPENSABLE_TABLE_COLUMNS.length) +  ")";
+            query += "(" + StringUtils.repeat("?", ",", DISPENSABLE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(dispensable));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -78,9 +77,9 @@ public class DispensableRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String[] selectionArgs = new String[]{id, dispensingUnit, sizeCode, routeOfAdministration};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString =  query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(DISPENSABLE_TABLE, DISPENSABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
@@ -124,15 +123,15 @@ public class DispensableRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(ROUTE_OF_ADMINISTRATION))
         );
     }
-    
+
     private Object[] createQueryValues(Dispensable dispensable) {
 
-        Object[] values = new Object[] {
-            dispensable.getId().toString(),
-            dispensable.getAttributes().get(KEY_DISPENSING_UNIT),
-            dispensable.getAttributes().get(KEY_SIZE_CODE),
-            dispensable.getAttributes().get(KEY_ROUTE_OF_ADMINISTRATION),
-            dispensable.getDateUpdated()
+        Object[] values = new Object[]{
+                dispensable.getId().toString(),
+                dispensable.getKeyDispensingUnit(),
+                dispensable.getKeySizeCode(),
+                dispensable.getKeyRouteOfAdministration(),
+                dispensable.getDateUpdated()
         };
         return values;
     }

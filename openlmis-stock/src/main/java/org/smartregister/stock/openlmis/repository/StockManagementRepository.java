@@ -7,6 +7,13 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.AllConstants;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 
 public class StockManagementRepository extends Repository {
 

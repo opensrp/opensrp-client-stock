@@ -13,6 +13,10 @@ public class Stock {
     private String toFrom;
     private String syncStatus;
     private Long dateUpdated;
+    private String locationId;
+    private String childLocationId;
+    private String team;
+    private String teamId;
 
     public static final String issued = "issued";
     public static final String received = "received";
@@ -100,5 +104,37 @@ public class Stock {
 
     public void setProviderid(String providerid) {
         this.providerid = providerid;
+    }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
+    }
+
+    public String getChildLocationId() {
+        return childLocationId;
+    }
+
+    public void setChildLocationId(String childLocationId) {
+        this.childLocationId = childLocationId;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 }

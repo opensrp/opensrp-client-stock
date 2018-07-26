@@ -34,15 +34,19 @@ public class StockRepository extends BaseRepository {
             "sync_status VARCHAR," +
             "date_updated INTEGER NULL)";
     public static final String stock_TABLE_NAME = "stocks";
-    private static final String ID_COLUMN = "_id";
+    public static final String ID_COLUMN = "_id";
     public static final String STOCK_TYPE_ID = "stock_type_id";
     public static final String TRANSACTION_TYPE = "transaction_type";
-    private static final String PROVIDER_ID = "providerid";
-    private static final String VALUE = "value";
+    public static final String PROVIDER_ID = "providerid";
+    public static final String VALUE = "value";
     public static final String DATE_CREATED = "date_created";
-    private static final String TO_FROM = "to_from";
-    private static final String SYNC_STATUS = "sync_status";
+    public static final String TO_FROM = "to_from";
+    public static final String SYNC_STATUS = "sync_status";
     public static final String DATE_UPDATED = "date_updated";
+    public static final String LOCATION_ID = "location_id";
+    public static final String CHILD_LOCATION_ID = "child_location_id";
+    public static final String TEAM_NAME = "team_name";
+    public static final String TEAM_ID = "team_id";
     public static final String[] stock_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED};
 
     public static final String TYPE_Unsynced = "Unsynced";

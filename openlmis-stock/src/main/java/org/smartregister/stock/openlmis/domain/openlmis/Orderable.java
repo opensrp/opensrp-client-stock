@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.domain;
+package org.smartregister.stock.openlmis.domain.openlmis;
 
 import java.util.HashMap;
 import java.util.List;

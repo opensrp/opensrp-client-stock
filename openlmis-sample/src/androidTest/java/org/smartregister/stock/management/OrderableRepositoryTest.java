@@ -3,10 +3,10 @@ package org.smartregister.stock.management;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.smartregister.stock.openlmis.domain.Code;
-import org.smartregister.stock.openlmis.domain.Dispensable;
-import org.smartregister.stock.openlmis.domain.Orderable;
-import org.smartregister.stock.openlmis.repository.OrderableRepository;
+import org.smartregister.stock.openlmis.domain.openlmis.Code;
+import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
+import org.smartregister.stock.openlmis.domain.openlmis.Orderable;
+import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
 
 import java.util.List;
 import java.util.UUID;
