@@ -43,18 +43,18 @@ public class StockRepository extends BaseRepository {
     private static final String CREATE_STOCK_TABLE = "CREATE TABLE " + stock_TABLE_NAME +
             " (" + ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             STOCK_TYPE_ID + " VARCHAR NOT NULL," +
-            TRANSACTION_TYPE + " VARCHAR NULL," +
-            LOT_ID + " VARCHAR NULL," +
-            VALUE + " INTEGER," +
+            TRANSACTION_TYPE + " VARCHAR NOT NULL," +
+            LOT_ID + " VARCHAR," +
+            VALUE + " INTEGER NOT NULL," +
             DATE_CREATED + " DATETIME NOT NULL," +
-            TO_FROM + " VARCHAR NULL," +
+            TO_FROM + " VARCHAR NOT NULL," +
             SYNC_STATUS + " VARCHAR," +
-            DATE_UPDATED + " INTEGER NULL" +
-            PROVIDER_ID + " VARCHAR NOT NULL," +
-            LOCATION_ID + " VARCHAR NOT NULL," +
-            CHILD_LOCATION_ID + " VARCHAR NOT NULL," +
-            TEAM_ID + " VARCHAR NOT NULL," +
-            TEAM_NAME + " VARCHAR NOT NULL)";
+            DATE_UPDATED + " INTEGER," +
+            PROVIDER_ID + " VARCHAR," +
+            LOCATION_ID + " VARCHAR," +
+            CHILD_LOCATION_ID + " VARCHAR," +
+            TEAM_ID + " VARCHAR," +
+            TEAM_NAME + " VARCHAR)";
 
     public StockRepository(Repository repository) {
         super(repository);

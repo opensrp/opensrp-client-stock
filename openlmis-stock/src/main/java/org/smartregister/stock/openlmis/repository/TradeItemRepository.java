@@ -113,8 +113,7 @@ public class TradeItemRepository extends BaseRepository {
     }
 
     private TradeItem createTradeItem(Cursor cursor) {
-        TradeItem tradeItem = new TradeItem();
-        tradeItem.setId(cursor.getString(cursor.getColumnIndex(ID)));
+        TradeItem tradeItem = new TradeItem(cursor.getString(cursor.getColumnIndex(ID)));
         tradeItem.setCommodityTypeId(cursor.getString(cursor.getColumnIndex(COMMODITY_TYPE_ID)));
         tradeItem.setName(cursor.getString(cursor.getColumnIndex(NAME)));
         tradeItem.setDateUpdated(cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)));

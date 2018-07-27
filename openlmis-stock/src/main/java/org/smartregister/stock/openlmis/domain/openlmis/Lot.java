@@ -9,15 +9,6 @@ import java.util.UUID;
  */
 public class Lot extends BaseEntity {
 
-    public Lot(UUID id, String lotCode, LocalDate expirationDate, LocalDate manufactureDate, TradeItem tradeItem, boolean active) {
-        this.id = id;
-        this.lotCode = lotCode;
-        this.expirationDate = expirationDate;
-        this.manufactureDate = manufactureDate;
-        this.tradeItem = tradeItem;
-        this.active = active;
-    }
-
     private String lotCode;
 
     private LocalDate expirationDate;
@@ -27,6 +18,15 @@ public class Lot extends BaseEntity {
     private TradeItem tradeItem;
 
     private boolean active;
+
+    public Lot(UUID id, String lotCode, LocalDate expirationDate, LocalDate manufactureDate, TradeItem tradeItem, boolean active) {
+        this.id = id;
+        this.lotCode = lotCode;
+        this.expirationDate = expirationDate;
+        this.manufactureDate = manufactureDate;
+        this.tradeItem = tradeItem;
+        this.active = active;
+    }
 
     public String getLotCode() {
         return lotCode;

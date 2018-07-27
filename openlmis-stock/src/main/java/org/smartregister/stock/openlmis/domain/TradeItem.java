@@ -31,6 +31,12 @@ public class TradeItem {
         return commodityTypeId;
     }
 
+    public TradeItem(String id) {
+        this.id = id;
+    }
+
+    ;
+
     public void setCommodityTypeId(String commodityTypeId) {
         this.commodityTypeId = commodityTypeId;
     }
