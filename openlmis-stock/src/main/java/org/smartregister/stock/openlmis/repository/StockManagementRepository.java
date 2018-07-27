@@ -9,6 +9,7 @@ import org.smartregister.AllConstants;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
@@ -39,6 +40,10 @@ public class StockManagementRepository extends Repository {
         ProgramOrderableRepository.createTable(database);
         TradeItemRepository.createTable(database);
         DispensableRepository.createTable(database);
+
+        LotRepository.createTable(database);
+        org.smartregister.stock.openlmis.repository.TradeItemRepository.createTable(database);
+        StockRepository.createTable(database);
     }
 
     @Override
@@ -48,7 +53,7 @@ public class StockManagementRepository extends Repository {
 
     @Override
     public SQLiteDatabase getWritableDatabase() {
-            return getWritableDatabase(password); // could add password field if you wanted
+        return getWritableDatabase(password); // could add password field if you wanted
     }
 
     @Override

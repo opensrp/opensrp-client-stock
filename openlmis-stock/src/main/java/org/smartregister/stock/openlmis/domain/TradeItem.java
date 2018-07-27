@@ -13,9 +13,9 @@ public class TradeItem {
 
     private String name;
 
-    private long dateUpdated;
+    private Long dateUpdated;
 
-    private long netContent;
+    private Long netContent;
 
     private Dispensable dispensable;
 
@@ -43,19 +43,19 @@ public class TradeItem {
         this.name = name;
     }
 
-    public long getDateUpdated() {
+    public Long getDateUpdated() {
         return dateUpdated;
     }
 
-    public void setDateUpdated(long dateUpdated) {
+    public void setDateUpdated(Long dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
 
-    public long getNetContent() {
+    public Long getNetContent() {
         return netContent;
     }
 
-    public void setNetContent(long netContent) {
+    public void setNetContent(Long netContent) {
         this.netContent = netContent;
     }
 

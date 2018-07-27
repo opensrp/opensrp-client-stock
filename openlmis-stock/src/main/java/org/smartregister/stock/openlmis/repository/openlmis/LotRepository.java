@@ -32,7 +32,7 @@ public class LotRepository extends BaseRepository {
     private static String CREATE_LOT_TABLE = "CREATE TABLE " + LOT_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," + LOT_CODE + " VARCHAR NOT NULL, " +
             EXPIRATION_DATE + " INTEGER NOT NULL, " + MANUFACTURE_DATE + " INTEGER NOT NULL" +
-            TRADE_ITEM_ID + " VARCHAR NOT NULL, " + ACTIVE + " INTEGER);";
+            TRADE_ITEM_ID + " VARCHAR NOT NULL, " + ACTIVE + " TINYINT);";
 
     public LotRepository(Repository repository) {
         super(repository);
