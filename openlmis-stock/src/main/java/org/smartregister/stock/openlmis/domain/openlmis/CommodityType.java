@@ -15,6 +15,7 @@ public class CommodityType extends BaseEntity {
     private Long dateUpdated;
     private String parentId;
     private List<CommodityType> children;
+    private List<TradeItem> tradeItems;
 
     public CommodityType(UUID id, String name, String parentId, String classificationSystem, String classificationId, Long dateUpdated) {
         this.id = id;
@@ -121,5 +122,13 @@ public class CommodityType extends BaseEntity {
 
     public void setChildren(List<CommodityType> children) {
         this.children = children;
+    }
+
+    public List<TradeItem> getTradeItems() {
+        return tradeItems;
+    }
+
+    public void setTradeItems(List<TradeItem> tradeItems) {
+        this.tradeItems = tradeItems;
     }
 }

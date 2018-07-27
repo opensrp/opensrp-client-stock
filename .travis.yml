@@ -50,8 +50,7 @@ script:
   # Enable the line below once we get all the test passing, currently most of the tests are failing
   # so we'll just if the project compiles
   #Run All tests Unit and Instrumentation
-  - travis_wait ./gradlew openlmis-sample:connectedDebugAndroidTest
-  - travis_wait ./gradlew opensrp-stock:jacocoTestReport opensrp-stock:coveralls --stacktrace
+  - travis_wait ./gradlew jacocoTestReport coveralls --stacktrace
 after_failure:
  - pandoc opensrp-stock/build/reports/tests/index.html -t plain
 

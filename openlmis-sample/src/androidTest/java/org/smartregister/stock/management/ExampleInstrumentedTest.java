@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("org.smartregister.stock", appContext.getPackageName());
+        assertEquals("org.smartregister.stock.openlmis.sample", appContext.getPackageName());
     }
 }
