@@ -1,0 +1,10 @@
+<resources>
+
+    <style name="FloatingActionButton" parent="Theme.AppCompat.DayNight">
+        <item name="backgroundTint">@color/colorPrimary</item>
+    </style>
+
+    <style name="PopupOverlay.Light" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:itemBackground">@android:color/white</item>
+    </style>
+</resources>

@@ -24,7 +24,6 @@
                 android:layout_margin="1dp"
                 android:background="@drawable/name_inits_bg"
                 android:gravity="center"
-                android:text="RW"
                 android:textAllCaps="true"
                 android:textColor="@color/actionbar"
                 android:textSize="25sp" />

@@ -26,7 +26,7 @@ jacoco {
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "org.smartregister.stock"
+        applicationId "org.smartregister.stock.openlmis.sample"
         minSdkVersion 22
         targetSdkVersion 27
         versionCode 1

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/list_stock_cardview_vertical_margin"
+    android:layout_marginEnd="@dimen/list_stock_cardview_horizontal_margin"
+    android:layout_marginStart="@dimen/list_stock_cardview_horizontal_margin"
+    android:layout_marginTop="@dimen/list_stock_cardview_vertical_margin"
+    app:cardCornerRadius="@dimen/list_stock_cardview_corner">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/collapseExpandButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:padding="@dimen/list_stock_padding"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_keyboard_arrow_down"
+            app:layout_constraintBottom_toBottomOf="@id/doseTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/commodityTypeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/list_stock_padding"
+            android:paddingTop="@dimen/list_stock_padding"
+            android:textColor="@color/text_black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/collapseExpandButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/doseTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/list_stock_padding"
+            android:textColor="@color/stock_list_light_text"
+            app:layout_constraintStart_toEndOf="@id/collapseExpandButton"
+            app:layout_constraintTop_toBottomOf="@id/commodityTypeTextView" />
+
+        <ImageView
+            android:id="@+id/commodityTypeMore"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:padding="@dimen/list_stock_padding"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_more_vert"
+            app:layout_constraintBottom_toBottomOf="@id/doseTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <View
+            android:id="@+id/commodityBorder"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/trade_item_border"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/doseTextView" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tradeItemsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/commodityBorder" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>
