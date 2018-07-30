@@ -1,5 +1,7 @@
 package org.smartregister.stock.openlmis.view;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import android.widget.Spinner;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
+import org.smartregister.stock.openlmis.util.TestDataUtils;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
 public class StockListActivity extends AppCompatActivity implements StockListView, View.OnClickListener {
@@ -48,6 +51,15 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         findViewById(R.id.collapseAll).setOnClickListener(this);
 
+        populateTestData();
+    }
+
+    public void populateTestData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("TestDataUtils", Context.MODE_PRIVATE);
+        if (!sharedPreferences.getBoolean("testDataPopulated", false)) {
+            TestDataUtils.getInstance().populateTestData();
+            sharedPreferences.edit().putBoolean("testDataPopulated", true).apply();
+        }
     }
 
     @Override

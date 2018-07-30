@@ -35,16 +35,18 @@ public class CommodityTypeRepository extends BaseRepository {
     public static final String CREATE_COMMODITY_TYPE_TABLE =
 
             "CREATE TABLE " + COMMODITY_TYPE_TABLE
-            + "("
+                    + "("
                     + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + NAME + " VARCHAR NOT NULL,"
                     + PARENT + " VARCHAR,"
                     + CLASSIFICATION_SYSTEM + " VARCHAR,"
                     + CLASSIFICATION_ID + " VARCHAR,"
                     + DATE_UPDATED + " INTEGER"
-            + ")";
+                    + ")";
 
-    public CommodityTypeRepository(Repository repository) { super(repository); }
+    public CommodityTypeRepository(Repository repository) {
+        super(repository);
+    }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_COMMODITY_TYPE_TABLE);
@@ -65,7 +67,7 @@ public class CommodityTypeRepository extends BaseRepository {
 
             String query = String.format(INSERT_OR_REPLACE, COMMODITY_TYPE_TABLE);
             query += "(" + StringUtils.repeat("?", ",", COMMODITY_TYPE_TABLE_COLUMNS.length) + ")";
-            database.execSQL(query, createQueryValues(commodityType) );
+            database.execSQL(query, createQueryValues(commodityType));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -77,12 +79,29 @@ public class CommodityTypeRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String[] selectionArgs = new String[]{id, name, parent, classificationSystem, classificationId};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString =  query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(COMMODITY_TYPE_TABLE, COMMODITY_TYPE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
+            commodityTypes = readCommodityTypes(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return commodityTypes;
+    }
+
+    public List<CommodityType> findAllCommodityTypes() {
+
+        List<CommodityType> commodityTypes = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().rawQuery("SELECT * FROM " + COMMODITY_TYPE_TABLE, null);
             commodityTypes = readCommodityTypes(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -128,13 +147,13 @@ public class CommodityTypeRepository extends BaseRepository {
 
     private Object[] createQueryValues(CommodityType commodityType) {
 
-        Object[] values = new Object[] {
-            commodityType.getId().toString(),
-            commodityType.getName(),
-            commodityType.getParentId(),
-            commodityType.getClassificationSystem(),
-            commodityType.getClassificationId(),
-            commodityType.getDateUpdated()
+        Object[] values = new Object[]{
+                commodityType.getId().toString(),
+                commodityType.getName(),
+                commodityType.getParentId(),
+                commodityType.getClassificationSystem(),
+                commodityType.getClassificationId(),
+                commodityType.getDateUpdated()
         };
         return values;
     }
