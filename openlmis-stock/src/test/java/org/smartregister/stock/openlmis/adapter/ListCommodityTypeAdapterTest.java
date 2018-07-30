@@ -85,7 +85,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         LinearLayout vg = new LinearLayout(context);
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
         listCommodityTypeAdapter.onBindViewHolder(holder, 0);
-        assertEquals("BCG ( 1)", holder.getCommodityTypeTextView().getText());
+        assertEquals("BCG (1)", holder.getCommodityTypeTextView().getText());
         assertEquals("1200 doses", holder.getDoseTextView().getText());
         assertNotNull(holder.getTradeItemsRecyclerView().getAdapter());
         assertEquals(1, holder.getTradeItemsRecyclerView().getAdapter().getItemCount());
@@ -97,7 +97,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         LinearLayout vg = new LinearLayout(context);
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
         listCommodityTypeAdapter.onBindViewHolder(holder, 1);
-        assertEquals("OPV ( 0)", holder.getCommodityTypeTextView().getText());
+        assertEquals("OPV (0)", holder.getCommodityTypeTextView().getText());
         assertEquals("1200 doses", holder.getDoseTextView().getText());
         assertNotNull(holder.getTradeItemsRecyclerView().getAdapter());
         assertEquals(0, holder.getTradeItemsRecyclerView().getAdapter().getItemCount());

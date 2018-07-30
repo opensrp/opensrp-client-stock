@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.view.viewholder;
 
 import android.content.Context;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -56,7 +57,8 @@ public class CommodityTypeViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     protected void showActionsMenu(View view) {
-        PopupMenu stockActionsMenu = new PopupMenu(context, view, Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0);
+        Context wrapper = new ContextThemeWrapper(context, R.style.PopupOverlay_Light);
+        PopupMenu stockActionsMenu = new PopupMenu(wrapper, view, Gravity.NO_GRAVITY, R.attr.actionOverflowMenuStyle, 0);
         stockActionsMenu.inflate(R.menu.commodity_type_menu);
         stockActionsMenu.show();
     }

@@ -30,12 +30,16 @@ public class StockListInteractor {
         commodityTypes.add(new CommodityType(UUID.randomUUID(), "BCG", "", null, null, System.currentTimeMillis()));
         commodityTypes.add(new CommodityType(UUID.randomUUID(), "OPV", "", null, null, System.currentTimeMillis()));
         commodityTypes.add(new CommodityType(UUID.randomUUID(), "Penta", "", null, null, System.currentTimeMillis()));
-        commodityTypes.add(new CommodityType(UUID.randomUUID(), "PC2", "", null, null, System.currentTimeMillis()));
+         commodityTypes.add(new CommodityType(UUID.randomUUID(), "PC2", "", null, null, System.currentTimeMillis()));
+        commodityTypes.add(new CommodityType(UUID.randomUUID(), "C1", "", null, null, System.currentTimeMillis()));
+
         return commodityTypes;
     }
 
     public List<TradeItem> getTradeItems(CommodityType commodityType) {
         List<TradeItem> tradeItems = new ArrayList<>();
+        if (commodityType.getName().equals("C1"))
+            return tradeItems;
         TradeItem tradeItem = new TradeItem(UUID.randomUUID());
         tradeItem.setName("Intervax " + commodityType.getName() + " 20");
         tradeItem.setDateUpdated(System.currentTimeMillis());
@@ -48,6 +52,8 @@ public class StockListInteractor {
         tradeItem.setDateUpdated(System.currentTimeMillis());
 
         tradeItems.add(tradeItem);
+        if (commodityType.getName().equals("Penta"))
+            return tradeItems;
 
         tradeItem = new TradeItem(UUID.randomUUID());
         tradeItem.setName("Brand B " + commodityType.getName() + " 5");
