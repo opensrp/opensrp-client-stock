@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
+import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
+import static org.smartregister.stock.repository.StockRepository.VALUE;
+import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
+
 /**
  * Created by samuelgithengi on 26/7/18.
  */
@@ -23,8 +28,8 @@ public class LotRepository extends BaseRepository {
     private static final String ID = "_id";
     private static final String LOT_CODE = "lot_code";
     private static final String EXPIRATION_DATE = "expiration_date";
-    private static final String MANUFACTURE_DATE = "manufactureDate";
-    private static final String TRADE_ITEM_ID = "tradeItem";
+    private static final String MANUFACTURE_DATE = "manufacture_date";
+    private static final String TRADE_ITEM_ID = "trade_item_id";
     private static final String ACTIVE = "active";
     public static final String LOT_TABLE = "lots";
     private static final String TAG = LotRepository.class.getName();
@@ -74,7 +79,11 @@ public class LotRepository extends BaseRepository {
     }
 
     public List<Lot> findLotsByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT * FROM %s WHERE %s=?", LOT_TABLE, TRADE_ITEM_ID);
+
+        String query = String.format("SELECT * FROM %s WHERE %s IN " +
+                        "(SELECT %s FROM %s  WHERE %s=? GROUP BY %s having SUM(%s) >0 )",
+                LOT_TABLE, ID, LOT_ID, stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID, VALUE);
+        Log.d(TAG, query);
         Cursor cursor = null;
         List<Lot> lots = new ArrayList<>();
         try {
@@ -90,6 +99,24 @@ public class LotRepository extends BaseRepository {
         }
         return lots;
 
+    }
+
+    public Lot findLotById(String lotId) {
+
+        String query = String.format("SELECT * FROM %s WHERE %s=?",
+                LOT_TABLE, ID);
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{lotId});
+            if (cursor.moveToFirst())
+                return createLot(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
     }
 
     public int getNumberOfLotsByTradeItem(String tradeItemId) {

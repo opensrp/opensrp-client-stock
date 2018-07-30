@@ -38,7 +38,7 @@ public class StockRepository extends BaseRepository {
 
     private static final String TAG = StockRepository.class.getName();
 
-    private static final String LOT_ID = "lot_id";
+    public static final String LOT_ID = "lot_id";
 
     private static final String CREATE_STOCK_TABLE = "CREATE TABLE " + stock_TABLE_NAME +
             " (" + ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
