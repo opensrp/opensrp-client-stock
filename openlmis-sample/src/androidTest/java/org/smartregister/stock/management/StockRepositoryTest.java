@@ -127,7 +127,7 @@ public class StockRepositoryTest extends BaseRepositoryTest {
 
         String tradeItemId2 = UUID.randomUUID().toString();
         stock = new Stock(null, Stock.loss_adjustment, "tester1134", 321, now,
-                "c District", "unsynched", now, tradeItemId2);
+                "Zomba District", "unsynched", now, tradeItemId2);
         stockRepository.addOrUpdate(stock);
 
         List<Stock> stockList = stockRepository.getStockByTradeItem(tradeItemId);
