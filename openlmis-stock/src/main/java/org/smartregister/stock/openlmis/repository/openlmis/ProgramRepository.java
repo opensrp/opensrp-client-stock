@@ -43,22 +43,23 @@ public class ProgramRepository extends BaseRepository {
     public static final String CREATE_PROGRAM_TABLE =
 
             "CREATE TABLE " + PROGRAM_TABLE
-            + "("
-                + ID + " VARCHAR NOT NULL PRIMARY KEY,"
-                + CODE + " VARCHAR NOT NULL,"
-                + NAME + " VARCHAR NOT NULL,"
-                + DESCRIPTION + " VARCHAR,"
-                + ACTIVE + " TINYINT,"
-                + PERIODS_SKIPPABLE + " TINYINT,"
-                + SKIP_AUTHORIZATION + " TINYINT,"
-                + SHOW_NON_FULL_SUPPLY_TAB + " TINYINT,"
-                + ENABLE_DATE_PHYSICAL_STOCK_COUNT_COMPLETED + " TINYINT,"
-                + DATE_UPDATED + " INTEGER"
-            + ")";
+                    + "("
+                    + ID + " VARCHAR NOT NULL PRIMARY KEY,"
+                    + CODE + " VARCHAR NOT NULL,"
+                    + NAME + " VARCHAR NOT NULL,"
+                    + DESCRIPTION + " VARCHAR,"
+                    + ACTIVE + " TINYINT,"
+                    + PERIODS_SKIPPABLE + " TINYINT,"
+                    + SKIP_AUTHORIZATION + " TINYINT,"
+                    + SHOW_NON_FULL_SUPPLY_TAB + " TINYINT,"
+                    + ENABLE_DATE_PHYSICAL_STOCK_COUNT_COMPLETED + " TINYINT,"
+                    + DATE_UPDATED + " INTEGER"
+                    + ")";
 
 
-
-    public ProgramRepository(Repository repository) { super(repository); }
+    public ProgramRepository(Repository repository) {
+        super(repository);
+    }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_PROGRAM_TABLE);
@@ -78,7 +79,7 @@ public class ProgramRepository extends BaseRepository {
             SQLiteDatabase database = getWritableDatabase();
 
             String query = String.format(INSERT_OR_REPLACE, PROGRAM_TABLE);
-            query += "(" + StringUtils.repeat("?", ",",PROGRAM_TABLE_COLUMNS.length) + ")";
+            query += "(" + StringUtils.repeat("?", ",", PROGRAM_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(program));
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -91,9 +92,9 @@ public class ProgramRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String[] selectionArgs = new String[]{id, code, name, active};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString =  query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(PROGRAM_TABLE, PROGRAM_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
@@ -107,6 +108,26 @@ public class ProgramRepository extends BaseRepository {
         }
         return programs;
     }
+
+    public List<Program> findAllPrograms() {
+
+        List<Program> programs = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+
+            String query = "SELECT * FROM " + PROGRAM_TABLE;
+            cursor = getReadableDatabase().rawQuery(query, null);
+            programs = readPrograms(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return programs;
+    }
+
 
     private List<Program> readPrograms(Cursor cursor) {
 
@@ -147,16 +168,16 @@ public class ProgramRepository extends BaseRepository {
     private Object[] createQueryValues(Program program) {
 
         Object[] values = new Object[]{
-            program.getId().toString(),
-            program.getCode().toString(),
-            program.getName(),
-            program.getDescription(),
-            convertBooleanToInt(program.getActive()),
-            convertBooleanToInt(program.getPeriodsSkippable()),
-            convertBooleanToInt(program.getSkipAuthorization()),
-            convertBooleanToInt(program.getShowNonFullSupplyTab()),
-            convertBooleanToInt(program.getEnableDatePhysicalStockCountCompleted()),
-            program.getDateUpdated()
+                program.getId().toString(),
+                program.getCode().toString(),
+                program.getName(),
+                program.getDescription(),
+                convertBooleanToInt(program.getActive()),
+                convertBooleanToInt(program.getPeriodsSkippable()),
+                convertBooleanToInt(program.getSkipAuthorization()),
+                convertBooleanToInt(program.getShowNonFullSupplyTab()),
+                convertBooleanToInt(program.getEnableDatePhysicalStockCountCompleted()),
+                program.getDateUpdated()
         };
         return values;
     }
