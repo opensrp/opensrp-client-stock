@@ -1,12 +1,13 @@
 package org.smartregister.stock.openlmis.interactor;
 
-import org.smartregister.stock.openlmis.domain.CommodityType;
-import org.smartregister.stock.openlmis.domain.Program;
-import org.smartregister.stock.openlmis.domain.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
+import org.smartregister.stock.openlmis.domain.openlmis.Program;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Created by samuelgithengi on 7/13/18.
@@ -41,14 +42,14 @@ public class StockListInteractor {
         if (commodityType.getName().equals("C1"))
             return tradeItems;
         TradeItem tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setName("Intervax " + commodityType.getName() + " 20");
+        tradeItem.setManufacturerOfTradeItem("Intervax " + commodityType.getName() + " 20");
         tradeItem.setDateUpdated(System.currentTimeMillis());
 
         tradeItems.add(tradeItem);
 
 
         tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setName("BIntervax " + commodityType.getName() + " 30");
+        tradeItem.setManufacturerOfTradeItem("BIntervax " + commodityType.getName() + " 30");
         tradeItem.setDateUpdated(System.currentTimeMillis());
 
         tradeItems.add(tradeItem);
@@ -56,13 +57,13 @@ public class StockListInteractor {
             return tradeItems;
 
         tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setName("Brand B " + commodityType.getName() + " 5");
+        tradeItem.setManufacturerOfTradeItem("Brand B " + commodityType.getName() + " 5");
         tradeItem.setDateUpdated(System.currentTimeMillis());
 
         tradeItems.add(tradeItem);
 
         tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setName("Antervax " + commodityType.getName() + " 5");
+        tradeItem.setManufacturerOfTradeItem("Antervax " + commodityType.getName() + " 5");
         tradeItem.setDateUpdated(System.currentTimeMillis());
 
         tradeItems.add(tradeItem);

@@ -3,9 +3,9 @@ package org.smartregister.stock.management;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.smartregister.stock.openlmis.domain.Code;
-import org.smartregister.stock.openlmis.domain.Program;
-import org.smartregister.stock.openlmis.repository.ProgramRepository;
+import org.smartregister.stock.openlmis.domain.openlmis.Code;
+import org.smartregister.stock.openlmis.domain.openlmis.Program;
+import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 
 import java.util.List;
 import java.util.UUID;

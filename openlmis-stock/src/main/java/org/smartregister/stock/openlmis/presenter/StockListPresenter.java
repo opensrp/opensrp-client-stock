@@ -5,8 +5,8 @@ import android.view.View;
 import com.google.common.annotations.VisibleForTesting;
 
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
-import org.smartregister.stock.openlmis.domain.CommodityType;
-import org.smartregister.stock.openlmis.domain.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.interactor.StockListInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 

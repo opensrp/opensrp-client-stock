@@ -10,8 +10,8 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.stock.openlmis.BaseUnitTest;
-import org.smartregister.stock.openlmis.domain.Gtin;
-import org.smartregister.stock.openlmis.domain.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.Gtin;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.view.viewholder.TradeItemViewHolder;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class ListTradeItemAdapterTest extends BaseUnitTest {
     public void setUp() throws Exception {
         List<TradeItem> expectedTradeItems = new ArrayList<>();
         TradeItem tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setName("Intervax BCG 20");
+        tradeItem.setManufacturerOfTradeItem("Intervax BCG 20");
         tradeItem.setGtin(new Gtin("305730154758"));
         expectedTradeItems.add(tradeItem);
         listTradeItemAdapter = new ListTradeItemAdapter(expectedTradeItems, context);

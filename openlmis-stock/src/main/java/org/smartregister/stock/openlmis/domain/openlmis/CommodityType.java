@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.domain;
+package org.smartregister.stock.openlmis.domain.openlmis;
 
 import android.util.Log;
 
@@ -102,7 +102,7 @@ public class CommodityType extends BaseEntity {
     private void validateIsNotDescendant(CommodityType commodityType) throws Exception {
         for (CommodityType child : children) {
             if (child.equals(commodityType)) {
-                throw new Exception("ParentIsDescendant");
+                throw new IllegalArgumentException("ParentIsDescendant");
             }
             child.validateIsNotDescendant(commodityType);
         }

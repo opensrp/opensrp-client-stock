@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.domain;
+package org.smartregister.stock.openlmis.domain.openlmis;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,10 +14,10 @@ public class Gtin {
      */
     public Gtin(String gtin) throws Exception {
         if (!StringUtils.isNumeric(gtin)) {
-            throw new Exception("GTIN should be numeric");
+            throw new IllegalArgumentException("GTIN should be numeric");
         }
         if (gtin.length() < 8 || gtin.length() > 14) {
-            throw new Exception("Invalid GTIN length");
+            throw new IllegalArgumentException("Invalid GTIN length");
         }
         this.gtin = gtin;
     }
