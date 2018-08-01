@@ -39,8 +39,9 @@ public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHold
         TradeItem tradeItem = tradeItems.get(position);
         holder.getNameTextView().setText(tradeItem.getName());
         holder.getNameTextView().setTag(R.id.trade_item_updated_key, tradeItem.getDateUpdated());
-        holder.getLotsTextView().setText(context.getString(R.string.lot_formatter, 100));
-        holder.getDispensableTextView().setText(context.getString(R.string.dispensable_formatter, 50, "vials"));
+        holder.getLotsTextView().setText(context.getString(R.string.lot_formatter, tradeItem.getNumberOfLots()));
+        holder.getDispensableTextView().setText(context.getString(R.string.dispensable_formatter,
+                tradeItem.getTotalStock(), tradeItem.getDispensable().getKeyDispensingUnit()));
         Random random = new Random();
         holder.getExpiringTextView().setVisibility(random.nextInt(4) == 1 ? View.VISIBLE : View.INVISIBLE);
 
