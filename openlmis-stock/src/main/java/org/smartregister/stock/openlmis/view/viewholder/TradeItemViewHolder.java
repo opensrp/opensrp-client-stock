@@ -37,8 +37,9 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
     public void onClick(View view) {
         if (view.getId() == R.id.tradeItemsMore) {
             Intent intent = new Intent(context, StockDetailsActivity.class);
-            TradeItemDto tradeItemDto = new TradeItemDto(nameTextView.getText().toString(),
-                    dispensableTextView.getText().toString(), Long.parseLong(nameTextView.getTag(R.id.trade_item_updated_key).toString()));
+            TradeItemDto tradeItemDto = new TradeItemDto(nameTextView.getTag(R.id.trade_item_id_key).toString(),
+                    nameTextView.getText().toString(), dispensableTextView.getText().toString(),
+                    Long.parseLong(nameTextView.getTag(R.id.trade_item_updated_key).toString()));
             intent.putExtra(OpenLMISConstants.tradeItem, tradeItemDto);
             context.startActivity(intent);
         }

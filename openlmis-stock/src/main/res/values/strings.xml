@@ -20,4 +20,9 @@
     <string name="stock_adjustment">Loss/Adjust</string>
     <string name="stock_on_hand">Stock on hand:</string>
     <string name="stock_last_updated">Last updated: %1s</string>
+    <string name="lot_code_and_expiry">Lot code and expiry date</string>
+    <string name="lot_stock_on_hand">Stock on hand</string>
+    <string name="status">Status</string>
+    <string name="VMM">VMM%1$d</string>
+    <string name="stock_on_hand_and_expiry">%1s Exp. %2s</string>
 </resources>

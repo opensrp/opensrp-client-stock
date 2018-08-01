@@ -154,6 +154,25 @@ public class StockRepository extends BaseRepository {
         return lots;
     }
 
+    public int getTotalStockByLot(String lotId) {
+        String query = String.format("SELECT sum(%s) FROM %s WHERE %s=?", VALUE, stock_TABLE_NAME, LOT_ID);
+        Cursor cursor = null;
+        int totalStock = 0;
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{lotId});
+            if (cursor.moveToFirst()) {
+                totalStock = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return totalStock;
+    }
+
     private Stock createStock(Cursor cursor) {
         Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
                 cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),

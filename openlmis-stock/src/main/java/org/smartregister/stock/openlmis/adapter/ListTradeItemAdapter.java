@@ -38,6 +38,7 @@ public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHold
         TradeItem tradeItem = tradeItems.get(position);
         holder.getNameTextView().setText(tradeItem.getName());
         holder.getNameTextView().setTag(R.id.trade_item_updated_key, tradeItem.getDateUpdated());
+        holder.getNameTextView().setTag(R.id.trade_item_id_key, tradeItem.getId());
         holder.getLotsTextView().setText(context.getString(R.string.lot_formatter, tradeItem.getNumberOfLots()));
         holder.getDispensableTextView().setText(context.getString(R.string.dispensable_formatter,
                 tradeItem.getTotalStock(), tradeItem.getDispensable().getKeyDispensingUnit()));

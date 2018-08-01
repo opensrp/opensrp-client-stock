@@ -112,6 +112,24 @@ public class TradeItemRepository extends BaseRepository {
         return tradeItems;
     }
 
+    public TradeItem getTradeItemById(String tradeItemId) {
+        String query = String.format("SELECT * FROM %s WHERE %s=?", TRADE_ITEM_TABLE, ID);
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId});
+            if (cursor.moveToFirst()) {
+                return createTradeItem(cursor);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
     private TradeItem createTradeItem(Cursor cursor) {
         TradeItem tradeItem = new TradeItem(cursor.getString(cursor.getColumnIndex(ID)));
         tradeItem.setCommodityTypeId(cursor.getString(cursor.getColumnIndex(COMMODITY_TYPE_ID)));
@@ -124,4 +142,5 @@ public class TradeItemRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(DISPENSING_ADMINISTRATION))));
         return tradeItem;
     }
+
 }
