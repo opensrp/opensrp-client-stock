@@ -23,6 +23,8 @@ public class TradeItem {
 
     private int numberOfLots;
 
+    private boolean hasLotExpiring;
+
     public String getId() {
         return id;
 
@@ -92,5 +94,13 @@ public class TradeItem {
 
     public void setNumberOfLots(int numberOfLots) {
         this.numberOfLots = numberOfLots;
+    }
+
+    public boolean isHasLotExpiring() {
+        return hasLotExpiring;
+    }
+
+    public void setHasLotExpiring(boolean hasLotExpiring) {
+        this.hasLotExpiring = hasLotExpiring;
     }
 }

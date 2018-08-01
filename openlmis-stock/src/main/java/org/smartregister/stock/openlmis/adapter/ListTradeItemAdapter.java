@@ -12,7 +12,6 @@ import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.view.viewholder.TradeItemViewHolder;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by samuelgithengi on 7/17/18.
@@ -42,8 +41,7 @@ public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHold
         holder.getLotsTextView().setText(context.getString(R.string.lot_formatter, tradeItem.getNumberOfLots()));
         holder.getDispensableTextView().setText(context.getString(R.string.dispensable_formatter,
                 tradeItem.getTotalStock(), tradeItem.getDispensable().getKeyDispensingUnit()));
-        Random random = new Random();
-        holder.getExpiringTextView().setVisibility(random.nextInt(4) == 1 ? View.VISIBLE : View.INVISIBLE);
+        holder.getExpiringTextView().setVisibility(tradeItem.isHasLotExpiring() ? View.VISIBLE : View.INVISIBLE);
 
     }
 
