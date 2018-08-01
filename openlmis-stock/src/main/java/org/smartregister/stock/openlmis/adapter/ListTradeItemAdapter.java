@@ -36,6 +36,7 @@ public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHold
     @Override
     public void onBindViewHolder(@NonNull TradeItemViewHolder holder, int position) {
         TradeItem tradeItem = tradeItems.get(position);
+        holder.setTradeItem(tradeItem);
         holder.getNameTextView().setText(tradeItem.getName());
         holder.getNameTextView().setTag(R.id.trade_item_updated_key, tradeItem.getDateUpdated());
         holder.getNameTextView().setTag(R.id.trade_item_id_key, tradeItem.getId());

@@ -15,7 +15,7 @@
     <string name="dispensable_formatter">%1d %2s</string>
     <string name="expiring">Expiring</string>
     <string name="stock_details_title">Stock Control -> %2s</string>
-    <string name="lots">Lots</string>
+    <string name="lots_details">Lots (%1$d)</string>
     <string name="transaction_record">Transaction record</string>
     <string name="stock_adjustment">Loss/Adjust</string>
     <string name="stock_on_hand">Stock on hand:</string>

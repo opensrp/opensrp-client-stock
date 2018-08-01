@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.smartregister.stock.openlmis.R;
-import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
+import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.presenter.StockDetailsPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.LotViewHolder;
 
@@ -25,14 +25,14 @@ public class LotAdapter extends RecyclerView.Adapter<LotViewHolder> {
     private Context context;
     private List<Lot> lots;
 
-    private TradeItem tradeItem;
+    private TradeItemDto tradeItem;
 
     private StockDetailsPresenter stockDetailsPresenter;
 
-    public LotAdapter(String tradeItemId, StockDetailsPresenter stockDetailsPresenter) {
+    public LotAdapter(TradeItemDto tradeItem, StockDetailsPresenter stockDetailsPresenter) {
         this.stockDetailsPresenter = stockDetailsPresenter;
-        lots = stockDetailsPresenter.findLotsByTradeItem(tradeItemId);
-        tradeItem = stockDetailsPresenter.findTradeItem(tradeItemId);
+        this.tradeItem = tradeItem;
+        lots = stockDetailsPresenter.findLotsByTradeItem(tradeItem.getId());
     }
 
     @NonNull
@@ -50,7 +50,7 @@ public class LotAdapter extends RecyclerView.Adapter<LotViewHolder> {
                 lot.getLotCode(), lot.getExpirationDate().toString(DATE_FORMAT)));
         holder.getStockOnHandTextView().setText(context.getString(R.string.dispensable_formatter,
                 stockDetailsPresenter.getTotalStockByLot(lot.getId()),
-                tradeItem.getDispensable().getKeyDispensingUnit()));
+                tradeItem.getDispensingUnit()));
         holder.getStatusTextView().setText(context.getString(R.string.VMM, 1));
 
     }

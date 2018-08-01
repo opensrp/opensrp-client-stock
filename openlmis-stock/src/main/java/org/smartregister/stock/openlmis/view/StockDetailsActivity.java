@@ -22,6 +22,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mma dd MMM, yyyy");
 
+    private StockDetailsPresenter stockDetailsPresenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +45,13 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         lastUpdatedTextView.setText(getString(R.string.stock_last_updated,
                 simpleDateFormat.format(lastUpdated)));
 
-        StockDetailsPresenter stockDetailsPresenter = new StockDetailsPresenter(this);
+        TextView lots = findViewById(R.id.number_of_lots);
+        lots.setText(getString(R.string.lots_details, tradeItemDto.getNumberOfLots()));
+
+        stockDetailsPresenter = new StockDetailsPresenter(this);
 
         RecyclerView lotsRecyclerView = findViewById(R.id.lotsRecyclerView);
-        lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto.getId(), stockDetailsPresenter));
+        lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
 
     }
 
