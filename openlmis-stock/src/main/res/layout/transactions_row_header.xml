@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        style="@style/StockDetails.Header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.2"
+        android:padding="@dimen/lots_padding"
+        android:text="@string/date" />
+
+
+    <TextView
+        style="@style/StockDetails.Header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:padding="@dimen/lots_padding"
+        android:text="@string/to_from" />
+
+
+    <TextView
+        style="@style/StockDetails.Header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.2"
+        android:padding="@dimen/lots_padding"
+        android:text="@string/lot_code" />
+
+
+    <TextView
+        style="@style/StockDetails.Header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="@dimen/lots_padding"
+        android:text="@string/stock_received" />
+
+
+    <TextView
+        style="@style/StockDetails.Header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="@dimen/lots_padding"
+        android:text="@string/stock_issues" />
+
+    <TextView
+        style="@style/StockDetails.Header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="@dimen/lots_padding"
+        android:text="@string/stock_adjustment" />
+
+    <TextView
+        style="@style/StockDetails.Header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:padding="@dimen/lots_padding"
+        android:text="@string/balance" />
+
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.interactor;
 
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.repository.StockRepository;
@@ -8,6 +9,7 @@ import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class StockDetailsInteractor {
@@ -34,5 +36,13 @@ public class StockDetailsInteractor {
 
     public TradeItem findTradeItem(String tradeItemId) {
         return tradeItemRepository.getTradeItemById(tradeItemId);
+    }
+
+    public List<Stock> getStockByTradeItem(String tradeItemId) {
+        return stockRepository.getStockByTradeItem(tradeItemId);
+    }
+
+    public Map<String, String> findLotNames(String tradeItemId) {
+        return lotRepository.findLotNames(tradeItemId);
     }
 }

@@ -7,4 +7,10 @@
     <style name="PopupOverlay.Light" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:itemBackground">@android:color/white</item>
     </style>
+
+    <style name="StockDetails.Header" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/text_black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

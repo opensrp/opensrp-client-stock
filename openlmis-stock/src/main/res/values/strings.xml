@@ -25,4 +25,9 @@
     <string name="status">Status</string>
     <string name="VMM">VMM%1$d</string>
     <string name="stock_on_hand_and_expiry">%1s Exp. %2s</string>
+    <string name="date">Date</string>
+    <string name="to_from">To/From</string>
+    <string name="lot_code">Lot code</string>
+    <string name="stock_issues">Issues</string>
+    <string name="balance">Balance</string>
 </resources>

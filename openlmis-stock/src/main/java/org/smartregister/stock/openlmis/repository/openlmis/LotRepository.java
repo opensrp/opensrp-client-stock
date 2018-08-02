@@ -13,7 +13,9 @@ import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
@@ -134,6 +136,28 @@ public class LotRepository extends BaseRepository {
                 cursor.close();
         }
         return 0;
+    }
+
+    public Map<String, String> findLotNames(String tradeItemId) {
+
+        String query = String.format("SELECT DISTINCT %s,%s FROM %s WHERE %s = ?",
+                ID, LOT_CODE, LOT_TABLE, TRADE_ITEM_ID);
+        Log.d(TAG, query);
+        Cursor cursor = null;
+        Map<String, String> lots = new HashMap<>();
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId});
+            while (cursor.moveToNext()) {
+                lots.put(cursor.getString(0), cursor.getString(1));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return lots;
+
     }
 
 

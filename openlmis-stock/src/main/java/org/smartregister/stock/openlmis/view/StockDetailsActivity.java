@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.LotAdapter;
+import org.smartregister.stock.openlmis.adapter.StockTransactionAdapter;
 import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.presenter.StockDetailsPresenter;
 import org.smartregister.stock.openlmis.util.OpenLMISConstants;
@@ -53,6 +54,9 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         RecyclerView lotsRecyclerView = findViewById(R.id.lotsRecyclerView);
         lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
 
+        RecyclerView transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
+        transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto.getId(), stockDetailsPresenter));
+
     }
 
     @Override
@@ -62,6 +66,6 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     @Override
     public void showTransactionsHeader() {
-
+        findViewById(R.id.transactions_header).setVisibility(View.VISIBLE);
     }
 }
