@@ -49,12 +49,12 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     public void onBindViewHolder(@NonNull CommodityTypeViewHolder holder, int position) {
         CommodityType commodityType = commodityTypes.get(position);
         List<TradeItemWrapper> tradeItems = stockListPresenter.getTradeItems(commodityType);
-        int total = 0;
+        int totalDoses = 0;
         for (TradeItemWrapper tradeItem : tradeItems)
-            total += tradeItem.getTotalStock();
+            totalDoses += tradeItem.getTotalStock() * tradeItem.getTradeItem().getNetContent();
         holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter,
                 commodityType.getName(), tradeItems.size()));
-        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, total));
+        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, totalDoses));
         holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, context));
     }
 

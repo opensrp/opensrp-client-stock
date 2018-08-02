@@ -1,5 +1,7 @@
 package org.smartregister.stock.openlmis.presenter;
 
+import android.view.View;
+
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -60,5 +62,13 @@ public class StockDetailsPresenter {
         }
         stockWrapperList.get(0).setStockBalance(stockCounter);
         return stockWrapperList;
+    }
+
+    public void collapseExpandClicked(int visibility) {
+        if (visibility == View.GONE) {
+            stockDetailsView.expandLots();
+        } else if (visibility == View.VISIBLE) {
+            stockDetailsView.collapseLots();
+        }
     }
 }

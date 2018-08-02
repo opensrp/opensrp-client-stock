@@ -18,7 +18,7 @@
             android:id="@+id/collapseExpandButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/list_stock_margin"
+            android:padding="@dimen/expand_collapse_margin"
             android:src="@drawable/ic_keyboard_arrow_down"
             app:layout_constraintBottom_toBottomOf="@id/doseTextView"
             app:layout_constraintStart_toStartOf="parent"

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,10 +31,14 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     private LinearLayout lotsHeader;
 
+    private ImageView collapseExpandButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_details);
+        stockDetailsPresenter = new StockDetailsPresenter(this);
+
         TradeItemDto tradeItemDto = getIntent().getParcelableExtra(OpenLMISConstants.tradeItem);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.stock_details_title, tradeItemDto.getName()));
@@ -44,7 +49,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         itemNameTextView.setText(tradeItemDto.getName());
 
         TextView dosesTextView = findViewById(R.id.doseTextView);
-        dosesTextView.setText(tradeItemDto.getDispensable());
+        dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
+                tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
 
         TextView lastUpdatedTextView = findViewById(R.id.lastUpdatedTextView);
         Date lastUpdated = new Date(tradeItemDto.getLastUpdated());
@@ -54,9 +60,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         TextView lots = findViewById(R.id.number_of_lots);
         lots.setText(getString(R.string.lots_details, tradeItemDto.getNumberOfLots()));
 
-        stockDetailsPresenter = new StockDetailsPresenter(this);
-
         lotsHeader = findViewById(R.id.lot_header);
+        collapseExpandButton = findViewById(R.id.collapseExpandButton);
 
         lotsRecyclerView = findViewById(R.id.lotsRecyclerView);
         lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
@@ -65,8 +70,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         RecyclerView transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
 
-        findViewById(R.id.collapseExpandButton).setOnClickListener(this);
-
+        collapseExpandButton.setOnClickListener(this);
+        findViewById(R.id.number_of_lots).setOnClickListener(this);
     }
 
     @Override
@@ -81,23 +86,23 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.collapseExpandButton) {
-            if (lotsRecyclerView.getVisibility() == View.VISIBLE) {
-                collapseLots();
-            } else {
-                expandLots();
-            }
+        if (view.getId() == R.id.collapseExpandButton || view.getId() == R.id.number_of_lots) {
+            stockDetailsPresenter.collapseExpandClicked(lotsRecyclerView.getVisibility());
         }
     }
 
+    @Override
     public void collapseLots() {
         lotsHeader.setVisibility(View.GONE);
         lotsRecyclerView.setVisibility(View.GONE);
+        collapseExpandButton.setImageResource(R.drawable.ic_keyboard_arrow_down);
     }
 
+    @Override
     public void expandLots() {
         lotsHeader.setVisibility(View.VISIBLE);
         lotsRecyclerView.setVisibility(View.VISIBLE);
+        collapseExpandButton.setImageResource(R.drawable.ic_keyboard_arrow_up);
     }
 
 }

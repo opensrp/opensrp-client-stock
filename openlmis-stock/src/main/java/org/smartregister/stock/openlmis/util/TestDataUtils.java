@@ -124,7 +124,7 @@ public class TestDataUtils {
             return tradeItems;
         TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Intervax " + commodityType.getName() + " 20");
-        tradeItem.setNetContent(Long.valueOf(random.nextInt(50)));
+        tradeItem.setNetContent((long) (2 + random.nextInt(18)));
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", "20 pills", null));
         calendar.add(Calendar.DATE, -random.nextInt(300));
@@ -137,7 +137,7 @@ public class TestDataUtils {
         tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("BIntervax " + commodityType.getName() + " 30");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
-        tradeItem.setNetContent(Long.valueOf(random.nextInt(40)));
+        tradeItem.setNetContent((long) (2 + random.nextInt(8)));
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "pills", "30 pills", null));
         calendar.add(Calendar.DATE, -random.nextInt(300));
         tradeItem.setDateUpdated(calendar.getTimeInMillis());
@@ -150,7 +150,7 @@ public class TestDataUtils {
         tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Brand B " + commodityType.getName() + " 5");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
-        tradeItem.setNetContent(Long.valueOf(random.nextInt(20)));
+        tradeItem.setNetContent((long) (2 + random.nextInt(18)));
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", "5 vials", null));
         calendar.add(Calendar.DATE, -random.nextInt(300));
         tradeItem.setDateUpdated(calendar.getTimeInMillis());
@@ -161,7 +161,7 @@ public class TestDataUtils {
         tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Antervax " + commodityType.getName() + " 5");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
-        tradeItem.setNetContent(Long.valueOf(random.nextInt(10)));
+        tradeItem.setNetContent((long) (2 + random.nextInt(8)));
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "strip", "10 tab strip", null));
         calendar.add(Calendar.DATE, -random.nextInt(300));
         tradeItem.setDateUpdated(calendar.getTimeInMillis());

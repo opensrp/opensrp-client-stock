@@ -10,7 +10,7 @@ public class TradeItemDto implements Parcelable {
 
     private String name;
 
-    private String dispensable;
+    private Integer totalStock;
 
     private Long lastUpdated;
 
@@ -18,17 +18,18 @@ public class TradeItemDto implements Parcelable {
 
     private String dispensingUnit;
 
-    private Integer totalStock;
+    private Long netContent;
 
-    public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull String dispensable,
-                        @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit, @NonNull Integer totalStock) {
+
+    public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
+                        @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit, @NonNull Long netContent) {
         this.id = id;
         this.name = name;
-        this.dispensable = dispensable;
+        this.totalStock = totalStock;
         this.lastUpdated = lastUpdated;
         this.numberOfLots = numberOfLots == null ? 0 : numberOfLots;
         this.dispensingUnit = dispensingUnit;
-        this.totalStock = totalStock;
+        this.netContent = netContent;
     }
 
     public TradeItemDto(Parcel in) {
@@ -37,11 +38,11 @@ public class TradeItemDto implements Parcelable {
         in.readStringArray(data);
         id = data[0];
         name = data[1];
-        dispensable = data[2];
+        totalStock = Integer.valueOf(data[2]);
         lastUpdated = Long.valueOf(data[3]);
         numberOfLots = Integer.valueOf(data[4]);
         dispensingUnit = data[5];
-        totalStock = Integer.valueOf(data[6]);
+        netContent = Long.valueOf(data[6]);
     }
 
     @Override
@@ -52,7 +53,8 @@ public class TradeItemDto implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{id, name,
-                dispensable, lastUpdated.toString(), numberOfLots.toString(), dispensingUnit, totalStock.toString()});
+                totalStock.toString(), lastUpdated.toString(), numberOfLots.toString(),
+                dispensingUnit, netContent.toString()});
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -73,8 +75,8 @@ public class TradeItemDto implements Parcelable {
         return name;
     }
 
-    public String getDispensable() {
-        return dispensable;
+    public Integer getTotalStock() {
+        return totalStock;
     }
 
     public Long getLastUpdated() {
@@ -89,7 +91,7 @@ public class TradeItemDto implements Parcelable {
         return dispensingUnit;
     }
 
-    public Integer getTotalStock() {
-        return totalStock;
+    public Long getNetContent() {
+        return netContent;
     }
 }

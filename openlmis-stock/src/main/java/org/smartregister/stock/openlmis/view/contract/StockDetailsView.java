@@ -9,4 +9,7 @@ public interface StockDetailsView {
 
     void showTransactionsHeader();
 
+    void collapseLots();
+
+    void expandLots();
 }
