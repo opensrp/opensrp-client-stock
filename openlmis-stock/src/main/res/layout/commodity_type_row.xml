@@ -49,8 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_more_vert"
             android:layout_margin="@dimen/list_stock_margin"
+            android:src="@drawable/ic_more_vert"
             app:layout_constraintBottom_toBottomOf="@id/doseTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -69,6 +69,7 @@
             android:id="@+id/tradeItemsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:overScrollMode="never"
             android:visibility="gone"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"

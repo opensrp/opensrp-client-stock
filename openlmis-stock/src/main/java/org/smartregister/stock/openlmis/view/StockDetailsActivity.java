@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
@@ -19,11 +20,15 @@ import org.smartregister.stock.openlmis.view.contract.StockDetailsView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class StockDetailsActivity extends AppCompatActivity implements StockDetailsView {
+public class StockDetailsActivity extends AppCompatActivity implements StockDetailsView, View.OnClickListener {
 
     static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mma dd MMM, yyyy");
 
     private StockDetailsPresenter stockDetailsPresenter;
+
+    private RecyclerView lotsRecyclerView;
+
+    private LinearLayout lotsHeader;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,21 +56,48 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
         stockDetailsPresenter = new StockDetailsPresenter(this);
 
-        RecyclerView lotsRecyclerView = findViewById(R.id.lotsRecyclerView);
+        lotsHeader = findViewById(R.id.lot_header);
+
+        lotsRecyclerView = findViewById(R.id.lotsRecyclerView);
         lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
+
 
         RecyclerView transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
+
+        findViewById(R.id.collapseExpandButton).setOnClickListener(this);
 
     }
 
     @Override
     public void showLotsHeader() {
-        findViewById(R.id.lot_header).setVisibility(View.VISIBLE);
+        lotsHeader.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showTransactionsHeader() {
         findViewById(R.id.transactions_header).setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.collapseExpandButton) {
+            if (lotsRecyclerView.getVisibility() == View.VISIBLE) {
+                collapseLots();
+            } else {
+                expandLots();
+            }
+        }
+    }
+
+    public void collapseLots() {
+        lotsHeader.setVisibility(View.GONE);
+        lotsRecyclerView.setVisibility(View.GONE);
+    }
+
+    public void expandLots() {
+        lotsHeader.setVisibility(View.VISIBLE);
+        lotsRecyclerView.setVisibility(View.VISIBLE);
+    }
+
 }
