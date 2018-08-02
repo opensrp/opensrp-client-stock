@@ -23,7 +23,7 @@ import java.util.Date;
 
 public class StockDetailsActivity extends AppCompatActivity implements StockDetailsView, View.OnClickListener {
 
-    static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mma dd MMM, yyyy");
+    private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mma dd MMM, yyyy");
 
     private StockDetailsPresenter stockDetailsPresenter;
 

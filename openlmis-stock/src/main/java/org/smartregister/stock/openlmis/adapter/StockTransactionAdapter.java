@@ -26,7 +26,7 @@ import static org.smartregister.stock.domain.Stock.received;
  */
 public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransactionsViewHolder> {
 
-    static SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+    private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
     private List<StockWrapper> stockTransactions;
 

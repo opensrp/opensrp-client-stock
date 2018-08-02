@@ -10,9 +10,10 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.stock.openlmis.BaseUnitTest;
-import org.smartregister.stock.openlmis.domain.openlmis.Gtin;
-import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
+import org.smartregister.stock.openlmis.domain.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import org.smartregister.stock.openlmis.view.viewholder.TradeItemViewHolder;
+import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +35,16 @@ public class ListTradeItemAdapterTest extends BaseUnitTest {
     private ListTradeItemAdapter listTradeItemAdapter;
 
     @Before
-    public void setUp() throws Exception {
-        List<TradeItem> expectedTradeItems = new ArrayList<>();
-        TradeItem tradeItem = new TradeItem(UUID.randomUUID());
-        tradeItem.setManufacturerOfTradeItem("Intervax BCG 20");
-        tradeItem.setGtin(new Gtin("305730154758"));
-        expectedTradeItems.add(tradeItem);
+    public void setUp() {
+        List<TradeItemWrapper> expectedTradeItems = new ArrayList<>();
+        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
+        tradeItem.setName("Intervax BCG 20");
+        tradeItem.setCommodityTypeId("305730154758");
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", null, null));
+        TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
+        tradeItemWrapper.setNumberOfLots(10);
+        tradeItemWrapper.setTotalStock(50);
+        expectedTradeItems.add(tradeItemWrapper);
         listTradeItemAdapter = new ListTradeItemAdapter(expectedTradeItems, context);
     }
 
@@ -61,7 +66,7 @@ public class ListTradeItemAdapterTest extends BaseUnitTest {
 
         listTradeItemAdapter.onBindViewHolder(holder, 0);
         assertEquals("Intervax BCG 20", holder.getNameTextView().getText());
-        assertEquals("100 lots", holder.getLotsTextView().getText());
+        assertEquals("10 lots", holder.getLotsTextView().getText());
         assertEquals("50 vials", holder.getDispensableTextView().getText());
 
     }

@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class LotAdapter extends RecyclerView.Adapter<LotViewHolder> {
 
-    static String DATE_FORMAT = "dd-MM-yyyy";
+    private static final String DATE_FORMAT = "dd-MM-yyyy";
 
     private Context context;
     private List<Lot> lots;
