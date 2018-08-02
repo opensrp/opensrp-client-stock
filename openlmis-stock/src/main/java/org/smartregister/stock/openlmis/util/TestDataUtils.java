@@ -97,14 +97,15 @@ public class TestDataUtils {
             List<Lot> lots = lotHashMap.get(tradeItem);
             for (Lot lot : lots) {
                 for (int i = 0; i < random.nextInt(15); i++) {
-                    long now = System.currentTimeMillis();
+                    Calendar dateCreated = Calendar.getInstance();
+                    dateCreated.add(Calendar.DATE, -random.nextInt(120));
                     int type = random.nextInt(3);
                     String transactionType = type == 0 ? Stock.received : type == 1 ? Stock.issued : Stock.loss_adjustment;
                     int value = random.nextInt(50);
                     if (transactionType.equals(Stock.issued))
                         value = -value;
-                    Stock stock = new Stock(null, transactionType, "tester11", value, now,
-                            RandomStringUtils.randomAlphabetic(6 + random.nextInt(6)), "unsynched", now, tradeItem.getId());
+                    Stock stock = new Stock(null, transactionType, "tester11", value, dateCreated.getTimeInMillis(),
+                            RandomStringUtils.randomAlphabetic(6 + random.nextInt(6)), "unsynched", System.currentTimeMillis(), tradeItem.getId());
                     stock.setLotId(lot.getId().toString());
                     stockRepository.addOrUpdate(stock);
                 }
@@ -176,7 +177,7 @@ public class TestDataUtils {
         for (int i = 0; i < numberOfLots; i++) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DATE, random.nextInt(300));
-            Lot lot = new Lot(UUID.randomUUID(), "LC" + RandomStringUtils.randomAlphanumeric(6), new LocalDate(calendar.getTimeInMillis()),
+            Lot lot = new Lot(UUID.randomUUID(), "LC" + (1000 + random.nextInt(8000)), new LocalDate(calendar.getTimeInMillis()),
                     new LocalDate(System.currentTimeMillis()),
                     new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),
                     false);
