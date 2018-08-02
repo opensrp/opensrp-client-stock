@@ -101,9 +101,11 @@ public class TestDataUtils {
                     dateCreated.add(Calendar.DATE, -random.nextInt(120));
                     int type = random.nextInt(3);
                     String transactionType = type == 0 ? Stock.received : type == 1 ? Stock.issued : Stock.loss_adjustment;
-                    int value = random.nextInt(50);
-                    if (transactionType.equals(Stock.issued))
-                        value = -value;
+                    int value = 5 + random.nextInt(50);
+                    if (transactionType.equals(Stock.issued) ||
+                            (transactionType.equals(Stock.loss_adjustment) && random.nextInt(2) == 0))
+                        value = -random.nextInt(5);
+
                     Stock stock = new Stock(null, transactionType, "tester11", value, dateCreated.getTimeInMillis(),
                             RandomStringUtils.randomAlphabetic(6 + random.nextInt(6)), "unsynched", System.currentTimeMillis(), tradeItem.getId());
                     stock.setLotId(lot.getId().toString());

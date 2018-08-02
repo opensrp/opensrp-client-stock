@@ -11,6 +11,7 @@ import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.util.OpenLMISConstants;
 import org.smartregister.stock.openlmis.view.StockDetailsActivity;
+import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 /**
  * Created by samuelgithengi on 7/17/18.
@@ -23,7 +24,7 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
     private TextView expiringTextView;
     private TextView dispensableTextView;
 
-    private TradeItem tradeItem;
+    private TradeItemWrapper tradeItemWrapper;
 
 
     public TradeItemViewHolder(View itemView) {
@@ -40,9 +41,11 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
     public void onClick(View view) {
         if (view.getId() == R.id.tradeItemsMore) {
             Intent intent = new Intent(context, StockDetailsActivity.class);
+            TradeItem tradeItem = tradeItemWrapper.getTradeItem();
             TradeItemDto tradeItemDto = new TradeItemDto(tradeItem.getId(),
                     tradeItem.getName(), dispensableTextView.getText().toString(),
-                    tradeItem.getDateUpdated(), tradeItem.getNumberOfLots(), tradeItem.getDispensable().getKeyDispensingUnit());
+                    tradeItem.getDateUpdated(), tradeItemWrapper.getNumberOfLots(),
+                    tradeItem.getDispensable().getKeyDispensingUnit(), tradeItemWrapper.getTotalStock());
             intent.putExtra(OpenLMISConstants.tradeItem, tradeItemDto);
             context.startActivity(intent);
         }
@@ -64,7 +67,7 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
         return dispensableTextView;
     }
 
-    public void setTradeItem(TradeItem tradeItem) {
-        this.tradeItem = tradeItem;
+    public void setTradeItemWrapper(TradeItemWrapper tradeItemWrapper) {
+        this.tradeItemWrapper = tradeItemWrapper;
     }
 }

@@ -18,18 +18,21 @@ public class TradeItemDto implements Parcelable {
 
     private String dispensingUnit;
 
+    private Integer totalStock;
+
     public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull String dispensable,
-                        @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit) {
+                        @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit, @NonNull Integer totalStock) {
         this.id = id;
         this.name = name;
         this.dispensable = dispensable;
         this.lastUpdated = lastUpdated;
         this.numberOfLots = numberOfLots == null ? 0 : numberOfLots;
         this.dispensingUnit = dispensingUnit;
+        this.totalStock = totalStock;
     }
 
     public TradeItemDto(Parcel in) {
-        String[] data = new String[6];
+        String[] data = new String[7];
 
         in.readStringArray(data);
         id = data[0];
@@ -38,6 +41,7 @@ public class TradeItemDto implements Parcelable {
         lastUpdated = Long.valueOf(data[3]);
         numberOfLots = Integer.valueOf(data[4]);
         dispensingUnit = data[5];
+        totalStock = Integer.valueOf(data[6]);
     }
 
     @Override
@@ -48,7 +52,7 @@ public class TradeItemDto implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{id, name,
-                dispensable, lastUpdated.toString(), numberOfLots.toString(), dispensingUnit});
+                dispensable, lastUpdated.toString(), numberOfLots.toString(), dispensingUnit, totalStock.toString()});
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -83,5 +87,9 @@ public class TradeItemDto implements Parcelable {
 
     public String getDispensingUnit() {
         return dispensingUnit;
+    }
+
+    public Integer getTotalStock() {
+        return totalStock;
     }
 }

@@ -135,7 +135,7 @@ public class StockRepository extends BaseRepository {
 
     public Map<Long, Integer> getNumberOfLotsByTradeItem(String tradeItemId) {
         String query = String.format("SELECT sum(%s),%s FROM %s s JOIN %s l on s.%s=l.%s" +
-                        " WHERE %s=? GROUP BY %s HAVING  sum(%s) >0 ",
+                        " WHERE %s=? GROUP BY %s HAVING  sum(%s) !=0 ",
                 VALUE, EXPIRATION_DATE, stock_TABLE_NAME, LOT_TABLE, LOT_ID, ID, STOCK_TYPE_ID, LOT_ID, VALUE);
         Cursor cursor = null;
         Map<Long, Integer> lots = new TreeMap<>(Collections.reverseOrder());

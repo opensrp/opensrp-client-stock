@@ -83,7 +83,7 @@ public class LotRepository extends BaseRepository {
     public List<Lot> findLotsByTradeItem(String tradeItemId) {
 
         String query = String.format("SELECT * FROM %s WHERE %s IN " +
-                        "(SELECT %s FROM %s  WHERE %s=? GROUP BY %s having SUM(%s) >0 )" +
+                        "(SELECT %s FROM %s  WHERE %s=? GROUP BY %s having SUM(%s) !=0 )" +
                         "ORDER BY %s asc",
                 LOT_TABLE, ID, LOT_ID, stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID, VALUE, EXPIRATION_DATE);
         Log.d(TAG, query);

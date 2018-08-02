@@ -9,6 +9,7 @@ import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
+import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,21 +50,23 @@ public class StockListInteractor {
         return commodityTypeRepository.findAllCommodityTypes();
     }
 
-    public List<TradeItem> getTradeItems(CommodityType commodityType) {
-        List<TradeItem> tradeItems = tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString());
-        for (TradeItem tradeItem : tradeItems) {
+    public List<TradeItemWrapper> getTradeItems(CommodityType commodityType) {
+        List<TradeItemWrapper> tradeItemWrappers = new ArrayList<>();
+        for (TradeItem tradeItem : tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString())) {
+            TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
             Map<Long, Integer> lots = stockRepository.getNumberOfLotsByTradeItem(tradeItem.getId());
             int totalStock = 0;
             for (int stock : lots.values())
                 totalStock += stock;
-            tradeItem.setTotalStock(totalStock);
-            tradeItem.setNumberOfLots(lots.size());
+            tradeItemWrapper.setTotalStock(totalStock);
+            tradeItemWrapper.setNumberOfLots(lots.size());
             if (!lots.isEmpty()) {
                 LocalDate maxExpiringDate = new LocalDate(lots.keySet().iterator().next());
-                tradeItem.setHasLotExpiring(new LocalDate().plusMonths(3).isAfter(maxExpiringDate));
+                tradeItemWrapper.setHasLotExpiring(new LocalDate().plusMonths(3).isAfter(maxExpiringDate));
             }
+            tradeItemWrappers.add(tradeItemWrapper);
         }
-        return tradeItems;
+        return tradeItemWrappers;
 
     }
 

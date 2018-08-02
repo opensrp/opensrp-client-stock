@@ -55,7 +55,7 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
 
         RecyclerView transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
-        transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto.getId(), stockDetailsPresenter));
+        transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
 
     }
 

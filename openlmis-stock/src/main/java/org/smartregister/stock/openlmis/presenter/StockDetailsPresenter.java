@@ -3,9 +3,12 @@ package org.smartregister.stock.openlmis.presenter;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
+import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.interactor.StockDetailsInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockDetailsView;
+import org.smartregister.stock.openlmis.wrapper.StockWrapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -46,11 +49,16 @@ public class StockDetailsPresenter {
         return stockList;
     }
 
-    public List<Stock> populateLotNames(String tradeItemId, List<Stock> stockTransactions) {
-        Map<String, String> lotName = stockDetailsInteractor.findLotNames(tradeItemId);
-        for (Stock stock : stockTransactions)
-            stock.setLotCode(lotName.get(stock.getLotId()));
-        return stockTransactions;
-
+    public List<StockWrapper> populateLotNamesAndBalance(TradeItemDto tradeItem, List<Stock> stockTransactions) {
+        List<StockWrapper> stockWrapperList = new ArrayList<>();
+        Map<String, String> lotName = stockDetailsInteractor.findLotNames(tradeItem.getId());
+        int stockCounter = 0;
+        for (Stock stock : stockTransactions) {
+            stockWrapperList.add(new StockWrapper(stock, lotName.get(stock.getLotId()),
+                    tradeItem.getTotalStock() - stockCounter));
+            stockCounter += stock.getValue();
+        }
+        stockWrapperList.get(0).setStockBalance(stockCounter);
+        return stockWrapperList;
     }
 }

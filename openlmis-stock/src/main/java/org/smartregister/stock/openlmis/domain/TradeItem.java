@@ -19,12 +19,6 @@ public class TradeItem {
 
     private Dispensable dispensable;
 
-    private int totalStock;
-
-    private int numberOfLots;
-
-    private boolean hasLotExpiring;
-
     public String getId() {
         return id;
 
@@ -80,27 +74,4 @@ public class TradeItem {
         this.dispensable = dispensable;
     }
 
-    public int getTotalStock() {
-        return totalStock;
-    }
-
-    public void setTotalStock(int totalStock) {
-        this.totalStock = totalStock;
-    }
-
-    public int getNumberOfLots() {
-        return numberOfLots;
-    }
-
-    public void setNumberOfLots(int numberOfLots) {
-        this.numberOfLots = numberOfLots;
-    }
-
-    public boolean isHasLotExpiring() {
-        return hasLotExpiring;
-    }
-
-    public void setHasLotExpiring(boolean hasLotExpiring) {
-        this.hasLotExpiring = hasLotExpiring;
-    }
 }

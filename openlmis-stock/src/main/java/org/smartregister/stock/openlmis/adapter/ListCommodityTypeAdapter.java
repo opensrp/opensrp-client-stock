@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
-import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.listener.ExpandCollapseListener;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.CommodityTypeViewHolder;
+import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +48,9 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     @Override
     public void onBindViewHolder(@NonNull CommodityTypeViewHolder holder, int position) {
         CommodityType commodityType = commodityTypes.get(position);
-        List<TradeItem> tradeItems = stockListPresenter.getTradeItems(commodityType);
+        List<TradeItemWrapper> tradeItems = stockListPresenter.getTradeItems(commodityType);
         int total = 0;
-        for (TradeItem tradeItem : tradeItems)
+        for (TradeItemWrapper tradeItem : tradeItems)
             total += tradeItem.getTotalStock();
         holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter,
                 commodityType.getName(), tradeItems.size()));

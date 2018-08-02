@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.Stock;
+import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.presenter.StockDetailsPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.StockTransactionsViewHolder;
+import org.smartregister.stock.openlmis.wrapper.StockWrapper;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,16 +28,12 @@ public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransacti
 
     static SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
-    private List<Stock> stockTransactions;
+    private List<StockWrapper> stockTransactions;
 
-    private StockDetailsPresenter stockDetailsPresenter;
 
-    private int balance = 0;
-
-    public StockTransactionAdapter(String tradeItemId, StockDetailsPresenter stockDetailsPresenter) {
-        this.stockDetailsPresenter = stockDetailsPresenter;
-        stockTransactions = stockDetailsPresenter.getStockByTradeItem(tradeItemId);
-        stockTransactions = stockDetailsPresenter.populateLotNames(tradeItemId, stockTransactions);
+    public StockTransactionAdapter(TradeItemDto tradeItem, StockDetailsPresenter stockDetailsPresenter) {
+        stockTransactions = stockDetailsPresenter.populateLotNamesAndBalance(tradeItem,
+                stockDetailsPresenter.getStockByTradeItem(tradeItem.getId()));
     }
 
     @NonNull
@@ -47,18 +45,25 @@ public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransacti
 
     @Override
     public void onBindViewHolder(@NonNull StockTransactionsViewHolder holder, int position) {
-        Stock stock = stockTransactions.get(position);
+        StockWrapper stockWrapper = stockTransactions.get(position);
+        Stock stock = stockWrapper.getStock();
         holder.getDateTextView().setText(dateFormatter.format(new Date(stock.getDateCreated())));
         holder.getToFromTextView().setText(stock.getToFrom());
-        holder.getLotCodeTextView().setText(stock.getLotCode());
+        holder.getLotCodeTextView().setText(stockWrapper.getLotCode());
+        holder.getBalanceTextView().setText(String.valueOf(stockWrapper.getStockBalance()));
         if (stock.getTransactionType().equals(received)) {
             holder.getReceivedTextView().setText(String.valueOf(stock.getValue()));
+            holder.getIssuedTextView().setText("");
+            holder.getAdjustmentTextView().setText("");
         } else if (stock.getTransactionType().equals(issued)) {
             holder.getIssuedTextView().setText(String.valueOf(Math.abs(stock.getValue())));
+            holder.getReceivedTextView().setText("");
+            holder.getAdjustmentTextView().setText("");
         } else if (stock.getTransactionType().equals(loss_adjustment)) {
             holder.getAdjustmentTextView().setText(String.valueOf(stock.getValue()));
+            holder.getReceivedTextView().setText("");
+            holder.getIssuedTextView().setText("");
         }
-        holder.getBalanceTextView().setText(String.valueOf(balance));
     }
 
     @Override
