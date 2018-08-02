@@ -8,7 +8,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.2"
-        android:padding="@dimen/lots_padding"
         android:text="@string/date" />
 
 
@@ -17,7 +16,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
-        android:padding="@dimen/lots_padding"
         android:text="@string/to_from" />
 
 
@@ -26,7 +24,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.2"
-        android:padding="@dimen/lots_padding"
         android:text="@string/lot_code" />
 
 
@@ -35,7 +32,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:padding="@dimen/lots_padding"
+        android:gravity="center_horizontal"
         android:text="@string/stock_received" />
 
 
@@ -44,7 +41,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:padding="@dimen/lots_padding"
+        android:gravity="center_horizontal"
         android:text="@string/stock_issues" />
 
     <TextView
@@ -52,7 +49,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:padding="@dimen/lots_padding"
+        android:gravity="center_horizontal"
         android:text="@string/stock_adjustment" />
 
     <TextView
@@ -61,7 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="right"
-        android:padding="@dimen/lots_padding"
         android:text="@string/balance" />
 
 

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/stock_details_margin"
+    android:background="@drawable/horizontal_separator"
+    android:paddingTop="@dimen/stock_details_margin">
 
     <TextView
         android:id="@+id/date"
@@ -16,7 +19,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
-        android:padding="@dimen/lots_padding"
         android:textColor="@color/stock_list_dark_text" />
 
 
@@ -25,7 +27,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.2"
-        android:padding="@dimen/lots_padding"
         android:textColor="@color/stock_list_dark_text" />
 
 
@@ -35,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_horizontal"
-        android:padding="@dimen/lots_padding"
         android:textColor="@color/stock_list_dark_text" />
 
 
@@ -45,7 +45,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_horizontal"
-        android:padding="@dimen/lots_padding"
         android:textColor="@color/stock_list_dark_text" />
 
     <TextView
@@ -54,7 +53,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_horizontal"
-        android:padding="@dimen/lots_padding"
         android:textColor="@color/stock_list_dark_text" />
 
     <TextView
@@ -63,7 +61,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="right"
-        android:padding="@dimen/lots_padding"
         android:textColor="@color/stock_list_dark_text" />
 
 

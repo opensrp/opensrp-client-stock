@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.util;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.LocalDate;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
@@ -95,7 +96,7 @@ public class TestDataUtils {
         for (TradeItem tradeItem : lotHashMap.keySet()) {
             List<Lot> lots = lotHashMap.get(tradeItem);
             for (Lot lot : lots) {
-                for (int i = 0; i < random.nextInt(10); i++) {
+                for (int i = 0; i < random.nextInt(15); i++) {
                     long now = System.currentTimeMillis();
                     int type = random.nextInt(3);
                     String transactionType = type == 0 ? Stock.received : type == 1 ? Stock.issued : Stock.loss_adjustment;
@@ -103,7 +104,7 @@ public class TestDataUtils {
                     if (transactionType.equals(Stock.issued))
                         value = -value;
                     Stock stock = new Stock(null, transactionType, "tester11", value, now,
-                            "WareHouse123", "unsynched", now, tradeItem.getId());
+                            RandomStringUtils.randomAlphabetic(6 + random.nextInt(6)), "unsynched", now, tradeItem.getId());
                     stock.setLotId(lot.getId().toString());
                     stockRepository.addOrUpdate(stock);
                 }
@@ -170,12 +171,12 @@ public class TestDataUtils {
     private List<Lot> createLots(String tradeItemId) {
         List<Lot> lots = new ArrayList<>();
         Random random = new Random();
-        int numberOfLots = random.nextInt(5);
+        int numberOfLots = random.nextInt(8);
 
         for (int i = 0; i < numberOfLots; i++) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DATE, random.nextInt(300));
-            Lot lot = new Lot(UUID.randomUUID(), "LC2016FG", new LocalDate(calendar.getTimeInMillis()),
+            Lot lot = new Lot(UUID.randomUUID(), "LC" + RandomStringUtils.randomAlphanumeric(6), new LocalDate(calendar.getTimeInMillis()),
                     new LocalDate(System.currentTimeMillis()),
                     new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),
                     false);
