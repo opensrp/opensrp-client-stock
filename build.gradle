@@ -161,12 +161,16 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
 }
 
 coveralls {
+    for (int i = 0; i  <   publishedProjects.jacocoTestReport.sourceDirectories.size() ; i++) {
+        sourceDirs.add(publishedProjects.jacocoTestReport.sourceDirectories.get(i).getAsPath())
+    }
+
     jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
 
 tasks.coveralls {
     group = 'Coverage reports'
     description = 'Uploads the aggregated coverage report to Coveralls'
-    dependsOn jacocoRootReport
+    //dependsOn jacocoRootReport
 }
 
