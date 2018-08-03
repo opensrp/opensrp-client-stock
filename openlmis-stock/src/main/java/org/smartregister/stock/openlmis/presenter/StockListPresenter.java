@@ -1,8 +1,7 @@
 package org.smartregister.stock.openlmis.presenter;
 
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
-
-import com.google.common.annotations.VisibleForTesting;
 
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;

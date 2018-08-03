@@ -11,6 +11,7 @@ import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -197,5 +198,48 @@ public class LotRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(1, lots);
 
+        assertEquals(0, lotRepository.getNumberOfLotsByTradeItem(UUID.randomUUID().toString()));
+
     }
+
+    @Test
+    public void testFindLotNames() {
+        UUID tradeItemId = UUID.randomUUID();
+        assertEquals(0, lotRepository.findLotNames(tradeItemId.toString()).size());
+
+        UUID lotId = UUID.randomUUID();
+        Lot lot = new Lot(lotId, "LC2018G", new LocalDate("2019-01-31"),
+                new LocalDate("2018-01-01"), new TradeItem(tradeItemId), true);
+        lotRepository.addOrUpdate(lot);
+
+        UUID lot2Id = UUID.randomUUID();
+        lot = new Lot(lot2Id, "LC2018N", new LocalDate("2020-07-11"),
+                new LocalDate("2018-01-15"), new TradeItem(tradeItemId), true);
+        lotRepository.addOrUpdate(lot);
+
+        UUID tradeItem2 = UUID.randomUUID();
+        UUID lot3Id = UUID.randomUUID();
+        lot = new Lot(lot3Id, "LC2016FG", new LocalDate("2017-01-04"),
+                new LocalDate("2016-04-05"), new TradeItem(tradeItem2), false);
+        lotRepository.addOrUpdate(lot);
+
+        Map<String, String> lots = lotRepository.findLotNames(tradeItemId.toString());
+
+        assertEquals(2, lots.size());
+        assertTrue(lots.containsKey(lotId.toString()));
+        assertEquals("LC2018G", lots.get(lotId.toString()));
+
+        assertTrue(lots.containsKey(lot2Id.toString()));
+        assertEquals("LC2018N", lots.get(lot2Id.toString()));
+
+        lots = lotRepository.findLotNames(tradeItem2.toString());
+
+        assertEquals(1, lots.size());
+        assertTrue(lots.containsKey(lot3Id.toString()));
+        assertEquals("LC2016FG", lots.get(lot3Id.toString()));
+
+        assertEquals(0, lotRepository.findLotNames(UUID.randomUUID().toString()).size());
+
+    }
+
 }

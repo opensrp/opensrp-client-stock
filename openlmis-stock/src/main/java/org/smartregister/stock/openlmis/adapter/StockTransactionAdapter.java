@@ -33,7 +33,7 @@ public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransacti
 
     public StockTransactionAdapter(TradeItemDto tradeItem, StockDetailsPresenter stockDetailsPresenter) {
         stockTransactions = stockDetailsPresenter.populateLotNamesAndBalance(tradeItem,
-                stockDetailsPresenter.getStockByTradeItem(tradeItem.getId()));
+                stockDetailsPresenter.findStockByTradeItem(tradeItem.getId()));
     }
 
     @NonNull

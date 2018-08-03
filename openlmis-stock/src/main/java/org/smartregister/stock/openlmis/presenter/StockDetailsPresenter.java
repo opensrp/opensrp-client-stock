@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.presenter;
 
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 
 import org.smartregister.stock.openlmis.domain.Stock;
@@ -28,6 +29,13 @@ public class StockDetailsPresenter {
 
     }
 
+    @VisibleForTesting
+    public StockDetailsPresenter(StockDetailsView stockDetailsView, StockDetailsInteractor stockDetailsInteractor) {
+        this.stockDetailsView = stockDetailsView;
+        this.stockDetailsInteractor = stockDetailsInteractor;
+
+    }
+
     public int getTotalStockByLot(UUID lotId) {
         return stockDetailsInteractor.getTotalStockByLot(lotId);
     }
@@ -43,7 +51,7 @@ public class StockDetailsPresenter {
         return stockDetailsInteractor.findTradeItem(tradeItemId);
     }
 
-    public List<Stock> getStockByTradeItem(String tradeItemId) {
+    public List<Stock> findStockByTradeItem(String tradeItemId) {
         List<Stock> stockList = stockDetailsInteractor.getStockByTradeItem(tradeItemId);
 
         if (!stockList.isEmpty())
@@ -60,7 +68,6 @@ public class StockDetailsPresenter {
                     tradeItem.getTotalStock() - stockCounter));
             stockCounter += stock.getValue();
         }
-        stockWrapperList.get(0).setStockBalance(stockCounter);
         return stockWrapperList;
     }
 
