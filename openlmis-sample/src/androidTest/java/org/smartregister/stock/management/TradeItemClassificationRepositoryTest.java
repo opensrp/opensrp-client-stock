@@ -3,9 +3,9 @@ package org.smartregister.stock.management;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.smartregister.stock.openlmis.domain.TradeItem;
-import org.smartregister.stock.openlmis.domain.TradeItemClassification;
-import org.smartregister.stock.openlmis.repository.TradeItemClassificationRepository;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItemClassification;
+import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 
 import java.util.List;
 import java.util.UUID;

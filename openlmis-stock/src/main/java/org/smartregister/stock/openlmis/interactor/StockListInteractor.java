@@ -1,12 +1,13 @@
 package org.smartregister.stock.openlmis.interactor;
 
-import org.smartregister.stock.openlmis.domain.CommodityType;
-import org.smartregister.stock.openlmis.domain.Program;
-import org.smartregister.stock.openlmis.domain.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
+import org.smartregister.stock.openlmis.domain.openlmis.Program;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Created by samuelgithengi on 7/13/18.

@@ -1,106 +1,52 @@
 package org.smartregister.stock.openlmis.domain;
 
-import java.util.List;
-import java.util.UUID;
+import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 
-public class TradeItem extends BaseEntity {
+/**
+ * Created by samuelgithengi on 26/7/18.
+ */
+public class TradeItem {
 
-    private Gtin gtin;
-    private String manufacturerOfTradeItem;
-    private List<TradeItemClassification> classifications;
+    private String id;
+
+    private String commodityTypeId;
+
+    private String name;
+
     private Long dateUpdated;
 
-    public TradeItem(UUID id) {
+    private Long netContent;
+
+    private Dispensable dispensable;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
         this.id = id;
     }
 
+    public String getCommodityTypeId() {
+        return commodityTypeId;
+    }
 
-    public TradeItem(UUID id, Gtin gtin, String manufacturerOfTradeItem, Long dateUpdated) {
+    public TradeItem(String id) {
         this.id = id;
-        this.gtin = gtin;
-        this.manufacturerOfTradeItem = manufacturerOfTradeItem;
-        this.classifications = classifications;
-        this.dateUpdated = dateUpdated;
     }
 
-    public TradeItem(String manufacturerOfTradeItem, List<TradeItemClassification> classifications) {
-        this.manufacturerOfTradeItem = manufacturerOfTradeItem;
-        this.classifications = classifications;
+    ;
+
+    public void setCommodityTypeId(String commodityTypeId) {
+        this.commodityTypeId = commodityTypeId;
     }
 
-    /**
-     * A TradeItem can fulfill for the given product if the product is this trade item or if this
-     * product's CommodityType is the given product.
-     * @param product the product we'd like to fulfill for.
-     * @return true if we can fulfill for the given product, false otherwise.
-     */
-    public boolean canFulfill(CommodityType product) {
-        for (TradeItemClassification classification : classifications) {
-            if (product.getClassificationSystem().equals(classification.getClassificationSystem())
-                    && product.getClassificationId().equals(classification.getClassificationId())) {
-                return true;
-            }
-        }
-        return false;
+    public String getName() {
+        return name;
     }
 
-    /**
-     * Assigns a commodity type to this trade item - will associate this trade item
-     * with the classification system of the provided commodity type.
-     * @param commodityType the commodity type to associate with
-     */
-    public void assignCommodityType(CommodityType commodityType) {
-        assignCommodityType(commodityType.getClassificationSystem(),
-                commodityType.getClassificationId());
-    }
-
-    /**
-     * Assigns to the classification system and classification id.
-     * @param classificationSystem the classification system
-     * @param classificationId the id of the classification system.
-     */
-    public void assignCommodityType(String classificationSystem, String classificationId) {
-        TradeItemClassification existingClassification = findClassificationById(classificationId);
-
-        if (existingClassification == null) {
-            classifications.add(new TradeItemClassification(this, classificationSystem,
-                    classificationId));
-        } else {
-            existingClassification.setClassificationSystem(classificationSystem);
-        }
-    }
-
-    TradeItemClassification findClassificationById(String classificationId) {
-        for (TradeItemClassification classification : classifications) {
-            if (classificationId.equals(classification.getClassificationId())) {
-                return classification;
-            }
-        }
-        return null;
-    }
-
-    public Gtin getGtin() {
-        return gtin;
-    }
-
-    public void setGtin(Gtin gtin) {
-        this.gtin = gtin;
-    }
-
-    public String getManufacturerOfTradeItem() {
-        return manufacturerOfTradeItem;
-    }
-
-    public void setManufacturerOfTradeItem(String manufacturerOfTradeItem) {
-        this.manufacturerOfTradeItem = manufacturerOfTradeItem;
-    }
-
-    public List<TradeItemClassification> getClassifications() {
-        return classifications;
-    }
-
-    public void setClassifications(List<TradeItemClassification> classifications) {
-        this.classifications = classifications;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getDateUpdated() {
@@ -109,5 +55,21 @@ public class TradeItem extends BaseEntity {
 
     public void setDateUpdated(Long dateUpdated) {
         this.dateUpdated = dateUpdated;
+    }
+
+    public Long getNetContent() {
+        return netContent;
+    }
+
+    public void setNetContent(Long netContent) {
+        this.netContent = netContent;
+    }
+
+    public Dispensable getDispensable() {
+        return dispensable;
+    }
+
+    public void setDispensable(Dispensable dispensable) {
+        this.dispensable = dispensable;
     }
 }

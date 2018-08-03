@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.domain;
+package org.smartregister.stock.openlmis.domain.openlmis;
 
 import org.apache.commons.lang3.StringUtils;
 

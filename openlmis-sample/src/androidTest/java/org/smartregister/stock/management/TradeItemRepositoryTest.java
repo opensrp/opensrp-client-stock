@@ -5,9 +5,9 @@ import android.util.Log;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.smartregister.stock.openlmis.domain.Gtin;
-import org.smartregister.stock.openlmis.domain.TradeItem;
-import org.smartregister.stock.openlmis.repository.TradeItemRepository;
+import org.smartregister.stock.openlmis.domain.openlmis.Gtin;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
+import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 
 import java.util.List;
 import java.util.UUID;

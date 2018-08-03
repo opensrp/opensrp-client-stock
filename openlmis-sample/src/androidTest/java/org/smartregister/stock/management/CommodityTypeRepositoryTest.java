@@ -3,8 +3,8 @@ package org.smartregister.stock.management;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.smartregister.stock.openlmis.domain.CommodityType;
-import org.smartregister.stock.openlmis.repository.CommodityTypeRepository;
+import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
+import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 
 import java.util.List;
 import java.util.UUID;
