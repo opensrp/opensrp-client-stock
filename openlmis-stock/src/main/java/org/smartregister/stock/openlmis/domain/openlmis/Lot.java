@@ -15,16 +15,20 @@ public class Lot extends BaseEntity {
 
     private LocalDate manufactureDate;
 
-    private TradeItem tradeItem;
+    private TradeItem tradeItemId;
 
     private boolean active;
 
-    public Lot(UUID id, String lotCode, LocalDate expirationDate, LocalDate manufactureDate, TradeItem tradeItem, boolean active) {
+    private Long serverVersion;
+
+    private Long dateDeleted;
+
+    public Lot(UUID id, String lotCode, LocalDate expirationDate, LocalDate manufactureDate, TradeItem tradeItemId, boolean active) {
         this.id = id;
         this.lotCode = lotCode;
         this.expirationDate = expirationDate;
         this.manufactureDate = manufactureDate;
-        this.tradeItem = tradeItem;
+        this.tradeItemId = tradeItemId;
         this.active = active;
     }
 
@@ -52,12 +56,12 @@ public class Lot extends BaseEntity {
         this.manufactureDate = manufactureDate;
     }
 
-    public TradeItem getTradeItem() {
-        return tradeItem;
+    public TradeItem getTradeItemId() {
+        return tradeItemId;
     }
 
-    public void setTradeItem(TradeItem tradeItem) {
-        this.tradeItem = tradeItem;
+    public void setTradeItemId(TradeItem tradeItemId) {
+        this.tradeItemId = tradeItemId;
     }
 
     public boolean isActive() {
@@ -66,5 +70,21 @@ public class Lot extends BaseEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Long getServerVersion() {
+        return serverVersion;
+    }
+
+    public void setServerVersion(Long serverVersion) {
+        this.serverVersion = serverVersion;
+    }
+
+    public Long getDateDeleted() {
+        return dateDeleted;
+    }
+
+    public void setDateDeleted(Long dateDeleted) {
+        this.dateDeleted = dateDeleted;
     }
 }
