@@ -1,4 +1,4 @@
-package org.smartregister.stock.management;
+package org.smartregister.stock.management.repository;
 
 import org.joda.time.LocalDate;
 import org.junit.After;
@@ -90,7 +90,7 @@ public class LotRepositoryTest extends BaseRepositoryTest {
 
         Lot updatedLot = lotRepository.findLotById(lotId.toString());
 
-        assertEquals(tradeItemId, updatedLot.getTradeItem().getId());
+        assertEquals(tradeItemId, updatedLot.getTradeItemId().getId());
         assertEquals("2019-01-11", updatedLot.getManufactureDate().toString(DATE_FORMAT));
         assertEquals("2019-06-01", updatedLot.getExpirationDate().toString(DATE_FORMAT));
         assertFalse(updatedLot.isActive());
@@ -140,7 +140,7 @@ public class LotRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(2, lots.size());
         for (Lot returnedLot : lots) {
-            assertEquals(tradeItemId, returnedLot.getTradeItem().getId());
+            assertEquals(tradeItemId, returnedLot.getTradeItemId().getId());
             assertTrue(returnedLot.getLotCode().equals("LC2018G") || returnedLot.getLotCode().equals("LC2018N"));
             assertTrue(returnedLot.getExpirationDate().toString(DATE_FORMAT).equals("2019-01-31")
                     || returnedLot.getExpirationDate().toString(DATE_FORMAT).equals("2020-07-11"));
@@ -150,7 +150,7 @@ public class LotRepositoryTest extends BaseRepositoryTest {
         lots = lotRepository.findLotsByTradeItem(tradeItem2.toString());
 
         assertEquals(1, lots.size());
-        assertEquals(tradeItem2, lots.get(0).getTradeItem().getId());
+        assertEquals(tradeItem2, lots.get(0).getTradeItemId().getId());
         assertEquals("LC2016FG", lots.get(0).getLotCode());
         assertEquals("2017-01-04", lots.get(0).getExpirationDate().toString(DATE_FORMAT));
         assertFalse(lots.get(0).isActive());
