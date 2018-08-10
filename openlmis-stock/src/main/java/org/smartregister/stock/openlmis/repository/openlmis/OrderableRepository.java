@@ -16,7 +16,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.Orderable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.convertBooleanToInt;
@@ -131,13 +130,13 @@ public class OrderableRepository extends BaseRepository {
     private Orderable createOrderable(Cursor cursor) {
 
         return new Orderable(
-            UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
+            cursor.getString(cursor.getColumnIndex(ID)),
             new Code(cursor.getString(cursor.getColumnIndex(CODE))), 
             cursor.getString(cursor.getColumnIndex(FULL_PRODUCT_CODE)),
             cursor.getLong(cursor.getColumnIndex(NET_CONTENT)),
             cursor.getLong(cursor.getColumnIndex(PACK_ROUNDING_THRESHOLD)),
             convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ROUND_TO_ZERO))),
-            new Dispensable(UUID.fromString(cursor.getString(cursor.getColumnIndex(DISPENSABLE)))),
+            new Dispensable(cursor.getString(cursor.getColumnIndex(DISPENSABLE))),
             cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
             cursor.getString(cursor.getColumnIndex(COMMODITY_TYPE_ID))
         );

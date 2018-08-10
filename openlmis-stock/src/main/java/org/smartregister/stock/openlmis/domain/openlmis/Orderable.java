@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Orderable extends BaseEntity {
 
@@ -22,11 +21,11 @@ public class Orderable extends BaseEntity {
     private Map<String, String> identifiers;
     private Map<String, String> extraData;
 
-    public Orderable(UUID id) {
+    public Orderable(String id) {
         this.id = id;
     }
 
-    public Orderable(UUID id, Code productCode, String fullProductCode, long netContent, long packRoundingThreshold,
+    public Orderable(String id, Code productCode, String fullProductCode, long netContent, long packRoundingThreshold,
                      boolean roundToZero, Dispensable dispensable, String tradeItemId, String commodityTypeId) {
 
         this.id = id;

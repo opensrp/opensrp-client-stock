@@ -2,8 +2,6 @@ package org.smartregister.stock.openlmis.domain.openlmis;
 
 import org.joda.time.LocalDate;
 
-import java.util.UUID;
-
 /**
  * Created by samuelgithengi on 25/7/18.
  */
@@ -11,11 +9,11 @@ public class Lot extends BaseEntity {
 
     private String lotCode;
 
-    private LocalDate expirationDate;
+    private Long expirationDate;
 
-    private LocalDate manufactureDate;
+    private Long manufactureDate;
 
-    private TradeItem tradeItemId;
+    private String tradeItemId;
 
     private boolean active;
 
@@ -23,7 +21,7 @@ public class Lot extends BaseEntity {
 
     private Long dateDeleted;
 
-    public Lot(UUID id, String lotCode, LocalDate expirationDate, LocalDate manufactureDate, TradeItem tradeItemId, boolean active) {
+    public Lot(String id, String lotCode, Long expirationDate, Long manufactureDate, String tradeItemId, boolean active) {
         this.id = id;
         this.lotCode = lotCode;
         this.expirationDate = expirationDate;
@@ -40,27 +38,27 @@ public class Lot extends BaseEntity {
         this.lotCode = lotCode;
     }
 
-    public LocalDate getExpirationDate() {
+    public Long getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(LocalDate expirationDate) {
+    public void setExpirationDate(Long expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public LocalDate getManufactureDate() {
+    public Long getManufactureDate() {
         return manufactureDate;
     }
 
-    public void setManufactureDate(LocalDate manufactureDate) {
+    public void setManufactureDate(Long manufactureDate) {
         this.manufactureDate = manufactureDate;
     }
 
-    public TradeItem getTradeItemId() {
+    public String getTradeItemId() {
         return tradeItemId;
     }
 
-    public void setTradeItemId(TradeItem tradeItemId) {
+    public void setTradeItemId(String tradeItemId) {
         this.tradeItemId = tradeItemId;
     }
 

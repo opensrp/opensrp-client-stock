@@ -3,7 +3,6 @@ package org.smartregister.stock.openlmis.domain.openlmis;
 import android.util.Log;
 
 import java.util.List;
-import java.util.UUID;
 
 public class CommodityType extends BaseEntity {
 
@@ -17,7 +16,7 @@ public class CommodityType extends BaseEntity {
     private List<CommodityType> children;
     private List<TradeItem> tradeItems;
 
-    public CommodityType(UUID id, String name, String parentId, String classificationSystem, String classificationId, Long dateUpdated) {
+    public CommodityType(String id, String name, String parentId, String classificationSystem, String classificationId, Long dateUpdated) {
         this.id = id;
         this.name = name;
         this.parentId = parentId;
@@ -26,7 +25,7 @@ public class CommodityType extends BaseEntity {
         this.dateUpdated = dateUpdated;
     }
 
-    public CommodityType(UUID id, String name, CommodityType parent, String classificationSystem, String classificationId, Long dateUpdated) {
+    public CommodityType(String id, String name, CommodityType parent, String classificationSystem, String classificationId, Long dateUpdated) {
         this.id = id;
         this.name = name;
         this.parent = parent;
@@ -35,11 +34,11 @@ public class CommodityType extends BaseEntity {
         this.dateUpdated = dateUpdated;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -9,7 +9,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.ProgramOrderable;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
@@ -40,9 +39,9 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
 
         // insert new ProgramOrderable
         ProgramOrderable programOrderable = new ProgramOrderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440100")),
-                new Orderable(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new Program("123e4567-e89b-42d3-a456-556642440100"),
+                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
                 10,
                 true,
                 false,
@@ -60,9 +59,9 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
 
         // insert new ProgramOrderable
         ProgramOrderable programOrderable = new ProgramOrderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440700")),
-                new Orderable(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new Program("123e4567-e89b-42d3-a456-556642440700"),
+                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
                 10,
                 true,
                 false,
@@ -72,9 +71,9 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
 
         // update existing ProgramOrderable
         programOrderable = new ProgramOrderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440800")),
-                new Orderable(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new Program("123e4567-e89b-42d3-a456-556642440800"),
+                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
                 10,
                 true,
                 false,
@@ -98,9 +97,9 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
 
         // insert new ProgramOrderables
         ProgramOrderable programOrderable = new ProgramOrderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440700")),
-                new Orderable(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new Program("123e4567-e89b-42d3-a456-556642440700"),
+                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
                 10,
                 true,
                 false,
@@ -109,9 +108,9 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(programOrderable);
 
         programOrderable = new ProgramOrderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440300"),
-                new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440700")),
-                new Orderable(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")),
+                "123e4567-e89b-42d3-a456-556642440300",
+                new Program("123e4567-e89b-42d3-a456-556642440700"),
+                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
                 10,
                 true,
                 false,
@@ -131,9 +130,9 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
 
         // insert new ProgramOrderables
         ProgramOrderable programOrderable = new ProgramOrderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440700")),
-                new Orderable(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new Program("123e4567-e89b-42d3-a456-556642440700"),
+                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
                 10,
                 true,
                 false,
@@ -142,9 +141,9 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(programOrderable);
 
         programOrderable = new ProgramOrderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440300"),
-                new Program(UUID.fromString("123e4567-e89b-42d3-a456-556642440700")),
-                new Orderable(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")),
+                "123e4567-e89b-42d3-a456-556642440300",
+                new Program("123e4567-e89b-42d3-a456-556642440700"),
+                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
                 10,
                 true,
                 false,

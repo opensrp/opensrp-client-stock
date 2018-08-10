@@ -7,7 +7,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
@@ -38,7 +37,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // insert new dispensable
         Dispensable dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -56,7 +55,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // insert new Dispensable
         Dispensable dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -65,7 +64,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // update existing Dispensable
         dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration_two"
@@ -88,7 +87,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // insert new Dispensables
         Dispensable dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                "123e4567-e89b-42d3-a456-556642440100",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -96,7 +95,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(dispensable);
 
         dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -115,7 +114,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // insert new Dispensable
         Dispensable dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -124,7 +123,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // update existing Dispensable
         dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration_two"

@@ -10,7 +10,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
@@ -37,7 +36,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
         TradeItem tradeItem = null;
         try {
              tradeItem = new TradeItem(
-                    UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                    "123e4567-e89b-42d3-a456-556642440200",
                     new Gtin("49312943891"),
                     "manufacturer",
                     98432143091L
@@ -61,7 +60,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
         TradeItem tradeItem = null;
         try {
             tradeItem = new TradeItem(
-                    UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                    "123e4567-e89b-42d3-a456-556642440200",
                     new Gtin("49312943891"),
                     "manufacturer",
                     98432143091L
@@ -76,7 +75,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
         tradeItem = null;
         try {
             tradeItem = new TradeItem(
-                    UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                    "123e4567-e89b-42d3-a456-556642440200",
                     new Gtin("49312943892"),
                     "manufacturer",
                     98432143091L
@@ -105,7 +104,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
         TradeItem tradeItem = null;
         try {
             tradeItem = new TradeItem(
-                    UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                    "123e4567-e89b-42d3-a456-556642440200",
                     new Gtin("49312943891"),
                     "manufacturer",
                     98432143091L
@@ -118,7 +117,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
         
         try {
             tradeItem = new TradeItem(
-                    UUID.fromString("123e4567-e89b-42d3-a456-556642440201"),
+                    "123e4567-e89b-42d3-a456-556642440201",
                     new Gtin("49312943891"),
                     "manufacturer",
                     98432143091L
@@ -143,7 +142,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
         TradeItem tradeItem = null;
         try {
             tradeItem = new TradeItem(
-                    UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                    "123e4567-e89b-42d3-a456-556642440200",
                     new Gtin("49312943891"),
                     "manufacturer",
                     98432143091L
@@ -156,7 +155,7 @@ public class TradeItemRepositoryTest extends BaseRepositoryTest {
 
         try {
             tradeItem = new TradeItem(
-                    UUID.fromString("123e4567-e89b-42d3-a456-556642440201"),
+                    "123e4567-e89b-42d3-a456-556642440201",
                     new Gtin("49312943891"),
                     "manufacturer",
                     98432143091L

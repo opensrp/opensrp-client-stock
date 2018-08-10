@@ -16,7 +16,7 @@ import org.smartregister.stock.openlmis.view.viewholder.TradeItemViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.String;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -36,7 +36,7 @@ public class ListTradeItemAdapterTest extends BaseUnitTest {
     @Before
     public void setUp() throws Exception {
         List<TradeItem> expectedTradeItems = new ArrayList<>();
-        TradeItem tradeItem = new TradeItem(UUID.randomUUID());
+        TradeItem tradeItem = new TradeItem(String.randomString());
         tradeItem.setManufacturerOfTradeItem("Intervax BCG 20");
         tradeItem.setGtin(new Gtin("305730154758"));
         expectedTradeItems.add(tradeItem);

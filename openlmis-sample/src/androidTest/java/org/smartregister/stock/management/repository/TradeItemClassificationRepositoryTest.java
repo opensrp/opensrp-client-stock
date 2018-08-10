@@ -8,7 +8,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.TradeItemClassification;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
@@ -39,8 +38,8 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
 
         // insert new TradeItemClassification
         TradeItemClassification tradeItemClassification = new TradeItemClassification(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440300")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new TradeItem("123e4567-e89b-42d3-a456-556642440300"),
                 "classification_system",
                 "classification_id",
                 398143982349L
@@ -58,8 +57,8 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
 
         // insert new TradeItemClassification
         TradeItemClassification tradeItemClassification = new TradeItemClassification(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440100")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new TradeItem("123e4567-e89b-42d3-a456-556642440100"),
                 "classification_system",
                 "classification_id",
                 398143982349L
@@ -68,8 +67,8 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
 
         // update existing TradeItemClassification
         tradeItemClassification = new TradeItemClassification(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440200")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new TradeItem("123e4567-e89b-42d3-a456-556642440200"),
                 "classification_system",
                 "classification_id",
                 398143982349L
@@ -93,8 +92,8 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
 
         // insert new TradeItemClassifications
         TradeItemClassification tradeItemClassification = new TradeItemClassification(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440100")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new TradeItem("123e4567-e89b-42d3-a456-556642440100"),
                 "classification_system",
                 "classification_id",
                 398143982349L
@@ -102,8 +101,8 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(tradeItemClassification);
 
         tradeItemClassification = new TradeItemClassification(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440000"),
-                new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440100")),
+                "123e4567-e89b-42d3-a456-556642440000",
+                new TradeItem("123e4567-e89b-42d3-a456-556642440100"),
                 "classification_system",
                 "classification_id",
                 398143982349L
@@ -121,8 +120,8 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
 
         // insert new TradeItemClassifications
         TradeItemClassification tradeItemClassification = new TradeItemClassification(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
-                new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440100")),
+                "123e4567-e89b-42d3-a456-556642440200",
+                new TradeItem("123e4567-e89b-42d3-a456-556642440100"),
                 "classification_system",
                 "classification_id",
                 398143982349L
@@ -130,8 +129,8 @@ public class TradeItemClassificationRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(tradeItemClassification);
 
         tradeItemClassification = new TradeItemClassification(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440000"),
-                new TradeItem(UUID.fromString("123e4567-e89b-42d3-a456-556642440100")),
+                "123e4567-e89b-42d3-a456-556642440000",
+                new TradeItem("123e4567-e89b-42d3-a456-556642440100"),
                 "classification_system",
                 "classification_id",
                 398143982349L

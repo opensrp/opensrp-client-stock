@@ -14,7 +14,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.createQuery;
@@ -117,7 +116,7 @@ public class DispensableRepository extends BaseRepository {
     private Dispensable createDispensable(Cursor cursor) {
 
         return new Dispensable(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
+                cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(DISPENSING_UNIT)),
                 cursor.getString(cursor.getColumnIndex(SIZE_CODE)),
                 cursor.getString(cursor.getColumnIndex(ROUTE_OF_ADMINISTRATION))

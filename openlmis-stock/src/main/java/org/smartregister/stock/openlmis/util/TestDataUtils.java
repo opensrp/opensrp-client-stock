@@ -55,19 +55,19 @@ public class TestDataUtils {
 
     private void populatePrograms() {
         ProgramRepository programRepository = new ProgramRepository(OpenLMISLibrary.getInstance().getRepository());
-        Program program = new Program(UUID.randomUUID(), new Code("PRG002"), "Essential Drugs", null, true, true, true, true, true, null);
+        Program program = new Program(UUID.randomUUID().toString(), new Code("PRG002"), "Essential Drugs", null, true, true, true, true, true, null);
         programRepository.addOrUpdate(program);
 
-        program = new Program(UUID.randomUUID(), new Code("PRG003"), "EPI", null, true, true, true, true, true, null);
+        program = new Program(UUID.randomUUID().toString(), new Code("PRG003"), "EPI", null, true, true, true, true, true, null);
         programRepository.addOrUpdate(program);
     }
 
     private void populateCommodityTypes() {
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID(), "BCG", "", null, null, System.currentTimeMillis()));
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID(), "OPV", "", null, null, System.currentTimeMillis()));
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID(), "Penta", "", null, null, System.currentTimeMillis()));
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID(), "PC2", "", null, null, System.currentTimeMillis()));
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID(), "C1", "", null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "BCG", "", null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "OPV", "", null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "Penta", "", null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "PC2", "", null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "C1", "", null, null, System.currentTimeMillis()));
     }
 
 
@@ -117,41 +117,41 @@ public class TestDataUtils {
         Random random = new Random();
         if (commodityType.getName().equals("C1"))
             return tradeItems;
-        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
+        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("Intervax " + commodityType.getName() + " 20");
         tradeItem.setNetContent(Long.valueOf(random.nextInt(50)));
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", "20 pills", null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "vials", "20 pills", null));
 
 
         tradeItems.add(tradeItem);
 
 
-        tradeItem = new TradeItem(UUID.randomUUID().toString());
+        tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("BIntervax " + commodityType.getName() + " 30");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
         tradeItem.setNetContent(Long.valueOf(random.nextInt(40)));
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "pills", "30 pills", null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "pills", "30 pills", null));
 
 
         tradeItems.add(tradeItem);
         if (commodityType.getName().equals("Penta"))
             return tradeItems;
 
-        tradeItem = new TradeItem(UUID.randomUUID().toString());
+        tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("Brand B " + commodityType.getName() + " 5");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
         tradeItem.setNetContent(Long.valueOf(random.nextInt(20)));
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", "5 vials", null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "vials", "5 vials", null));
 
 
         tradeItems.add(tradeItem);
 
-        tradeItem = new TradeItem(UUID.randomUUID().toString());
+        tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("Antervax " + commodityType.getName() + " 5");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
         tradeItem.setNetContent(Long.valueOf(random.nextInt(10)));
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "strip", "10 tab strip", null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "strip", "10 tab strip", null));
 
 
         tradeItems.add(tradeItem);
@@ -167,9 +167,11 @@ public class TestDataUtils {
         for (int i = 0; i < numberOfLots; i++) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DATE, -random.nextInt(300));
-            Lot lot = new Lot(UUID.randomUUID(), "LC2016FG", new LocalDate(calendar.getTimeInMillis()),
-                    new LocalDate(System.currentTimeMillis()),
-                    new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),
+            Lot lot = new Lot(UUID.randomUUID().toString(),
+                    "LC2016FG",
+                    calendar.getTimeInMillis(),
+                    System.currentTimeMillis(),
+                    tradeItemId,
                     false);
             lots.add(lot);
         }

@@ -8,7 +8,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
@@ -39,7 +38,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         // insert new Program
         Program program = new Program(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("program_code"),
                 "program_name",
                 "program_description",
@@ -64,7 +63,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         // insert new Program
         Program program = new Program(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("program_code"),
                 "program_name_two",
                 "program_description",
@@ -79,7 +78,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         // update existing Program
         program = new Program(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                "123e4567-e89b-42d3-a456-556642440100",
                 new Code("program_code"),
                 "program_name_two",
                 "program_description",
@@ -108,7 +107,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         // insert new Programs
         Program program = new Program(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                "123e4567-e89b-42d3-a456-556642440100",
                 new Code("program_code"),
                 "program_name",
                 "program_description",
@@ -122,7 +121,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(program);
 
         program = new Program(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("program_code"),
                 "program_name",
                 "program_description",
@@ -147,7 +146,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         // insert new Programs
         Program program = new Program(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("program_code"),
                 "program_name",
                 "program_description",
@@ -161,7 +160,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(program);
 
         program = new Program(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("program_code"),
                 "program_name",
                 "program_description",

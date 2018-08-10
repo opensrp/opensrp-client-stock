@@ -35,8 +35,8 @@ public class StockRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testAdd() {
-        String tradeItemId = UUID.randomUUID().toString();
-        String lotId = UUID.randomUUID().toString();
+        String tradeItemId = UUID.randomUUID().toString().toString();
+        String lotId = UUID.randomUUID().toString().toString();
         long now = System.currentTimeMillis();
         Stock stock = new Stock(null, Stock.received, "tester11", 25, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
@@ -56,8 +56,8 @@ public class StockRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testUpdate() {
-        String tradeItemId = UUID.randomUUID().toString();
-        String lotId = UUID.randomUUID().toString();
+        String tradeItemId = UUID.randomUUID().toString().toString();
+        String lotId = UUID.randomUUID().toString().toString();
         long now = System.currentTimeMillis();
         Stock stock = new Stock(null, Stock.issued, "tester11", 32, now,
                 "HO", "unsynched", now, tradeItemId);
@@ -90,7 +90,7 @@ public class StockRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testGetTotalStockByTradeItem() {
-        String tradeItemId = UUID.randomUUID().toString();
+        String tradeItemId = UUID.randomUUID().toString().toString();
         long now = System.currentTimeMillis();
         Stock stock = new Stock(null, Stock.received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
@@ -100,7 +100,7 @@ public class StockRepositoryTest extends BaseRepositoryTest {
                 "HO", "unsynched", now, tradeItemId);
         stockRepository.addOrUpdate(stock);
 
-        String tradeItemId2 = UUID.randomUUID().toString();
+        String tradeItemId2 = UUID.randomUUID().toString().toString();
         stock = new Stock(null, Stock.loss_adjustment, "tester11", 32, now,
                 "HO", "unsynched", now, tradeItemId2);
         stockRepository.addOrUpdate(stock);
@@ -109,13 +109,13 @@ public class StockRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(32, stockRepository.getTotalStockByTradeItem(tradeItemId2));
 
-        assertEquals(0, stockRepository.getTotalStockByTradeItem(UUID.randomUUID().toString()));
+        assertEquals(0, stockRepository.getTotalStockByTradeItem(UUID.randomUUID().toString().toString()));
 
     }
 
     @Test
     public void testGetStockByTradeItem() {
-        String tradeItemId = UUID.randomUUID().toString();
+        String tradeItemId = UUID.randomUUID().toString().toString();
         long now = System.currentTimeMillis();
         Stock stock = new Stock(null, Stock.received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
@@ -125,7 +125,7 @@ public class StockRepositoryTest extends BaseRepositoryTest {
                 "HO", "unsynched", now, tradeItemId);
         stockRepository.addOrUpdate(stock);
 
-        String tradeItemId2 = UUID.randomUUID().toString();
+        String tradeItemId2 = UUID.randomUUID().toString().toString();
         stock = new Stock(null, Stock.loss_adjustment, "tester1134", 321, now,
                 "Zomba District", "unsynched", now, tradeItemId2);
         stockRepository.addOrUpdate(stock);
@@ -143,14 +143,14 @@ public class StockRepositoryTest extends BaseRepositoryTest {
         assertEquals(321, stockList.get(0).getValue());
         assertEquals(Stock.loss_adjustment, stockList.get(0).getTransactionType());
 
-        assertTrue(stockRepository.getStockByTradeItem(UUID.randomUUID().toString()).isEmpty());
+        assertTrue(stockRepository.getStockByTradeItem(UUID.randomUUID().toString().toString()).isEmpty());
     }
 
     @Test
     public void testGetNumberOfLotsByTradeItem() {
 
-        String tradeItemId = UUID.randomUUID().toString();
-        String lotId = UUID.randomUUID().toString();
+        String tradeItemId = UUID.randomUUID().toString().toString();
+        String lotId = UUID.randomUUID().toString().toString();
         long now = System.currentTimeMillis();
         Stock stock = new Stock(null, Stock.received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
@@ -162,13 +162,13 @@ public class StockRepositoryTest extends BaseRepositoryTest {
         stock.setLotId(lotId);
         stockRepository.addOrUpdate(stock);
 
-        String lotId2 = UUID.randomUUID().toString();
+        String lotId2 = UUID.randomUUID().toString().toString();
         stock = new Stock(null, Stock.received, "tester11", 12, now,
                 "HO", "unsynched", now, tradeItemId);
         stock.setLotId(lotId2);
         stockRepository.addOrUpdate(stock);
 
-        String tradeItemId2 = UUID.randomUUID().toString();
+        String tradeItemId2 = UUID.randomUUID().toString().toString();
         stock = new Stock(null, Stock.received, "tester11", 32, now,
                 "HO", "unsynched", now, tradeItemId2);
         stock.setLotId(lotId2);
@@ -179,7 +179,7 @@ public class StockRepositoryTest extends BaseRepositoryTest {
         assertEquals(1, stockRepository.getNumberOfLotsByTradeItem(tradeItemId2));
 
 
-        assertEquals(0, stockRepository.getNumberOfLotsByTradeItem(UUID.randomUUID().toString()));
+        assertEquals(0, stockRepository.getNumberOfLotsByTradeItem(UUID.randomUUID().toString().toString()));
 
     }
 }

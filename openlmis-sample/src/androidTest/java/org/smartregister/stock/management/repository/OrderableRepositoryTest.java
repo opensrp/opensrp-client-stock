@@ -9,7 +9,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.Orderable;
 import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
@@ -40,13 +39,13 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
 
         // insert new orderable
         Orderable orderable = new Orderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("orderable_code"),
                 "full_product_code",
                 10,
                 1,
                 false,
-                new Dispensable(UUID.fromString("123e4567-e89b-42d3-a456-556642590067")),
+                new Dispensable("123e4567-e89b-42d3-a456-556642590067"),
                 "trade_item_id",
                 "commodity_type_id"
         );
@@ -62,13 +61,13 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
 
         // insert new Orderable
         Orderable orderable = new Orderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("orderable_code"),
                 "full_product_code",
                 10,
                 1,
                 false,
-                new Dispensable(UUID.fromString("123e4567-e89b-24d3-a456-556642590067")),
+                new Dispensable("123e4567-e89b-24d3-a456-556642590067"),
                 "trade_item_id",
                 "commodity_type_id"
         );
@@ -76,13 +75,13 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
 
         // update existing Orderable
        orderable = new Orderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("orderable_code"),
                 "full_product_code",
                 10,
                 1,
                 false,
-                new Dispensable(UUID.fromString("123e4567-e89b-24d3-a456-556642590067")),
+                new Dispensable("123e4567-e89b-24d3-a456-556642590067"),
                 "trade_item_id",
                 "commodity_type_id_two"
         );
@@ -105,26 +104,26 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
 
         // insert new Orderables
         Orderable orderable = new Orderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                "123e4567-e89b-42d3-a456-556642440100",
                 new Code("orderable_code"),
                 "full_product_code",
                 10,
                 1,
                 false,
-                new Dispensable(UUID.fromString("123e4567-e89b-42d3-a456-556642590067")),
+                new Dispensable("123e4567-e89b-42d3-a456-556642590067"),
                 "trade_item_id",
                 "commodity_type_id"
         );
         database.addOrUpdate(orderable);
 
         orderable = new Orderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("orderable_code"),
                 "full_product_code",
                 10,
                 1,
                 false,
-                new Dispensable(UUID.fromString("123e4567-e89b-42d3-a456-556642590067")),
+                new Dispensable("123e4567-e89b-42d3-a456-556642590067"),
                 "trade_item_id",
                 "commodity_type_id"
         );
@@ -142,26 +141,26 @@ public class OrderableRepositoryTest extends BaseRepositoryTest {
 
         // insert Orderables
         Orderable orderable = new Orderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                "123e4567-e89b-42d3-a456-556642440100",
                 new Code("orderable_code"),
                 "full_product_code",
                 10,
                 1,
                 false,
-                new Dispensable(UUID.fromString("123e4567-e89b-42d3-a456-556642590067")),
+                new Dispensable("123e4567-e89b-42d3-a456-556642590067"),
                 "trade_item_id",
                 "commodity_type_id"
         );
         database.addOrUpdate(orderable);
 
         orderable = new Orderable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 new Code("orderable_code"),
                 "full_product_code",
                 10,
                 1,
                 false,
-                new Dispensable(UUID.fromString("123e4567-e89b-42d3-a456-556642590067")),
+                new Dispensable("123e4567-e89b-42d3-a456-556642590067"),
                 "trade_item_id",
                 "commodity_type_id"
         );

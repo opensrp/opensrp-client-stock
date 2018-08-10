@@ -14,7 +14,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.createQuery;
@@ -136,7 +135,7 @@ public class CommodityTypeRepository extends BaseRepository {
     private CommodityType createCommodityType(Cursor cursor) {
 
         return new CommodityType(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
+                cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(PARENT)),
                 cursor.getString(cursor.getColumnIndex(CLASSIFICATION_SYSTEM)),

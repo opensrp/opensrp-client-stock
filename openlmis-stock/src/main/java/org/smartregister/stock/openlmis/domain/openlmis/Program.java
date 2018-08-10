@@ -1,7 +1,5 @@
 package org.smartregister.stock.openlmis.domain.openlmis;
 
-import java.util.UUID;
-
 public class Program extends BaseEntity {
 
     private Code code;
@@ -18,15 +16,11 @@ public class Program extends BaseEntity {
         code = null;
     }
 
-    public Program(UUID id) {
+    public Program(String id) {
         this.id = id;
     }
 
-    public Program(String programCode) {
-        this.code = Code.code(programCode);
-    }
-
-    public Program(UUID id, Code code, String name, String description, Boolean active, Boolean periodsSkippable, Boolean skipAuthorization,
+    public Program(String id, Code code, String name, String description, Boolean active, Boolean periodsSkippable, Boolean skipAuthorization,
                    Boolean showNonFullSupplyTab, Boolean enableDatePhysicalStockCountCompleted, Long dateUpdated) {
 
         this.id = id;

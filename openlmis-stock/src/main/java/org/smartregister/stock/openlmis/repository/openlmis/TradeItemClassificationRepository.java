@@ -15,7 +15,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.TradeItemClassification;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.createQuery;
@@ -116,8 +115,8 @@ public class TradeItemClassificationRepository extends BaseRepository {
     private TradeItemClassification createTradeItemClassification(Cursor cursor) {
 
         return new TradeItemClassification(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
-                new TradeItem(UUID.fromString(cursor.getString(cursor.getColumnIndex(TRADE_ITEM)))),
+                cursor.getString(cursor.getColumnIndex(ID)),
+                new TradeItem(cursor.getString(cursor.getColumnIndex(TRADE_ITEM))),
                 cursor.getString(cursor.getColumnIndex(CLASSIFICATION_SYSTEM)),
                 cursor.getString(cursor.getColumnIndex(CLASSIFICATION_ID)),
                 cursor.getLong(cursor.getColumnIndex(DATE_UPDATED))

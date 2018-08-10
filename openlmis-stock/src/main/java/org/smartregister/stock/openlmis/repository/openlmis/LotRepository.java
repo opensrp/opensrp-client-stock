@@ -14,9 +14,9 @@ import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
+import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
 import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
 import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
@@ -65,9 +65,9 @@ public class LotRepository extends BaseRepository {
     public void addOrUpdate(Lot lot) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(LOT_CODE, lot.getLotCode());
-        contentValues.put(EXPIRATION_DATE, lot.getExpirationDate().toDate().getTime());
-        contentValues.put(MANUFACTURE_DATE, lot.getManufactureDate().toDate().getTime());
-        contentValues.put(TRADE_ITEM_ID, lot.getTradeItemId().getId().toString());
+        contentValues.put(EXPIRATION_DATE, lot.getExpirationDate());
+        contentValues.put(MANUFACTURE_DATE, lot.getManufactureDate());
+        contentValues.put(TRADE_ITEM_ID, lot.getTradeItemId());
         contentValues.put(ACTIVE, lot.isActive());
         if (lotExists(lot.getId().toString())) {
             getWritableDatabase().update(LOT_TABLE, contentValues, ID + "=?", new String[]{lot.getId().toString()});
@@ -138,12 +138,13 @@ public class LotRepository extends BaseRepository {
 
 
     private Lot createLot(Cursor cursor) {
-        Lot lot = new Lot(UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
+        Lot lot = new Lot(cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(LOT_CODE)),
-                new LocalDate(cursor.getLong(cursor.getColumnIndex(EXPIRATION_DATE))),
-                new LocalDate(cursor.getLong(cursor.getColumnIndex(MANUFACTURE_DATE))),
-                new TradeItem(UUID.fromString(cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)))),
-                cursor.getInt(cursor.getColumnIndex(ACTIVE)) > 0);
+                cursor.getLong(cursor.getColumnIndex(EXPIRATION_DATE)),
+                cursor.getLong(cursor.getColumnIndex(MANUFACTURE_DATE)),
+                cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
+                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE)))
+        );
         return lot;
     }
 }
