@@ -1,7 +1,5 @@
 package org.smartregister.stock.openlmis.domain.openlmis;
 
-import org.joda.time.LocalDate;
-
 /**
  * Created by samuelgithengi on 25/7/18.
  */

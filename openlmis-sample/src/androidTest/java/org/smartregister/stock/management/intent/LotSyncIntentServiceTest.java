@@ -34,6 +34,7 @@ public class LotSyncIntentServiceTest {
 
     @Test
     public void testLotsAreSyncedAndSaved() {
+        // this assumes that a lot with an id value of "id" has been posted to the lots endpoint
         try {
             TimeUnit.SECONDS.sleep(5);
             assertNotNull(repository.findLotById("id"));
