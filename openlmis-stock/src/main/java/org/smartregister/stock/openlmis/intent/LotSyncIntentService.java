@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
 import org.smartregister.domain.Response;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
@@ -83,21 +81,13 @@ public class LotSyncIntentService extends IntentService implements SyncIntentSer
                 }
 
                 String jsonPayload = response.payload();
-                // List<Lot> lots = getLotsFromPayload(jsonPayload);
 
                 // store lots
                 Long highestTimeStamp = 0L;
-                JSONArray lotsArray = new JSONArray(jsonPayload);
-
                 List<Lot> lots = new Gson().fromJson(jsonPayload, new TypeToken<List<Lot>>(){}.getType());
-
                 LotRepository repository = OpenLMISLibrary.getInstance().getLotRepository();
-                for (int i = 0; i < lotsArray.length(); i++) {
-                    Lot lot = convertToLot(lotsArray.getJSONObject(i).toString());
+                for (Lot lot : lots) {
                     repository.addOrUpdate(lot);
-                    if (lot.getServerVersion() > highestTimeStamp) {
-                        highestTimeStamp = lot.getServerVersion();
-                    }
                 }
 
                 // save highest server version
@@ -107,16 +97,6 @@ public class LotSyncIntentService extends IntentService implements SyncIntentSer
             } catch (Exception e) {
                 logError(e.getMessage());
             }
-        }
-    }
-
-    private Lot convertToLot(String lotObj) {
-
-        try {
-            return new Gson().fromJson(lotObj, new TypeToken<Lot>(){}.getType());
-        } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
-            return null;
         }
     }
 }
