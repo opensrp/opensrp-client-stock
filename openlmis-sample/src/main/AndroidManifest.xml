@@ -22,5 +22,7 @@
             android:exported="false"/>
         <service android:name="org.smartregister.stock.openlmis.intent.ProgramSyncIntentService"
             android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.ProgramOrderableSyncIntentService"
+            android:exported="false"/>
     </application>
 </manifest>
