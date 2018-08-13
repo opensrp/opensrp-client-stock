@@ -18,5 +18,7 @@
         </activity>
         <service android:name="org.smartregister.stock.openlmis.intent.LotSyncIntentService"
             android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.TradeItemSyncIntentService"
+            android:exported="false"/>
     </application>
 </manifest>
