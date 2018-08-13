@@ -40,8 +40,8 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         // insert new ProgramOrderable
         ProgramOrderable programOrderable = new ProgramOrderable(
                 "123e4567-e89b-42d3-a456-556642440200",
-                new Program("123e4567-e89b-42d3-a456-556642440100"),
-                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
+                "123e4567-e89b-42d3-a456-556642440100",
+                "123e4567-e89b-42d3-a456-556642440000",
                 10,
                 true,
                 false,
@@ -60,8 +60,8 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         // insert new ProgramOrderable
         ProgramOrderable programOrderable = new ProgramOrderable(
                 "123e4567-e89b-42d3-a456-556642440200",
-                new Program("123e4567-e89b-42d3-a456-556642440700"),
-                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
+                "123e4567-e89b-42d3-a456-556642440700",
+                "123e4567-e89b-42d3-a456-556642440000",
                 10,
                 true,
                 false,
@@ -72,8 +72,8 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         // update existing ProgramOrderable
         programOrderable = new ProgramOrderable(
                 "123e4567-e89b-42d3-a456-556642440200",
-                new Program("123e4567-e89b-42d3-a456-556642440800"),
-                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
+                "123e4567-e89b-42d3-a456-556642440800",
+                "123e4567-e89b-42d3-a456-556642440000",
                 10,
                 true,
                 false,
@@ -98,8 +98,8 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         // insert new ProgramOrderables
         ProgramOrderable programOrderable = new ProgramOrderable(
                 "123e4567-e89b-42d3-a456-556642440200",
-                new Program("123e4567-e89b-42d3-a456-556642440700"),
-                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
+                "123e4567-e89b-42d3-a456-556642440700",
+                "123e4567-e89b-42d3-a456-556642440000",
                 10,
                 true,
                 false,
@@ -109,8 +109,8 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
 
         programOrderable = new ProgramOrderable(
                 "123e4567-e89b-42d3-a456-556642440300",
-                new Program("123e4567-e89b-42d3-a456-556642440700"),
-                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
+                "123e4567-e89b-42d3-a456-556642440700",
+                "123e4567-e89b-42d3-a456-556642440000",
                 10,
                 true,
                 false,
@@ -131,8 +131,8 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
         // insert new ProgramOrderables
         ProgramOrderable programOrderable = new ProgramOrderable(
                 "123e4567-e89b-42d3-a456-556642440200",
-                new Program("123e4567-e89b-42d3-a456-556642440700"),
-                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
+                "123e4567-e89b-42d3-a456-556642440700",
+               "123e4567-e89b-42d3-a456-556642440000",
                 10,
                 true,
                 false,
@@ -142,8 +142,8 @@ public class ProgramOrderableRepositoryTest extends BaseRepositoryTest {
 
         programOrderable = new ProgramOrderable(
                 "123e4567-e89b-42d3-a456-556642440300",
-                new Program("123e4567-e89b-42d3-a456-556642440700"),
-                new Orderable("123e4567-e89b-42d3-a456-556642440000"),
+                "123e4567-e89b-42d3-a456-556642440700",
+                "123e4567-e89b-42d3-a456-556642440000",
                 10,
                 true,
                 false,

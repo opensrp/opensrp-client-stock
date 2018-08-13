@@ -123,8 +123,8 @@ public class ProgramOrderableRepository extends BaseRepository {
 
         return new ProgramOrderable(
                 cursor.getString(cursor.getColumnIndex(ID)),
-                new Program(cursor.getString(cursor.getColumnIndex(PROGRAM))),
-                new Orderable(cursor.getString(cursor.getColumnIndex(ORDERABLE))),
+                cursor.getString(cursor.getColumnIndex(PROGRAM)),
+                cursor.getString(cursor.getColumnIndex(ORDERABLE)),
                 cursor.getInt(cursor.getColumnIndex(DOSES_PER_PATIENT)),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE))),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(FULL_SUPPLY))),
@@ -135,9 +135,9 @@ public class ProgramOrderableRepository extends BaseRepository {
     private Object[] createQueryValues(ProgramOrderable programOrderable) {
 
         Object[] values = new Object[] {
-            programOrderable.getId().toString(),
-            programOrderable.getProgram().getId().toString(),
-            programOrderable.getOrderable().getId().toString(),
+            programOrderable.getId(),
+            programOrderable.getProgramId(),
+            programOrderable.getOrderableId(),
             programOrderable.getDosesPerPatient(),
             convertBooleanToInt(programOrderable.isActive()),
             convertBooleanToInt(programOrderable.isFullSupply()),
