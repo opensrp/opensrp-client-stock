@@ -41,10 +41,10 @@ public class Utils {
                 continue;
             }
 
-            queryString += SELECT_TABLE_COLUMNS[i] + "=?";
-            if (i != columnValues.length - 1) {
+            if (!"".equals(queryString)) {
                 queryString += " AND ";
             }
+            queryString += SELECT_TABLE_COLUMNS[i] + "=?";
             selectionArgs.add(columnValues[i]);
         }
 
@@ -53,5 +53,4 @@ public class Utils {
 
         return new Pair<>(queryString, args);
     }
-
 }

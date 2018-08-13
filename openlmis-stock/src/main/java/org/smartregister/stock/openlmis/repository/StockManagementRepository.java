@@ -13,6 +13,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 
@@ -33,6 +34,7 @@ public class StockManagementRepository extends Repository {
     }
 
     public static void createTables(SQLiteDatabase database) {
+
         OrderableRepository.createTable(database);
         CommodityTypeRepository.createTable(database);
         ProgramRepository.createTable(database);
@@ -40,6 +42,7 @@ public class StockManagementRepository extends Repository {
         ProgramOrderableRepository.createTable(database);
         TradeItemRepository.createTable(database);
         DispensableRepository.createTable(database);
+        ReasonRepository.createTable(database);
 
         LotRepository.createTable(database);
         org.smartregister.stock.openlmis.repository.TradeItemRepository.createTable(database);
