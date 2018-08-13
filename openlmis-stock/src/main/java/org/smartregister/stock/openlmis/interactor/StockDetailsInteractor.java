@@ -1,5 +1,8 @@
 package org.smartregister.stock.openlmis.interactor;
 
+
+import android.support.annotation.VisibleForTesting;
+
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
@@ -24,6 +27,13 @@ public class StockDetailsInteractor {
         stockRepository = new StockRepository(OpenLMISLibrary.getInstance().getRepository());
         lotRepository = new LotRepository(OpenLMISLibrary.getInstance().getRepository());
         tradeItemRepository = new TradeItemRepository(OpenLMISLibrary.getInstance().getRepository());
+    }
+
+    @VisibleForTesting
+    protected StockDetailsInteractor(StockRepository stockRepository, LotRepository lotRepository, TradeItemRepository tradeItemRepository) {
+        this.stockRepository = stockRepository;
+        this.lotRepository = lotRepository;
+        this.tradeItemRepository = tradeItemRepository;
     }
 
     public int getTotalStockByLot(UUID lotId) {

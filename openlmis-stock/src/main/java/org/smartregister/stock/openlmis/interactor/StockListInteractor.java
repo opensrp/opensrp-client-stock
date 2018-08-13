@@ -1,5 +1,7 @@
 package org.smartregister.stock.openlmis.interactor;
 
+import android.support.annotation.VisibleForTesting;
+
 import org.joda.time.LocalDate;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.TradeItem;
@@ -35,6 +37,14 @@ public class StockListInteractor {
         commodityTypeRepository = new CommodityTypeRepository(OpenLMISLibrary.getInstance().getRepository());
         tradeItemRepository = new TradeItemRepository(OpenLMISLibrary.getInstance().getRepository());
         stockRepository = new StockRepository(OpenLMISLibrary.getInstance().getRepository());
+    }
+
+    @VisibleForTesting
+    protected StockListInteractor(ProgramRepository programRepository, CommodityTypeRepository commodityTypeRepository, TradeItemRepository tradeItemRepository, StockRepository stockRepository) {
+        this.programRepository = programRepository;
+        this.commodityTypeRepository = commodityTypeRepository;
+        this.tradeItemRepository = tradeItemRepository;
+        this.stockRepository = stockRepository;
     }
 
     public List<String> getPrograms() {

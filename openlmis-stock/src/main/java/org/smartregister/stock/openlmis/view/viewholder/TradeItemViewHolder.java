@@ -47,6 +47,7 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
                     tradeItem.getDateUpdated(), tradeItemWrapper.getNumberOfLots(),
                     tradeItem.getDispensable().getKeyDispensingUnit(), tradeItem.getNetContent());
             intent.putExtra(OpenLMISConstants.tradeItem, tradeItemDto);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
     }
@@ -69,5 +70,9 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
 
     public void setTradeItemWrapper(TradeItemWrapper tradeItemWrapper) {
         this.tradeItemWrapper = tradeItemWrapper;
+    }
+
+    public Context getContext() {
+        return context;
     }
 }
