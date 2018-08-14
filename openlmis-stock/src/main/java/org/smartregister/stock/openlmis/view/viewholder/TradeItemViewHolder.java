@@ -34,22 +34,20 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
         lotsTextView = itemView.findViewById(R.id.lotsTextView);
         expiringTextView = itemView.findViewById(R.id.expiringTextView);
         dispensableTextView = itemView.findViewById(R.id.dispensableTextView);
-        itemView.findViewById(R.id.tradeItemsMore).setOnClickListener(this);
+        itemView.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.tradeItemsMore) {
-            Intent intent = new Intent(context, StockDetailsActivity.class);
-            TradeItem tradeItem = tradeItemWrapper.getTradeItem();
-            TradeItemDto tradeItemDto = new TradeItemDto(tradeItem.getId(),
-                    tradeItem.getName(), tradeItemWrapper.getTotalStock(),
-                    tradeItem.getDateUpdated(), tradeItemWrapper.getNumberOfLots(),
-                    tradeItem.getDispensable().getKeyDispensingUnit(), tradeItem.getNetContent());
-            intent.putExtra(OpenLMISConstants.tradeItem, tradeItemDto);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
+        Intent intent = new Intent(context, StockDetailsActivity.class);
+        TradeItem tradeItem = tradeItemWrapper.getTradeItem();
+        TradeItemDto tradeItemDto = new TradeItemDto(tradeItem.getId(),
+                tradeItem.getName(), tradeItemWrapper.getTotalStock(),
+                tradeItem.getDateUpdated(), tradeItemWrapper.getNumberOfLots(),
+                tradeItem.getDispensable().getKeyDispensingUnit(), tradeItem.getNetContent());
+        intent.putExtra(OpenLMISConstants.tradeItem, tradeItemDto);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     public TextView getNameTextView() {
