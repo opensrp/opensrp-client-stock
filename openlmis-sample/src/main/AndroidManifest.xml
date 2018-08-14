@@ -26,5 +26,7 @@
             android:exported="false"/>
         <service android:name="org.smartregister.stock.openlmis.intent.ReasonSyncIntentService"
             android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.CommodityTypeSyncIntentService"
+            android:exported="false"/>
     </application>
 </manifest>

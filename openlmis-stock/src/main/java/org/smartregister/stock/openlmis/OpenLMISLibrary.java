@@ -2,6 +2,7 @@ package org.smartregister.stock.openlmis;
 
 import org.smartregister.Context;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
@@ -21,6 +22,7 @@ public class OpenLMISLibrary {
     private ProgramRepository programRepository;
     private ProgramOrderableRepository programOrderableRepository;
     private ReasonRepository reasonRepository;
+    private CommodityTypeRepository commodityTypeRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -82,5 +84,12 @@ public class OpenLMISLibrary {
             return new ReasonRepository(getRepository());
         }
         return reasonRepository;
+    }
+
+    public CommodityTypeRepository getCommodityTypeRepository() {
+        if (commodityTypeRepository == null) {
+            return new CommodityTypeRepository(getRepository());
+        }
+        return commodityTypeRepository;
     }
 }

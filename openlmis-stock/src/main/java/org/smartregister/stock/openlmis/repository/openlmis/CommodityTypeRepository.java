@@ -72,12 +72,12 @@ public class CommodityTypeRepository extends BaseRepository {
         }
     }
 
-    public List<CommodityType> findCommodityTypes(String id, String name, String parent, String classificationSystem, String classificationId) {
+    public List<CommodityType> findCommodityTypes(String id, String name, String parentId, String classificationSystem, String classificationId) {
 
         List<CommodityType> commodityTypes = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String[] selectionArgs = new String[]{id, name, parent, classificationSystem, classificationId};
+            String[] selectionArgs = new String[]{id, name, parentId, classificationSystem, classificationId};
             Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
             String querySelectString = query.first;
