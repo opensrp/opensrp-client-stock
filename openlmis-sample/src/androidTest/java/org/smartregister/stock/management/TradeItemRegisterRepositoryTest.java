@@ -140,13 +140,12 @@ public class TradeItemRegisterRepositoryTest extends BaseRepositoryTest {
         String commodityTypeId = UUID.randomUUID().toString();
         long now = System.currentTimeMillis();
         String id = UUID.randomUUID().toString();
-        UUID dispendableId = UUID.randomUUID();
         TradeItem expected = new TradeItem(id);
         expected.setName("CIntervax BCG 20");
         expected.setNetContent(20l);
         expected.setDateUpdated(now);
         expected.setCommodityTypeId(commodityTypeId);
-        expected.setDispensable(new Dispensable(dispendableId, "vials", "10 ml", null));
+        expected.setDispensable(new Dispensable(null, "vials", "10 ml", null));
         tradeItemRepository.addOrUpdate(expected);
 
         TradeItem tradeItem = tradeItemRepository.getTradeItemById(id);
@@ -155,7 +154,7 @@ public class TradeItemRegisterRepositoryTest extends BaseRepositoryTest {
         assertEquals(20l, tradeItem.getNetContent().longValue());
         assertEquals(now, tradeItem.getDateUpdated().longValue());
         assertEquals(commodityTypeId, tradeItem.getCommodityTypeId());
-        assertEquals(dispendableId, tradeItem.getDispensable().getId());
+        assertEquals(null, tradeItem.getDispensable().getId());
         assertEquals("vials", tradeItem.getDispensable().getKeyDispensingUnit());
         assertEquals("10 ml", tradeItem.getDispensable().getKeySizeCode());
     }

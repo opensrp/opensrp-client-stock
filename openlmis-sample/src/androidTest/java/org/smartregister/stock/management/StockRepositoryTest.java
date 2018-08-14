@@ -245,9 +245,9 @@ public class StockRepositoryTest extends BaseRepositoryTest {
         stock.setLotId(lotId2.toString());
         stockRepository.addOrUpdate(stock);
 
-        assertEquals(2, stockRepository.getTotalStockByLot(lotId.toString()));
+        assertEquals(40, stockRepository.getTotalStockByLot(lotId.toString()));
 
-        assertEquals(1, stockRepository.getTotalStockByLot(lotId2.toString()));
+        assertEquals(12, stockRepository.getTotalStockByLot(lotId2.toString()));
 
         assertEquals(0, stockRepository.getTotalStockByLot(UUID.randomUUID().toString()));
     }
