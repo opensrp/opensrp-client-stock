@@ -7,7 +7,7 @@ public class Reason extends BaseEntity {
     @JsonProperty
     private String name;
     @JsonProperty
-    private String programId;
+    private Program program;
     @JsonProperty
     private String description;
     @JsonProperty
@@ -15,10 +15,10 @@ public class Reason extends BaseEntity {
     @JsonProperty
     private Long dateUpdated;
 
-    public Reason(String id, String name, String programId, String description, Boolean additive) {
+    public Reason(String id, String name, Program program, String description, Boolean additive) {
         this.id = id;
         this.name = name;
-        this.programId = programId;
+        this.program = program;
         this.description = description;
         this.additive = additive;
     }
@@ -39,12 +39,12 @@ public class Reason extends BaseEntity {
         this.description = description;
     }
 
-    public String getProgram() {
-        return programId;
+    public Program getProgram() {
+        return program;
     }
 
-    public void setProgram(String programId) {
-        this.programId = programId;
+    public void setProgram(Program program) {
+        this.program = program;
     }
 
     public Boolean getAdditive() {

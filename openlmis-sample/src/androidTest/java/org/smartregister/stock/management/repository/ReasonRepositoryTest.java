@@ -3,6 +3,7 @@ package org.smartregister.stock.management.repository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 
@@ -33,7 +34,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         Reason reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
                "name",
-                "program_id",
+                new Program("program_id"),
                 "description",
                 true
         );
@@ -50,7 +51,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         Reason reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "name",
-                "program_id",
+                new Program("program_id"),
                 "description",
                 true
         );
@@ -60,7 +61,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "name_1",
-                "program_id_1",
+                new Program("program_id_1"),
                 "description_1",
                 true
         );
@@ -83,7 +84,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         Reason reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440100",
                 "name",
-                "program_id",
+                new Program("program_id"),
                 "description",
                 true
         );
@@ -92,7 +93,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "name",
-                "program_id_1",
+                new Program("program_id_1"),
                 "description_1",
                 true
         );
@@ -110,7 +111,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         Reason reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440100",
                 "name",
-                "program_id",
+                new Program("program_id"),
                 "description",
                 true
         );
@@ -119,7 +120,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "name",
-                "program_id_1",
+                new Program("program_id_1"),
                 "description_1",
                 true
         );

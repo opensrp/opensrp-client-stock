@@ -9,6 +9,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 
 import java.util.ArrayList;
@@ -120,7 +121,7 @@ public class ReasonRepository extends BaseRepository {
         return new Reason(
                 cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
-                cursor.getString(cursor.getColumnIndex(PROGRAM_ID)),
+                new Program(cursor.getString(cursor.getColumnIndex(PROGRAM_ID))),
                 cursor.getString(cursor.getColumnIndex(DESCRIPTION)),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ADDITIVE)))
         );
@@ -131,7 +132,7 @@ public class ReasonRepository extends BaseRepository {
         Object[] values = new Object[]{
                 reason.getId(),
                 reason.getName(),
-                reason.getProgram(),
+                reason.getProgram().getId(),
                 reason.getDescription(),
                 reason.getAdditive(),
                 reason.getDateUpdated()
