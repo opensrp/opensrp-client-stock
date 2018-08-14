@@ -39,12 +39,12 @@ public class TradeItemViewHolderTest extends BaseUnitTest {
     private TradeItemViewHolder viewHolder;
 
 
-    private View imageView;
+    private View view;
 
 
     @Before
     public void setUp() {
-        View view = LayoutInflater.from(context).inflate(R.layout.trade_item_row, null);
+        view = LayoutInflater.from(context).inflate(R.layout.trade_item_row, null);
         viewHolder = new TradeItemViewHolder(view);
         TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Intervax BCG 20");
@@ -54,12 +54,11 @@ public class TradeItemViewHolderTest extends BaseUnitTest {
         tradeItemWrapper.setNumberOfLots(10);
         tradeItemWrapper.setTotalStock(50);
         viewHolder.setTradeItemWrapper(tradeItemWrapper);
-        imageView = view.findViewById(R.id.tradeItemsMore);
     }
 
     @Test
     public void testOnClick() {
-        imageView.findViewById(R.id.tradeItemsMore).performClick();
+        view.performClick();
         ContextWrapper contextWrapper = new ContextWrapper(viewHolder.getContext());
         Intent startedIntent = shadowOf(contextWrapper).getNextStartedActivity();
         ShadowIntent shadowIntent = shadowOf(startedIntent);
