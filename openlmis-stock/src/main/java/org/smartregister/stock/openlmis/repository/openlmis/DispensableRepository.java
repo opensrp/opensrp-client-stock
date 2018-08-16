@@ -93,6 +93,32 @@ public class DispensableRepository extends BaseRepository {
         return dispensables;
     }
 
+    public Dispensable findDispensable(String id) {
+
+        Dispensable dispensable = null;
+        Cursor cursor = null;
+        try {
+            String[] selectionArgs = new String[]{id};
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+
+            String querySelectString = query.first;
+            selectionArgs = query.second;
+
+            cursor = getReadableDatabase().query(DISPENSABLE_TABLE, DISPENSABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
+            List<Dispensable> dispensables = readDispensables(cursor);
+            if (dispensables.size() > 0) {
+                dispensable = dispensables.get(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return dispensable;
+    }
+
     private List<Dispensable> readDispensables(Cursor cursor) {
 
         List<Dispensable> dispensables = new ArrayList<>();

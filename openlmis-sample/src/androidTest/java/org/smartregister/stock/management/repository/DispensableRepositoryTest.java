@@ -9,6 +9,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepositor
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
 
 /************** test naming convention followed *****************
@@ -49,6 +50,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(dispensables.size(), 1);
     }
+
 
     @Test
     public void testAddOrUpdateShouldUpdateExistingDispensable() {
@@ -108,6 +110,33 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(dispensables.size(), 2);
     }
+
+    @Test
+    public void testFindDispensablesById() {
+
+        // insert new Dispensables
+        Dispensable dispensable = new Dispensable(
+                "123e4567-e89b-42d3-a456-556642440100",
+                "dispensing_unit",
+                "size_code",
+                "route_of_administration"
+        );
+        database.addOrUpdate(dispensable);
+
+        dispensable = new Dispensable(
+                "123e4567-e89b-42d3-a456-556642440200",
+                "dispensing_unit",
+                "size_code",
+                "route_of_administration"
+        );
+        database.addOrUpdate(dispensable);
+
+        // ensure all matching rows are returned
+        dispensable = database.findDispensable("123e4567-e89b-42d3-a456-556642440100");
+
+        assertNotNull(dispensable);
+    }
+
 
     @Test
     public void testFindDispensablesShouldNotReturnAnyMatchingRows() {

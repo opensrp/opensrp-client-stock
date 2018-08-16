@@ -1,8 +1,5 @@
 package org.smartregister.stock.openlmis.domain.openlmis;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class Orderable extends BaseEntity {
@@ -15,46 +12,28 @@ public class Orderable extends BaseEntity {
     private long netContent;
     private long packRoundingThreshold;
     private boolean roundToZero;
-    private Dispensable dispensable;
+    private String commodityTypeId;
+    private String tradeItemId;
+    private String dispensableId;
+    private String fullProductName;
     private Long dateUpdated;
-    private List<ProgramOrderable> programOrderables;
-    private Map<String, String> identifiers;
-    private Map<String, String> extraData;
 
     public Orderable(String id) {
         this.id = id;
     }
 
-    public Orderable(String id, Code productCode, String fullProductCode, long netContent, long packRoundingThreshold,
-                     boolean roundToZero, Dispensable dispensable, String tradeItemId, String commodityTypeId) {
+    public Orderable(String id, String fullProductCode, String fullProductName, long netContent, long packRoundingThreshold,
+                     boolean roundToZero, String dispensableId, String tradeItemId, String commodityTypeId) {
 
         this.id = id;
-        this.productCode = productCode;
         this.fullProductCode = fullProductCode;
+        this.fullProductName = fullProductName;
         this.netContent = netContent;
         this.packRoundingThreshold = packRoundingThreshold;
         this.roundToZero = roundToZero;
-        this.dispensable = dispensable;
-
-        identifiers = new HashMap<>();
-        identifiers.put(TRADE_ITEM, tradeItemId);
-        identifiers.put(COMMODITY_TYPE, commodityTypeId);
-    }
-
-    /**
-     * Get the association to a {@link Program}.
-     * @param program the Program this product is (maybe) in.
-     * @return the association to the given {@link Program}, or null if this product is not in the
-     *        given program or is marked inactive.
-     */
-    public ProgramOrderable getProgramOrderable(Program program) {
-        for (ProgramOrderable programOrderable : programOrderables) {
-            if (programOrderable.isForProgram(program) && programOrderable.isActive()) {
-                return programOrderable;
-            }
-        }
-
-        return null;
+        this.dispensableId = dispensableId;
+        this.tradeItemId = tradeItemId;
+        this.commodityTypeId = commodityTypeId;
     }
 
     /**
@@ -82,16 +61,8 @@ public class Orderable extends BaseEntity {
         return packsToOrder;
     }
 
-    public String getTradeItemIdentifier() {
-        return identifiers.get(TRADE_ITEM);
-    }
-
-    public String getCommodityTypeIdentifier() {
-        return identifiers.get(COMMODITY_TYPE);
-    }
-
     public boolean hasDispensable(Dispensable dispensable) {
-        return this.dispensable.equals(dispensable);
+        return this.dispensableId.equals(dispensable);
     }
 
     public Long getDateUpdated() {
@@ -159,35 +130,35 @@ public class Orderable extends BaseEntity {
         this.roundToZero = roundToZero;
     }
 
-    public Dispensable getDispensable() {
-        return dispensable;
+    public String getDispensableId() {
+        return dispensableId;
     }
 
-    public void setDispensable(Dispensable dispensable) {
-        this.dispensable = dispensable;
+    public String getCommodityTypeId() {
+        return commodityTypeId;
     }
 
-    public List<ProgramOrderable> getProgramOrderables() {
-        return programOrderables;
+    public void setCommodityTypeId(String commodityTypeId) {
+        this.commodityTypeId = commodityTypeId;
     }
 
-    public void setProgramOrderables(List<ProgramOrderable> programOrderables) {
-        this.programOrderables = programOrderables;
+    public String getTradeItemId() {
+        return tradeItemId;
     }
 
-    public Map<String, String> getIdentifiers() {
-        return identifiers;
+    public void setTradeItemId(String tradeItemId) {
+        this.tradeItemId = tradeItemId;
     }
 
-    public void setIdentifiers(Map<String, String> identifiers) {
-        this.identifiers = identifiers;
+    public void setDispensableId(String dispensableId) {
+        this.dispensableId = dispensableId;
     }
 
-    public Map<String, String> getExtraData() {
-        return extraData;
+    public String getFullProductName() {
+        return fullProductName;
     }
 
-    public void setExtraData(Map<String, String> extraData) {
-        this.extraData = extraData;
+    public void setFullProductName(String fullProductName) {
+        this.fullProductName = fullProductName;
     }
 }
