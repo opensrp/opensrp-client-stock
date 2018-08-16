@@ -77,7 +77,7 @@ public class TradeItemRepository extends BaseRepository {
         }
     }
 
-    private boolean tradeItemExists(String tradeItemId) {
+    public boolean tradeItemExists(String tradeItemId) {
         String query = String.format("SELECT 1 FROM %s WHERE %s=?", TRADE_ITEM_TABLE, ID);
         Cursor cursor = null;
         try {

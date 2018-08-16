@@ -3,7 +3,9 @@ package org.smartregister.stock.openlmis;
 import org.smartregister.Context;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
@@ -19,10 +21,13 @@ public class OpenLMISLibrary {
     private Repository repository;
     private LotRepository lotRepository;
     private TradeItemRepository tradeItemRepository;
+    private org.smartregister.stock.openlmis.repository.TradeItemRepository tradeItemRegisterRepository;
     private ProgramRepository programRepository;
     private ProgramOrderableRepository programOrderableRepository;
     private ReasonRepository reasonRepository;
     private CommodityTypeRepository commodityTypeRepository;
+    private OrderableRepository orderableRepository;
+    private DispensableRepository dispensableRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -65,6 +70,13 @@ public class OpenLMISLibrary {
         return tradeItemRepository;
     }
 
+    public org.smartregister.stock.openlmis.repository.TradeItemRepository getTradeItemRegisterRepository() {
+        if (tradeItemRegisterRepository == null)   {
+            return new org.smartregister.stock.openlmis.repository.TradeItemRepository(getRepository());
+        }
+        return tradeItemRegisterRepository;
+    }
+
     public ProgramRepository getProgramRepository() {
         if (programRepository == null) {
             return new ProgramRepository(getRepository());
@@ -91,5 +103,19 @@ public class OpenLMISLibrary {
             return new CommodityTypeRepository(getRepository());
         }
         return commodityTypeRepository;
+    }
+
+    public OrderableRepository getOrderableRepository() {
+        if (orderableRepository == null) {
+           return new OrderableRepository(getRepository());
+        }
+        return orderableRepository;
+    }
+
+    public DispensableRepository getDispensableRepository() {
+        if (dispensableRepository == null) {
+           return new DispensableRepository(getRepository());
+        }
+        return dispensableRepository;
     }
 }
