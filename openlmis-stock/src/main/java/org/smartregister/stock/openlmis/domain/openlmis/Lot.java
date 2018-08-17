@@ -15,9 +15,9 @@ public class Lot extends BaseEntity {
 
     private boolean active;
 
-    private Long serverVersion;
-
     private Long dateDeleted;
+
+    private Long dateUpdated;
 
     public Lot(String id, String lotCode, Long expirationDate, Long manufactureDate, String tradeItemId, boolean active) {
         this.id = id;
@@ -68,19 +68,19 @@ public class Lot extends BaseEntity {
         this.active = active;
     }
 
-    public Long getServerVersion() {
-        return serverVersion;
-    }
-
-    public void setServerVersion(Long serverVersion) {
-        this.serverVersion = serverVersion;
-    }
-
     public Long getDateDeleted() {
         return dateDeleted;
     }
 
     public void setDateDeleted(Long dateDeleted) {
         this.dateDeleted = dateDeleted;
+    }
+
+    public Long getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Long dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 }

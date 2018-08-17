@@ -53,4 +53,8 @@ public class Utils {
 
         return new Pair<>(queryString, args);
     }
+
+    public static Long getCurrentTime() {
+        return System.nanoTime();
+    }
 }

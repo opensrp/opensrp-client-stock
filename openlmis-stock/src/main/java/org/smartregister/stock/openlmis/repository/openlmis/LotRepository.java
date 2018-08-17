@@ -13,10 +13,12 @@ import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
 import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
+import static org.smartregister.stock.openlmis.util.Utils.getCurrentTime;
 import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
 import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
@@ -31,13 +33,14 @@ public class LotRepository extends BaseRepository {
     private static final String MANUFACTURE_DATE = "manufacture_date";
     private static final String TRADE_ITEM_ID = "trade_item_id";
     private static final String ACTIVE = "active";
+    public static final String DATE_UPDATED = "date_updated";
     public static final String LOT_TABLE = "lots";
     private static final String TAG = LotRepository.class.getName();
 
     private static String CREATE_LOT_TABLE = "CREATE TABLE " + LOT_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," + LOT_CODE + " VARCHAR NOT NULL," +
             EXPIRATION_DATE + " INTEGER NOT NULL," + MANUFACTURE_DATE + " INTEGER NOT NULL," +
-            TRADE_ITEM_ID + " VARCHAR NOT NULL," + ACTIVE + " TINYINT);";
+            TRADE_ITEM_ID + " VARCHAR NOT NULL," + ACTIVE + " TINYINT," + DATE_UPDATED + " INTEGER);";
 
     public LotRepository(Repository repository) {
         super(repository);
@@ -69,6 +72,7 @@ public class LotRepository extends BaseRepository {
         contentValues.put(MANUFACTURE_DATE, lot.getManufactureDate());
         contentValues.put(TRADE_ITEM_ID, lot.getTradeItemId());
         contentValues.put(ACTIVE, lot.isActive());
+        contentValues.put(DATE_UPDATED, (lot.getDateUpdated() == null ? getCurrentTime() : lot.getDateUpdated()));
 
         if (lotExists(lot.getId())) {
             getWritableDatabase().update(LOT_TABLE, contentValues, ID + "=?", new String[]{lot.getId().toString()});
