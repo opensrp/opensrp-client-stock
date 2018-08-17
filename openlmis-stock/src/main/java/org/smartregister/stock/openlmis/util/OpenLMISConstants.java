@@ -4,11 +4,15 @@ public interface OpenLMISConstants {
 
     String TRADE_ITEM = "TRADE_ITEM";
 
-    interface JsonKeys {
+    interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";
 
         String NET_CONTENT = "[net_content]";
+
+        String PREVIOUS = "previous";
+
+        String NEXT = "next";
     }
 
     interface Forms {

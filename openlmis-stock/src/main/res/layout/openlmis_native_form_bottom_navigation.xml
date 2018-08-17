@@ -27,7 +27,8 @@
         android:textAllCaps="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
         android:textColor="#979797"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/next_button"
@@ -43,5 +44,6 @@
         android:textAllCaps="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
         android:textColor="#979797"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
 </LinearLayout>

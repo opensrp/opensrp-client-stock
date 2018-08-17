@@ -26,8 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonKeys.NET_CONTENT;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonKeys.TRADE_ITEM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM;
 
 public class StockDetailsActivity extends AppCompatActivity implements StockDetailsView, View.OnClickListener {
 

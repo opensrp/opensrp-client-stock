@@ -1,5 +1,5 @@
 {
-  "count": "2",
+  "count": "3",
   "encounter_type": "",
   "entity_id": "",
   "metadata": {
@@ -47,7 +47,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Issued [trade_item]",
+    "title": "Issue [trade_item]",
     "next": "step2",
     "bottom_navigation": "true",
     "fields": [
@@ -167,13 +167,27 @@
     ]
   },
   "step2": {
-    "title": "Issued [trade_item]",
+    "title": "Issue [trade_item]",
+    "previous": "step1",
+    "next": "step3",
     "bottom_navigation": "true",
     "fields": [
       {
         "key": "labellots",
         "type": "label",
         "text": "Lots Selection Widget (Step 2)"
+      }
+    ]
+  },
+  "step3": {
+    "title": "Review",
+    "previous": "step2",
+    "bottom_navigation": "true",
+    "fields": [
+      {
+        "key": "labelReview",
+        "type": "label",
+        "text": "Stock Review Widget (Step 3)"
       }
     ]
   }
