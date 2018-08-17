@@ -15,4 +15,6 @@
     <dimen name="stock_details_margin">15dp</dimen>
 
     <dimen name="lots_padding">10dp</dimen>
+
+    <dimen name="date_picker_min_width">300dp</dimen>
 </resources>
