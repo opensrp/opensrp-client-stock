@@ -39,7 +39,7 @@ public class TradeItemRepository extends BaseRepository {
 
     private static final String DISPENSING_ADMINISTRATION = "dispensing_administration";
 
-    private static final String CREATE_TADE_ITEM_TABLE = "CREATE TABLE " + TRADE_ITEM_TABLE +
+    private static final String CREATE_TRADE_ITEM_TABLE = "CREATE TABLE " + TRADE_ITEM_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," +
             COMMODITY_TYPE_ID + " VARCHAR ," +
             NAME + " VARCHAR, " +
@@ -55,7 +55,7 @@ public class TradeItemRepository extends BaseRepository {
     }
 
     public static void createTable(SQLiteDatabase database) {
-        database.execSQL(CREATE_TADE_ITEM_TABLE);
+        database.execSQL(CREATE_TRADE_ITEM_TABLE);
     }
 
     public void addOrUpdate(TradeItem tradeItem) {
