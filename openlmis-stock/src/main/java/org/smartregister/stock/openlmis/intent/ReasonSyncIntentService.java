@@ -88,6 +88,9 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
                 ReasonRepository repository = OpenLMISLibrary.getInstance().getReasonRepository();
                 for (Reason reason : reasons) {
                     repository.addOrUpdate(reason);
+                    if (reason.getServerVersion() > highestTimeStamp) {
+                        highestTimeStamp = reason.getServerVersion();
+                    }
                 }
 
                 // save highest server version

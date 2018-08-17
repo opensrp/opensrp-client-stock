@@ -84,10 +84,9 @@ public class OrderableSyncIntentService extends IntentService implements SyncInt
                     return;
                 }
 
-                String jsonPayload = response.payload();
-
-                // store orderables
+                // store Orderables
                 Long highestTimeStamp = 0L;
+                String jsonPayload = response.payload();
                 List<Orderable> orderables = new Gson().fromJson(jsonPayload, new TypeToken<List<Orderable>>(){}.getType());
                 OrderableRepository orderableRepository = OpenLMISLibrary.getInstance().getOrderableRepository();
                 TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRegisterRepository();
@@ -105,8 +104,11 @@ public class OrderableSyncIntentService extends IntentService implements SyncInt
                         tradeItem.setDispensable(dispensable);
                         tradeItemRepository.addOrUpdate(tradeItem);
                     }
-                }
 
+                    if (orderable.getServerVersion() > highestTimeStamp) {
+                        highestTimeStamp = orderable.getServerVersion();
+                    }
+                }
                 // save highest server version
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);

@@ -88,6 +88,9 @@ public class ProgramOrderableSyncIntentService extends IntentService implements 
                 ProgramOrderableRepository repository = OpenLMISLibrary.getInstance().getProgramOrderableRepository();
                 for (ProgramOrderable programOrderable : programOrderables) {
                     repository.addOrUpdate(programOrderable);
+                    if (programOrderable.getServerVersion() > highestTimeStamp) {
+                        highestTimeStamp = programOrderable.getServerVersion();
+                    }
                 }
 
                 // save highest server version

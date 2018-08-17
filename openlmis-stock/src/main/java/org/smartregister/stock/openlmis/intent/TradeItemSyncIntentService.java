@@ -88,6 +88,9 @@ public class TradeItemSyncIntentService extends IntentService implements SyncInt
                 TradeItemRepository repository = OpenLMISLibrary.getInstance().getTradeItemRepository();
                 for (TradeItem tradeItem : tradeItems) {
                     repository.addOrUpdate(tradeItem);
+                    if (tradeItem.getServerVersion() > highestTimeStamp) {
+                        highestTimeStamp = tradeItem.getServerVersion();
+                    }
                 }
 
                 // save highest server version

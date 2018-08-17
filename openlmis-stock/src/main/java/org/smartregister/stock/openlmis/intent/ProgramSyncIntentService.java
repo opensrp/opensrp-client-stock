@@ -89,6 +89,9 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
                 ProgramRepository repository = OpenLMISLibrary.getInstance().getProgramRepository();
                 for (Program program : programs) {
                     repository.addOrUpdate(program);
+                    if (program.getServerVersion() > highestTimeStamp) {
+                        highestTimeStamp = program.getServerVersion();
+                    }
                 }
 
                 // save highest server version

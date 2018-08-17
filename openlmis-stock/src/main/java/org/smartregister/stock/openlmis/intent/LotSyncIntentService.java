@@ -88,6 +88,9 @@ public class LotSyncIntentService extends IntentService implements SyncIntentSer
                 LotRepository repository = OpenLMISLibrary.getInstance().getLotRepository();
                 for (Lot lot : lots) {
                     repository.addOrUpdate(lot);
+                    if (lot.getServerVersion() > highestTimeStamp) {
+                        highestTimeStamp = lot.getServerVersion();
+                    }
                 }
 
                 // save highest server version

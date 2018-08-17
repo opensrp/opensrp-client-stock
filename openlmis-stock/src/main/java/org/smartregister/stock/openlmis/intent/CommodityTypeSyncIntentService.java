@@ -88,6 +88,9 @@ public class CommodityTypeSyncIntentService extends IntentService implements Syn
                 CommodityTypeRepository repository = OpenLMISLibrary.getInstance().getCommodityTypeRepository();
                 for (CommodityType commodityType : commodityTypes) {
                     repository.addOrUpdate(commodityType);
+                    if (commodityType.getServerVersion() > highestTimeStamp) {
+                        highestTimeStamp = commodityType.getServerVersion();
+                    }
                 }
 
                 // save highest server version
