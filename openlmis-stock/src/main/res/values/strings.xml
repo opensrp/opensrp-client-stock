@@ -31,4 +31,7 @@
     <string name="stock_issues">Issues</string>
     <string name="balance">Balance</string>
     <string name="stock_balance">%1d %2s, %3d doses</string>
+    <string name="previous">Previous</string>
+    <string name="review">Review</string>
+    <string name="next">Next</string>
 </resources>

@@ -17,4 +17,7 @@
     <dimen name="lots_padding">10dp</dimen>
 
     <dimen name="date_picker_min_width">300dp</dimen>
+    <dimen name="form_cardview_margin">8dp</dimen>
+    <dimen name="bottom_navigation_margin">10dp</dimen>
+    <dimen name="bottom_navigation_padding">40dp</dimen>
 </resources>
