@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
+import com.vijay.jsonwizard.utils.ValidationStatus;
 
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
@@ -39,6 +40,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         informationTextView = rootView.findViewById(R.id.information_textView);
         previousButton = rootView.findViewById(R.id.previous_button);
         nextButton = rootView.findViewById(R.id.next_button);
+        nextButton.setEnabled(false);
         setupCustomToolbar();
         rootView.findViewById(R.id.previous_button).setOnClickListener(navigationListener);
         rootView.findViewById(R.id.next_button).setOnClickListener(navigationListener);
@@ -90,5 +92,39 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
                 getFragmentManager().popBackStack();
             }
         }
+    }
+
+    private void validateActivateNext() {
+        if (!isVisible())//form fragment is initializing
+            return;
+        ValidationStatus validationStatus = null;
+        for (View dataView : getJsonApi().getFormDataViews()) {
+            validationStatus = presenter.validate(this, dataView, false);
+            if (!validationStatus.isValid()) {
+                break;
+            }
+        }
+        if (validationStatus != null && validationStatus.isValid()) {
+            nextButton.setEnabled(true);
+            nextButton.setTextColor(getContext().getResources().getColor(R.color.white));
+        } else {
+            nextButton.setEnabled(false);
+            nextButton.setTextColor(getContext().getResources().getColor(R.color.next_button_disabled));
+        }
+    }
+
+    @Override
+    public void writeValue(String stepName, String key, String s, String
+            openMrsEntityParent, String openMrsEntity, String openMrsEntityId) {
+        super.writeValue(stepName, key, s, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+        validateActivateNext();
+    }
+
+    @Override
+    public void writeValue(String stepName, String prentKey, String childObjectKey, String
+            childKey, String value, String openMrsEntityParent, String openMrsEntity, String
+                                   openMrsEntityId) {
+        super.writeValue(stepName, prentKey, childObjectKey, childKey, value, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+        validateActivateNext();
     }
 }

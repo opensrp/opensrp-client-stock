@@ -13,6 +13,12 @@ public interface OpenLMISConstants {
         String PREVIOUS = "previous";
 
         String NEXT = "next";
+
+        String BACKGROUND = "background";
+
+        String UNDERLINE_COLOR = "underline_color";
+
+        String VALUE = "value";
     }
 
     interface Forms {

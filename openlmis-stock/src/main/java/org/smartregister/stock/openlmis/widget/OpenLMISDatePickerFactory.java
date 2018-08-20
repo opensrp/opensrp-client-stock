@@ -13,8 +13,9 @@ import com.vijay.jsonwizard.widgets.DatePickerFactory;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
 
-import static org.smartregister.stock.util.Constants.BACKGROUND;
-import static org.smartregister.stock.util.Constants.UNDERLINE_COLOR;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.BACKGROUND;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.UNDERLINE_COLOR;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.VALUE;
 
 /**
  * Created by samuelgithengi on 8/16/18.
@@ -22,10 +23,14 @@ import static org.smartregister.stock.util.Constants.UNDERLINE_COLOR;
 public class OpenLMISDatePickerFactory extends DatePickerFactory {
 
     @Override
-    protected void attachJson(String stepName, Context context, JsonFormFragment formFragment,
+    protected void attachJson(final String stepName, Context context, final JsonFormFragment formFragment,
                               final JSONObject jsonObject, final MaterialEditText editText, TextView duration) {
         super.attachJson(stepName, context, formFragment, jsonObject, editText, duration);
         editText.setFloatingLabelText(jsonObject.optString("hint"));
+        if (!jsonObject.optString(VALUE).isEmpty()) {
+            editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_HIGHLIGHT);
+            editText.setFloatingLabelAlwaysShown(true);
+        }
         String background = jsonObject.optString(BACKGROUND);
         if (!background.isEmpty())
             editText.setBackgroundColor(Color.parseColor(background));
@@ -45,6 +50,13 @@ public class OpenLMISDatePickerFactory extends DatePickerFactory {
                 } else {
                     editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_HIGHLIGHT);
                 }
+                String key = (String) editText.getTag(com.vijay.jsonwizard.R.id.key);
+                String openMrsEntityParent = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent);
+                String openMrsEntity = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity);
+                String openMrsEntityId = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id);
+                formFragment.writeValue(stepName, key, s.toString(), openMrsEntityParent,
+                        openMrsEntity, openMrsEntityId);
+
             }
 
             @Override

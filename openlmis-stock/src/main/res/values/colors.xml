@@ -9,4 +9,6 @@
     <color name="stock_list_dark_text">#6B6B6B</color>
     <color name="stock_list_light_text">#9D9D9D</color>
     <color name="trade_item_border">#E1E1E1</color>
+
+    <color name="next_button_disabled">#979797</color>
 </resources>

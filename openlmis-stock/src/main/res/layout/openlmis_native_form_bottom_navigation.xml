@@ -3,7 +3,7 @@
     android:id="@+id/botton_navigation_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@drawable/bottom_navigation_border"
     android:orientation="horizontal"
     android:paddingEnd="30dp"
     android:paddingStart="30dp">

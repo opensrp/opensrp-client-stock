@@ -12,6 +12,4 @@ public class Constants {
 
     public static final String NUMBER_PICKER = "number_picker";
 
-    public static final String BACKGROUND = "background";
-    public static final String UNDERLINE_COLOR = "underline_color";
 }
