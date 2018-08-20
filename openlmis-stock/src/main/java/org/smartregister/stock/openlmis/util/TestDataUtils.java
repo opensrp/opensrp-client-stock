@@ -183,6 +183,16 @@ public class TestDataUtils {
                     new LocalDate(System.currentTimeMillis()),
                     new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),
                     false);
+            lot.setLotStatus("VMM1");
+            lots.add(lot);
+        }
+        if (numberOfLots >1) {
+            Lot lot = new Lot(UUID.randomUUID(), "LC" + (1000 + random.nextInt(8000)),
+                    lots.get(random.nextInt(numberOfLots - 1)).getExpirationDate(),
+                    new LocalDate(System.currentTimeMillis()),
+                    new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),
+                    false);
+            lot.setLotStatus("VMM2");
             lots.add(lot);
         }
         return lots;

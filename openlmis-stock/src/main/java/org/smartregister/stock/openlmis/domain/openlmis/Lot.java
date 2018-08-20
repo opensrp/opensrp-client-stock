@@ -19,7 +19,10 @@ public class Lot extends BaseEntity {
 
     private boolean active;
 
-    public Lot(UUID id, String lotCode, LocalDate expirationDate, LocalDate manufactureDate, TradeItem tradeItem, boolean active) {
+    private String lotStatus;
+
+    public Lot(UUID id, String lotCode, LocalDate expirationDate, LocalDate manufactureDate,
+               TradeItem tradeItem, boolean active) {
         this.id = id;
         this.lotCode = lotCode;
         this.expirationDate = expirationDate;
@@ -66,5 +69,13 @@ public class Lot extends BaseEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getLotStatus() {
+        return lotStatus;
+    }
+
+    public void setLotStatus(String lotStatus) {
+        this.lotStatus = lotStatus;
     }
 }

@@ -33,13 +33,14 @@ public class LotRepository extends BaseRepository {
     private static final String MANUFACTURE_DATE = "manufacture_date";
     private static final String TRADE_ITEM_ID = "trade_item_id";
     private static final String ACTIVE = "active";
+    private static final String LOT_STATUS = "lot_status";
     public static final String LOT_TABLE = "lots";
     private static final String TAG = LotRepository.class.getName();
 
     private static String CREATE_LOT_TABLE = "CREATE TABLE " + LOT_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," + LOT_CODE + " VARCHAR NOT NULL," +
             EXPIRATION_DATE + " INTEGER NOT NULL," + MANUFACTURE_DATE + " INTEGER NOT NULL," +
-            TRADE_ITEM_ID + " VARCHAR NOT NULL," + ACTIVE + " TINYINT);";
+            TRADE_ITEM_ID + " VARCHAR NOT NULL," + ACTIVE + " TINYINT," + LOT_STATUS + " VARCHAR);";
 
     public LotRepository(Repository repository) {
         super(repository);
@@ -71,6 +72,7 @@ public class LotRepository extends BaseRepository {
         contentValues.put(MANUFACTURE_DATE, lot.getManufactureDate().toDate().getTime());
         contentValues.put(TRADE_ITEM_ID, lot.getTradeItem().getId().toString());
         contentValues.put(ACTIVE, lot.isActive());
+        contentValues.put(LOT_STATUS, lot.getLotStatus());
         if (lotExists(lot.getId().toString())) {
             getWritableDatabase().update(LOT_TABLE, contentValues, ID + "=?", new String[]{lot.getId().toString()});
         } else {
@@ -84,8 +86,9 @@ public class LotRepository extends BaseRepository {
 
         String query = String.format("SELECT * FROM %s WHERE %s IN " +
                         "(SELECT %s FROM %s  WHERE %s=? GROUP BY %s having SUM(%s) !=0 )" +
-                        "ORDER BY %s asc",
-                LOT_TABLE, ID, LOT_ID, stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID, VALUE, EXPIRATION_DATE);
+                        "ORDER BY %s, %s asc",
+                LOT_TABLE, ID, LOT_ID, stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID, VALUE,
+                EXPIRATION_DATE, LOT_STATUS);
         Log.d(TAG, query);
         Cursor cursor = null;
         List<Lot> lots = new ArrayList<>();
@@ -169,6 +172,7 @@ public class LotRepository extends BaseRepository {
                 new LocalDate(cursor.getLong(cursor.getColumnIndex(MANUFACTURE_DATE))),
                 new TradeItem(UUID.fromString(cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)))),
                 cursor.getInt(cursor.getColumnIndex(ACTIVE)) > 0);
+        lot.setLotStatus(cursor.getString(cursor.getColumnIndex(LOT_STATUS)));
         return lot;
     }
 }

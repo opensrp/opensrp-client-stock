@@ -51,7 +51,7 @@ public class LotAdapter extends RecyclerView.Adapter<LotViewHolder> {
         holder.getStockOnHandTextView().setText(context.getString(R.string.dispensable_formatter,
                 stockDetailsPresenter.getTotalStockByLot(lot.getId()),
                 tradeItem.getDispensingUnit()));
-        holder.getStatusTextView().setText(context.getString(R.string.VMM, 1));
+        holder.getStatusTextView().setText(lot.getLotStatus());
 
     }
 
