@@ -86,7 +86,7 @@ public class LotRepository extends BaseRepository {
 
         String query = String.format("SELECT * FROM %s WHERE %s IN " +
                         "(SELECT %s FROM %s  WHERE %s=? GROUP BY %s having SUM(%s) !=0 )" +
-                        "ORDER BY %s, %s asc",
+                        "ORDER BY %s, %s desc",
                 LOT_TABLE, ID, LOT_ID, stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID, VALUE,
                 EXPIRATION_DATE, LOT_STATUS);
         Log.d(TAG, query);
