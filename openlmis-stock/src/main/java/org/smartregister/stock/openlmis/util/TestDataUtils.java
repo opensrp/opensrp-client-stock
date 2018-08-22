@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.util;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.LocalDate;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
@@ -95,15 +96,18 @@ public class TestDataUtils {
         for (TradeItem tradeItem : lotHashMap.keySet()) {
             List<Lot> lots = lotHashMap.get(tradeItem);
             for (Lot lot : lots) {
-                for (int i = 0; i < random.nextInt(10); i++) {
-                    long now = System.currentTimeMillis();
+                for (int i = 0; i < random.nextInt(15); i++) {
+                    Calendar dateCreated = Calendar.getInstance();
+                    dateCreated.add(Calendar.DATE, -random.nextInt(120));
                     int type = random.nextInt(3);
                     String transactionType = type == 0 ? Stock.received : type == 1 ? Stock.issued : Stock.loss_adjustment;
-                    int value = random.nextInt(50);
-                    if (transactionType.equals(Stock.issued))
-                        value = -value;
-                    Stock stock = new Stock(null, transactionType, "tester11", value, now,
-                            "WareHouse123", "unsynched", now, tradeItem.getId());
+                    int value = 5 + random.nextInt(50);
+                    if (transactionType.equals(Stock.issued) ||
+                            (transactionType.equals(Stock.loss_adjustment) && random.nextInt(2) == 0))
+                        value = -random.nextInt(5);
+
+                    Stock stock = new Stock(null, transactionType, "tester11", value, dateCreated.getTimeInMillis(),
+                            RandomStringUtils.randomAlphabetic(6 + random.nextInt(6)), "unsynched", System.currentTimeMillis(), tradeItem.getId());
                     stock.setLotId(lot.getId().toString());
                     stockRepository.addOrUpdate(stock);
                 }
@@ -113,15 +117,18 @@ public class TestDataUtils {
     }
 
     private List<TradeItem> createTradeItems(CommodityType commodityType) {
+        Calendar calendar = Calendar.getInstance();
         List<TradeItem> tradeItems = new ArrayList<>();
         Random random = new Random();
         if (commodityType.getName().equals("C1"))
             return tradeItems;
         TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Intervax " + commodityType.getName() + " 20");
-        tradeItem.setNetContent(Long.valueOf(random.nextInt(50)));
+        tradeItem.setNetContent((long) (2 + random.nextInt(18)));
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", "20 pills", null));
+        calendar.add(Calendar.DATE, -random.nextInt(300));
+        tradeItem.setDateUpdated(calendar.getTimeInMillis());
 
 
         tradeItems.add(tradeItem);
@@ -130,8 +137,10 @@ public class TestDataUtils {
         tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("BIntervax " + commodityType.getName() + " 30");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
-        tradeItem.setNetContent(Long.valueOf(random.nextInt(40)));
+        tradeItem.setNetContent((long) (2 + random.nextInt(8)));
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "pills", "30 pills", null));
+        calendar.add(Calendar.DATE, -random.nextInt(300));
+        tradeItem.setDateUpdated(calendar.getTimeInMillis());
 
 
         tradeItems.add(tradeItem);
@@ -141,8 +150,10 @@ public class TestDataUtils {
         tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Brand B " + commodityType.getName() + " 5");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
-        tradeItem.setNetContent(Long.valueOf(random.nextInt(20)));
+        tradeItem.setNetContent((long) (2 + random.nextInt(18)));
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", "5 vials", null));
+        calendar.add(Calendar.DATE, -random.nextInt(300));
+        tradeItem.setDateUpdated(calendar.getTimeInMillis());
 
 
         tradeItems.add(tradeItem);
@@ -150,9 +161,10 @@ public class TestDataUtils {
         tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Antervax " + commodityType.getName() + " 5");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
-        tradeItem.setNetContent(Long.valueOf(random.nextInt(10)));
+        tradeItem.setNetContent((long) (2 + random.nextInt(8)));
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "strip", "10 tab strip", null));
-
+        calendar.add(Calendar.DATE, -random.nextInt(300));
+        tradeItem.setDateUpdated(calendar.getTimeInMillis());
 
         tradeItems.add(tradeItem);
         return tradeItems;
@@ -162,15 +174,25 @@ public class TestDataUtils {
     private List<Lot> createLots(String tradeItemId) {
         List<Lot> lots = new ArrayList<>();
         Random random = new Random();
-        int numberOfLots = random.nextInt(5);
+        int numberOfLots = random.nextInt(8);
 
         for (int i = 0; i < numberOfLots; i++) {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DATE, -random.nextInt(300));
-            Lot lot = new Lot(UUID.randomUUID(), "LC2016FG", new LocalDate(calendar.getTimeInMillis()),
+            calendar.add(Calendar.DATE, random.nextInt(300));
+            Lot lot = new Lot(UUID.randomUUID(), "LC" + (1000 + random.nextInt(8000)), new LocalDate(calendar.getTimeInMillis()),
                     new LocalDate(System.currentTimeMillis()),
                     new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),
                     false);
+            lot.setLotStatus("VMM1");
+            lots.add(lot);
+        }
+        if (numberOfLots >1) {
+            Lot lot = new Lot(UUID.randomUUID(), "LC" + (1000 + random.nextInt(8000)),
+                    lots.get(random.nextInt(numberOfLots - 1)).getExpirationDate(),
+                    new LocalDate(System.currentTimeMillis()),
+                    new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),
+                    false);
+            lot.setLotStatus("VMM2");
             lots.add(lot);
         }
         return lots;

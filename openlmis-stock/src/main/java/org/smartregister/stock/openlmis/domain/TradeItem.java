@@ -21,11 +21,13 @@ public class TradeItem {
 
     public String getId() {
         return id;
+
     }
 
     public void setId(String id) {
         this.id = id;
     }
+
 
     public String getCommodityTypeId() {
         return commodityTypeId;
@@ -35,7 +37,6 @@ public class TradeItem {
         this.id = id;
     }
 
-    ;
 
     public void setCommodityTypeId(String commodityTypeId) {
         this.commodityTypeId = commodityTypeId;
@@ -72,4 +73,5 @@ public class TradeItem {
     public void setDispensable(Dispensable dispensable) {
         this.dispensable = dispensable;
     }
+
 }

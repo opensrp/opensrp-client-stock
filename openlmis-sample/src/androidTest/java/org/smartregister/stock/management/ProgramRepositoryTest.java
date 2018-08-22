@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
 
 /************** test naming convention followed *****************
@@ -98,7 +99,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
         assertEquals(programs.size(), 0);
 
         // make sure new values exist
-       programs = database.findPrograms("123e4567-e89b-42d3-a456-556642440100", "program_code",
+        programs = database.findPrograms("123e4567-e89b-42d3-a456-556642440100", "program_code",
                 "program_name_two", "1");
         assertEquals(programs.size(), 1);
     }
@@ -141,7 +142,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(programs.size(), 2);
     }
-    
+
     @Test
     public void testFindProgramsShouldNotReturnAnyMatchingRows() {
 
@@ -181,4 +182,46 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(programs.size(), 0);
     }
+
+    @Test
+    public void testFindAllPrograms() {
+
+        assertTrue(database.findAllPrograms().isEmpty());
+
+        // insert new Programs
+        Program program = new Program(
+                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                new Code("program_code"),
+                "program_name",
+                "program_description",
+                true,
+                false,
+                false,
+                false,
+                false,
+                4918234891L
+        );
+        database.addOrUpdate(program);
+
+        assertEquals(database.findAllPrograms().size(), 1);
+
+        program = new Program(
+                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                new Code("program_code"),
+                "program_name",
+                "program_description",
+                true,
+                false,
+                false,
+                false,
+                false,
+                4918234891L
+        );
+        database.addOrUpdate(program);
+
+        // ensure all matching rows are returned
+
+        assertEquals(database.findAllPrograms().size(), 2);
+    }
+
 }

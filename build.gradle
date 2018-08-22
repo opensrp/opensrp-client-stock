@@ -119,6 +119,7 @@ subprojects { prj ->
 
             sourceDirectories = files([mainSrc])
             classDirectories = files([debugTree])
+
             executionData = fileTree(dir: project.buildDir, includes: [
                     'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
             ])
@@ -136,10 +137,12 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
     description = 'Generates an aggregate report from all subprojects'
     dependsOn publishedProjects.jacocoTestReport
 
-    additionalSourceDirs = files(publishedProjects.sourceSets.main.allSource.srcDirs)
-    sourceDirectories = files(publishedProjects.sourceSets.main.allSource.srcDirs)
-    classDirectories = files(publishedProjects.sourceSets.main.output)
+    sourceDirectories = files(publishedProjects.jacocoTestReport.sourceDirectories)
+    classDirectories = files(publishedProjects.jacocoTestReport.classDirectories)
     executionData = files(publishedProjects.jacocoTestReport.executionData)
+
+    getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"))
+    getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
 
     reports {
         html.enabled = true
@@ -158,7 +161,10 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
 }
 
 coveralls {
-    sourceDirs = publishedProjects.sourceSets.main.allSource.srcDirs.flatten()
+    for (int i = 0; i  <   publishedProjects.jacocoTestReport.sourceDirectories.size() ; i++) {
+        sourceDirs.add(publishedProjects.jacocoTestReport.sourceDirectories.get(i).getAsPath())
+    }
+
     jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
 
