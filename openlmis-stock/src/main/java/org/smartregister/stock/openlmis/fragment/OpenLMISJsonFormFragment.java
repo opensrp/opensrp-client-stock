@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
@@ -28,7 +27,6 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
     public static final String TAG = "OpenLMISJSonFragment";
 
     private BottomNavigationListener navigationListener = new BottomNavigationListener();
-    private TextView informationTextView;
     private Button previousButton;
     private Button nextButton;
 
@@ -37,7 +35,6 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         View rootView = inflater.inflate(R.layout.openlmis_native_form_fragment_json_wizard, (ViewGroup) null);
         this.mMainView = rootView.findViewById(R.id.main_layout);
         this.mScrollView = rootView.findViewById(R.id.scroll_view);
-        informationTextView = rootView.findViewById(R.id.information_textView);
         previousButton = rootView.findViewById(R.id.previous_button);
         nextButton = rootView.findViewById(R.id.next_button);
         nextButton.setEnabled(false);

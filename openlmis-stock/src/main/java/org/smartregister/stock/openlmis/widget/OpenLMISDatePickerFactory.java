@@ -40,7 +40,7 @@ public class OpenLMISDatePickerFactory extends DatePickerFactory {
             editText.setUnderlineColor(Color.parseColor(underlineColor));
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {//do nothing
             }
 
             @Override
@@ -60,7 +60,7 @@ public class OpenLMISDatePickerFactory extends DatePickerFactory {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {//do nothing
             }
         });
     }
