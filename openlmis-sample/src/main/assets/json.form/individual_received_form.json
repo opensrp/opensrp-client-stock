@@ -47,12 +47,12 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Issue [trade_item]",
+    "title": "Receive [trade_item]",
     "next": "step2",
     "bottom_navigation": "true",
     "fields": [
       {
-        "key": "Date_Stock_Issued",
+        "key": "Date_Stock_Received",
         "type": "date_picker",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -65,17 +65,17 @@
         "underline_color": "#EAEAEA",
         "v_required": {
           "value": "true",
-          "err": "Enter the Stock Issue date"
+          "err": "Enter the Stock Receipt date"
         }
       },
       {
-        "key": "labelIssuedTo",
+        "key": "labelRecieveFrom",
         "type": "label",
-        "text": "Issued to *",
+        "text": "Receive from *",
         "top_margin":"10dp"
       },
       {
-        "key": "Issued_Stock_To",
+        "key": "Receive_Stock_From",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -95,14 +95,14 @@
             "text": "Other"
           }
         ],
-        "value": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
+        "value": "13037147-1769-4735-90a7-b9b310d128b8",
         "v_required": {
           "value": true,
-          "err": "Please select where stock was issued"
+          "err": "Please select where stock was received from"
         }
       },
       {
-        "key": "Issued_Stock_TO_Other",
+        "key": "Receive_Stock_From_Other",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -111,10 +111,10 @@
         "edit_type": "name",
         "v_required": {
           "value": true,
-          "err": "Please specify where stock was issued"
+          "err": "Please specify where stock was received from"
         },
         "relevance": {
-          "step1:Issued_Stock_To": {
+          "step1:Receive_Stock_From": {
             "type": "string",
             "ex": "equalTo(., \"Other\")"
           }
@@ -135,24 +135,24 @@
         "type": "native_radio",
         "options": [
           {
-            "key": "b5c27da7-bdda-4790-925a-9484c5dfb594",
-            "text": "Consumed"
+            "key": "313f2f5f-0c22-4626-8c49-3554ef763de3",
+            "text": "Receipts"
           }, {
-            "key": "c1fc3cf3-da18-44b0-a220-77c985202e06",
-            "text": "Transfer Out"
+            "key": "e3fc3cf3-da18-44b0-a220-77c985202e06",
+            "text": "Transfer In"
           }, {
-            "key": "5b09202e-b8a7-4f77-9e0e-8156f8efc613",
-            "text": "Damage"
+            "key": "84eb13c3-3e54-4687-8a5f-a9f20dcd0dac",
+            "text": "Beginning Balance Excess"
           },
           {
             "key": "Other",
             "text": "Other"
           }
         ],
-        "value": "b5c27da7-bdda-4790-925a-9484c5dfb594",
+        "value": "313f2f5f-0c22-4626-8c49-3554ef763de3",
         "v_required": {
           "value": true,
-          "err": "Please select reason stock was issued"
+          "err": "Please select reason stock was received"
         }
       },
       {
@@ -165,7 +165,7 @@
         "edit_type": "name",
         "v_required": {
           "value": true,
-          "err": "Please specify reason stock was issued"
+          "err": "Please specify reason stock was received"
         },
         "relevance": {
           "step1:Reason": {
@@ -177,7 +177,7 @@
     ]
   },
   "step2": {
-    "title": "Issue [trade_item]",
+    "title": "Receive [trade_item]",
     "previous": "step1",
     "next": "step3",
     "bottom_navigation": "true",

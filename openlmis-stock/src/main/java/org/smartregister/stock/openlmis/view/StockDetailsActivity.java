@@ -21,11 +21,13 @@ import org.smartregister.stock.openlmis.presenter.StockDetailsPresenter;
 import org.smartregister.stock.openlmis.util.OpenLMISConstants;
 import org.smartregister.stock.openlmis.view.contract.StockDetailsView;
 import org.smartregister.util.FormUtils;
+import org.smartregister.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_RECEIVED_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM;
 
@@ -42,13 +44,15 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     private ImageView collapseExpandButton;
 
+    private TradeItemDto tradeItemDto;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_details);
         stockDetailsPresenter = new StockDetailsPresenter(this);
 
-        TradeItemDto tradeItemDto = getIntent().getParcelableExtra(OpenLMISConstants.TRADE_ITEM);
+        tradeItemDto = getIntent().getParcelableExtra(OpenLMISConstants.TRADE_ITEM);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.stock_details_title, tradeItemDto.getName()));
         setSupportActionBar(toolbar);
@@ -82,6 +86,7 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         collapseExpandButton.setOnClickListener(this);
         findViewById(R.id.number_of_lots).setOnClickListener(this);
         findViewById(R.id.issued).setOnClickListener(this);
+        findViewById(R.id.received).setOnClickListener(this);
     }
 
     @Override
@@ -98,8 +103,11 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
     public void onClick(View view) {
         if (view.getId() == R.id.collapseExpandButton || view.getId() == R.id.number_of_lots) {
             stockDetailsPresenter.collapseExpandClicked(lotsRecyclerView.getVisibility());
-        } else if (view.getId() == R.id.issued)
-            stockIssueClicked();
+        } else if (view.getId() == R.id.issued) {
+            startJsonForm(INDIVIDUAL_ISSUED_FORM);
+        } else if (view.getId() == R.id.received) {
+            startJsonForm(INDIVIDUAL_RECEIVED_FORM);
+        }
     }
 
     @Override
@@ -116,18 +124,16 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         collapseExpandButton.setImageResource(R.drawable.ic_keyboard_arrow_up);
     }
 
-    private void stockIssueClicked() {
+    private void startJsonForm(String formName) {
         Intent intent = new Intent(getApplicationContext(), OpenLMISJsonForm.class);
         try {
-            JSONObject form = FormUtils.getInstance(getApplicationContext()).getFormJson(INDIVIDUAL_ISSUED_FORM);
-            String tradeItem = "Intervax BCG 20";
-            String formMetadata = form.toString().replace(TRADE_ITEM, tradeItem);
-            int netContent = 20;
-            formMetadata = formMetadata.replace(NET_CONTENT, String.valueOf(netContent));
+            JSONObject form = FormUtils.getInstance(getApplicationContext()).getFormJson(formName);
+            String formMetadata = form.toString().replace(TRADE_ITEM, tradeItemDto.getName());
+            formMetadata = formMetadata.replace(NET_CONTENT, tradeItemDto.getNetContent().toString());
             intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.logDebug(e.getMessage());
         }
     }
 

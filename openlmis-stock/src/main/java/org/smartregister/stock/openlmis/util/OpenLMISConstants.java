@@ -23,5 +23,7 @@ public interface OpenLMISConstants {
 
     interface Forms {
         String INDIVIDUAL_ISSUED_FORM = "individual_issued_form";
+
+        String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
     }
 }
