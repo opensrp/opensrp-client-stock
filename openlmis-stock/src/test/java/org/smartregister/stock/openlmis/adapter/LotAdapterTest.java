@@ -47,8 +47,10 @@ public class LotAdapterTest extends BaseUnitTest {
         TradeItemDto tradeItemDto = new TradeItemDto(UUID.randomUUID().toString(),
                 "GHGR", 100, System.currentTimeMillis(), 2, "vials", 5l);
         List<Lot> lots = new ArrayList<>();
-        lots.add(new Lot(lotId, "LC2018G", new LocalDate("2019-01-31"),
-                new LocalDate("2018-01-01"), null, true));
+        Lot lot=new Lot(lotId, "LC2018G", new LocalDate("2019-01-31"),
+                new LocalDate("2018-01-01"), null, true);
+        lot.setLotStatus("VMM1");
+        lots.add(lot);
         when(stockDetailsPresenter.findLotsByTradeItem(tradeItemDto.getId())).thenReturn(lots);
         lotAdapter = new LotAdapter(tradeItemDto, stockDetailsPresenter);
     }

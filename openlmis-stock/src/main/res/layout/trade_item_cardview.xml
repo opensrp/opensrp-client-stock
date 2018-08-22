@@ -139,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/stock_list" />
+                android:src="@drawable/stock_loss_adj" />
 
             <TextView
                 android:layout_width="wrap_content"
