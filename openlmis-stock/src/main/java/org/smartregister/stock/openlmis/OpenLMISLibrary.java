@@ -9,6 +9,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 
 /**
@@ -28,6 +29,7 @@ public class OpenLMISLibrary {
     private CommodityTypeRepository commodityTypeRepository;
     private OrderableRepository orderableRepository;
     private DispensableRepository dispensableRepository;
+    private TradeItemClassificationRepository tradeItemClassificationRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -117,5 +119,12 @@ public class OpenLMISLibrary {
            return new DispensableRepository(getRepository());
         }
         return dispensableRepository;
+    }
+
+    public TradeItemClassificationRepository getTradeItemClassificationRepository() {
+        if (tradeItemClassificationRepository == null) {
+            return new TradeItemClassificationRepository(getRepository());
+        }
+        return tradeItemClassificationRepository;
     }
 }
