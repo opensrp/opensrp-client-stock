@@ -72,7 +72,7 @@
         "key": "labelIssuedTo",
         "type": "label",
         "text": "Issued to *",
-        "top_margin":"10dp"
+        "top_margin": "10dp"
       },
       {
         "key": "Issued_Stock_To",
@@ -137,10 +137,12 @@
           {
             "key": "b5c27da7-bdda-4790-925a-9484c5dfb594",
             "text": "Consumed"
-          }, {
+          },
+          {
             "key": "c1fc3cf3-da18-44b0-a220-77c985202e06",
             "text": "Transfer Out"
-          }, {
+          },
+          {
             "key": "5b09202e-b8a7-4f77-9e0e-8156f8efc613",
             "text": "Damage"
           },
@@ -183,9 +185,18 @@
     "bottom_navigation": "true",
     "fields": [
       {
-        "key": "labellots",
-        "type": "label",
-        "text": "Lots Selection Widget (Step 2)"
+        "key": "stockLots",
+        "type": "lot",
+        "trade_item": "[trade_item]",
+        "status": [
+          "VMM1",
+          "VMM2"
+        ],
+        "lots": [
+          "LC2082 Exp. 30-08-2018",
+          "LC2083 Exp. 03-08-2018",
+          "LC2080 Exp. 30-07-2018"
+        ]
       }
     ]
   },

@@ -11,4 +11,5 @@
     <color name="trade_item_border">#E1E1E1</color>
 
     <color name="next_button_disabled">#979797</color>
+    <color name="edit_text_background">#EAEAEA</color>
 </resources>

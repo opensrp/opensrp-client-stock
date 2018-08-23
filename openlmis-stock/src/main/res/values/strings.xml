@@ -34,4 +34,6 @@
     <string name="previous">Previous</string>
     <string name="review">Review</string>
     <string name="next">Next</string>
+    <string name="quantity">Quantity</string>
+    <string name="add_lot">Add Lot</string>
 </resources>
