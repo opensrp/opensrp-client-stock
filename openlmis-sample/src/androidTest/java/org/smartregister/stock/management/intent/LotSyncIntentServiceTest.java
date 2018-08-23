@@ -38,6 +38,8 @@ public class LotSyncIntentServiceTest {
         try {
             TimeUnit.SECONDS.sleep(5);
             assertNotNull(repository.findLotById("id"));
+            assertNotNull(repository.findLotById("id_1"));
+            assertNotNull(repository.findLotById("id_2"));
         } catch (InterruptedException e) {
             fail("Waiting for the worker thread took too long.");
         }

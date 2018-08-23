@@ -25,6 +25,7 @@ import org.smartregister.stock.util.NetworkUtils;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 
 public class OrderableSyncIntentService extends IntentService implements SyncIntentService {
@@ -68,7 +69,7 @@ public class OrderableSyncIntentService extends IntentService implements SyncInt
             long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
             String timeStampString = String.valueOf(timestamp);
 
-            baseUrl = "http://10.20.25.188:8080/openlmis"; // TODO REMOVE THIS
+            baseUrl = "http://10.20.25.188:8080/opensrp"; // TODO REMOVE THIS
             timeStampString = "0"; // TODO REMOVE THIS
 
             String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
@@ -78,15 +79,13 @@ public class OrderableSyncIntentService extends IntentService implements SyncInt
             );
 
             try {
-                Response<String> response = httpAgent.fetch(uri);
-                if (response.isFailure()) {
+                String jsonPayload = makeGetRequest(uri);
+                if (jsonPayload == null) {
                     logError("Orderables pull failed.");
                     return;
                 }
-
                 // store Orderables
                 Long highestTimeStamp = 0L;
-                String jsonPayload = response.payload();
                 List<Orderable> orderables = new Gson().fromJson(jsonPayload, new TypeToken<List<Orderable>>(){}.getType());
                 OrderableRepository orderableRepository = OpenLMISLibrary.getInstance().getOrderableRepository();
                 TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRegisterRepository();

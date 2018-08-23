@@ -21,6 +21,7 @@ import org.smartregister.stock.util.NetworkUtils;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 
 public class ReasonSyncIntentService extends IntentService implements SyncIntentService {
@@ -64,7 +65,7 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
             long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
             String timeStampString = String.valueOf(timestamp);
 
-            baseUrl = "http://10.20.25.188:8080/openlmis"; // TODO REMOVE THIS
+            baseUrl = "http://10.20.25.188:8080/opensrp"; // TODO REMOVE THIS
             timeStampString = "0"; // TODO REMOVE THIS
 
             String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
@@ -74,14 +75,11 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
             );
 
             try {
-                Response<String> response = httpAgent.fetch(uri);
-                if (response.isFailure()) {
+                String jsonPayload = makeGetRequest(uri);
+                if (jsonPayload == null) {
                     logError("Reasons pull failed.");
                     return;
                 }
-
-                String jsonPayload = response.payload();
-
                 // store reasons
                 Long highestTimeStamp = 0L;
                 List<Reason> reasons = new Gson().fromJson(jsonPayload, new TypeToken<List<Reason>>(){}.getType());
@@ -92,7 +90,6 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
                         highestTimeStamp = reason.getServerVersion();
                     }
                 }
-
                 // save highest server version
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);

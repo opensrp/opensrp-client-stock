@@ -34,6 +34,8 @@ public class TradeItemSyncIntentServiceTest {
         // this assumes that a tradeItem with an id value of "id" has been posted to the tradeItems endpoint
         try {
             TimeUnit.SECONDS.sleep(5);
+            assertEquals(1, repository.findTradeItems("identifier_1", "859245888", "manufactuter_1").size());
+            assertEquals(1, repository.findTradeItems("identifier_2", "859245888", "manufactuter_2").size());
             assertEquals(1, repository.findTradeItems("identifier_3", "859245888", "manufactuter_3").size());
         } catch (InterruptedException e) {
             fail("Waiting for the worker thread took too long.");

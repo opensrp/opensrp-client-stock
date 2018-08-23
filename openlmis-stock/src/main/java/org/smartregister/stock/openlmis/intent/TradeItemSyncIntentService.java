@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.http.HttpClientConnection;
 import org.smartregister.domain.Response;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
@@ -18,9 +20,15 @@ import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 import org.smartregister.stock.util.NetworkUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 
 public class TradeItemSyncIntentService extends IntentService implements SyncIntentService {
@@ -64,7 +72,7 @@ public class TradeItemSyncIntentService extends IntentService implements SyncInt
             long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
             String timeStampString = String.valueOf(timestamp);
 
-            baseUrl = "http://10.20.25.188:8080/openlmis"; // TODO REMOVE THIS
+            baseUrl = "http://10.20.25.188:8080/opensrp"; // TODO REMOVE THIS
             timeStampString = "0"; // TODO REMOVE THIS
 
             String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
@@ -74,14 +82,11 @@ public class TradeItemSyncIntentService extends IntentService implements SyncInt
             );
 
             try {
-                Response<String> response = httpAgent.fetch(uri);
-                if (response.isFailure()) {
-                    logError("TradeItems pull failed.");
+                String jsonPayload = makeGetRequest(uri);
+                if (jsonPayload == null) {
+                    logError("TradeItemClassifications pull failed.");
                     return;
                 }
-
-                String jsonPayload = response.payload();
-
                 // store tradeItems
                 Long highestTimeStamp = 0L;
                 List<TradeItem> tradeItems = new Gson().fromJson(jsonPayload, new TypeToken<List<TradeItem>>(){}.getType());
@@ -92,7 +97,6 @@ public class TradeItemSyncIntentService extends IntentService implements SyncInt
                         highestTimeStamp = tradeItem.getServerVersion();
                     }
                 }
-
                 // save highest server version
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);

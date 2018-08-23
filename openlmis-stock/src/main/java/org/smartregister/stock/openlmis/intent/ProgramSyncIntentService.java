@@ -21,6 +21,7 @@ import org.smartregister.stock.util.NetworkUtils;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 
 public class ProgramSyncIntentService extends IntentService implements SyncIntentService {
@@ -65,7 +66,7 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
             long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
             String timeStampString = String.valueOf(timestamp);
 
-            baseUrl = "http://10.20.25.188:8080/openlmis"; // TODO REMOVE THIS
+            baseUrl = "http://10.20.25.188:8080/opensrp"; // TODO REMOVE THIS
             timeStampString = "0"; // TODO REMOVE THIS
 
             String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
@@ -75,14 +76,11 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
             );
 
             try {
-                Response<String> response = httpAgent.fetch(uri);
-                if (response.isFailure()) {
+                String jsonPayload = makeGetRequest(uri);
+                if (jsonPayload == null) {
                     logError("Programs pull failed.");
                     return;
                 }
-
-                String jsonPayload = response.payload();
-
                 // store programs
                 Long highestTimeStamp = 0L;
                 List<Program> programs = new Gson().fromJson(jsonPayload, new TypeToken<List<Program>>(){}.getType());
@@ -93,7 +91,6 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
                         highestTimeStamp = program.getServerVersion();
                     }
                 }
-
                 // save highest server version
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);

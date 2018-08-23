@@ -34,7 +34,7 @@ public class ReasonSyncIntentServiceTest {
         // this assumes that a reason with an id value of "id" has been posted to the reasons endpoint
         try {
             TimeUnit.SECONDS.sleep(5);
-            assertEquals(1, repository.findReasons("id_2", "name_2", "program_id").size());
+            assertEquals(1, repository.findReasons("id_2", "name_2", "id").size());
         } catch (InterruptedException e) {
             fail("Waiting for the worker thread took too long.");
         }

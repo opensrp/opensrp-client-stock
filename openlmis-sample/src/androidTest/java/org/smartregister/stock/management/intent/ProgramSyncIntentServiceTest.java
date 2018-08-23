@@ -34,6 +34,8 @@ public class ProgramSyncIntentServiceTest {
         // this assumes that a program with an id value of "id" has been posted to the programs endpoint
         try {
             TimeUnit.SECONDS.sleep(5);
+            assertEquals(1, repository.findPrograms("identifier", "code", "program_name", "1").size());
+            assertEquals(1, repository.findPrograms("identifier_1", "code_1", "program_name_1", "1").size());
             assertEquals(1, repository.findPrograms("identifier_2", "code_2", "program_name_2", "1").size());
         } catch (InterruptedException e) {
             fail("Waiting for the worker thread took too long.");
