@@ -41,7 +41,7 @@ public class LotDto {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || obj instanceof LotDto)
+        if (obj == null || !(obj instanceof LotDto))
             return false;
         LotDto other = (LotDto) obj;
         return lotId.equals(other.lotId);

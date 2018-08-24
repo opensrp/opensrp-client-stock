@@ -34,7 +34,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.openlmis_native_form_fragment_json_wizard, (ViewGroup) null);
+        View rootView = inflater.inflate(R.layout.openlmis_native_form_fragment_json_wizard, null);
         this.mMainView = rootView.findViewById(R.id.main_layout);
         this.mScrollView = rootView.findViewById(R.id.scroll_view);
         previousButton = rootView.findViewById(R.id.previous_button);
