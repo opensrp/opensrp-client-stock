@@ -25,6 +25,8 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
+import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
@@ -58,27 +60,19 @@ public class TradeItemClassificationSyncIntentService extends IntentService impl
     @Override
     public void pullFromServer() {
 
-        final String PREV_SYNC_SERVER_VERSION = "prev_sync_server_version";
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
         if (baseUrl.endsWith(context.getString(R.string.url_separator))) {
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
         }
-
+        long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
+        String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
+                BASE_URL,
+                TRADE_ITEM_CLASSIFICATION_SYNC_URL,
+                timestamp
+        );
+        // TODO: make baseUrl configurable
         while (true) {
-            long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
-            String timeStampString = String.valueOf(timestamp);
-
-            baseUrl = "http://10.20.25.188:8080/opensrp"; // TODO REMOVE THIS
-            timeStampString = "0"; // TODO REMOVE THIS
-
-            String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
-                    baseUrl,
-                    TRADE_ITEM_CLASSIFICATION_SYNC_URL,
-                    timeStampString
-            );
-
             try {
                 String jsonPayload = makeGetRequest(uri);
                 if (jsonPayload == null) {

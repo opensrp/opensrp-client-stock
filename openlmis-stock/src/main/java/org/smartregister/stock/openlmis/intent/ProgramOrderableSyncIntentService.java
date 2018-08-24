@@ -21,6 +21,7 @@ import org.smartregister.stock.util.NetworkUtils;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 
@@ -63,17 +64,12 @@ public class ProgramOrderableSyncIntentService extends IntentService implements 
 
         while (true) {
             long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
-            String timeStampString = String.valueOf(timestamp);
-
-            baseUrl = "http://10.20.25.188:8080/opensrp"; // TODO REMOVE THIS
-            timeStampString = "0"; // TODO REMOVE THIS
-
             String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
-                    baseUrl,
+                    BASE_URL,
                     LOT_SYNC_URL,
-                    timeStampString
+                    timestamp
             );
-
+            // make request
             try {
                 String jsonPayload = makeGetRequest(uri);
                 if (jsonPayload == null) {
