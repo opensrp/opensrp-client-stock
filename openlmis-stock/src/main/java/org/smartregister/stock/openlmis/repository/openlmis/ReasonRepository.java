@@ -68,7 +68,6 @@ public class ReasonRepository extends BaseRepository {
             String query = String.format(INSERT_OR_REPLACE, REASON_TABLE);
             query += "(" + StringUtils.repeat("?", ",", REASON_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(reason));
-            database.close();
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }

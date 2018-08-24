@@ -30,6 +30,7 @@ public class ReasonSyncIntentServiceTest extends BaseSyncIntentServiceTest {
     @After
     public void tearDown() {
         stopService(Application.getInstance().getApplicationContext(), ReasonSyncIntentService.class);
+        repository.getReadableDatabase().close();
     }
 
     @Test

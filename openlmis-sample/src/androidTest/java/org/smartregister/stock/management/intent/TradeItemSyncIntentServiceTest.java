@@ -30,6 +30,7 @@ public class TradeItemSyncIntentServiceTest extends BaseSyncIntentServiceTest {
     @After
     public void tearDown() {
         stopService(Application.getInstance().getApplicationContext(), TradeItemSyncIntentService.class);
+        repository.getReadableDatabase().close();
     }
 
     @Test

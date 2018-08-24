@@ -33,6 +33,7 @@ public class LotSyncIntentServiceTest extends BaseSyncIntentServiceTest {
     @After
     public void tearDown() {
         stopService(Application.getInstance().getApplicationContext(), LotSyncIntentService.class);
+        repository.getReadableDatabase().close();
     }
 
     @Test

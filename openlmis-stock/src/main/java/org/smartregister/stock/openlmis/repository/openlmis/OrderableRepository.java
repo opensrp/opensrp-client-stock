@@ -77,7 +77,6 @@ public class OrderableRepository extends BaseRepository {
             String query = String.format(INSERT_OR_REPLACE, ORDERABLE_TABLE);
             query += "(" + StringUtils.repeat("?", ",", ORDERABLE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(orderable));
-            database.close();
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }

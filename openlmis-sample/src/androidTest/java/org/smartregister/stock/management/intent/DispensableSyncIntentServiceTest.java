@@ -29,6 +29,7 @@ public class DispensableSyncIntentServiceTest extends  BaseSyncIntentServiceTest
     @After
     public void tearDown() {
         stopService(Application.getInstance().getApplicationContext(), DispensableSyncIntentService.class);
+        repository.getReadableDatabase().close();
     }
 
     @Test

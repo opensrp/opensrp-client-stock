@@ -71,7 +71,6 @@ public class ProgramOrderableRepository extends BaseRepository {
             String query = String.format(INSERT_OR_REPLACE, PROGRAM_ORDERABLE_TABLE);
             query += "(" + StringUtils.repeat("?", ",", PROGRAM_ORDERABLE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(program));
-            database.close();
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }

@@ -34,6 +34,8 @@ public class OrderableSyncIntentServiceTest extends BaseSyncIntentServiceTest {
     @After
     public void tearDown() {
         stopService(Application.getInstance().getApplicationContext(), OrderableSyncIntentService.class);
+        orderableRepository.getReadableDatabase().close();
+        tradeItemRegisterRepository.getReadableDatabase().close();
     }
 
     @Test

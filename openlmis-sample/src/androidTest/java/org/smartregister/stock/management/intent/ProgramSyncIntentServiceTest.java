@@ -30,6 +30,7 @@ public class ProgramSyncIntentServiceTest extends BaseSyncIntentServiceTest {
     @After
     public void tearDown() {
         stopService(Application.getInstance().getApplicationContext(), ProgramSyncIntentService.class);
+        repository.getReadableDatabase().close();
     }
 
     @Test

@@ -30,6 +30,7 @@ public class CommodityTypeSyncIntentServiceTest extends BaseSyncIntentServiceTes
     @After
     public void tearDown() {
         stopService(Application.getInstance().getApplicationContext(), CommodityTypeSyncIntentService.class);
+        repository.getReadableDatabase().close();
     }
 
     @Test

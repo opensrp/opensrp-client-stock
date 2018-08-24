@@ -67,7 +67,6 @@ public class CommodityTypeRepository extends BaseRepository {
             String query = String.format(INSERT_OR_REPLACE, COMMODITY_TYPE_TABLE);
             query += "(" + StringUtils.repeat("?", ",", COMMODITY_TYPE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(commodityType));
-            database.close();
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }

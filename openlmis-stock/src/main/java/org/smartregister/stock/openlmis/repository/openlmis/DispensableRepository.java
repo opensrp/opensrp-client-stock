@@ -65,7 +65,6 @@ public class DispensableRepository extends BaseRepository {
             String query = String.format(INSERT_OR_REPLACE, DISPENSABLE_TABLE);
             query += "(" + StringUtils.repeat("?", ",", DISPENSABLE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(dispensable));
-            database.close();
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
