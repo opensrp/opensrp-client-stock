@@ -28,11 +28,13 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/lot_quantity"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/lot_margin"
         android:layout_weight="2"
+        android:visibility="invisible"
         app:boxBackgroundColor="@color/edit_text_background">
 
         <android.support.design.widget.TextInputEditText
@@ -44,11 +46,12 @@
 
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/lot_status"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/lot_margin"
         android:layout_weight="2"
+        android:visibility="invisible"
         app:boxBackgroundColor="@color/edit_text_background">
 
         <android.support.design.widget.TextInputEditText
@@ -60,5 +63,14 @@
             android:focusable="false"
             android:hint="@string/status" />
     </android.support.design.widget.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:padding="@dimen/list_stock_margin"
+        android:src="@drawable/ic_cancel"
+        android:visibility="invisible" />
 
 </LinearLayout>

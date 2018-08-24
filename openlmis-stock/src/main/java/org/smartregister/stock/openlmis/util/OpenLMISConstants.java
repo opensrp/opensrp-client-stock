@@ -10,6 +10,8 @@ public interface OpenLMISConstants {
 
         String TRADE_ITEM = "[trade_item]";
 
+        String TRADE_ITEM_ID = "[trade_item_id]";
+
         String NET_CONTENT = "[net_content]";
 
         String PREVIOUS = "previous";

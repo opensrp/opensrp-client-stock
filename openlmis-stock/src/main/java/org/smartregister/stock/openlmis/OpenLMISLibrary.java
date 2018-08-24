@@ -2,6 +2,7 @@ package org.smartregister.stock.openlmis;
 
 import org.smartregister.Context;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 
 /**
  * Created by samuelgithengi on 7/10/18.
@@ -11,6 +12,7 @@ public class OpenLMISLibrary {
     private static OpenLMISLibrary instance;
     private Context context;
     private Repository repository;
+    private LotRepository lotRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
 
@@ -38,5 +40,12 @@ public class OpenLMISLibrary {
 
     public Repository getRepository() {
         return repository;
+    }
+
+    public LotRepository getLotRepository() {
+        if (lotRepository == null) {
+            lotRepository = new LotRepository(getRepository());
+        }
+        return lotRepository;
     }
 }

@@ -188,14 +188,10 @@
         "key": "stockLots",
         "type": "lot",
         "trade_item": "[trade_item]",
-        "status": [
+        "trade_item_id": "[trade_item_id]",
+        "lot_status": [
           "VMM1",
           "VMM2"
-        ],
-        "lots": [
-          "LC2082 Exp. 30-08-2018",
-          "LC2083 Exp. 03-08-2018",
-          "LC2080 Exp. 30-07-2018"
         ]
       }
     ]

@@ -16,7 +16,9 @@ import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,41 +37,73 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.V_REQUIRED;
  */
 public class LotFactory implements FormWidgetFactory {
 
-
-    private final static String LOTS_FIELD_NAME = "lots";
-
-    private final static String STATUS_FIELD_NAME = "status";
+    private final static String STATUS_FIELD_NAME = "lot_status";
     private final static String TAG = "LotFactory";
 
     private final static String TRADE_ITEM = "trade_item";
+    private final static String TRADE_ITEM_ID = "trade_item_id";
+
+    private LinearLayout lotsContainer;
+
+    private Context context;
+
+    private LotListener lotListener = new LotListener();
+
+    private List<Lot> lotList;
+
+    private JSONArray statusOptions;
+
 
     @Override
     public List<View> getViewsFromJson(String s, final Context context, JsonFormFragment jsonFormFragment, JSONObject jsonObject, CommonListener commonListener) throws Exception {
+        this.context = context;
         List<View> views = new ArrayList<>(1);
         View root = LayoutInflater.from(context).inflate(R.layout.openlmis_native_form_item_lot, null);
 
         TextView tradeItem = root.findViewById(R.id.trade_item);
         tradeItem.setText(jsonObject.getString(TRADE_ITEM));
 
-        final LinearLayout lotsContainer = root.findViewById(R.id.lots_Container);
-        root.findViewById(R.id.add_lot).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lotsContainer.addView(LayoutInflater.from(context).inflate(R.layout.native_form_lot_row, null),
-                        lotsContainer.getChildCount() - 1);
-            }
-        });
+        lotsContainer = root.findViewById(R.id.lots_Container);
+        root.findViewById(R.id.add_lot).setOnClickListener(lotListener);
+
+        lotList = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(jsonObject.getString(TRADE_ITEM_ID));
 
         TextInputEditText lotDropdown = root.findViewById(R.id.lot_dropdown);
-        JSONArray options = jsonObject.getJSONArray(LOTS_FIELD_NAME);
-        populateSpinnerOptions(context, lotDropdown, options);
+        lotDropdown.setTag(R.id.lot_position, 0);
+        populateLotOptions(context, lotDropdown);
 
 
         TextInputEditText statusDropdown = root.findViewById(R.id.status_dropdown);
-        options = jsonObject.getJSONArray(STATUS_FIELD_NAME);
-        populateSpinnerOptions(context, statusDropdown, options);
+        statusOptions = jsonObject.getJSONArray(STATUS_FIELD_NAME);
+        populateQuantityOptions(context, statusDropdown);
         views.add(root);
         return views;
+    }
+
+
+    private void addLotRow() {
+        View lotView = LayoutInflater.from(context).inflate(R.layout.native_form_lot_row, null);
+        int viewIndex = lotsContainer.getChildCount() - 1;
+        View cancelButton = lotView.findViewById(R.id.cancel_button);
+        cancelButton.setVisibility(View.VISIBLE);
+        cancelButton.setTag(R.id.lot_position, viewIndex);
+        TextInputEditText lotDropdown = lotView.findViewById(R.id.lot_dropdown);
+        lotDropdown.setTag(R.id.lot_position, viewIndex);
+        populateLotOptions(context, lotDropdown);
+        populateQuantityOptions(context, (TextInputEditText) lotView.findViewById(R.id.status_dropdown));
+        cancelButton.setOnClickListener(lotListener);
+        lotsContainer.addView(lotView, viewIndex);
+    }
+
+    private void removeLotRow(View view) {
+        lotsContainer.removeViewAt(Integer.parseInt(view.getTag(R.id.lot_position).toString()));
+    }
+
+
+    private void showQuantityAndStatus(View view) {
+        View lotRow = lotsContainer.getChildAt(Integer.parseInt(view.getTag(R.id.lot_position).toString()));
+        lotRow.findViewById(R.id.lot_quantity).setVisibility(View.VISIBLE);
+        lotRow.findViewById(R.id.lot_status).setVisibility(View.VISIBLE);
     }
 
     private void populateProperties(TextInputEditText editText, JSONObject jsonObject) {
@@ -95,13 +129,13 @@ public class LotFactory implements FormWidgetFactory {
         }
     }
 
-    private void populateSpinnerOptions(final Context context, final TextInputEditText editText, final JSONArray options) {
+    private void populateQuantityOptions(final Context context, final TextInputEditText editText) {
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PopupMenu popupMenu = new PopupMenu(context, view);
-                for (int i = 0; i < options.length(); i++) {
-                    popupMenu.getMenu().add(options.optString(i));
+                for (int i = 0; i < statusOptions.length(); i++) {
+                    popupMenu.getMenu().add(statusOptions.optString(i));
                 }
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -114,4 +148,40 @@ public class LotFactory implements FormWidgetFactory {
             }
         });
     }
+
+    private void populateLotOptions(final Context context, final TextInputEditText editText) {
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                for (Lot lot : lotList) {
+                    popupMenu.getMenu().add(lot.getLotCode());
+                }
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        editText.setText(menuItem.getTitle());
+                        showQuantityAndStatus(editText);
+                        return true;
+                    }
+                });
+            }
+        });
+    }
+
+    private class LotListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.add_lot)
+                addLotRow();
+            else if (view.getId() == R.id.cancel_button)
+                removeLotRow(view);
+            else if (view.getId() == R.id.lot_dropdown)
+                showQuantityAndStatus(view);
+
+        }
+    }
+
+
 }
