@@ -14,13 +14,16 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 import static org.smartregister.stock.management.util.ServiceUtils.startService;
 import static org.smartregister.stock.management.util.ServiceUtils.stopService;
+import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
 
-public class ProgramSyncIntentServiceTest {
+public class ProgramSyncIntentServiceTest extends BaseSyncIntentServiceTest {
 
     ProgramRepository repository = OpenLMISLibrary.getInstance().getProgramRepository();
 
     @Before
-    public void setup() {
+    @Override
+    public void setUp() {
+        super.setUp();
         startService(Application.getInstance().getApplicationContext(), ProgramSyncIntentService.class);
     }
 

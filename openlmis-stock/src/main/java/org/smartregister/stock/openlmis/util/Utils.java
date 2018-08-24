@@ -7,8 +7,16 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
@@ -19,7 +27,7 @@ public class Utils {
     public static final String DATABASE_NAME = "drishti.db";
     private static final String USERNAME = "admin";
     private static  final String PASSWORD = "Admin123";
-    public static final String BASE_URL = "https://vreach-dev.smartregister.org/opensrp/";
+    public static final String BASE_URL = "https://vreach-dev.smartregister.org/opensrp";
     public static final String PREV_SYNC_SERVER_VERSION = "prev_sync_server_version";
 
     public static Boolean convertIntToBoolean(int i) {
@@ -74,6 +82,8 @@ public class Utils {
 
         StringBuffer response = new StringBuffer();
         try {
+            createAllTrustingCertValidator(); // TODO: REMOVE THIS!!!!!!!!!!!!!!!!!!!
+
             HttpURLConnection connection = (HttpURLConnection) new URL(uri).openConnection();
             String encoded = Base64.encodeToString((USERNAME + ":" + PASSWORD).getBytes(), Base64.NO_WRAP);
             connection.setRequestProperty("Authorization", "Basic " + encoded);
@@ -98,5 +108,35 @@ public class Utils {
             return null;
         }
         return response.toString();
+    }
+
+    private static void createAllTrustingCertValidator() throws Exception {
+
+        // Create a trust manager that does not validate certificate chains
+        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }
+        };
+
+        // Install the all-trusting trust manager
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+        // Create all-trusting host name verifier
+        HostnameVerifier allHostsValid = new HostnameVerifier() {
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        };
+
+        // Install the all-trusting host verifier
+        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
     }
 }

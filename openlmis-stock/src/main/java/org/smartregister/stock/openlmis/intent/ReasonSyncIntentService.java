@@ -62,10 +62,11 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
         }
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
+        String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
                 REASON_SYNC_URL,
-                timestamp
+                timestampStr
         );
         // TODO: make baseUrl configurable
         while (true) {

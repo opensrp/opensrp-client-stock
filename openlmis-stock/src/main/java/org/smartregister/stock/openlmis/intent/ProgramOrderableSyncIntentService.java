@@ -64,10 +64,11 @@ public class ProgramOrderableSyncIntentService extends IntentService implements 
 
         while (true) {
             long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
+            String timestampStr = String.valueOf(timestamp);
             String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                     BASE_URL,
                     LOT_SYNC_URL,
-                    timestamp
+                    timestampStr
             );
             // make request
             try {

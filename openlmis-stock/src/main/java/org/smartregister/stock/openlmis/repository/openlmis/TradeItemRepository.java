@@ -61,6 +61,7 @@ public class TradeItemRepository extends BaseRepository {
             String query = String.format(INSERT_OR_REPLACE, TRADE_ITEM_TABLE);
             query += "(" + StringUtils.repeat("?", ",", TRADE_ITEM_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(tradeItem));
+            database.close();
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }

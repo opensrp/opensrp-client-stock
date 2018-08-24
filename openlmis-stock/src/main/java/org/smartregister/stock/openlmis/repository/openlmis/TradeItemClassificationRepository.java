@@ -64,6 +64,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
             String query = String.format(INSERT_OR_REPLACE, TRADE_ITEM_CLASSIFICATION_TABLE);
             query += "(" + StringUtils.repeat("?", ",", TRADE_ITEM_CLASSIFICATION_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(tradeItemClassification));
+            database.close();
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }

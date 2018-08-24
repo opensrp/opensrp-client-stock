@@ -15,12 +15,14 @@ import static junit.framework.Assert.fail;
 import static org.smartregister.stock.management.util.ServiceUtils.startService;
 import static org.smartregister.stock.management.util.ServiceUtils.stopService;
 
-public class DispensableSyncIntentServiceTest {
+public class DispensableSyncIntentServiceTest extends  BaseSyncIntentServiceTest {
 
     DispensableRepository repository = OpenLMISLibrary.getInstance().getDispensableRepository();
 
     @Before
-    public void setup() {
+    @Override
+    public void setUp() {
+        super.setUp();
         startService(Application.getInstance().getApplicationContext(), DispensableSyncIntentService.class);
     }
 

@@ -57,10 +57,11 @@ public class CommodityTypeSyncIntentService extends IntentService implements Syn
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
+        String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
                 LOT_SYNC_URL,
-                timestamp
+                timestampStr
         );
         // TODO: make baseUrl configurable
         while (true) {

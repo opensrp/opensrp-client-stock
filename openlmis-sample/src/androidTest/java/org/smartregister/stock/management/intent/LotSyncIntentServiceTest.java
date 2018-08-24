@@ -16,14 +16,17 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.fail;
 import static org.smartregister.stock.management.util.ServiceUtils.startService;
 import static org.smartregister.stock.management.util.ServiceUtils.stopService;
+import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
 
 @RunWith(JUnit4ClassRunner.class)
-public class LotSyncIntentServiceTest {
+public class LotSyncIntentServiceTest extends BaseSyncIntentServiceTest {
 
     LotRepository repository = OpenLMISLibrary.getInstance().getLotRepository();
 
     @Before
-    public void setup() {
+    @Override
+    public void setUp() {
+        super.setUp();
         startService(Application.getInstance().getApplicationContext(), LotSyncIntentService.class);
     }
 
