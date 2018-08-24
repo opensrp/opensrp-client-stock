@@ -50,6 +50,7 @@ public class LotFactory implements FormWidgetFactory {
     private final static String TRADE_ITEM = "trade_item";
     private final static String TRADE_ITEM_ID = "trade_item_id";
     private final static String NET_CONTENT = "net_content";
+    private final static String DISPENSING_UNIT = "dispensing_unit";
 
     private LinearLayout lotsContainer;
 
@@ -66,6 +67,8 @@ public class LotFactory implements FormWidgetFactory {
     private JSONArray statusOptions;
 
     private long netContent;
+
+    private String dispensingUnit;
 
     private Map<String, LotDto> selectedLotDTos;
 
@@ -87,6 +90,7 @@ public class LotFactory implements FormWidgetFactory {
         tradeItem.setText(jsonObject.getString(TRADE_ITEM));
 
         netContent = jsonObject.getLong(NET_CONTENT);
+        dispensingUnit = jsonObject.getString(DISPENSING_UNIT);
 
         lotsContainer = root.findViewById(R.id.lots_Container);
         root.findViewById(R.id.add_lot).setOnClickListener(lotListener);
@@ -235,7 +239,7 @@ public class LotFactory implements FormWidgetFactory {
         for (LotDto lot : selectedLotDTos.values())
             totalQuantity += lot.getQuantity();
         jsonFormFragment.setBottomNavigationText(context.getString(R.string.issued_dose_formatter,
-                totalQuantity, "vials", totalQuantity * netContent));
+                totalQuantity, dispensingUnit, totalQuantity * netContent));
     }
 
     private class QuantityTextWatcher implements TextWatcher {

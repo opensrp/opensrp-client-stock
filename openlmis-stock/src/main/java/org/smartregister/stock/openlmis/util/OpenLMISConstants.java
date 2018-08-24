@@ -14,6 +14,8 @@ public interface OpenLMISConstants {
 
         String NET_CONTENT = "[net_content]";
 
+        String DISPENSING_UNIT = "[dispensing_unit]";
+
         String PREVIOUS = "previous";
 
         String NEXT = "next";
