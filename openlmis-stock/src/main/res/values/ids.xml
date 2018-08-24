@@ -3,4 +3,5 @@
     <item name="trade_item_updated_key" type="id" />
     <item name="trade_item_id_key" type="id" />
     <item name="lot_position" type="id" />
+    <item name="lot_id" type="id" />
 </resources>

@@ -189,6 +189,7 @@
         "type": "lot",
         "trade_item": "[trade_item]",
         "trade_item_id": "[trade_item_id]",
+        "net_content": "[net_content]",
         "lot_status": [
           "VMM1",
           "VMM2"

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
@@ -29,6 +30,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
     private BottomNavigationListener navigationListener = new BottomNavigationListener();
     private Button previousButton;
     private Button nextButton;
+    private TextView informationTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         previousButton = rootView.findViewById(R.id.previous_button);
         nextButton = rootView.findViewById(R.id.next_button);
         nextButton.setEnabled(false);
+        informationTextView = rootView.findViewById(R.id.information_textView);
         setupCustomToolbar();
         rootView.findViewById(R.id.previous_button).setOnClickListener(navigationListener);
         rootView.findViewById(R.id.next_button).setOnClickListener(navigationListener);
@@ -123,5 +126,9 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
                                    openMrsEntityId) {
         super.writeValue(stepName, prentKey, childObjectKey, childKey, value, openMrsEntityParent, openMrsEntity, openMrsEntityId);
         validateActivateNext();
+    }
+
+    public void setBottomNavigationText(String text) {
+        informationTextView.setText(text);
     }
 }

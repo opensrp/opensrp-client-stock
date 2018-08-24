@@ -23,7 +23,7 @@
     <string name="lot_code_and_expiry">Lot code and expiry date</string>
     <string name="lot_stock_on_hand">Stock on hand</string>
     <string name="status">Status</string>
-    <string name="stock_on_hand_and_expiry">%1s Exp. %2s</string>
+    <string name="lotcode_and_expiry">%1s Exp. %2s</string>
     <string name="date">Date</string>
     <string name="to_from">To/From</string>
     <string name="lot_code">Lot code</string>
@@ -36,4 +36,5 @@
     <string name="next">Next</string>
     <string name="quantity">Quantity</string>
     <string name="add_lot">Add Lot</string>
+    <string name="issued_dose_formatter">%1d %2s, %3d doses will be issued</string>
 </resources>
