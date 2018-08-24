@@ -15,6 +15,15 @@ public class LotDto {
         this.lotId = lotId;
     }
 
+    public LotDto(String lotId, int quantity, String lotStatus) {
+        this.lotId = lotId;
+        this.quantity = quantity;
+        this.lotStatus = lotStatus;
+    }
+
+    public LotDto() {
+    }
+
     public String getLotId() {
         return lotId;
     }

@@ -222,14 +222,23 @@ public class LotFactory implements FormWidgetFactory {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        String lotId = menuItem.getActionView().getTag(R.id.lot_id).toString();
-                        editText.setText(menuItem.getTitle());
-                        editText.setTag(R.id.lot_id, lotId);
-                        showQuantityAndStatus(editText, lotId);
-                        if (!selectedLotDTos.contains(new LotDto(lotId))) {
-                            selectedLotDTos.add(new LotDto(lotId));
+                        Object previousLotId = editText.getTag(R.id.lot_id);
+                        LotDto previousDto = new LotDto();
+                        if (previousLotId != null) {
+                            lotMap.put(previousLotId.toString(), selectedLotsMap.remove(previousLotId.toString()));
+                            previousDto = selectedLotDTos.get(selectedLotDTos.indexOf(new LotDto(previousLotId.toString())));
+                            selectedLotDTos.remove(previousDto);
                         }
-                        selectedLotsMap.put(lotId, lotMap.remove(lotId));
+                        String selectedLotId = menuItem.getActionView().getTag(R.id.lot_id).toString();
+                        editText.setText(menuItem.getTitle());
+                        editText.setTag(R.id.lot_id, selectedLotId);
+                        showQuantityAndStatus(editText, selectedLotId);
+                        if (!selectedLotDTos.contains(new LotDto(selectedLotId))) {
+                            selectedLotDTos.add(new LotDto(selectedLotId, previousDto.getQuantity(), previousDto.getLotStatus()));
+                        }
+                        selectedLotsMap.put(selectedLotId, lotMap.remove(selectedLotId));
+                        writeValues();
+                        displayDosesQuantity();
                         return true;
                     }
                 });
