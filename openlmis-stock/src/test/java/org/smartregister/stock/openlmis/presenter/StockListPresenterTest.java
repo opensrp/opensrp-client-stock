@@ -19,7 +19,7 @@ import org.smartregister.stock.openlmis.view.contract.StockListView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.String;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -69,9 +69,9 @@ public class StockListPresenterTest extends BaseUnitTest {
     @Test
     public void testGetCommodityTypes() {
         List<CommodityType> expected = new ArrayList<>();
-        String uuid = String.randomString();
+        String uuid = UUID.randomUUID().toString();
         expected.add(new CommodityType(uuid, "BCG", "", null, null, System.currentTimeMillis()));
-        expected.add(new CommodityType(String.randomString(), "OPV", "", null, null, System.currentTimeMillis()));
+        expected.add(new CommodityType(UUID.randomUUID().toString(), "OPV", "", null, null, System.currentTimeMillis()));
 
         when(stockListInteractor.getCommodityTypes()).thenReturn(expected);
         List<CommodityType> commodityTypes = stockListPresenter.getCommodityTypes();
@@ -86,7 +86,7 @@ public class StockListPresenterTest extends BaseUnitTest {
     @Test
     public void getTradeItems() throws Exception {
         List<TradeItem> expected = new ArrayList<>();
-        String uuid = String.randomString();
+        String uuid = UUID.randomUUID().toString();
         TradeItem tradeItem = new TradeItem(uuid);
         tradeItem.setManufacturerOfTradeItem("Intervax BCG 20");
         tradeItem.setGtin(new Gtin("305730154758"));

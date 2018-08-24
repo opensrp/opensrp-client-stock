@@ -12,16 +12,16 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.stock.openlmis.BaseUnitTest;
-import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Gtin;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.listener.ExpandCollapseListener;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.CommodityTypeViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.String;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -46,7 +46,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
     private ListCommodityTypeAdapter listCommodityTypeAdapter;
 
-    private CommodityType bcGCommodityType = new CommodityType(String.randomString(), "BCG",
+    private CommodityType bcGCommodityType = new CommodityType(UUID.randomUUID().toString(), "BCG",
             "", null, null, System.currentTimeMillis());
 
 
@@ -54,7 +54,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
     public void setUp() {
         List<CommodityType> expected = new ArrayList<>();
         expected.add(bcGCommodityType);
-        expected.add(new CommodityType(String.randomString(), "OPV", "", null, null, System.currentTimeMillis()));
+        expected.add(new CommodityType(UUID.randomUUID().toString(), "OPV", "", null, null, System.currentTimeMillis()));
 
         when(stockListPresenter.getCommodityTypes()).thenReturn(expected);
 
@@ -77,7 +77,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
     public void testOnBindViewHolderWithTradeItem() throws Exception {
 
         List<TradeItem> expectedTradeItems = new ArrayList<>();
-        TradeItem tradeItem = new TradeItem(String.randomString());
+        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setManufacturerOfTradeItem("Intervax BCG 20");
         tradeItem.setGtin(new Gtin("305730154758"));
         expectedTradeItems.add(tradeItem);
