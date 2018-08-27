@@ -6,6 +6,8 @@ public interface OpenLMISConstants {
 
     String LOT_WIDGET = "lot";
 
+    String REVIEW_WIDGET = "review";
+
     interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";

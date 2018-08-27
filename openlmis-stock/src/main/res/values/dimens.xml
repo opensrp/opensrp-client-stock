@@ -21,4 +21,6 @@
     <dimen name="bottom_navigation_margin">10dp</dimen>
     <dimen name="bottom_navigation_padding">40dp</dimen>
     <dimen name="lot_margin">50dp</dimen>
+
+    <dimen name="review_margin">20dp</dimen>
 </resources>

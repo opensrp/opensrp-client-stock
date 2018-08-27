@@ -89,6 +89,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
             nextButton.setTag(R.id.submit, true);
             nextButton.setVisibility(View.VISIBLE);
             nextButton.setEnabled(true);
+            nextButton.setTextColor(getContext().getResources().getColor(R.color.white));
         }
         if (step.has(NEXT_LABEL))
             nextButton.setText(step.optString(NEXT_LABEL));

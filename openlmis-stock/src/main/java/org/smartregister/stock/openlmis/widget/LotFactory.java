@@ -57,12 +57,12 @@ public class LotFactory implements FormWidgetFactory {
     private final static String STATUS_FIELD_NAME = "lot_status";
     private final static String TAG = "LotFactory";
 
-    private final static String TRADE_ITEM = "trade_item";
-    private final static String TRADE_ITEM_ID = "trade_item_id";
-    private final static String NET_CONTENT = "net_content";
-    private final static String DISPENSING_UNIT = "dispensing_unit";
+    public final static String TRADE_ITEM = "trade_item";
+    public final static String TRADE_ITEM_ID = "trade_item_id";
+    public final static String NET_CONTENT = "net_content";
+    public final static String DISPENSING_UNIT = "dispensing_unit";
 
-    private final static Gson gson = new GsonBuilder().create();
+    public final static Gson gson = new GsonBuilder().create();
 
     private LinearLayout lotsContainer;
 

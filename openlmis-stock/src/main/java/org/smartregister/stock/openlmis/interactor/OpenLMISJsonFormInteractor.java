@@ -6,6 +6,7 @@ import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import org.smartregister.stock.openlmis.util.OpenLMISConstants;
 import org.smartregister.stock.openlmis.widget.LotFactory;
 import org.smartregister.stock.openlmis.widget.OpenLMISDatePickerFactory;
+import org.smartregister.stock.openlmis.widget.ReviewFactory;
 
 /**
  * Created by samuelgithengi on 8/16/18.
@@ -22,6 +23,7 @@ public class OpenLMISJsonFormInteractor extends JsonFormInteractor {
         super.registerWidgets();
         map.put(JsonFormConstants.DATE_PICKER, new OpenLMISDatePickerFactory());
         map.put(OpenLMISConstants.LOT_WIDGET, new LotFactory());
+        map.put(OpenLMISConstants.REVIEW_WIDGET, new ReviewFactory());
     }
 
     public static JsonFormInteractor getInstance() {
