@@ -141,23 +141,25 @@ public class LotFactory implements FormWidgetFactory {
         populateStatusOptions(context, statusDropdown);
         views.add(root);
 
-        if (!selectedLotDTos.isEmpty()) {
-            this.jsonFormFragment.validateActivateNext();
-            showQuantityAndStatus(lotDropdown, selectedLotDTos.get(0).getLotId(), selectedLotDTos.get(0));
-            restoreAdditionalLotRows();
-        }
-
         ((JsonApi) context).addFormDataView(lotsContainer);
+
+        if (!selectedLotDTos.isEmpty()) {
+            showQuantityAndStatus(lotDropdown, selectedLotDTos.get(0).getLotId(), selectedLotDTos.get(0));
+            if (selectedLotDTos.size() == 1)
+                this.jsonFormFragment.validateActivateNext();
+            else
+                restoreAdditionalLotRows();
+        }
 
         return views;
     }
 
     private void restoreAdditionalLotRows() {
-        if (selectedLotDTos.size() == 1) return;
         for (int i = 1; i < selectedLotDTos.size(); i++) {
             LotDto lotDto = selectedLotDTos.get(i);
             showQuantityAndStatus(addLotRow(), lotDto.getLotId(), lotDto);
         }
+        this.jsonFormFragment.validateActivateNext();
     }
 
 
