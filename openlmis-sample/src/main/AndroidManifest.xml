@@ -34,5 +34,7 @@
             android:exported="false"/>
         <service android:name="org.smartregister.stock.openlmis.intent.DispensableSyncIntentService"
             android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.OpenLMISStockSyncIntentService"
+            android:exported="false"/>
     </application>
 </manifest>

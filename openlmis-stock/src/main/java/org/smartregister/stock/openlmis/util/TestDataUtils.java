@@ -103,7 +103,7 @@ public class TestDataUtils {
                     if (transactionType.equals(Stock.issued))
                         value = -value;
                     Stock stock = new Stock(null, transactionType, "tester11", value, now,
-                            "WareHouse123", "unsynched", now, tradeItem.getId());
+                            "WareHouse123", "unsynched", now, tradeItem.getId(), "lot_id");
                     stock.setLotId(lot.getId().toString());
                     stockRepository.addOrUpdate(stock);
                 }
