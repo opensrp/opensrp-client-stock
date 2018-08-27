@@ -3,7 +3,12 @@ package org.smartregister.stock.openlmis.util;
 import android.util.Base64;
 import android.util.Pair;
 
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.domain.Stock;
+import org.smartregister.stock.openlmis.repository.StockRepository;
+
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -27,7 +32,8 @@ public class Utils {
     public static final String DATABASE_NAME = "drishti.db";
     private static final String USERNAME = "admin";
     private static  final String PASSWORD = "Admin123";
-    public static final String BASE_URL = "https://vreach-dev.smartregister.org/opensrp";
+    //public static final String BASE_URL = "https://vreach-dev.smartregister.org/opensrp";
+    public static final String BASE_URL = "http://10.20.25.188:8080/opensrp";
     public static final String PREV_SYNC_SERVER_VERSION = "prev_sync_server_version";
 
     public static Boolean convertIntToBoolean(int i) {
@@ -110,6 +116,48 @@ public class Utils {
         return response.toString();
     }
 
+    public static String makePostRequest(String uri, String payload) {
+
+        StringBuffer response = new StringBuffer();
+        try {
+            createAllTrustingCertValidator(); // TODO: REMOVE THIS!!!!!!!!!!!!!!!!!!!
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(uri).openConnection();
+            String encoded = Base64.encodeToString((USERNAME + ":" + PASSWORD).getBytes(), Base64.NO_WRAP);
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("Authorization", "Basic " + encoded);
+
+            // send POST request
+            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            outputStream.write(payload.getBytes("UTF-8"));
+            outputStream.flush();
+            outputStream.close();
+
+            // validate response code
+            int responseCode = connection.getResponseCode();
+            logInfo("\nSending 'POST' request to URL : " + uri);
+            logInfo("Response Code : " + responseCode);
+            if (responseCode > 299 && responseCode < 600) {
+                return null;
+            }
+
+            // read response
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+        } catch (Exception e) {
+            logError(e.getMessage());
+            return null;
+        }
+        return response.toString();
+    }
+
+
     private static void createAllTrustingCertValidator() throws Exception {
 
         // Create a trust manager that does not validate certificate chains
@@ -138,5 +186,21 @@ public class Utils {
 
         // Install the all-trusting host verifier
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+    }
+
+    public static void populateDBWithStock() {
+        StockRepository repository = OpenLMISLibrary.getInstance().getStockRepository();
+
+        List<Stock> stocks = new ArrayList<>();
+        Stock stock = new Stock(null, "debit", "provider_id", 1, 1L, "to_from", "Unsynced", 1L, "trade_item_id", "lot_id");
+        stocks.add(stock);
+        stock = new Stock(null, "debit", "provider_id_1", 1, 1L, "to_from", "Unsynced", 1L, "trade_item_id_1", "lot_id_1");
+        stocks.add(stock);
+        stock = new Stock(null, "debit", "provider_id_2", 1, 1L, "to_from", "Unsynced", 1L, "trade_item_id_2", "lot_id_2");
+        stocks.add(stock);
+
+        for (Stock stk : stocks) {
+            repository.addOrUpdate(stk);
+        }
     }
 }

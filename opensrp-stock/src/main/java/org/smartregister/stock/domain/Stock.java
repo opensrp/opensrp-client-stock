@@ -137,4 +137,24 @@ public class Stock {
     public void setTeamId(String teamId) {
         this.teamId = teamId;
     }
+
+    public Long getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Long dateUpdated) {
+        this.dateUpdated = dateUpdated;
+    }
+
+    public static String getIssued() {
+        return issued;
+    }
+
+    public static String getReceived() {
+        return received;
+    }
+
+    public static String getLoss_adjustment() {
+        return loss_adjustment;
+    }
 }

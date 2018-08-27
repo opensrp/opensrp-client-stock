@@ -33,10 +33,10 @@ public class OpenLMISStockSyncIntentServiceTest extends BaseSyncIntentServiceTes
     }
 
     @Test
-    public void testOpenLMISStocksAreSyncedAndSaved() {
+    public void testOpenLMISStocksAreSyncedDownwardAndSaved() {
         // this assumes that stock with corresponding id value has been posted to the stock endpoint
         try {
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(7);
             assertEquals(1, repository.findUniqueStock("trade_item_id", "debit", "provider_id", "1", "1", "to_from").size());
             assertEquals(1, repository.findUniqueStock("trade_item_id_1", "debit", "provider_id_1", "1", "1", "to_from").size());
             assertEquals(1, repository.findUniqueStock("trade_item_id_2", "debit", "provider_id_2", "1", "1", "to_from").size());

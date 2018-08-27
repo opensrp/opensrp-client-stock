@@ -27,10 +27,12 @@ import static org.smartregister.repository.BaseRepository.TYPE_Synced;
 import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
+import static org.smartregister.stock.openlmis.util.Utils.makePostRequest;
+import static org.smartregister.stock.openlmis.util.Utils.populateDBWithStock;
 import static org.smartregister.util.Log.logError;
 
 public class OpenLMISStockSyncIntentService extends IntentService {
-    private static final String STOCK_Add_PATH = "/rest/stockresource/add/";
+    private static final String STOCK_Add_PATH = "rest/stockresource/add/";
     private static final String STOCK_SYNC_PATH = "rest/stockresource/sync/";
 
     private Context context;
@@ -155,9 +157,7 @@ public class OpenLMISStockSyncIntentService extends IntentService {
     private void pushStockToServer() {
         boolean keepSyncing = true;
         int limit = 50;
-
         try {
-
             while (keepSyncing) {
                 StockRepository stockRepository = OpenLMISLibrary.getInstance().getStockRepository();
                 ArrayList<Stock> stocks = (ArrayList<Stock>) stockRepository.findUnSyncedWithLimit(limit);
@@ -170,14 +170,14 @@ public class OpenLMISStockSyncIntentService extends IntentService {
                 request.put(context.getString(org.smartregister.stock.R.string.stocks_key), stocksarray);
 
                 String jsonPayload = request.toString();
-                Response<String> response = httpAgent.post(
+                String response = makePostRequest(
                         MessageFormat.format(
                                 "{0}/{1}",
                                 BASE_URL,
                                 STOCK_Add_PATH),
                                 jsonPayload);
-                if (response.isFailure()) {
-                    Log.e(getClass().getName(), "Stocks sync failed.");
+                if (response == null) {
+                    Log.e(getClass().getName(), "Stocks upward sync failed.");
                     return;
                 }
                 stockRepository.markEventsAsSynced(stocks);
