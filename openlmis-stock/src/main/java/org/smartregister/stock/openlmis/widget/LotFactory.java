@@ -20,6 +20,9 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
+import com.vijay.jsonwizard.interfaces.JsonApi;
+import com.vijay.jsonwizard.utils.ValidationStatus;
+import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,6 +47,7 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.V_REQUIRED;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET;
 
 /**
  * Created by samuelgithengi on 8/23/18.
@@ -107,6 +111,9 @@ public class LotFactory implements FormWidgetFactory {
         dispensingUnit = jsonObject.getString(DISPENSING_UNIT);
 
         lotsContainer = root.findViewById(R.id.lots_Container);
+        lotsContainer.setTag(com.vijay.jsonwizard.R.id.address, stepName + ":" + key);
+        lotsContainer.setTag(com.vijay.jsonwizard.R.id.type, LOT_WIDGET);
+
         root.findViewById(R.id.add_lot).setOnClickListener(lotListener);
 
         String selectedLotDTosJSON = jsonObject.optString(JsonFormConstants.VALUE);
@@ -135,9 +142,12 @@ public class LotFactory implements FormWidgetFactory {
         views.add(root);
 
         if (!selectedLotDTos.isEmpty()) {
+            this.jsonFormFragment.validateActivateNext();
             showQuantityAndStatus(lotDropdown, selectedLotDTos.get(0).getLotId(), selectedLotDTos.get(0));
             restoreAdditionalLotRows();
         }
+
+        ((JsonApi) context).addFormDataView(lotsContainer);
 
         return views;
     }
@@ -163,6 +173,7 @@ public class LotFactory implements FormWidgetFactory {
         populateStatusOptions(context, (TextInputEditText) lotView.findViewById(R.id.status_dropdown));
         cancelButton.setOnClickListener(lotListener);
         lotsContainer.addView(lotView, viewIndex);
+        writeValues();
         return lotDropdown;
     }
 
@@ -172,11 +183,12 @@ public class LotFactory implements FormWidgetFactory {
         if (lotId != null) {
             lotMap.put(lotId.toString(), selectedLotsMap.remove(lotId.toString()));
             writeValues();
+            if (selectedLotDTos.contains(new LotDto(lotId.toString())))
+                selectedLotDTos.remove(selectedLotDTos.indexOf(new LotDto(lotId.toString())));
         }
         lotsContainer.removeView(lotRow);
-        if (selectedLotDTos.contains(new LotDto(lotId.toString())))
-            selectedLotDTos.remove(selectedLotDTos.indexOf(new LotDto(lotId.toString())));
         displayDosesQuantity();
+        writeValues();
     }
 
 
@@ -340,6 +352,17 @@ public class LotFactory implements FormWidgetFactory {
             writeValues();
             displayDosesQuantity();
         }
+    }
+
+    public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
+                                            LinearLayout lotsContainer) {
+        for (int i = 0; i < lotsContainer.getChildCount() - 1; i++) {
+            if (((TextInputEditText) lotsContainer.getChildAt(i).findViewById(R.id.lot_dropdown)).getText().toString().isEmpty() ||
+                    ((TextInputEditText) lotsContainer.getChildAt(i).findViewById(R.id.quantity_textview)).getText().toString().isEmpty() ||
+                    ((TextInputEditText) lotsContainer.getChildAt(i).findViewById(R.id.status_dropdown)).getText().toString().isEmpty())
+                return new ValidationStatus(false, "Not Valid", formFragmentView, lotsContainer);
+        }
+        return new ValidationStatus(true, null, formFragmentView, lotsContainer);
     }
 
 }

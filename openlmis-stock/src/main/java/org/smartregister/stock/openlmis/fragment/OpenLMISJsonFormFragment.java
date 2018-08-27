@@ -94,12 +94,13 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
     }
 
-    private void validateActivateNext() {
+    public void validateActivateNext() {
         if (!isVisible())//form fragment is initializing
             return;
         ValidationStatus validationStatus = null;
         for (View dataView : getJsonApi().getFormDataViews()) {
-            validationStatus = presenter.validate(this, dataView, false);
+
+            validationStatus = getPresenter().validate(this, dataView, false);
             if (!validationStatus.isValid()) {
                 break;
             }
@@ -130,5 +131,9 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
 
     public void setBottomNavigationText(String text) {
         informationTextView.setText(text);
+    }
+
+    private OpenLMISJsonFormFragmentPresenter getPresenter() {
+        return (OpenLMISJsonFormFragmentPresenter) presenter;
     }
 }
