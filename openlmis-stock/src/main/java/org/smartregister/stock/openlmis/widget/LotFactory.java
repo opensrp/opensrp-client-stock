@@ -205,10 +205,15 @@ public class LotFactory implements FormWidgetFactory {
         status.setTag(R.id.lot_id, lotId);
         if (lotDto != null) {
             quantity.setText(String.valueOf(lotDto.getQuantity()));
+            quantity.setTag(R.id.lot_id, lotDto.getLotId());
+
             status.setText(lotDto.getLotStatus());
+            status.setTag(R.id.lot_id, lotDto.getLotId());
+
             TextInputEditText lot = lotRow.findViewById(R.id.lot_dropdown);
             lot.setText(context.getString(R.string.lotcode_and_expiry,
                     selectedLotsMap.get(lotId).getLotCode(), selectedLotsMap.get(lotId).getExpirationDate().toString(DATE_FORMAT)));
+            lot.setTag(R.id.lot_id, lotDto.getLotId());
 
         }
 
