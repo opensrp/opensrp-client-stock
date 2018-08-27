@@ -5,11 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
-import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -172,29 +172,73 @@ public class LotRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testGetNumberOfLotsByTradeItem() {
+
         String tradeItemId = UUID.randomUUID().toString();
-        assertEquals(0, lotRepository.getNumberOfLotsByTradeItem(tradeItemId.toString()));
+        String tradeItemId2 = UUID.randomUUID().toString();
 
-        Lot lot = new Lot(UUID.randomUUID().toString(), "LC2018G", 98914892L,
-                837813919L, tradeItemId, true);
+        long now = System.currentTimeMillis();
+
+
+        Lot lot = new Lot(UUID.randomUUID().toString(), "LC2018G", 378874l,
+                3478483l, tradeItemId, true);
         lotRepository.addOrUpdate(lot);
 
-        lot = new Lot(UUID.randomUUID().toString(), "LC2018N", 9482494L,
-                389189302L, tradeItemId, true);
+        lot = new Lot(UUID.randomUUID().toString(), "LC2018N", 8843l,
+                4838l, tradeItemId, true);
         lotRepository.addOrUpdate(lot);
 
-        String tradeItem2 = UUID.randomUUID().toString();
-        lot = new Lot(UUID.randomUUID().toString(), "LC2016FG",284829L,
-                390189391L, tradeItem2, false);
+        UUID tradeItem2 = UUID.randomUUID();
+        lot = new Lot(UUID.randomUUID().toString(), "LC2016FG", 89343l,
+                9343l, tradeItemId2, false);
         lotRepository.addOrUpdate(lot);
 
-        int lots = lotRepository.getNumberOfLotsByTradeItem(tradeItemId.toString());
-
+        int lots = lotRepository.getNumberOfLotsByTradeItem(tradeItemId);
         assertEquals(2, lots);
 
-        lots = lotRepository.getNumberOfLotsByTradeItem(tradeItem2.toString());
-
+        lots = lotRepository.getNumberOfLotsByTradeItem(tradeItemId2);
         assertEquals(1, lots);
 
+        assertEquals(0, lotRepository.getNumberOfLotsByTradeItem(UUID.randomUUID().toString()));
     }
+
+    @Test
+    public void testFindLotNames() {
+        UUID tradeItemId = UUID.randomUUID();
+        assertEquals(0, lotRepository.findLotNames(tradeItemId.toString()).size());
+
+        UUID lotId = UUID.randomUUID();
+        Lot lot = new Lot(lotId.toString(), "LC2018G", 490234l,
+                248392l, tradeItemId.toString(), true);
+        lotRepository.addOrUpdate(lot);
+
+        UUID lot2Id = UUID.randomUUID();
+        lot = new Lot(lot2Id.toString(), "LC2018N", 4893942l,
+                3193982l, tradeItemId.toString(), true);
+        lotRepository.addOrUpdate(lot);
+
+        UUID tradeItem2 = UUID.randomUUID();
+        UUID lot3Id = UUID.randomUUID();
+        lot = new Lot(lot3Id.toString(), "LC2016FG", 949123l,
+                391390l, tradeItem2.toString(), false);
+        lotRepository.addOrUpdate(lot);
+
+        Map<String, String> lots = lotRepository.findLotNames(tradeItemId.toString());
+
+        assertEquals(2, lots.size());
+        assertTrue(lots.containsKey(lotId.toString()));
+        assertEquals("LC2018G", lots.get(lotId.toString()));
+
+        assertTrue(lots.containsKey(lot2Id.toString()));
+        assertEquals("LC2018N", lots.get(lot2Id.toString()));
+
+        lots = lotRepository.findLotNames(tradeItem2.toString());
+
+        assertEquals(1, lots.size());
+        assertTrue(lots.containsKey(lot3Id.toString()));
+        assertEquals("LC2016FG", lots.get(lot3Id.toString()));
+
+        assertEquals(0, lotRepository.findLotNames(UUID.randomUUID().toString()).size());
+
+    }
+
 }

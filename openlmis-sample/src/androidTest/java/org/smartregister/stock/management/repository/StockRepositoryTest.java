@@ -4,7 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.smartregister.stock.openlmis.domain.Stock;
+import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.repository.StockRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -148,38 +150,42 @@ public class StockRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testGetNumberOfLotsByTradeItem() {
+        LotRepository lotRepository = new LotRepository(mainRepository);
 
-        String tradeItemId = UUID.randomUUID().toString().toString();
-        String lotId = UUID.randomUUID().toString().toString();
+        String tradeItemId = UUID.randomUUID().toString();
+        String tradeItemId2 = UUID.randomUUID().toString();
+
+        Lot lotId1 = new Lot(UUID.randomUUID().toString(), "LC2018G", 98914892L,
+                837813919L, tradeItemId, true);
+        lotRepository.addOrUpdate(lotId1);
+
+        Lot lotId2 = new Lot(UUID.randomUUID().toString(), "LC2018N", 9482494L,
+                389189302L, tradeItemId2, true);
+        lotRepository.addOrUpdate(lotId2);
+
         long now = System.currentTimeMillis();
         Stock stock = new Stock(null, Stock.received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
-        stock.setLotId(lotId);
+        stock.setLotId(lotId1.getId());
         stockRepository.addOrUpdate(stock);
 
         stock = new Stock(null, Stock.issued, "tester11", -10, now,
                 "HO", "unsynched", now, tradeItemId);
-        stock.setLotId(lotId);
+        stock.setLotId(lotId1.getId());
         stockRepository.addOrUpdate(stock);
 
-        String lotId2 = UUID.randomUUID().toString().toString();
         stock = new Stock(null, Stock.received, "tester11", 12, now,
                 "HO", "unsynched", now, tradeItemId);
-        stock.setLotId(lotId2);
+        stock.setLotId(lotId2.getId());
         stockRepository.addOrUpdate(stock);
 
-        String tradeItemId2 = UUID.randomUUID().toString().toString();
         stock = new Stock(null, Stock.received, "tester11", 32, now,
                 "HO", "unsynched", now, tradeItemId2);
-        stock.setLotId(lotId2);
+        stock.setLotId(lotId2.getId());
         stockRepository.addOrUpdate(stock);
 
-        assertEquals(2, stockRepository.getNumberOfLotsByTradeItem(tradeItemId));
-
-        assertEquals(1, stockRepository.getNumberOfLotsByTradeItem(tradeItemId2));
-
-
-        assertEquals(0, stockRepository.getNumberOfLotsByTradeItem(UUID.randomUUID().toString().toString()));
-
+        assertEquals(2, stockRepository.getNumberOfLotsByTradeItem(tradeItemId).size());
+        assertEquals(1, stockRepository.getNumberOfLotsByTradeItem(tradeItemId2).size());
+        assertEquals(0, stockRepository.getNumberOfLotsByTradeItem(UUID.randomUUID().toString()).size());
     }
 }

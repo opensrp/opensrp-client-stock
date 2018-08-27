@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
-import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.listener.ExpandCollapseListener;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.CommodityTypeViewHolder;
+import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +48,13 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     @Override
     public void onBindViewHolder(@NonNull CommodityTypeViewHolder holder, int position) {
         CommodityType commodityType = commodityTypes.get(position);
-        List<TradeItem> tradeItems = stockListPresenter.getTradeItems(commodityType);
-        holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter, commodityType.getName(), tradeItems.size()));
-        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, 1200));
+        List<TradeItemWrapper> tradeItems = stockListPresenter.getTradeItems(commodityType);
+        int totalDoses = 0;
+        for (TradeItemWrapper tradeItem : tradeItems)
+            totalDoses += tradeItem.getTotalStock() * tradeItem.getTradeItem().getNetContent();
+        holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter,
+                commodityType.getName(), tradeItems.size()));
+        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, totalDoses));
         holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, context));
     }
 

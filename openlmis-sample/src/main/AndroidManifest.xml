@@ -36,5 +36,8 @@
             android:exported="false"/>
         <service android:name="org.smartregister.stock.openlmis.intent.OpenLMISStockSyncIntentService"
             android:exported="false"/>
+        <activity
+            android:name="org.smartregister.stock.openlmis.view.StockDetailsActivity"
+            android:parentActivityName="org.smartregister.stock.openlmis.view.StockListActivity" />
     </application>
 </manifest>

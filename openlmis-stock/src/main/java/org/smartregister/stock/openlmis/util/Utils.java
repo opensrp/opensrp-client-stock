@@ -33,7 +33,7 @@ public class Utils {
     private static final String USERNAME = "admin";
     private static  final String PASSWORD = "Admin123";
     //public static final String BASE_URL = "https://vreach-dev.smartregister.org/opensrp";
-    public static final String BASE_URL = "http://10.20.25.188:8080/opensrp";
+    public static final String BASE_URL = "http://192.168.0.10:8080/opensrp";
     public static final String PREV_SYNC_SERVER_VERSION = "prev_sync_server_version";
 
     public static Boolean convertIntToBoolean(int i) {

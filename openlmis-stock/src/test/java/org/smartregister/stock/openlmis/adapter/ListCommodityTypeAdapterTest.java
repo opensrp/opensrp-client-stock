@@ -12,12 +12,12 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.stock.openlmis.BaseUnitTest;
+import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
-import org.smartregister.stock.openlmis.domain.openlmis.Gtin;
-import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.listener.ExpandCollapseListener;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.CommodityTypeViewHolder;
+import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 
 
 /**
@@ -76,11 +75,14 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
     @Test
     public void testOnBindViewHolderWithTradeItem() throws Exception {
 
-        List<TradeItem> expectedTradeItems = new ArrayList<>();
+        List<TradeItemWrapper> expectedTradeItems = new ArrayList<>();
         TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
-        tradeItem.setManufacturerOfTradeItem("Intervax BCG 20");
-        tradeItem.setGtin(new Gtin("305730154758"));
-        expectedTradeItems.add(tradeItem);
+        tradeItem.setCommodityTypeId(bcGCommodityType.getId().toString());
+        tradeItem.setName("Intervax BCG 20");
+        tradeItem.setNetContent(20l);
+        TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
+        tradeItemWrapper.setTotalStock(60);
+        expectedTradeItems.add(tradeItemWrapper);
 
         when(stockListPresenter.getTradeItems(bcGCommodityType)).thenReturn(expectedTradeItems);
 
@@ -100,7 +102,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
         listCommodityTypeAdapter.onBindViewHolder(holder, 1);
         assertEquals("OPV (0)", holder.getCommodityTypeTextView().getText());
-        assertEquals("1200 doses", holder.getDoseTextView().getText());
+        assertEquals("0 doses", holder.getDoseTextView().getText());
         assertNotNull(holder.getTradeItemsRecyclerView().getAdapter());
         assertEquals(0, holder.getTradeItemsRecyclerView().getAdapter().getItemCount());
     }

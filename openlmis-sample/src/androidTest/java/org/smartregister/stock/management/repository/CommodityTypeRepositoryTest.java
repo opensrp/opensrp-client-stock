@@ -9,6 +9,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeReposit
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
 
 /************** test naming convention followed *****************
@@ -148,5 +149,38 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
                 "123e4567-e89b-42d3-a456-556642440286", "classification_system", "classification_id");
 
         assertEquals(commodityTypes.size(), 0);
+    }
+
+
+    @Test
+    public void testFindAllCommodityTypes() {
+
+        assertTrue(database.findAllCommodityTypes().isEmpty());
+
+        // insert new CommodityTypes
+        CommodityType commodityType = new CommodityType(
+                "123e4567-e89b-42d3-a456-556642440100",
+                "commodity",
+                "123e4567-e89b-42d3-a456-556642440276",
+                "classification_system",
+                "classification_id",
+                421309130103L
+        );
+        database.addOrUpdate(commodityType);
+
+        assertEquals(database.findAllCommodityTypes().size(), 1);
+
+        commodityType = new CommodityType(
+                "123e4567-e89b-42d3-a456-556642440200",
+                "commodity",
+                "123e4567-e89b-42d3-a456-556642440276",
+                "classification_system",
+                "classification_id",
+                421309130103L
+        );
+        database.addOrUpdate(commodityType);
+
+        // ensure all matching rows are returned
+        assertEquals(database.findAllCommodityTypes().size(), 2);
     }
 }

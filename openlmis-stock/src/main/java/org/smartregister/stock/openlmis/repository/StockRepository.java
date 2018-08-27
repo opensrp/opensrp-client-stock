@@ -11,8 +11,14 @@ import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.Stock;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.ID;
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.LOT_TABLE;
 import static org.smartregister.stock.repository.StockRepository.CHILD_LOCATION_ID;
 import static org.smartregister.stock.repository.StockRepository.DATE_CREATED;
 import static org.smartregister.stock.repository.StockRepository.DATE_UPDATED;
@@ -155,7 +161,8 @@ public class StockRepository extends BaseRepository {
 
 
     public List<Stock> getStockByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT * FROM %s WHERE %s=?", stock_TABLE_NAME, STOCK_TYPE_ID);
+        String query = String.format("SELECT * FROM %s WHERE %s=? ORDER BY %s desc", stock_TABLE_NAME
+                , STOCK_TYPE_ID, DATE_CREATED);
         Cursor cursor = null;
         List<Stock> stockList = new ArrayList<>();
         try {
@@ -174,14 +181,17 @@ public class StockRepository extends BaseRepository {
     }
 
 
-    public int getNumberOfLotsByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT 1 FROM %s WHERE %s=? GROUP BY %s HAVING  sum(%s) >0 ",
-                stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID, VALUE);
+    public Map<Long, Integer> getNumberOfLotsByTradeItem(String tradeItemId) {
+        String query = String.format("SELECT sum(%s),%s FROM %s s JOIN %s l on s.%s=l.%s" +
+                        " WHERE %s=? GROUP BY %s HAVING  sum(%s) !=0 ",
+                VALUE, EXPIRATION_DATE, stock_TABLE_NAME, LOT_TABLE, LOT_ID, ID, STOCK_TYPE_ID, LOT_ID, VALUE);
         Cursor cursor = null;
+        Map<Long, Integer> lots = new TreeMap<>(Collections.reverseOrder());
         try {
             cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId});
-            if (cursor.moveToFirst())
-                return cursor.getCount();
+            while (cursor.moveToNext()) {
+                lots.put(cursor.getLong(1), cursor.getInt(0));
+            }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         } finally {
@@ -189,7 +199,26 @@ public class StockRepository extends BaseRepository {
                 cursor.close();
             }
         }
-        return 0;
+        return lots;
+    }
+
+    public int getTotalStockByLot(String lotId) {
+        String query = String.format("SELECT sum(%s) FROM %s WHERE %s=?", VALUE, stock_TABLE_NAME, LOT_ID);
+        Cursor cursor = null;
+        int totalStock = 0;
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{lotId});
+            if (cursor.moveToFirst()) {
+                totalStock = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return totalStock;
     }
 
     public List<Stock> findUniqueStock(String stock_type_id, String transaction_type, String providerid, String value, String date_created, String to_from) {

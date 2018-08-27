@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.util;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.LocalDate;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
@@ -95,15 +96,19 @@ public class TestDataUtils {
         for (TradeItem tradeItem : lotHashMap.keySet()) {
             List<Lot> lots = lotHashMap.get(tradeItem);
             for (Lot lot : lots) {
-                for (int i = 0; i < random.nextInt(10); i++) {
-                    long now = System.currentTimeMillis();
+                for (int i = 0; i < random.nextInt(15); i++) {
+                    Calendar dateCreated = Calendar.getInstance();
+                    dateCreated.add(Calendar.DATE, -random.nextInt(120));
                     int type = random.nextInt(3);
                     String transactionType = type == 0 ? Stock.received : type == 1 ? Stock.issued : Stock.loss_adjustment;
-                    int value = random.nextInt(50);
-                    if (transactionType.equals(Stock.issued))
-                        value = -value;
-                    Stock stock = new Stock(null, transactionType, "tester11", value, now,
-                            "WareHouse123", "unsynched", now, tradeItem.getId(), "lot_id");
+
+                    int value = 5 + random.nextInt(50);
+                    if (transactionType.equals(Stock.issued) ||
+                            (transactionType.equals(Stock.loss_adjustment) && random.nextInt(2) == 0))
+                        value = -random.nextInt(5);
+
+                    Stock stock = new Stock(null, transactionType, "tester11", value, dateCreated.getTimeInMillis(),
+                            RandomStringUtils.randomAlphabetic(6 + random.nextInt(6)), "unsynched", System.currentTimeMillis(), tradeItem.getId());
                     stock.setLotId(lot.getId().toString());
                     stockRepository.addOrUpdate(stock);
                 }
@@ -113,26 +118,23 @@ public class TestDataUtils {
     }
 
     private List<TradeItem> createTradeItems(CommodityType commodityType) {
+        Calendar calendar = Calendar.getInstance();
         List<TradeItem> tradeItems = new ArrayList<>();
         Random random = new Random();
         if (commodityType.getName().equals("C1"))
             return tradeItems;
         TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("Intervax " + commodityType.getName() + " 20");
-        tradeItem.setNetContent(Long.valueOf(random.nextInt(50)));
+        tradeItem.setNetContent((long) (2 + random.nextInt(18)));
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "vials", "20 pills", null));
-
-
         tradeItems.add(tradeItem);
-
 
         tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("BIntervax " + commodityType.getName() + " 30");
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
         tradeItem.setNetContent(Long.valueOf(random.nextInt(40)));
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "pills", "30 pills", null));
-
 
         tradeItems.add(tradeItem);
         if (commodityType.getName().equals("Penta"))
@@ -143,8 +145,6 @@ public class TestDataUtils {
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
         tradeItem.setNetContent(Long.valueOf(random.nextInt(20)));
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "vials", "5 vials", null));
-
-
         tradeItems.add(tradeItem);
 
         tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
@@ -152,8 +152,6 @@ public class TestDataUtils {
         tradeItem.setCommodityTypeId(commodityType.getId().toString());
         tradeItem.setNetContent(Long.valueOf(random.nextInt(10)));
         tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "strip", "10 tab strip", null));
-
-
         tradeItems.add(tradeItem);
         return tradeItems;
     }
@@ -162,7 +160,7 @@ public class TestDataUtils {
     private List<Lot> createLots(String tradeItemId) {
         List<Lot> lots = new ArrayList<>();
         Random random = new Random();
-        int numberOfLots = random.nextInt(5);
+        int numberOfLots = random.nextInt(8);
 
         for (int i = 0; i < numberOfLots; i++) {
             Calendar calendar = Calendar.getInstance();
@@ -173,6 +171,7 @@ public class TestDataUtils {
                     System.currentTimeMillis(),
                     tradeItemId,
                     false);
+            lot.setLotStatus("VMM2");
             lots.add(lot);
         }
         return lots;

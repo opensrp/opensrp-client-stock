@@ -19,6 +19,8 @@ public class Lot extends BaseEntity {
 
     private Long dateUpdated;
 
+    private String lotStatus;
+
     public Lot(String id, String lotCode, Long expirationDate, Long manufactureDate, String tradeItemId, boolean active) {
         this.id = id;
         this.lotCode = lotCode;
@@ -82,5 +84,13 @@ public class Lot extends BaseEntity {
 
     public void setDateUpdated(Long dateUpdated) {
         this.dateUpdated = dateUpdated;
+    }
+
+    public String getLotStatus() {
+        return lotStatus;
+    }
+
+    public void setLotStatus(String lotStatus) {
+        this.lotStatus = lotStatus;
     }
 }

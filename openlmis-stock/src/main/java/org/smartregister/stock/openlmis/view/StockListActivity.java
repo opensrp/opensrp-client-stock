@@ -30,6 +30,8 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         setSupportActionBar(toolbar);
         stockListPresenter = new StockListPresenter(this);
 
+        populateTestData();
+
         FloatingActionButton mfFloatingActionButton = findViewById(R.id.stockAction);
         mfFloatingActionButton.setOnClickListener(this);
 
@@ -51,7 +53,6 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         findViewById(R.id.collapseAll).setOnClickListener(this);
 
-        populateTestData();
     }
 
     public void populateTestData() {

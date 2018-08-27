@@ -10,12 +10,12 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.smartregister.stock.openlmis.BaseUnitTest;
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
+import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
-import org.smartregister.stock.openlmis.domain.openlmis.Gtin;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
-import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.interactor.StockListInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
+import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,27 +85,26 @@ public class StockListPresenterTest extends BaseUnitTest {
 
     @Test
     public void getTradeItems() throws Exception {
-        List<TradeItem> expected = new ArrayList<>();
-        String uuid = UUID.randomUUID().toString();
-        TradeItem tradeItem = new TradeItem(uuid);
-        tradeItem.setManufacturerOfTradeItem("Intervax BCG 20");
-        tradeItem.setGtin(new Gtin("305730154758"));
-        expected.add(tradeItem);
 
-        CommodityType commodityType = new CommodityType(uuid, "BCG", "",
+        List<TradeItemWrapper> expected = new ArrayList<>();
+        UUID uuid = UUID.randomUUID();
+        TradeItem tradeItem = new TradeItem(uuid.toString());
+        tradeItem.setName("Intervax BCG 20");
+        tradeItem.setCommodityTypeId("305730154758");
+        expected.add(new TradeItemWrapper(tradeItem));
+
+        CommodityType commodityType = new CommodityType(uuid.toString(), "BCG", "",
                 null, null, System.currentTimeMillis());
         when(stockListInteractor.getTradeItems(commodityType)).thenReturn(expected);
 
-        List<TradeItem> tradeItems = stockListPresenter.getTradeItems(commodityType);
+        List<TradeItemWrapper> tradeItems = stockListPresenter.getTradeItems(commodityType);
 
         verify(stockListInteractor).getTradeItems(commodityType);
 
         assertEquals(1, tradeItems.size());
-        assertEquals(uuid, tradeItems.get(0).getId());
-        assertEquals("305730154758", tradeItems.get(0).getGtin().toString());
-        assertEquals("Intervax BCG 20", tradeItems.get(0).getManufacturerOfTradeItem());
-
-
+        assertEquals(uuid.toString(), tradeItems.get(0).getTradeItem().getId());
+        assertEquals("305730154758", tradeItems.get(0).getTradeItem().getCommodityTypeId().toString());
+        assertEquals("Intervax BCG 20", tradeItems.get(0).getTradeItem().getName());
     }
 
     @Test

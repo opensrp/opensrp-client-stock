@@ -8,21 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.smartregister.stock.openlmis.R;
-import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
+import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.view.viewholder.TradeItemViewHolder;
+import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by samuelgithengi on 7/17/18.
  */
 public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHolder> {
 
-    private List<TradeItem> tradeItems;
+    private List<TradeItemWrapper> tradeItems;
     private Context context;
 
-    public ListTradeItemAdapter(List<TradeItem> tradeItems, Context context) {
+    public ListTradeItemAdapter(List<TradeItemWrapper> tradeItems, Context context) {
         this.tradeItems = tradeItems;
         this.context = context;
     }
@@ -36,12 +36,17 @@ public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHold
 
     @Override
     public void onBindViewHolder(@NonNull TradeItemViewHolder holder, int position) {
-        TradeItem tradeItem = tradeItems.get(position);
-        holder.getNameTextView().setText(tradeItem.getManufacturerOfTradeItem());
-        holder.getLotsTextView().setText(context.getString(R.string.lot_formatter, 100));
-        holder.getDispensableTextView().setText(context.getString(R.string.dispensable_formatter, 50, "vials"));
-        Random random = new Random();
-        holder.getExpiringTextView().setVisibility(random.nextInt(4) == 1 ? View.VISIBLE : View.INVISIBLE);
+        TradeItemWrapper tradeItemWrapper = tradeItems.get(position);
+        TradeItem tradeItem = tradeItemWrapper.getTradeItem();
+        holder.setTradeItemWrapper(tradeItemWrapper);
+        holder.getNameTextView().setText(tradeItem.getName());
+        holder.getNameTextView().setTag(R.id.trade_item_updated_key, tradeItem.getDateUpdated());
+        holder.getNameTextView().setTag(R.id.trade_item_id_key, tradeItem.getId());
+        holder.getLotsTextView().setText(context.getString(R.string.lot_formatter, tradeItemWrapper.getNumberOfLots()));
+        holder.getDispensableTextView().setText(context.getString(R.string.dispensable_formatter,
+                tradeItemWrapper.getTotalStock(),
+                tradeItem.getDispensable() == null ? null : tradeItem.getDispensable().getKeyDispensingUnit()));
+        holder.getExpiringTextView().setVisibility(tradeItemWrapper.isHasLotExpiring() ? View.VISIBLE : View.INVISIBLE);
 
     }
 
