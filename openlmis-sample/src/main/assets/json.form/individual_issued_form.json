@@ -203,6 +203,8 @@
     "title": "Review",
     "previous": "step2",
     "bottom_navigation": "true",
+    "next_type": "submit",
+    "next_label": "Submit",
     "fields": [
       {
         "key": "labelReview",

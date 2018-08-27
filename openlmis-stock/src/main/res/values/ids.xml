@@ -4,4 +4,5 @@
     <item name="trade_item_id_key" type="id" />
     <item name="lot_position" type="id" />
     <item name="lot_id" type="id" />
+    <item name="submit" type="id" />
 </resources>
