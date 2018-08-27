@@ -18,7 +18,11 @@ public interface OpenLMISConstants {
 
         String PREVIOUS = "previous";
 
+        String PREVIOUS_LABEL = "previous_label";
+
         String NEXT = "next";
+
+        String NEXT_LABEL = "next_label";
 
         String BACKGROUND = "background";
 

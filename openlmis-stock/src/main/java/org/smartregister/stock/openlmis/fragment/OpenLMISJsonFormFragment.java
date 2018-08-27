@@ -19,7 +19,9 @@ import org.smartregister.stock.openlmis.presenter.OpenLMISJsonFormFragmentPresen
 import org.smartregister.stock.util.Constants;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_LABEL;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS_LABEL;
 
 /**
  * Created by samuelgithengi on 8/16/18.
@@ -76,9 +78,13 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         JSONObject step = getStep(stepName);
         if (step.has(PREVIOUS)) {
             previousButton.setVisibility(View.VISIBLE);
+            if (step.has(PREVIOUS_LABEL))
+                previousButton.setText(step.optString(PREVIOUS_LABEL));
         }
         if (step.has(NEXT)) {
             nextButton.setVisibility(View.VISIBLE);
+            if (step.has(NEXT_LABEL))
+                nextButton.setText(step.optString(NEXT_LABEL));
         }
     }
 

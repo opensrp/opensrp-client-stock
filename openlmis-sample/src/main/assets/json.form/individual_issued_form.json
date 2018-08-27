@@ -182,6 +182,7 @@
     "title": "Issue [trade_item]",
     "previous": "step1",
     "next": "step3",
+    "next_label": "Review",
     "bottom_navigation": "true",
     "fields": [
       {
