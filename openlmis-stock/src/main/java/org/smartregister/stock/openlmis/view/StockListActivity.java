@@ -53,6 +53,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         findViewById(R.id.collapseAll).setOnClickListener(this);
 
+        // populateTestData();
     }
 
     public void populateTestData() {
