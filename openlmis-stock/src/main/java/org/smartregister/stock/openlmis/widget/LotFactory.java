@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
@@ -26,6 +29,7 @@ import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.widget.helper.LotDto;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,9 +109,20 @@ public class LotFactory implements FormWidgetFactory {
         lotsContainer = root.findViewById(R.id.lots_Container);
         root.findViewById(R.id.add_lot).setOnClickListener(lotListener);
 
+        String selectedLotDTosJSON = jsonObject.optString(JsonFormConstants.VALUE);
+        if (!selectedLotDTosJSON.isEmpty()) {
+            Type listType = new TypeToken<List<LotDto>>() {
+            }.getType();
+            selectedLotDTos = gson.fromJson(selectedLotDTosJSON, listType);
+        }
+
         List<Lot> lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(jsonObject.getString(TRADE_ITEM_ID));
-        for (Lot lot : lots)
-            lotMap.put(lot.getId().toString(), lot);
+        for (Lot lot : lots) {
+            if (!selectedLotDTos.isEmpty() && selectedLotDTos.contains(new LotDto(lot.getId().toString())))
+                selectedLotsMap.put(lot.getId().toString(), lot);
+            else
+                lotMap.put(lot.getId().toString(), lot);
+        }
 
         TextInputEditText lotDropdown = root.findViewById(R.id.lot_dropdown);
         lotDropdown.setTag(R.id.lot_position, 0);
@@ -118,11 +133,25 @@ public class LotFactory implements FormWidgetFactory {
         statusOptions = jsonObject.getJSONArray(STATUS_FIELD_NAME);
         populateStatusOptions(context, statusDropdown);
         views.add(root);
+
+        if (!selectedLotDTos.isEmpty()) {
+            showQuantityAndStatus(lotDropdown, selectedLotDTos.get(0).getLotId(), selectedLotDTos.get(0));
+            restoreAdditionalLotRows();
+        }
+
         return views;
     }
 
+    private void restoreAdditionalLotRows() {
+        if (selectedLotDTos.size() == 1) return;
+        for (int i = 1; i < selectedLotDTos.size(); i++) {
+            LotDto lotDto = selectedLotDTos.get(i);
+            showQuantityAndStatus(addLotRow(), lotDto.getLotId(), lotDto);
+        }
+    }
 
-    private void addLotRow() {
+
+    private TextInputEditText addLotRow() {
         View lotView = LayoutInflater.from(context).inflate(R.layout.native_form_lot_row, null);
         int viewIndex = lotsContainer.getChildCount() - 1;
         View cancelButton = lotView.findViewById(R.id.cancel_button);
@@ -134,6 +163,7 @@ public class LotFactory implements FormWidgetFactory {
         populateStatusOptions(context, (TextInputEditText) lotView.findViewById(R.id.status_dropdown));
         cancelButton.setOnClickListener(lotListener);
         lotsContainer.addView(lotView, viewIndex);
+        return lotDropdown;
     }
 
     private void removeLotRow(View view) {
@@ -144,18 +174,29 @@ public class LotFactory implements FormWidgetFactory {
             writeValues();
         }
         lotsContainer.removeView(lotRow);
+        if (selectedLotDTos.contains(new LotDto(lotId.toString())))
+            selectedLotDTos.remove(selectedLotDTos.indexOf(new LotDto(lotId.toString())));
         displayDosesQuantity();
     }
 
 
-    private void showQuantityAndStatus(View view, String lotId) {
+    private void showQuantityAndStatus(View view, String lotId, @Nullable LotDto lotDto) {
         View lotRow = lotsContainer.getChildAt(Integer.parseInt(view.getTag(R.id.lot_position).toString()));
         lotRow.findViewById(R.id.lot_quantity).setVisibility(View.VISIBLE);
+        lotRow.findViewById(R.id.lot_status).setVisibility(View.VISIBLE);
         TextInputEditText quantity = lotRow.findViewById(R.id.quantity_textview);
         quantity.setTag(R.id.lot_id, lotId);
         quantity.addTextChangedListener(new QuantityTextWatcher(quantity));
-        lotRow.findViewById(R.id.lot_status).setVisibility(View.VISIBLE);
-        lotRow.findViewById(R.id.status_dropdown).setTag(R.id.lot_id, lotId);
+        TextInputEditText status = lotRow.findViewById(R.id.status_dropdown);
+        status.setTag(R.id.lot_id, lotId);
+        if (lotDto != null) {
+            quantity.setText(String.valueOf(lotDto.getQuantity()));
+            status.setText(lotDto.getLotStatus());
+            TextInputEditText lot = lotRow.findViewById(R.id.lot_dropdown);
+            lot.setText(context.getString(R.string.lotcode_and_expiry,
+                    selectedLotsMap.get(lotId).getLotCode(), selectedLotsMap.get(lotId).getExpirationDate().toString(DATE_FORMAT)));
+
+        }
 
     }
 
@@ -232,7 +273,7 @@ public class LotFactory implements FormWidgetFactory {
                         String selectedLotId = menuItem.getActionView().getTag(R.id.lot_id).toString();
                         editText.setText(menuItem.getTitle());
                         editText.setTag(R.id.lot_id, selectedLotId);
-                        showQuantityAndStatus(editText, selectedLotId);
+                        showQuantityAndStatus(editText, selectedLotId, null);
                         if (!selectedLotDTos.contains(new LotDto(selectedLotId))) {
                             selectedLotDTos.add(new LotDto(selectedLotId, previousDto.getQuantity(), previousDto.getLotStatus()));
                         }
@@ -267,7 +308,7 @@ public class LotFactory implements FormWidgetFactory {
             else if (view.getId() == R.id.cancel_button)
                 removeLotRow(view);
             else if (view.getId() == R.id.lot_dropdown)
-                showQuantityAndStatus(view, view.getTag(R.id.lot_id).toString());
+                showQuantityAndStatus(view, view.getTag(R.id.lot_id).toString(), null);
 
         }
     }
