@@ -11,14 +11,17 @@ public class LotDto {
 
     private int quantity;
 
+    private String lotCodeAndExpiry;
+
     public LotDto(String lotId) {
         this.lotId = lotId;
     }
 
-    public LotDto(String lotId, int quantity, String lotStatus) {
+    public LotDto(String lotId, int quantity, String lotStatus, String lotCodeAndExpiry) {
         this.lotId = lotId;
         this.quantity = quantity;
         this.lotStatus = lotStatus;
+        this.lotCodeAndExpiry = lotCodeAndExpiry;
     }
 
     public LotDto() {
@@ -46,6 +49,14 @@ public class LotDto {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getLotCodeAndExpiry() {
+        return lotCodeAndExpiry;
+    }
+
+    public void setLotCodeAndExpiry(String lotCodeAndExpiry) {
+        this.lotCodeAndExpiry = lotCodeAndExpiry;
     }
 
     @Override

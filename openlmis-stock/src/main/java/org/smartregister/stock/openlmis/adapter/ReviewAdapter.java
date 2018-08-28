@@ -40,7 +40,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
     public void onBindViewHolder(@NonNull ReviewViewHolder reviewViewHolder, int position) {
         LotDto lot = lotDtoList.get(position);
         reviewViewHolder.getTradeItemTextView().setText(tradeItem);
-        reviewViewHolder.getLotCodeTextView().setText(lot.getLotId());
+        reviewViewHolder.getLotCodeTextView().setText(lot.getLotCodeAndExpiry());
         reviewViewHolder.getQuantityTextView().setText(String.valueOf(lot.getQuantity()));
         reviewViewHolder.getStatusTextView().setText(lot.getLotStatus());
     }

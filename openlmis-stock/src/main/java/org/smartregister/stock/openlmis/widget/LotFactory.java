@@ -294,7 +294,8 @@ public class LotFactory implements FormWidgetFactory {
                         editText.setTag(R.id.lot_id, selectedLotId);
                         showQuantityAndStatus(editText, selectedLotId, null);
                         if (!selectedLotDTos.contains(new LotDto(selectedLotId))) {
-                            selectedLotDTos.add(new LotDto(selectedLotId, previousDto.getQuantity(), previousDto.getLotStatus()));
+                            selectedLotDTos.add(new LotDto(selectedLotId, previousDto.getQuantity(),
+                                    previousDto.getLotStatus(), menuItem.getTitle().toString()));
                         }
                         selectedLotsMap.put(selectedLotId, lotMap.remove(selectedLotId));
                         writeValues();
