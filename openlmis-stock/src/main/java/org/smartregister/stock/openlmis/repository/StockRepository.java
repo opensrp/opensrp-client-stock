@@ -6,6 +6,7 @@ import android.util.Log;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.joda.time.LocalDate;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.Stock;
@@ -19,6 +20,7 @@ import java.util.TreeMap;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.ID;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.LOT_TABLE;
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.TRADE_ITEM_ID;
 import static org.smartregister.stock.repository.StockRepository.CHILD_LOCATION_ID;
 import static org.smartregister.stock.repository.StockRepository.DATE_CREATED;
 import static org.smartregister.stock.repository.StockRepository.DATE_UPDATED;
@@ -138,13 +140,14 @@ public class StockRepository extends BaseRepository {
 
 
     public Map<Long, Integer> getNumberOfLotsByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT sum(%s),%s FROM %s s JOIN %s l on s.%s=l.%s" +
-                        " WHERE %s=? GROUP BY %s HAVING  sum(%s) !=0 ",
-                VALUE, EXPIRATION_DATE, stock_TABLE_NAME, LOT_TABLE, LOT_ID, ID, STOCK_TYPE_ID, LOT_ID, VALUE);
+        String query = String.format("SELECT sum(%s),%s FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
+                        " WHERE %s=? AND %s > ? GROUP BY l.%s ",
+                VALUE, EXPIRATION_DATE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID, TRADE_ITEM_ID, EXPIRATION_DATE, ID);
         Cursor cursor = null;
         Map<Long, Integer> lots = new TreeMap<>(Collections.reverseOrder());
         try {
-            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId});
+            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId,
+                    String.valueOf(new LocalDate().toDate().getTime())});
 
             while (cursor.moveToNext()) {
                 lots.put(cursor.getLong(1), cursor.getInt(0));

@@ -18,11 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
-import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
-import static org.smartregister.stock.repository.StockRepository.VALUE;
-import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
-
 /**
  * Created by samuelgithengi on 26/7/18.
  */
@@ -31,7 +26,7 @@ public class LotRepository extends BaseRepository {
     private static final String LOT_CODE = "lot_code";
     public static final String EXPIRATION_DATE = "expiration_date";
     private static final String MANUFACTURE_DATE = "manufacture_date";
-    private static final String TRADE_ITEM_ID = "trade_item_id";
+    public static final String TRADE_ITEM_ID = "trade_item_id";
     private static final String ACTIVE = "active";
     private static final String LOT_STATUS = "lot_status";
     public static final String LOT_TABLE = "lots";
@@ -84,16 +79,15 @@ public class LotRepository extends BaseRepository {
 
     public List<Lot> findLotsByTradeItem(String tradeItemId) {
 
-        String query = String.format("SELECT * FROM %s WHERE %s IN " +
-                        "(SELECT %s FROM %s  WHERE %s=? GROUP BY %s having SUM(%s) !=0 )" +
+        String query = String.format("SELECT * FROM %s WHERE %s=? AND %s > ? " +
                         "ORDER BY %s, %s desc",
-                LOT_TABLE, ID, LOT_ID, stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID, VALUE,
+                LOT_TABLE, TRADE_ITEM_ID, EXPIRATION_DATE,
                 EXPIRATION_DATE, LOT_STATUS);
         Log.d(TAG, query);
         Cursor cursor = null;
         List<Lot> lots = new ArrayList<>();
         try {
-            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId});
+            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId, String.valueOf(new LocalDate().toDate().getTime())});
             while (cursor.moveToNext()) {
                 lots.add(createLot(cursor));
             }

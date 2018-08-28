@@ -50,7 +50,7 @@ public class TestDataUtils {
         populateCommodityTypes();
         populateTradeItems();
         populateLots();
-        populateStock();
+        //populateStock();
     }
 
 
