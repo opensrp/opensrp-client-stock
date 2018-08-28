@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.ReviewAdapter;
+import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.widget.helper.LotDto;
 import org.smartregister.util.JsonFormUtils;
 
@@ -64,11 +65,23 @@ public class ReviewFactory implements FormWidgetFactory {
         step1Fields = formJSon.getJSONObject(STEP2).getJSONArray(FIELDS);
 
         String lotsJSON = JsonFormUtils.getFieldValue(step1Fields, STOCK_LOTS);
-        RecyclerView review_recyclerView = root.findViewById(R.id.review_recyclerView);
+        RecyclerView reviewRecyclerView = root.findViewById(R.id.review_recyclerView);
         Type listType = new TypeToken<List<LotDto>>() {
         }.getType();
         List<LotDto> selectedLotDTos = LotFactory.gson.fromJson(lotsJSON, listType);
-        review_recyclerView.setAdapter(new ReviewAdapter(tradeItem, selectedLotDTos));
+        reviewRecyclerView.setAdapter(new ReviewAdapter(tradeItem, selectedLotDTos));
+
+        displayDosesQuantity((OpenLMISJsonFormFragment) formFragment, context, selectedLotDTos, dispensingUnit, netContent);
+
         return views;
+    }
+
+    private void displayDosesQuantity(OpenLMISJsonFormFragment jsonFormFragment, Context context,
+                                      List<LotDto> selectedLotDTos, String dispensingUnit, long netContent) {
+        int totalQuantity = 0;
+        for (LotDto lot : selectedLotDTos)
+            totalQuantity += lot.getQuantity();
+        jsonFormFragment.setBottomNavigationText(context.getString(R.string.issued_dose_formatter,
+                totalQuantity, dispensingUnit, totalQuantity * netContent));
     }
 }
