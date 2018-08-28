@@ -193,8 +193,8 @@
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
         "lot_status": [
-          "VMM1",
-          "VMM2"
+          "VVM1",
+          "VVM2"
         ]
       }
     ]
