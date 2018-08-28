@@ -9,17 +9,20 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.smartregister.domain.Response;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import org.smartregister.stock.openlmis.domain.openlmis.Orderable;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItemClassification;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.util.NetworkUtils;
 
 import java.text.MessageFormat;
@@ -83,22 +86,21 @@ public class OrderableSyncIntentService extends IntentService implements SyncInt
                 Long highestTimeStamp = 0L;
                 List<Orderable> orderables = new Gson().fromJson(jsonPayload, new TypeToken<List<Orderable>>(){}.getType());
                 OrderableRepository orderableRepository = OpenLMISLibrary.getInstance().getOrderableRepository();
-                TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRegisterRepository();
+                TradeItemRepository registerTradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRegisterRepository();
                 DispensableRepository dispensableRepository = OpenLMISLibrary.getInstance().getDispensableRepository();
                 for (Orderable orderable : orderables) {
                     orderableRepository.addOrUpdate(orderable);
                     // update trade item that feeds views
                     if (orderable.getTradeItemId() != null) {
-                        TradeItem tradeItem = new TradeItem(orderable.getTradeItemId());
-                        tradeItem.setCommodityTypeId(orderable.getCommodityTypeId());
-                        tradeItem.setNetContent(orderable.getNetContent());
-                        tradeItem.setName(orderable.getFullProductName());
-
+                        TradeItem registerTradeItem = registerTradeItemRepository.getTradeItemById(orderable.getTradeItemId());
+                        registerTradeItem = registerTradeItem == null ? new org.smartregister.stock.openlmis.domain.TradeItem(orderable.getTradeItemId()) : registerTradeItem;
+                        registerTradeItem.setNetContent(orderable.getNetContent());
+                        registerTradeItem.setName(orderable.getFullProductName());
+                        // save dispensables
                         Dispensable dispensable = dispensableRepository.findDispensable(orderable.getDispensableId());
-                        tradeItem.setDispensable(dispensable);
-                        tradeItemRepository.addOrUpdate(tradeItem);
+                        registerTradeItem.setDispensable(dispensable);
+                        registerTradeItemRepository.addOrUpdate(registerTradeItem);
                     }
-
                     if (orderable.getServerVersion() > highestTimeStamp) {
                         highestTimeStamp = orderable.getServerVersion();
                     }

@@ -9,13 +9,13 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.smartregister.domain.Response;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
-import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 import org.smartregister.stock.util.NetworkUtils;
 
 import java.text.MessageFormat;
@@ -74,9 +74,20 @@ public class CommodityTypeSyncIntentService extends IntentService implements Syn
                 // store commodityTypes
                 Long highestTimeStamp = 0L;
                 List<CommodityType> commodityTypes = new Gson().fromJson(jsonPayload, new TypeToken<List<CommodityType>>(){}.getType());
-                CommodityTypeRepository repository = OpenLMISLibrary.getInstance().getCommodityTypeRepository();
+                CommodityTypeRepository commodityTypeRepository = OpenLMISLibrary.getInstance().getCommodityTypeRepository();
+                org.smartregister.stock.openlmis.repository.TradeItemRepository tradeItemRegisterRepository = OpenLMISLibrary.getInstance().getTradeItemRegisterRepository();
+                TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
                 for (CommodityType commodityType : commodityTypes) {
-                    repository.addOrUpdate(commodityType);
+                    commodityTypeRepository.addOrUpdate(commodityType);
+                    for (TradeItem tradeItem : commodityType.getTradeItems()) {
+                        // update trade item register repository
+                        org.smartregister.stock.openlmis.domain.TradeItem tradeItemRegister = tradeItemRegisterRepository.getTradeItemById(tradeItem.getId());
+                        tradeItemRegister = tradeItemRegister == null ? new org.smartregister.stock.openlmis.domain.TradeItem(tradeItem.getId()) : tradeItemRegister;
+                        tradeItemRegister.setCommodityTypeId(commodityType.getId());
+                        tradeItemRegisterRepository.addOrUpdate(tradeItemRegister);
+                        // update trade item repository
+                        tradeItemRepository.addOrUpdate(tradeItem);
+                    }
                     if (commodityType.getServerVersion() > highestTimeStamp) {
                         highestTimeStamp = commodityType.getServerVersion();
                     }

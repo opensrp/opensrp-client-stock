@@ -17,6 +17,8 @@ import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
+import org.smartregister.stock.openlmis.domain.openlmis.TradeItemClassification;
+import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 import org.smartregister.stock.util.NetworkUtils;
 
@@ -85,9 +87,14 @@ public class TradeItemSyncIntentService extends IntentService implements SyncInt
                 // store tradeItems
                 Long highestTimeStamp = 0L;
                 List<TradeItem> tradeItems = new Gson().fromJson(jsonPayload, new TypeToken<List<TradeItem>>(){}.getType());
-                TradeItemRepository repository = OpenLMISLibrary.getInstance().getTradeItemRepository();
+                TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
+                TradeItemClassificationRepository tradeItemClassificationRepository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
                 for (TradeItem tradeItem : tradeItems) {
-                    repository.addOrUpdate(tradeItem);
+                    tradeItemRepository.addOrUpdate(tradeItem);
+                    // assumes existing trade item classification
+                    TradeItemClassification tradeItemClassification = tradeItem.getClassifications().get(0);
+                    tradeItemClassification.setTradeItem(tradeItem);
+                    tradeItemClassificationRepository.addOrUpdate(tradeItemClassification);
                     if (tradeItem.getServerVersion() > highestTimeStamp) {
                         highestTimeStamp = tradeItem.getServerVersion();
                     }

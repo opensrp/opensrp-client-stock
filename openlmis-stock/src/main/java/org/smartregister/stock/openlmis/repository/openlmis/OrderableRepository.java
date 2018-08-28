@@ -51,7 +51,7 @@ public class OrderableRepository extends BaseRepository {
                     + ROUND_TO_ZERO + " TINYINT,"
                     + DISPENSABLE_ID + " VARCHAR,"
                     + TRADE_ITEM_ID + " VARCHAR,"
-                    + COMMODITY_TYPE_ID + " VARCHAR NOT NULL,"
+                    + COMMODITY_TYPE_ID + " VARCHAR,"
                     + DATE_UPDATED + " INTEGER"
              + ")";
     
