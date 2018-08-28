@@ -17,5 +17,5 @@ public interface StockDetailsView {
 
     Context getContext();
 
-    void refreshStockTransactions();
+    void refreshStockDetails(int totalStockAdjustment);
 }

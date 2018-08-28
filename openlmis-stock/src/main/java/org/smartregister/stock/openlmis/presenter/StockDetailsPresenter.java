@@ -53,6 +53,8 @@ public class StockDetailsPresenter {
 
     private StockDetailsView stockDetailsView;
 
+    private int totalStockAdjustment;
+
 
     public StockDetailsPresenter(StockDetailsView stockDetailsView) {
         this.stockDetailsView = stockDetailsView;
@@ -112,6 +114,7 @@ public class StockDetailsPresenter {
 
     public void processFormJsonResult(String jsonString) {
         try {
+            totalStockAdjustment = 0;
             JSONObject jsonForm = new JSONObject(jsonString);
             JSONObject step = jsonForm.getJSONObject(STEP1);
             String FormTitle = step.getString("title");
@@ -124,7 +127,7 @@ public class StockDetailsPresenter {
                 processed = processStockReceived(jsonForm, allSharedPreferences.fetchRegisteredANM());
             }
             if (processed)
-                stockDetailsView.refreshStockTransactions();
+                stockDetailsView.refreshStockDetails(totalStockAdjustment);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -201,6 +204,7 @@ public class StockDetailsPresenter {
                     System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
+            totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
         }
         return true;

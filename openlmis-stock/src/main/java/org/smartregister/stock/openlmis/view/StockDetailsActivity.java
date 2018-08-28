@@ -52,6 +52,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     private RecyclerView transactionsRecyclerView;
 
+    TextView dosesTextView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         TextView itemNameTextView = findViewById(R.id.itemNameTextView);
         itemNameTextView.setText(tradeItemDto.getName());
 
-        TextView dosesTextView = findViewById(R.id.doseTextView);
+        dosesTextView = findViewById(R.id.doseTextView);
         dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
                 tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
 
@@ -136,8 +138,14 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
     }
 
     @Override
-    public void refreshStockTransactions() {
+    public void refreshStockDetails(int totalStockAdjustment) {
+        lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
+        tradeItemDto.setTotalStock(tradeItemDto.getTotalStock() + totalStockAdjustment);
+        dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
+                tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
+
+
     }
 
     @Override
