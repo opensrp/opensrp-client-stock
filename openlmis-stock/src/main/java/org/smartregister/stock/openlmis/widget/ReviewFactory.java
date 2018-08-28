@@ -11,6 +11,7 @@ import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
@@ -55,9 +56,16 @@ public class ReviewFactory implements FormWidgetFactory {
 
         JSONObject formJSon = new JSONObject(formFragment.getCurrentJsonState());
         JSONArray step1Fields = JsonFormUtils.fields(formJSon);
+
         ((TextView) root.findViewById(R.id.date)).setText(JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(DATE)));
-        ((TextView) root.findViewById(R.id.facility)).setText(JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(FACILITY)));
-        ((TextView) root.findViewById(R.id.reason)).setText(JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(REASON)));
+        String facility = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(FACILITY));
+        if (StringUtils.isBlank(facility))
+            facility = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(FACILITY + "_Other"));
+        String reason = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(REASON));
+        if (StringUtils.isBlank(facility))
+            reason = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(REASON + "_Other"));
+        ((TextView) root.findViewById(R.id.facility)).setText(facility);
+        ((TextView) root.findViewById(R.id.reason)).setText(reason);
         views.add(root);
 
         step1Fields = formJSon.getJSONObject(STEP2).getJSONArray(FIELDS);

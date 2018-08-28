@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +34,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.smartregister.stock.domain.Stock.issued;
+import static org.smartregister.stock.domain.Stock.received;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STEP2;
@@ -117,6 +120,9 @@ public class StockDetailsPresenter {
             if (FormTitle.contains("Issue")) {
                 processStockIssued(jsonForm, allSharedPreferences.fetchRegisteredANM());
             }
+            if (FormTitle.contains("Receive")) {
+                processStockReceived(jsonForm, allSharedPreferences.fetchRegisteredANM());
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -128,9 +134,37 @@ public class StockDetailsPresenter {
 
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Issued");
         String facility = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_To");
+        if (StringUtils.isBlank(facility)) {
+            facility = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_TO_Other");
+        }
         String reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason");
+        if (StringUtils.isBlank(facility)) {
+            reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason_Other");
+        }
 
-        stepFields = jsonString.getJSONObject(STEP2).getJSONArray(FIELDS);
+        processStock(jsonString, provider, date, facility, reason, issued);
+    }
+
+    private void processStockReceived(JSONObject jsonString, String provider) throws JSONException {
+        JSONArray stepFields = JsonFormUtils.fields(jsonString);
+
+        String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Received");
+        String facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From");
+        if (StringUtils.isBlank(facility)) {
+            facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From_Other");
+        }
+        String reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason");
+        if (StringUtils.isBlank(facility)) {
+            reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason_Other");
+        }
+
+        processStock(jsonString, provider, date, facility, reason, received);
+
+
+    }
+
+    private void processStock(JSONObject jsonString, String provider, String date, String facility, String reason, String transactionType) throws JSONException {
+        JSONArray stepFields = jsonString.getJSONObject(STEP2).getJSONArray(FIELDS);
 
         String lotsJSON = JsonFormUtils.getFieldValue(stepFields, STOCK_LOTS);
 
@@ -159,9 +193,10 @@ public class StockDetailsPresenter {
         }
 
         for (LotDto lot : selectedLotDTos) {
-            Stock stock = new Stock(null, org.smartregister.stock.domain.Stock.issued,
-                    provider, lot.getQuantity(), encounterDate.getTime(),
-                    facility, "unsynched", System.currentTimeMillis(), tradeItem);
+            Stock stock = new Stock(null, transactionType,
+                    provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
+                    encounterDate.getTime(), facility, "unsynched",
+                    System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
             stockDetailsInteractor.addStock(stock);
