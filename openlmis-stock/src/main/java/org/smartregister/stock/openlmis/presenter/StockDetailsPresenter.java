@@ -117,19 +117,21 @@ public class StockDetailsPresenter {
             String FormTitle = step.getString("title");
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(stockDetailsView.getContext());
             AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            boolean processed = false;
             if (FormTitle.contains("Issue")) {
-                processStockIssued(jsonForm, allSharedPreferences.fetchRegisteredANM());
+                processed = processStockIssued(jsonForm, allSharedPreferences.fetchRegisteredANM());
+            } else if (FormTitle.contains("Receive")) {
+                processed = processStockReceived(jsonForm, allSharedPreferences.fetchRegisteredANM());
             }
-            if (FormTitle.contains("Receive")) {
-                processStockReceived(jsonForm, allSharedPreferences.fetchRegisteredANM());
-            }
+            if (processed)
+                stockDetailsView.refreshStockTransactions();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void processStockIssued(JSONObject jsonString, String provider) throws JSONException {
+    private boolean processStockIssued(JSONObject jsonString, String provider) throws JSONException {
         JSONArray stepFields = JsonFormUtils.fields(jsonString);
 
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Issued");
@@ -142,10 +144,10 @@ public class StockDetailsPresenter {
             reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason_Other");
         }
 
-        processStock(jsonString, provider, date, facility, reason, issued);
+        return processStock(jsonString, provider, date, facility, reason, issued);
     }
 
-    private void processStockReceived(JSONObject jsonString, String provider) throws JSONException {
+    private boolean processStockReceived(JSONObject jsonString, String provider) throws JSONException {
         JSONArray stepFields = JsonFormUtils.fields(jsonString);
 
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Received");
@@ -158,12 +160,12 @@ public class StockDetailsPresenter {
             reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason_Other");
         }
 
-        processStock(jsonString, provider, date, facility, reason, received);
+        return processStock(jsonString, provider, date, facility, reason, received);
 
 
     }
 
-    private void processStock(JSONObject jsonString, String provider, String date, String facility, String reason, String transactionType) throws JSONException {
+    private boolean processStock(JSONObject jsonString, String provider, String date, String facility, String reason, String transactionType) throws JSONException {
         JSONArray stepFields = jsonString.getJSONObject(STEP2).getJSONArray(FIELDS);
 
         String lotsJSON = JsonFormUtils.getFieldValue(stepFields, STOCK_LOTS);
@@ -201,6 +203,7 @@ public class StockDetailsPresenter {
             stock.setReason(reason);
             stockDetailsInteractor.addStock(stock);
         }
+        return true;
     }
 
 }

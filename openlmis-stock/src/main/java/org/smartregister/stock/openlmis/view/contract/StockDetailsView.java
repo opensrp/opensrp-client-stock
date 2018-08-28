@@ -16,4 +16,6 @@ public interface StockDetailsView {
     void expandLots();
 
     Context getContext();
+
+    void refreshStockTransactions();
 }

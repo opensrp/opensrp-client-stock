@@ -50,6 +50,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     private TradeItemDto tradeItemDto;
 
+    private RecyclerView transactionsRecyclerView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +86,7 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
 
 
-        RecyclerView transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
+        transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
 
         collapseExpandButton.setOnClickListener(this);
@@ -133,6 +135,20 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         return this;
     }
 
+    @Override
+    public void refreshStockTransactions() {
+        transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            String jsonString = data.getStringExtra("json");
+            android.util.Log.d("JSONResult", jsonString);
+            stockDetailsPresenter.processFormJsonResult(jsonString);
+        }
+    }
+
     private void startJsonForm(String formName) {
         Intent intent = new Intent(getApplicationContext(), OpenLMISJsonForm.class);
         try {
@@ -148,12 +164,5 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == Activity.RESULT_OK && data != null) {
-            String jsonString = data.getStringExtra("json");
-            android.util.Log.d("JSONResult", jsonString);
-            stockDetailsPresenter.processFormJsonResult(jsonString);
-        }
-    }
+
 }
