@@ -127,7 +127,7 @@
         "top_margin": "10dp"
       },
       {
-        "key": "Reason",
+        "key": "Issued_Stock_Reason",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -158,7 +158,7 @@
         }
       },
       {
-        "key": "Reason_Other",
+        "key": "Issued_Stock_Reason_Other",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -170,7 +170,7 @@
           "err": "Please specify reason stock was issued"
         },
         "relevance": {
-          "step1:Reason": {
+          "step1:Issued_Stock_Reason": {
             "type": "string",
             "ex": "equalTo(., \"Other\")"
           }
@@ -216,7 +216,7 @@
         "review_type": "Review Your Issue",
         "date": "Date_Stock_Issued",
         "facility": "Issued_Stock_To",
-        "reason": "Reason"
+        "reason": "Issued_Stock_Reason"
       }
     ]
   }

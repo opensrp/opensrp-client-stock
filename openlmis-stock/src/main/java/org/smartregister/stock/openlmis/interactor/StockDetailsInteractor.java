@@ -55,4 +55,8 @@ public class StockDetailsInteractor {
     public Map<String, String> findLotNames(String tradeItemId) {
         return lotRepository.findLotNames(tradeItemId);
     }
+
+    public void addStock(Stock stock) {
+        stockRepository.addOrUpdate(stock);
+    }
 }

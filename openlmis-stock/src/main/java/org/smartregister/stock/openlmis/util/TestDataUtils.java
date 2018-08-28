@@ -96,7 +96,7 @@ public class TestDataUtils {
         for (TradeItem tradeItem : lotHashMap.keySet()) {
             List<Lot> lots = lotHashMap.get(tradeItem);
             for (Lot lot : lots) {
-                for (int i = 0; i < random.nextInt(15); i++) {
+                for (int i = 0; i < random.nextInt(2); i++) {
                     Calendar dateCreated = Calendar.getInstance();
                     dateCreated.add(Calendar.DATE, -random.nextInt(120));
                     int type = random.nextInt(3);

@@ -26,7 +26,6 @@ import java.util.List;
 import static org.smartregister.stock.openlmis.widget.LotFactory.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.NET_CONTENT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM;
-import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
 import static org.smartregister.util.JsonFormUtils.FIELDS;
 
 
@@ -47,7 +46,6 @@ public class ReviewFactory implements FormWidgetFactory {
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
 
         String tradeItem = jsonObject.getString(TRADE_ITEM);
-        String tradeItemId = jsonObject.getString(TRADE_ITEM_ID);
         long netContent = jsonObject.getLong(NET_CONTENT);
         String dispensingUnit = jsonObject.getString(DISPENSING_UNIT);
 

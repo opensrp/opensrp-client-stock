@@ -1,5 +1,7 @@
 package org.smartregister.stock.openlmis.view;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,8 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONObject;
-import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.adapter.LotAdapter;
 import org.smartregister.stock.openlmis.adapter.StockTransactionAdapter;
 import org.smartregister.stock.openlmis.dto.TradeItemDto;
@@ -126,6 +128,11 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         collapseExpandButton.setImageResource(R.drawable.ic_keyboard_arrow_up);
     }
 
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
     private void startJsonForm(String formName) {
         Intent intent = new Intent(getApplicationContext(), OpenLMISJsonForm.class);
         try {
@@ -141,4 +148,12 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            String jsonString = data.getStringExtra("json");
+            android.util.Log.d("JSONResult", jsonString);
+            stockDetailsPresenter.processFormJsonResult(jsonString);
+        }
+    }
 }

@@ -1,22 +1,50 @@
 package org.smartregister.stock.openlmis.presenter;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 import android.view.View;
 
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.interactor.StockDetailsInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockDetailsView;
+import org.smartregister.stock.openlmis.widget.LotFactory;
+import org.smartregister.stock.openlmis.widget.helper.LotDto;
 import org.smartregister.stock.openlmis.wrapper.StockWrapper;
+import org.smartregister.util.JsonFormUtils;
 
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
+import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
+import static org.smartregister.stock.openlmis.widget.ReviewFactory.STEP2;
+import static org.smartregister.stock.openlmis.widget.ReviewFactory.STOCK_LOTS;
+import static org.smartregister.util.JsonFormUtils.FIELDS;
+import static org.smartregister.util.JsonFormUtils.KEY;
+import static org.smartregister.util.JsonFormUtils.STEP1;
+import static org.smartregister.util.JsonFormUtils.getJSONObject;
+
 public class StockDetailsPresenter {
+
+    private static final String TAG = StockDetailsPresenter.class.getName();
 
     private StockDetailsInteractor stockDetailsInteractor;
 
@@ -78,4 +106,66 @@ public class StockDetailsPresenter {
             stockDetailsView.collapseLots();
         }
     }
+
+    public void processFormJsonResult(String jsonString) {
+        try {
+            JSONObject jsonForm = new JSONObject(jsonString);
+            JSONObject step = jsonForm.getJSONObject(STEP1);
+            String FormTitle = step.getString("title");
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(stockDetailsView.getContext());
+            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            if (FormTitle.contains("Issue")) {
+                processStockIssued(jsonForm, allSharedPreferences.fetchRegisteredANM());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void processStockIssued(JSONObject jsonString, String provider) throws JSONException {
+        JSONArray stepFields = JsonFormUtils.fields(jsonString);
+
+        String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Issued");
+        String facility = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_To");
+        String reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason");
+
+        stepFields = jsonString.getJSONObject(STEP2).getJSONArray(FIELDS);
+
+        String lotsJSON = JsonFormUtils.getFieldValue(stepFields, STOCK_LOTS);
+
+        Type listType = new TypeToken<List<LotDto>>() {
+        }.getType();
+
+        List<LotDto> selectedLotDTos = LotFactory.gson.fromJson(lotsJSON, listType);
+
+        String tradeItem = null;
+
+        for (int i = 0; i < stepFields.length(); i++) {
+            JSONObject jsonObject = getJSONObject(stepFields, i);
+            String keyValue = jsonObject.getString(KEY);
+            if (keyValue != null && keyValue.equals(STOCK_LOTS)) {
+                tradeItem = jsonObject.getString(TRADE_ITEM_ID);
+            }
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+        Date encounterDate;
+        try {
+            encounterDate = simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            Log.e(TAG, "error passing stock issue/received date", e);
+            encounterDate = new Date();
+        }
+
+        for (LotDto lot : selectedLotDTos) {
+            Stock stock = new Stock(null, org.smartregister.stock.domain.Stock.issued,
+                    provider, lot.getQuantity(), encounterDate.getTime(),
+                    facility, "unsynched", System.currentTimeMillis(), tradeItem);
+            stock.setLotId(lot.getLotId());
+            stock.setReason(reason);
+            stockDetailsInteractor.addStock(stock);
+        }
+    }
+
 }
