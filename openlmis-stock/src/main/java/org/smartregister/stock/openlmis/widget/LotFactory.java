@@ -24,6 +24,7 @@ import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
@@ -89,6 +90,10 @@ public class LotFactory implements FormWidgetFactory {
 
     private List<LotDto> selectedLotDTos;
 
+    private boolean isStockIssue;
+
+    private Map<String, Integer> lotStockBalances;
+
     public LotFactory() {
     }
 
@@ -97,7 +102,7 @@ public class LotFactory implements FormWidgetFactory {
         this.stepName = stepName;
         this.context = context;
         this.jsonFormFragment = (OpenLMISJsonFormFragment) jsonFormFragment;
-        selectedLotDTos = new ArrayList();
+        selectedLotDTos = new ArrayList<>();
         lotMap = new HashMap<>();
         selectedLotsMap = new HashMap<>();
 
@@ -124,11 +129,16 @@ public class LotFactory implements FormWidgetFactory {
             selectedLotDTos = gson.fromJson(selectedLotDTosJSON, listType);
         }
 
+
+        isStockIssue = jsonObject.optBoolean(IS_STOCK_ISSUE);
         List<Lot> lots;
-        if (jsonObject.optBoolean(IS_STOCK_ISSUE))
-            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(jsonObject.getString(TRADE_ITEM_ID), true);
-        else
-            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(jsonObject.getString(TRADE_ITEM_ID));
+        String tradeItemId = jsonObject.getString(TRADE_ITEM_ID);
+        if (isStockIssue) {
+            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(tradeItemId, true);
+            lotStockBalances = OpenLMISLibrary.getInstance().getLotRepository().getStockByLot(tradeItemId);
+        } else {
+            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(tradeItemId);
+        }
         for (Lot lot : lots) {
             if (!selectedLotDTos.isEmpty() && selectedLotDTos.contains(new LotDto(lot.getId().toString())))
                 selectedLotsMap.put(lot.getId().toString(), lot);
@@ -138,6 +148,7 @@ public class LotFactory implements FormWidgetFactory {
 
         TextInputEditText lotDropdown = root.findViewById(R.id.lot_dropdown);
         lotDropdown.setTag(R.id.lot_position, 0);
+        lotDropdown.setTag(R.id.is_stock_issue, isStockIssue);
         populateLotOptions(context, lotDropdown);
 
 
@@ -176,6 +187,7 @@ public class LotFactory implements FormWidgetFactory {
         cancelButton.setTag(R.id.lot_position, viewIndex);
         TextInputEditText lotDropdown = lotView.findViewById(R.id.lot_dropdown);
         lotDropdown.setTag(R.id.lot_position, viewIndex);
+        lotDropdown.setTag(R.id.is_stock_issue, isStockIssue);
         populateLotOptions(context, lotDropdown);
         populateStatusOptions(context, (TextInputEditText) lotView.findViewById(R.id.status_dropdown));
         cancelButton.setOnClickListener(lotListener);
@@ -206,12 +218,13 @@ public class LotFactory implements FormWidgetFactory {
         TextInputEditText quantity = lotRow.findViewById(R.id.quantity_textview);
         quantity.setTag(R.id.lot_id, lotId);
         quantity.addTextChangedListener(new QuantityTextWatcher(quantity));
+        if (isStockIssue)
+            quantity.setTag(R.id.stock_balance, lotStockBalances.get(lotId));
         TextInputEditText status = lotRow.findViewById(R.id.status_dropdown);
         status.setTag(R.id.lot_id, lotId);
         if (lotDto != null) {
             quantity.setText(String.valueOf(lotDto.getQuantity()));
             quantity.setTag(R.id.lot_id, lotDto.getLotId());
-
             status.setText(lotDto.getLotStatus());
             status.setTag(R.id.lot_id, lotDto.getLotId());
 
@@ -368,13 +381,30 @@ public class LotFactory implements FormWidgetFactory {
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
                                             LinearLayout lotsContainer) {
+        boolean isValid = true;
         for (int i = 0; i < lotsContainer.getChildCount() - 1; i++) {
-            if (((TextInputEditText) lotsContainer.getChildAt(i).findViewById(R.id.lot_dropdown)).getText().toString().isEmpty() ||
-                    ((TextInputEditText) lotsContainer.getChildAt(i).findViewById(R.id.quantity_textview)).getText().toString().isEmpty() ||
-                    ((TextInputEditText) lotsContainer.getChildAt(i).findViewById(R.id.status_dropdown)).getText().toString().isEmpty())
-                return new ValidationStatus(false, "Not Valid", formFragmentView, lotsContainer);
+            TextInputEditText lot = lotsContainer.getChildAt(i).findViewById(R.id.lot_dropdown);
+            TextInputEditText quantity = lotsContainer.getChildAt(i).findViewById(R.id.quantity_textview);
+            TextInputEditText status = lotsContainer.getChildAt(i).findViewById(R.id.status_dropdown);
+            if (StringUtils.isBlank(lot.getText()) || StringUtils.isBlank(quantity.getText()) ||
+                    StringUtils.isBlank(status.getText()))
+                isValid = false;
+
+            if (lot.getTag(R.id.is_stock_issue) != null && Boolean.valueOf(lot.getTag(R.id.is_stock_issue).toString())
+                    && StringUtils.isNotBlank(quantity.getText()) && quantity.getTag(R.id.stock_balance) != null
+                    && Integer.parseInt(quantity.getText().toString()) > Integer.parseInt(quantity.getTag(R.id.stock_balance).toString())) {
+                quantity.setError(lotsContainer.getContext().getString(R.string.stock_issued_more_balance,
+                        Integer.parseInt(quantity.getText().toString()),
+                        Integer.parseInt(quantity.getTag(R.id.stock_balance).toString())));
+                isValid = false;
+            }
         }
-        return new ValidationStatus(true, null, formFragmentView, lotsContainer);
+        if (isValid)
+            return new
+                    ValidationStatus(true, null, formFragmentView, lotsContainer);
+        else
+            return new ValidationStatus(false, "Not Valid", formFragmentView, lotsContainer);
+
     }
 
 }

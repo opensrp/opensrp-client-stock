@@ -24,8 +24,6 @@ public interface OpenLMISConstants {
 
         String NEXT_LABEL = "next_label";
 
-        String TITLE = "title";
-
     }
 
     interface Forms {

@@ -37,4 +37,5 @@
     <string name="quantity">Quantity</string>
     <string name="add_lot">Add Lot</string>
     <string name="issued_dose_formatter">%1d %2s, %3d doses will be issued</string>
+    <string name="stock_issued_more_balance">Stock being Issued %1d is more than Stock on Hand %1d</string>
 </resources>

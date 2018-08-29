@@ -37,7 +37,7 @@ public class LotRepository extends BaseRepository {
     public static final String LOT_TABLE = "lots";
     private static final String TAG = LotRepository.class.getName();
 
-    private static String CREATE_LOT_TABLE = "CREATE TABLE " + LOT_TABLE +
+    private static final String CREATE_LOT_TABLE = "CREATE TABLE " + LOT_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," + LOT_CODE + " VARCHAR NOT NULL," +
             EXPIRATION_DATE + " INTEGER NOT NULL," + MANUFACTURE_DATE + " INTEGER NOT NULL," +
             TRADE_ITEM_ID + " VARCHAR NOT NULL," + ACTIVE + " TINYINT," + LOT_STATUS + " VARCHAR);";
@@ -171,6 +171,26 @@ public class LotRepository extends BaseRepository {
         }
         return lots;
 
+    }
+
+    public Map<String, Integer> getStockByLot(String tradeItemId) {
+        String query = String.format("SELECT %s, sum(%s) FROM %s WHERE %s=? GROUP BY %s", LOT_ID, VALUE,
+                stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID);
+        Cursor cursor = null;
+        Map<String, Integer> lots = new HashMap<>();
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId});
+            while (cursor.moveToNext()) {
+                lots.put(cursor.getString(0), cursor.getInt(1));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return lots;
     }
 
 
