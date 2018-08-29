@@ -1,21 +1,19 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.TextView;
 
-import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
-import com.vijay.jsonwizard.widgets.DatePickerFactory;
+import com.vijay.jsonwizard.utils.ValidationStatus;
+import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
 
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.BACKGROUND;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.UNDERLINE_COLOR;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.VALUE;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.DATE_PICKER;
 
 /**
  * Created by samuelgithengi on 8/16/18.
@@ -24,20 +22,10 @@ public class OpenLMISDatePickerFactory extends DatePickerFactory {
 
     @Override
     protected void attachJson(final String stepName, Context context, final JsonFormFragment formFragment,
-                              final JSONObject jsonObject, final MaterialEditText editText, TextView duration) {
+                              final JSONObject jsonObject, final CustomTextInputEditText editText, TextView duration) {
         super.attachJson(stepName, context, formFragment, jsonObject, editText, duration);
-        editText.setFloatingLabelText(jsonObject.optString("hint"));
-        if (!jsonObject.optString(VALUE).isEmpty()) {
-            editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_HIGHLIGHT);
-            editText.setFloatingLabelAlwaysShown(true);
-        }
-        String background = jsonObject.optString(BACKGROUND);
-        if (!background.isEmpty())
-            editText.setBackgroundColor(Color.parseColor(background));
-
-        String underlineColor = jsonObject.optString(UNDERLINE_COLOR);
-        if (!underlineColor.isEmpty())
-            editText.setUnderlineColor(Color.parseColor(underlineColor));
+        editText.setTag(com.vijay.jsonwizard.R.id.type, DATE_PICKER);
+        editText.setHint(jsonObject.optString("hint"));
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {//do nothing
@@ -45,11 +33,6 @@ public class OpenLMISDatePickerFactory extends DatePickerFactory {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().isEmpty()) {
-                    editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_NONE);
-                } else {
-                    editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_HIGHLIGHT);
-                }
                 String key = (String) editText.getTag(com.vijay.jsonwizard.R.id.key);
                 String openMrsEntityParent = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent);
                 String openMrsEntity = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity);
@@ -68,6 +51,17 @@ public class OpenLMISDatePickerFactory extends DatePickerFactory {
     @Override
     protected int getLayout() {
         return R.layout.openlmis_native_form_item_date_picker;
+    }
+
+    public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
+                                            CustomTextInputEditText editText) {
+        if (editText.isEnabled()) {
+            boolean validate = editText.validate();
+            if (!validate) {
+                return new ValidationStatus(false, editText.getError().toString(), formFragmentView, editText);
+            }
+        }
+        return new ValidationStatus(true, null, formFragmentView, editText);
     }
 
 
