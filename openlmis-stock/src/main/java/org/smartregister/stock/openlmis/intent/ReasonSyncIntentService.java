@@ -55,7 +55,6 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
     @Override
     public void pullFromServer() {
 
-
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
         if (baseUrl.endsWith(context.getString(R.string.url_separator))) {

@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
+import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 
 import java.util.List;
@@ -33,10 +34,9 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         // insert new reason
         Reason reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
-               "name",
-                new Program("program_id"),
-                "description",
-                true
+                "program_id",
+                "facility_type",
+                getStockCardLineItemReason()
         );
         database.addOrUpdate(reason);
 
@@ -50,21 +50,20 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         // insert new Reason
         Reason reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
-                "name",
-                new Program("program_id"),
-                "description",
-                true
+                "program_id",
+                "facility_type",
+                getStockCardLineItemReason()
         );
         database.addOrUpdate(reason);
 
         // update existing Reason
         reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
-                "name_1",
-                new Program("program_id_1"),
-                "description_1",
-                true
+                "program_id_1",
+                "facility_type_1",
+                getStockCardLineItemReason()
         );
+        reason.getStockCardLineItemReason().setName("name_1");
         database.addOrUpdate(reason);
 
         // make sure old values are removed
@@ -83,19 +82,17 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         // insert new Reasons
         Reason reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440100",
-                "name",
-                new Program("program_id"),
-                "description",
-                true
+                "program_id",
+                "facility_type",
+                getStockCardLineItemReason()
         );
         database.addOrUpdate(reason);
 
         reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
-                "name",
-                new Program("program_id_1"),
-                "description_1",
-                true
+                "program_id_1",
+                "facility_type_1",
+                getStockCardLineItemReason()
         );
         database.addOrUpdate(reason);
 
@@ -110,19 +107,17 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         // insert Reasons
         Reason reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440100",
-                "name",
-                new Program("program_id"),
-                "description",
-                true
+                "program_id",
+                "facility_type",
+                getStockCardLineItemReason()
         );
         database.addOrUpdate(reason);
 
         reason = new Reason(
                 "123e4567-e89b-42d3-a456-556642440200",
-                "name",
-                new Program("program_id_1"),
-                "description_1",
-                true
+                "program_id_1",
+                "facility_type_1",
+                getStockCardLineItemReason()
         );
         database.addOrUpdate(reason);
 
@@ -130,5 +125,16 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440300", "name", "program_id");
 
         assertEquals(reasons.size(), 0);
+    }
+
+    private StockCardLineItemReason getStockCardLineItemReason() {
+
+        return new StockCardLineItemReason(
+                "name",
+                "description",
+                "reason_type",
+                "reason_category",
+                true
+        );
     }
 }
