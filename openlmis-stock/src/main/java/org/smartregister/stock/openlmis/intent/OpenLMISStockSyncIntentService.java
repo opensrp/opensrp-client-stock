@@ -56,7 +56,6 @@ public class OpenLMISStockSyncIntentService extends IntentService {
         if (NetworkUtils.isNetworkAvailable(context)) {
             pushStockToServer();
             pullStockFromServer();
-            actionService.fetchNewActions();
         }
     }
 
