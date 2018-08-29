@@ -192,6 +192,7 @@
         "trade_item_id": "[trade_item_id]",
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
+        "is_stock_issue": "true",
         "lot_status": [
           "VMM1",
           "VMM2"

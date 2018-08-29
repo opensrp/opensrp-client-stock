@@ -61,6 +61,7 @@ public class LotFactory implements FormWidgetFactory {
     private final static String TRADE_ITEM_ID = "trade_item_id";
     private final static String NET_CONTENT = "net_content";
     private final static String DISPENSING_UNIT = "dispensing_unit";
+    private final static String IS_STOCK_ISSUE = "is_stock_issue";
 
     private final static Gson gson = new GsonBuilder().create();
 
@@ -123,7 +124,11 @@ public class LotFactory implements FormWidgetFactory {
             selectedLotDTos = gson.fromJson(selectedLotDTosJSON, listType);
         }
 
-        List<Lot> lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(jsonObject.getString(TRADE_ITEM_ID));
+        List<Lot> lots;
+        if (jsonObject.optBoolean(IS_STOCK_ISSUE))
+            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(jsonObject.getString(TRADE_ITEM_ID), true);
+        else
+            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(jsonObject.getString(TRADE_ITEM_ID));
         for (Lot lot : lots) {
             if (!selectedLotDTos.isEmpty() && selectedLotDTos.contains(new LotDto(lot.getId().toString())))
                 selectedLotsMap.put(lot.getId().toString(), lot);

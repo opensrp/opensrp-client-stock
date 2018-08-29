@@ -24,11 +24,8 @@ public interface OpenLMISConstants {
 
         String NEXT_LABEL = "next_label";
 
-        String BACKGROUND = "background";
+        String TITLE = "title";
 
-        String UNDERLINE_COLOR = "underline_color";
-
-        String VALUE = "value";
     }
 
     interface Forms {
