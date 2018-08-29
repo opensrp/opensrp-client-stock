@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -372,8 +373,14 @@ public class LotFactory implements FormWidgetFactory {
             LotDto lotDto = selectedLotDTos.get(selectedLotDTos.indexOf(new LotDto(lotId)));
             if (editable.toString().isEmpty())
                 lotDto.setQuantity(0);
-            else
-                lotDto.setQuantity(Integer.parseInt(editable.toString()));
+            else {
+                try {
+                    lotDto.setQuantity(Integer.parseInt(editable.toString()));
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, "quantity is too large");
+                    editText.setError("Quantity is too large");
+                }
+            }
             writeValues();
             displayDosesQuantity();
         }
@@ -381,6 +388,7 @@ public class LotFactory implements FormWidgetFactory {
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
                                             LinearLayout lotsContainer) {
+
         boolean isValid = true;
         for (int i = 0; i < lotsContainer.getChildCount() - 1; i++) {
             TextInputEditText lot = lotsContainer.getChildAt(i).findViewById(R.id.lot_dropdown);
@@ -389,7 +397,6 @@ public class LotFactory implements FormWidgetFactory {
             if (StringUtils.isBlank(lot.getText()) || StringUtils.isBlank(quantity.getText()) ||
                     StringUtils.isBlank(status.getText()))
                 isValid = false;
-
             if (lot.getTag(R.id.is_stock_issue) != null && Boolean.valueOf(lot.getTag(R.id.is_stock_issue).toString())
                     && StringUtils.isNotBlank(quantity.getText()) && quantity.getTag(R.id.stock_balance) != null
                     && Integer.parseInt(quantity.getText().toString()) > Integer.parseInt(quantity.getTag(R.id.stock_balance).toString())) {
