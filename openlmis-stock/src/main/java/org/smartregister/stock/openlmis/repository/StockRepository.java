@@ -159,12 +159,11 @@ public class StockRepository extends BaseRepository {
     }
 
     public int getTotalStockByLot(String lotId) {
-        String query = String.format("SELECT %s, sum(%s) FROM %s WHERE %s=? AND %s > ?", LOT_ID, VALUE,
-                stock_TABLE_NAME, LOT_ID, EXPIRATION_DATE);
+        String query = String.format("SELECT sum(%s) FROM %s WHERE %s=?", VALUE, stock_TABLE_NAME, LOT_ID);
         Cursor cursor = null;
         int totalStock = 0;
         try {
-            cursor = getReadableDatabase().rawQuery(query, new String[]{lotId, String.valueOf(new LocalDate().toDate().getTime())});
+            cursor = getReadableDatabase().rawQuery(query, new String[]{lotId});
             if (cursor.moveToFirst()) {
                 totalStock = cursor.getInt(0);
             }
