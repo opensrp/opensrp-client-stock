@@ -3,6 +3,11 @@
     <color name="colorPrimary">#3A8CB5</color>
     <color name="colorPrimaryDark">#2B6C8F</color>
     <color name="colorAccent">#3A8CB5</color>
+
+    <color name="primary">@color/colorPrimary</color>
+    <color name="primary_dark">@color/colorPrimaryDark</color>
+    <color name="accent">@color/colorAccent</color>
+
     <color name="button_color">#579DC0</color>
 
     <color name="stock_background">#FAFAFA</color>
