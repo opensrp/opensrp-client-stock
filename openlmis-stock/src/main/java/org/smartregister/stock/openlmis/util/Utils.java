@@ -32,8 +32,8 @@ public class Utils {
     public static final String DATABASE_NAME = "drishti.db";
     private static final String USERNAME = "admin";
     private static  final String PASSWORD = "Admin123";
-    //public static final String BASE_URL = "https://vreach-dev.smartregister.org/opensrp";
-    public static final String BASE_URL = "http://192.168.0.10:8080/opensrp";
+    public static final String BASE_URL = "https://vreach-dev.smartregister.org/opensrp";
+    // public static final String BASE_URL = "http://192.168.0.10:8080/opensrp";
     public static final String PREV_SYNC_SERVER_VERSION = "prev_sync_server_version";
 
     public static Boolean convertIntToBoolean(int i) {
@@ -41,7 +41,7 @@ public class Utils {
     }
 
     public static int convertBooleanToInt(Boolean isTrue) {
-        if (isTrue) {
+        if (isTrue != null && isTrue) {
             return 1;
         }
         return 0;
