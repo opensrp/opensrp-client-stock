@@ -123,8 +123,8 @@ public class LotRepositoryTest extends BaseRepositoryTest {
 
 
         UUID tradeItem2 = UUID.randomUUID();
-        lot = new Lot(UUID.randomUUID(), "LC2016FG", new LocalDate("2017-01-04"),
-                new LocalDate("2016-04-05"), new TradeItem(tradeItem2), false);
+        lot = new Lot(UUID.randomUUID(), "LC2016FG", new LocalDate("2019-01-04"),
+                new LocalDate("2019-04-05"), new TradeItem(tradeItem2), false);
         lotRepository.addOrUpdate(lot);
 
         stock = new Stock(null, Stock.received, "tester11", 10, now,
@@ -137,7 +137,7 @@ public class LotRepositoryTest extends BaseRepositoryTest {
                 new LocalDate("2019-03-02"), new TradeItem(tradeItem2), true);
         lotRepository.addOrUpdate(lot);
 
-        List<Lot> lots = lotRepository.findLotsByTradeItem(tradeItemId.toString());
+        List<Lot> lots = lotRepository.findLotsByTradeItem(tradeItemId.toString(),true);
 
         assertEquals(2, lots.size());
         for (Lot returnedLot : lots) {
@@ -153,7 +153,7 @@ public class LotRepositoryTest extends BaseRepositoryTest {
         assertEquals(1, lots.size());
         assertEquals(tradeItem2, lots.get(0).getTradeItem().getId());
         assertEquals("LC2016FG", lots.get(0).getLotCode());
-        assertEquals("2017-01-04", lots.get(0).getExpirationDate().toString(DATE_FORMAT));
+        assertEquals("2019-01-04", lots.get(0).getExpirationDate().toString(DATE_FORMAT));
         assertFalse(lots.get(0).isActive());
     }
 
@@ -165,8 +165,22 @@ public class LotRepositoryTest extends BaseRepositoryTest {
                 new LocalDate("2018-01-01"), new TradeItem(tradeItemId), true);
         lotRepository.addOrUpdate(lot);
 
-
         List<Lot> lots = lotRepository.findLotsByTradeItem(tradeItemId.toString());
+
+        assertEquals(1, lots.size());
+        assertEquals("LC2018G", lots.get(0).getLotCode());
+
+    }
+
+    @Test
+    public void testFindLotsByTradeItemWithoutStockWithStockValidation() {
+        UUID tradeItemId = UUID.randomUUID();
+        assertTrue(lotRepository.findLotsByTradeItem(tradeItemId.toString()).isEmpty());
+        Lot lot = new Lot(UUID.randomUUID(), "LC2018G", new LocalDate("2019-01-31"),
+                new LocalDate("2018-01-01"), new TradeItem(tradeItemId), true);
+        lotRepository.addOrUpdate(lot);
+
+        List<Lot> lots = lotRepository.findLotsByTradeItem(tradeItemId.toString(), true);
 
         assertTrue(lots.isEmpty());
 
