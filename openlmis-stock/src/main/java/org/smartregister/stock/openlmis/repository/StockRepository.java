@@ -12,7 +12,6 @@ import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.Stock;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -140,7 +139,7 @@ public class StockRepository extends BaseRepository {
                         " WHERE %s=? AND %s > ? GROUP BY l.%s ",
                 VALUE, EXPIRATION_DATE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID, TRADE_ITEM_ID, EXPIRATION_DATE, ID);
         Cursor cursor = null;
-        Map<Long, Integer> lots = new TreeMap<>(Collections.reverseOrder());
+        Map<Long, Integer> lots = new TreeMap<>();
         try {
             cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId,
                     String.valueOf(new LocalDate().toDate().getTime())});
