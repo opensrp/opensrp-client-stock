@@ -91,10 +91,14 @@ public class TradeItemSyncIntentService extends IntentService implements SyncInt
                 TradeItemClassificationRepository tradeItemClassificationRepository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
                 for (TradeItem tradeItem : tradeItems) {
                     tradeItemRepository.addOrUpdate(tradeItem);
-                    // assumes existing trade item classification
-                    TradeItemClassification tradeItemClassification = tradeItem.getClassifications().get(0);
-                    tradeItemClassification.setTradeItem(tradeItem);
-                    tradeItemClassificationRepository.addOrUpdate(tradeItemClassification);
+                    // save trade item classifications
+                    List<TradeItemClassification> tradeItemClassifications = tradeItem.getClassifications();
+                    if (tradeItemClassifications.size() > 0) {
+                        for (TradeItemClassification tradeItemClassification : tradeItemClassifications) {
+                            tradeItemClassification.setTradeItem(tradeItem);
+                            tradeItemClassificationRepository.addOrUpdate(tradeItemClassification);
+                        }
+                    }
                     if (tradeItem.getServerVersion() > highestTimeStamp) {
                         highestTimeStamp = tradeItem.getServerVersion();
                     }

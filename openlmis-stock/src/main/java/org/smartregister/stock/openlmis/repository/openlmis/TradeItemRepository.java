@@ -130,7 +130,7 @@ public class TradeItemRepository extends BaseRepository {
 
         Object[] values = new Object[] {
             tradeItem.getId().toString(),
-            tradeItem.getGtin() == null ? "832929" : tradeItem.getGtin().toString(),
+            tradeItem.getGtin() == null ? null : tradeItem.getGtin().toString(),
             tradeItem.getManufacturerOfTradeItem(),
             tradeItem.getDateUpdated(),
         };
