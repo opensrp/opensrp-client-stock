@@ -1,11 +1,14 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,6 +29,7 @@ import com.vijay.jsonwizard.utils.ValidationStatus;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
@@ -49,6 +53,7 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.V_REQUIRED;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_MONTHS_WARNING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET;
 
 /**
@@ -290,12 +295,19 @@ public class LotFactory implements FormWidgetFactory {
             @Override
             public void onClick(View view) {
                 PopupMenu popupMenu = new PopupMenu(context, view);
+                LocalDate expiringDateWarning = new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING);
                 for (Lot lot : lotMap.values()) {
                     MenuItem menuitem = popupMenu.getMenu().add(context.getString(R.string.lotcode_and_expiry,
                             lot.getLotCode(), lot.getExpirationDate().toString(DATE_FORMAT)));
                     View actionView = new View(context);
                     actionView.setTag(R.id.lot_id, lot.getId());
                     menuitem.setActionView(actionView);
+                    if (expiringDateWarning.isAfter(lot.getExpirationDate())) {
+                        SpannableString spanString = new SpannableString(menuitem.getTitle());
+                        spanString.setSpan(new ForegroundColorSpan(Color.RED), 0, spanString.length(), 0);
+                        menuitem.setTitle(spanString);
+                    }
+
                 }
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

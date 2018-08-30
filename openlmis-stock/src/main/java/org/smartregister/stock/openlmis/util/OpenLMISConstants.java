@@ -2,6 +2,8 @@ package org.smartregister.stock.openlmis.util;
 
 public interface OpenLMISConstants {
 
+    int EXPIRING_MONTHS_WARNING = 3;
+
     String TRADE_ITEM = "TRADE_ITEM";
 
     String LOT_WIDGET = "lot";
