@@ -40,7 +40,7 @@ import org.smartregister.stock.openlmis.widget.helper.LotDto;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,8 +109,8 @@ public class LotFactory implements FormWidgetFactory {
         this.context = context;
         this.jsonFormFragment = (OpenLMISJsonFormFragment) jsonFormFragment;
         selectedLotDTos = new ArrayList<>();
-        lotMap = new HashMap<>();
-        selectedLotsMap = new HashMap<>();
+        lotMap = new LinkedHashMap<>();
+        selectedLotsMap = new LinkedHashMap<>();
 
         key = jsonObject.getString(KEY);
         List<View> views = new ArrayList<>(1);
@@ -321,7 +321,7 @@ public class LotFactory implements FormWidgetFactory {
                             selectedLotDTos.remove(previousDto);
                         }
                         String selectedLotId = menuItem.getActionView().getTag(R.id.lot_id).toString();
-                        editText.setText(menuItem.getTitle());
+                        editText.setText(menuItem.getTitle().toString());
                         editText.setTag(R.id.lot_id, selectedLotId);
                         showQuantityAndStatus(editText, selectedLotId, null);
                         if (!selectedLotDTos.contains(new LotDto(selectedLotId))) {
