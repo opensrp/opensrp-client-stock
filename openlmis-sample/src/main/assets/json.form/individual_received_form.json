@@ -89,35 +89,12 @@
           {
             "key": "Balaka District Warehouse",
             "text": "Balaka District Warehouse"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
           }
         ],
         "value": "Balaka District Warehouse",
         "v_required": {
           "value": true,
           "err": "Please select where stock was received from"
-        }
-      },
-      {
-        "key": "Receive_Stock_From_Other",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Please specify: *",
-        "edit_type": "name",
-        "v_required": {
-          "value": true,
-          "err": "Please specify where stock was received from"
-        },
-        "relevance": {
-          "step1:Receive_Stock_From": {
-            "type": "string",
-            "ex": "equalTo(., \"Other\")"
-          }
         }
       },
       {

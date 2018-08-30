@@ -186,7 +186,7 @@ public class TestDataUtils {
             lot.setLotStatus("VVM1");
             lots.add(lot);
         }
-        if (numberOfLots >1) {
+        if (numberOfLots > 1) {
             Lot lot = new Lot(UUID.randomUUID(), "LC" + (1000 + random.nextInt(8000)),
                     lots.get(random.nextInt(numberOfLots - 1)).getExpirationDate(),
                     new LocalDate(System.currentTimeMillis()),

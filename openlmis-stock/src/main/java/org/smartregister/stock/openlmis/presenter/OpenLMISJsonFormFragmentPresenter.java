@@ -11,7 +11,10 @@ import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.widget.LotFactory;
+import org.smartregister.stock.openlmis.widget.OpenLMISDatePickerFactory;
+import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
 
+import static com.vijay.jsonwizard.constants.JsonFormConstants.DATE_PICKER;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET;
 
 /**
@@ -41,6 +44,9 @@ public class OpenLMISJsonFormFragmentPresenter extends JsonFormFragmentPresenter
         if (validationStatus.isValid() && childAt instanceof LinearLayout
                 && childAt.getTag(com.vijay.jsonwizard.R.id.type).equals(LOT_WIDGET)) {
             validationStatus = LotFactory.validate(formFragmentView, (LinearLayout) childAt);
+        } else if (validationStatus.isValid() && childAt instanceof CustomTextInputEditText
+                && childAt.getTag(com.vijay.jsonwizard.R.id.type).equals(DATE_PICKER)) {
+            validationStatus = OpenLMISDatePickerFactory.validate(formFragmentView, (CustomTextInputEditText) childAt);
         }
         return validationStatus;
     }

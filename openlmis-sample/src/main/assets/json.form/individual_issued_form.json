@@ -89,35 +89,12 @@
           {
             "key": "Balaka District Warehouse",
             "text": "Balaka District Warehouse"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
           }
         ],
         "value": "Comfort Health Clinic",
         "v_required": {
           "value": true,
           "err": "Please select where stock was issued"
-        }
-      },
-      {
-        "key": "Issued_Stock_TO_Other",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Please specify: *",
-        "edit_type": "name",
-        "v_required": {
-          "value": true,
-          "err": "Please specify where stock was issued"
-        },
-        "relevance": {
-          "step1:Issued_Stock_To": {
-            "type": "string",
-            "ex": "equalTo(., \"Other\")"
-          }
         }
       },
       {
@@ -192,6 +169,7 @@
         "trade_item_id": "[trade_item_id]",
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
+        "is_stock_issue": "true",
         "lot_status": [
           "VVM1",
           "VVM2"

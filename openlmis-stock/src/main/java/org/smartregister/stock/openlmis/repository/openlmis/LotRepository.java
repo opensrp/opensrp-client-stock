@@ -18,6 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
+import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
+import static org.smartregister.stock.repository.StockRepository.VALUE;
+import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
+
 /**
  * Created by samuelgithengi on 26/7/18.
  */
@@ -32,7 +37,7 @@ public class LotRepository extends BaseRepository {
     public static final String LOT_TABLE = "lots";
     private static final String TAG = LotRepository.class.getName();
 
-    private static String CREATE_LOT_TABLE = "CREATE TABLE " + LOT_TABLE +
+    private static final String CREATE_LOT_TABLE = "CREATE TABLE " + LOT_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," + LOT_CODE + " VARCHAR NOT NULL," +
             EXPIRATION_DATE + " INTEGER NOT NULL," + MANUFACTURE_DATE + " INTEGER NOT NULL," +
             TRADE_ITEM_ID + " VARCHAR NOT NULL," + ACTIVE + " TINYINT," + LOT_STATUS + " VARCHAR);";
@@ -78,11 +83,23 @@ public class LotRepository extends BaseRepository {
     }
 
     public List<Lot> findLotsByTradeItem(String tradeItemId) {
+        return findLotsByTradeItem(tradeItemId, false);
+    }
 
-        String query = String.format("SELECT * FROM %s WHERE %s=? AND %s > ? " +
-                        "ORDER BY %s, %s desc",
-                LOT_TABLE, TRADE_ITEM_ID, EXPIRATION_DATE,
-                EXPIRATION_DATE, LOT_STATUS);
+
+    public List<Lot> findLotsByTradeItem(String tradeItemId, boolean filterWithoutStock) {
+        String query;
+        if (filterWithoutStock)
+            query = String.format("SELECT * FROM %s WHERE %s IN " +
+                            "(SELECT %s FROM %s  WHERE %s=? AND %s > ? GROUP BY %s having SUM(%s) >0 )" +
+                            "ORDER BY %s, %s desc",
+                    LOT_TABLE, ID, LOT_ID, stock_TABLE_NAME, STOCK_TYPE_ID, EXPIRATION_DATE, LOT_ID,
+                    VALUE, EXPIRATION_DATE, LOT_STATUS);
+        else
+            query = String.format("SELECT * FROM %s WHERE %s=? AND %s > ? " +
+                            "ORDER BY %s, %s desc",
+                    LOT_TABLE, TRADE_ITEM_ID, EXPIRATION_DATE,
+                    EXPIRATION_DATE, LOT_STATUS);
         Log.d(TAG, query);
         Cursor cursor = null;
         List<Lot> lots = new ArrayList<>();
@@ -98,7 +115,6 @@ public class LotRepository extends BaseRepository {
                 cursor.close();
         }
         return lots;
-
     }
 
     public Lot findLotById(String lotId) {
@@ -156,6 +172,26 @@ public class LotRepository extends BaseRepository {
         }
         return lots;
 
+    }
+
+    public Map<String, Integer> getStockByLot(String tradeItemId) {
+        String query = String.format("SELECT %s, sum(%s) FROM %s WHERE %s=? GROUP BY %s", LOT_ID, VALUE,
+                stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID);
+        Cursor cursor = null;
+        Map<String, Integer> lots = new HashMap<>();
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId});
+            while (cursor.moveToNext()) {
+                lots.put(cursor.getString(0), cursor.getInt(1));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return lots;
     }
 
 

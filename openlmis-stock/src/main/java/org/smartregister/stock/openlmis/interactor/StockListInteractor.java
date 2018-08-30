@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_MONTHS_WARNING;
+
 
 /**
  * Created by samuelgithengi on 7/13/18.
@@ -72,7 +74,7 @@ public class StockListInteractor {
             tradeItemWrapper.setNumberOfLots(lots.size());
             if (!lots.isEmpty()) {
                 LocalDate maxExpiringDate = new LocalDate(lots.keySet().iterator().next());
-                tradeItemWrapper.setHasLotExpiring(new LocalDate().plusMonths(3).isAfter(maxExpiringDate));
+                tradeItemWrapper.setHasLotExpiring(new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING).isAfter(maxExpiringDate));
             }
             tradeItemWrappers.add(tradeItemWrapper);
         }
