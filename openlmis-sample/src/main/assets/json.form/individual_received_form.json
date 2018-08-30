@@ -89,35 +89,12 @@
           {
             "key": "13037147-1769-4735-90a7-b9b310d128b8",
             "text": "Balaka District Warehouse"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
           }
         ],
         "value": "13037147-1769-4735-90a7-b9b310d128b8",
         "v_required": {
           "value": true,
           "err": "Please select where stock was received from"
-        }
-      },
-      {
-        "key": "Receive_Stock_From_Other",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Please specify: *",
-        "edit_type": "name",
-        "v_required": {
-          "value": true,
-          "err": "Please specify where stock was received from"
-        },
-        "relevance": {
-          "step1:Receive_Stock_From": {
-            "type": "string",
-            "ex": "equalTo(., \"Other\")"
-          }
         }
       },
       {
