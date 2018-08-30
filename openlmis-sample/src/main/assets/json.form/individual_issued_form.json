@@ -1,0 +1,181 @@
+{
+  "count": "3",
+  "encounter_type": "",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Issue [trade_item]",
+    "next": "step2",
+    "bottom_navigation": "true",
+    "fields": [
+      {
+        "key": "Date_Stock_Issued",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Date",
+        "expanded": false,
+        "min_date": "today-1m",
+        "max_date": "today",
+        "background": "#EAEAEA",
+        "underline_color": "#EAEAEA",
+        "v_required": {
+          "value": "true",
+          "err": "Enter the Stock Issue date"
+        }
+      },
+      {
+        "key": "labelIssuedTo",
+        "type": "label",
+        "text": "Issued to *",
+        "top_margin":"10dp"
+      },
+      {
+        "key": "Issued_Stock_To",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "openmrs_data_type": "select one",
+        "type": "native_radio",
+        "options": [
+          {
+            "key": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
+            "text": "Comfort Health Clinic"
+          },
+          {
+            "key": "13037147-1769-4735-90a7-b9b310d128b8",
+            "text": "Balaka District Warehouse"
+          }
+        ],
+        "value": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
+        "v_required": {
+          "value": true,
+          "err": "Please select where stock was issued"
+        }
+      },
+      {
+        "key": "labelReason",
+        "type": "label",
+        "text": "Reason *",
+        "top_margin": "10dp"
+      },
+      {
+        "key": "Reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "openmrs_data_type": "select one",
+        "type": "native_radio",
+        "options": [
+          {
+            "key": "b5c27da7-bdda-4790-925a-9484c5dfb594",
+            "text": "Consumed"
+          }, {
+            "key": "c1fc3cf3-da18-44b0-a220-77c985202e06",
+            "text": "Transfer Out"
+          }, {
+            "key": "5b09202e-b8a7-4f77-9e0e-8156f8efc613",
+            "text": "Damage"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "value": "b5c27da7-bdda-4790-925a-9484c5dfb594",
+        "v_required": {
+          "value": true,
+          "err": "Please select reason stock was issued"
+        }
+      },
+      {
+        "key": "Reason_Other",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Please specify: *",
+        "edit_type": "name",
+        "v_required": {
+          "value": true,
+          "err": "Please specify reason stock was issued"
+        },
+        "relevance": {
+          "step1:Reason": {
+            "type": "string",
+            "ex": "equalTo(., \"Other\")"
+          }
+        }
+      }
+    ]
+  },
+  "step2": {
+    "title": "Issue [trade_item]",
+    "previous": "step1",
+    "next": "step3",
+    "bottom_navigation": "true",
+    "fields": [
+      {
+        "key": "labellots",
+        "type": "label",
+        "text": "Lots Selection Widget (Step 2)"
+      }
+    ]
+  },
+  "step3": {
+    "title": "Review",
+    "previous": "step2",
+    "bottom_navigation": "true",
+    "fields": [
+      {
+        "key": "labelReview",
+        "type": "label",
+        "text": "Stock Review Widget (Step 3)"
+      }
+    ]
+  }
+}

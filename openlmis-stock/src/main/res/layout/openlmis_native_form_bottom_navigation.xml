@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/botton_navigation_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_navigation_border"
+    android:orientation="horizontal"
+    android:paddingEnd="30dp"
+    android:paddingStart="30dp">
+
+    <TextView
+        android:id="@+id/information_textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/previous_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottom_navigation_margin"
+        android:layout_marginTop="@dimen/bottom_navigation_margin"
+        android:paddingEnd="@dimen/bottom_navigation_padding"
+        android:paddingStart="@dimen/bottom_navigation_padding"
+        android:text="@string/previous"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="#979797"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/next_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottom_navigation_margin"
+        android:layout_marginTop="@dimen/bottom_navigation_margin"
+        android:background="@drawable/rounded_button"
+        android:paddingEnd="@dimen/bottom_navigation_padding"
+        android:paddingStart="@dimen/bottom_navigation_padding"
+        android:text="@string/next"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="#979797"
+        android:textSize="16sp"
+        android:visibility="gone" />
+</LinearLayout>

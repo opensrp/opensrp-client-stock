@@ -19,5 +19,10 @@
         <activity
             android:name="org.smartregister.stock.openlmis.view.StockDetailsActivity"
             android:parentActivityName="org.smartregister.stock.openlmis.view.StockListActivity" />
+        <activity
+            android:name="org.smartregister.stock.openlmis.activity.OpenLMISJsonForm"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
     </application>
 </manifest>
