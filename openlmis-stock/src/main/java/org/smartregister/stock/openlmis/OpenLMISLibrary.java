@@ -1,7 +1,9 @@
 package org.smartregister.stock.openlmis;
 
 import org.smartregister.Context;
+import org.smartregister.repository.DrishtiRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.repository.SettingsRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
@@ -32,6 +34,7 @@ public class OpenLMISLibrary {
     private DispensableRepository dispensableRepository;
     private TradeItemClassificationRepository tradeItemClassificationRepository;
     private StockRepository stockRepository;
+    private SettingsRepository settingsRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -135,5 +138,17 @@ public class OpenLMISLibrary {
             return new StockRepository(getRepository());
         }
         return stockRepository;
+    }
+
+    public SettingsRepository getSettingsRepository() {
+        if (settingsRepository == null) {
+            for (DrishtiRepository repository : getContext ().sharedRepositories()) {
+                if (repository instanceof SettingsRepository) {
+                    settingsRepository = (SettingsRepository) repository;
+                    return settingsRepository;
+                }
+            }
+        }
+        return settingsRepository;
     }
 }

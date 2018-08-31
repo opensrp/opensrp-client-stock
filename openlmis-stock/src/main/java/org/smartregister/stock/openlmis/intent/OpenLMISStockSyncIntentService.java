@@ -10,7 +10,6 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.domain.Response;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
@@ -28,7 +27,6 @@ import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.stock.openlmis.util.Utils.makePostRequest;
-import static org.smartregister.stock.openlmis.util.Utils.populateDBWithStock;
 import static org.smartregister.util.Log.logError;
 
 public class OpenLMISStockSyncIntentService extends IntentService {
@@ -46,7 +44,7 @@ public class OpenLMISStockSyncIntentService extends IntentService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         context = getBaseContext();
-        actionService =OpenLMISLibrary.getInstance().getContext().actionService();
+        actionService = OpenLMISLibrary.getInstance().getContext().actionService();
         httpAgent = OpenLMISLibrary.getInstance().getContext().getHttpAgent();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -154,6 +152,7 @@ public class OpenLMISStockSyncIntentService extends IntentService {
     }
 
     private void pushStockToServer() {
+
         boolean keepSyncing = true;
         int limit = 50;
         try {
@@ -176,11 +175,11 @@ public class OpenLMISStockSyncIntentService extends IntentService {
                                 STOCK_Add_PATH),
                                 jsonPayload);
                 if (response == null) {
-                    Log.e(getClass().getName(), "Stocks upward sync failed.");
+                    Log.e(getClass().getName(), "Stock push sync failed.");
                     return;
                 }
                 stockRepository.markEventsAsSynced(stocks);
-                Log.i(getClass().getName(), "Stocks synced successfully.");
+                Log.i(getClass().getName(), "Stock successfully pushed.");
             }
         } catch (JSONException e) {
             Log.e(getClass().getName(), e.getMessage());

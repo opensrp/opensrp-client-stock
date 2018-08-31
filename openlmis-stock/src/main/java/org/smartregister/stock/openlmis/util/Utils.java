@@ -1,8 +1,14 @@
 package org.smartregister.stock.openlmis.util;
 
 import android.util.Base64;
+import android.util.Log;
 import android.util.Pair;
 
+import org.smartregister.domain.Response;
+import org.smartregister.repository.AllSettings;
+import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.service.HTTPAgent;
+import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.repository.StockRepository;
@@ -32,9 +38,11 @@ public class Utils {
     public static final String DATABASE_NAME = "drishti.db";
     private static final String USERNAME = "admin";
     private static  final String PASSWORD = "Admin123";
-    public static final String BASE_URL = "https://vreach-dev.smartregister.org/opensrp";
+    // public static final String BASE_URL = "https://vreach-dev.smartregister.org/opensrp";
     // public static final String BASE_URL = "http://192.168.0.10:8080/opensrp";
+    public static final String BASE_URL = "http://10.20.25.188:8080/opensrp";
     public static final String PREV_SYNC_SERVER_VERSION = "prev_sync_server_version";
+    private static HTTPAgent httpAgent = OpenLMISLibrary.getInstance().getContext().getHttpAgent();
 
     public static Boolean convertIntToBoolean(int i) {
         return i > 0;
@@ -86,106 +94,32 @@ public class Utils {
 
     public static String makeGetRequest(String uri) {
 
-        StringBuffer response = new StringBuffer();
+        Response<String> response;
         try {
-            createAllTrustingCertValidator(); // TODO: REMOVE THIS!!!!!!!!!!!!!!!!!!!
-
-            HttpURLConnection connection = (HttpURLConnection) new URL(uri).openConnection();
-            String encoded = Base64.encodeToString((USERNAME + ":" + PASSWORD).getBytes(), Base64.NO_WRAP);
-            connection.setRequestProperty("Authorization", "Basic " + encoded);
-
-            int responseCode = connection.getResponseCode();
-            logInfo("\nSending 'GET' request to URL : " + uri);
-            logInfo("Response Code : " + responseCode);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            if (responseCode > 299 && responseCode < 600) {
+            response = httpAgent.fetchWithCredentials(uri, USERNAME, PASSWORD);
+            if (response.isFailure()) {
+                logError("Pull on url: " +  uri  + ", failed.");
                 return null;
             }
         } catch (Exception e) {
             logError(e.getMessage());
             return null;
         }
-        return response.toString();
+        return response.payload();
     }
 
     public static String makePostRequest(String uri, String payload) {
 
-        StringBuffer response = new StringBuffer();
+        AllSettings settings = OpenLMISLibrary.getInstance().getContext().allSettings();
+        settings.registerANM(USERNAME, PASSWORD);
+        Response<String> response;
         try {
-            createAllTrustingCertValidator(); // TODO: REMOVE THIS!!!!!!!!!!!!!!!!!!!
-
-            HttpURLConnection connection = (HttpURLConnection) new URL(uri).openConnection();
-            String encoded = Base64.encodeToString((USERNAME + ":" + PASSWORD).getBytes(), Base64.NO_WRAP);
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("Authorization", "Basic " + encoded);
-
-            // send POST request
-            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.write(payload.getBytes("UTF-8"));
-            outputStream.flush();
-            outputStream.close();
-
-            // validate response code
-            int responseCode = connection.getResponseCode();
-            logInfo("\nSending 'POST' request to URL : " + uri);
-            logInfo("Response Code : " + responseCode);
-            if (responseCode > 299 && responseCode < 600) {
-                return null;
-            }
-
-            // read response
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
+            response = httpAgent.post(uri, payload);
         } catch (Exception e) {
             logError(e.getMessage());
             return null;
         }
-        return response.toString();
-    }
-
-
-    private static void createAllTrustingCertValidator() throws Exception {
-
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
-        }
-        };
-
-        // Install the all-trusting trust manager
-        SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-        // Create all-trusting host name verifier
-        HostnameVerifier allHostsValid = new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        };
-
-        // Install the all-trusting host verifier
-        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        return response.payload();
     }
 
     public static void populateDBWithStock() {
