@@ -182,6 +182,7 @@
     "bottom_navigation": "true",
     "next_type": "submit",
     "next_label": "Submit",
+    "no_padding": true,
     "fields": [
       {
         "key": "stockReview",

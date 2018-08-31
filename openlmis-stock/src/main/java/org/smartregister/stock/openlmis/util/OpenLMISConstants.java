@@ -32,6 +32,8 @@ public interface OpenLMISConstants {
 
         String SUBMIT = "submit";
 
+        String NO_PADDING = "no_padding";
+
     }
 
     interface Forms {
