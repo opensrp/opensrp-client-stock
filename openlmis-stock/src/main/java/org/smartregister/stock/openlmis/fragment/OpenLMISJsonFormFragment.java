@@ -83,7 +83,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         return jsonFormFragment;
     }
 
-    private void initializeBottomNavigation() {
+    protected void initializeBottomNavigation() {
         JSONObject step = getStep(stepName);
         if (step.has(PREVIOUS)) {
             previousButton.setVisibility(View.VISIBLE);
