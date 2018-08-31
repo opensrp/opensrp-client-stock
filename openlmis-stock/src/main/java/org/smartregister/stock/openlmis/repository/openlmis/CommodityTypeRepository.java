@@ -137,7 +137,7 @@ public class CommodityTypeRepository extends BaseRepository {
         return new CommodityType(
                 cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
-                cursor.getString(cursor.getColumnIndex(PARENT)),
+                new CommodityType(cursor.getString(cursor.getColumnIndex(PARENT))),
                 cursor.getString(cursor.getColumnIndex(CLASSIFICATION_SYSTEM)),
                 cursor.getString(cursor.getColumnIndex(CLASSIFICATION_ID)),
                 cursor.getLong(cursor.getColumnIndex(DATE_UPDATED))
@@ -149,7 +149,7 @@ public class CommodityTypeRepository extends BaseRepository {
         Object[] values = new Object[]{
                 commodityType.getId().toString(),
                 commodityType.getName(),
-                commodityType.getParentId(),
+                commodityType.getParent() == null ? null : commodityType.getParent().getId(),
                 commodityType.getClassificationSystem(),
                 commodityType.getClassificationId(),
                 commodityType.getDateUpdated()

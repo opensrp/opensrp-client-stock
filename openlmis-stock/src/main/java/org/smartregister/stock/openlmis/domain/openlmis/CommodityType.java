@@ -12,18 +12,8 @@ public class CommodityType extends BaseEntity {
     private String classificationSystem;
     private String classificationId;
     private Long dateUpdated;
-    private String parentId;
     private List<CommodityType> children;
     private List<TradeItem> tradeItems;
-
-    public CommodityType(String id, String name, String parentId, String classificationSystem, String classificationId, Long dateUpdated) {
-        this.id = id;
-        this.name = name;
-        this.parentId = parentId;
-        this.classificationSystem = classificationSystem;
-        this.classificationId = classificationId;
-        this.dateUpdated = dateUpdated;
-    }
 
     public CommodityType(String id, String name, CommodityType parent, String classificationSystem, String classificationId, Long dateUpdated) {
         this.id = id;
@@ -32,6 +22,10 @@ public class CommodityType extends BaseEntity {
         this.classificationSystem = classificationSystem;
         this.classificationId = classificationId;
         this.dateUpdated = dateUpdated;
+    }
+
+    public CommodityType(String id) {
+        this.id = id;
     }
 
     public String getId() {
@@ -105,14 +99,6 @@ public class CommodityType extends BaseEntity {
             }
             child.validateIsNotDescendant(commodityType);
         }
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
     }
 
     public List<CommodityType> getChildren() {

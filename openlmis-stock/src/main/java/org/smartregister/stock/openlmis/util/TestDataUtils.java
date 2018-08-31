@@ -64,11 +64,11 @@ public class TestDataUtils {
     }
 
     private void populateCommodityTypes() {
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "BCG", "", null, null, System.currentTimeMillis()));
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "OPV", "", null, null, System.currentTimeMillis()));
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "Penta", "", null, null, System.currentTimeMillis()));
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "PC2", "", null, null, System.currentTimeMillis()));
-        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "C1", "", null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "BCG", null, null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "OPV", null, null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "Penta", null, null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "PC2", null, null, null, System.currentTimeMillis()));
+        commodityTypeRepository.addOrUpdate(new CommodityType(UUID.randomUUID().toString(), "C1", null, null, null, System.currentTimeMillis()));
     }
 
 

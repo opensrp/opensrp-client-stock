@@ -40,7 +40,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         CommodityType commodityType = new CommodityType(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -60,7 +60,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         CommodityType commodityType = new CommodityType(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440286",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440286"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -71,7 +71,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         commodityType = new CommodityType(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440286",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440286"),
                 "classification_system_two",
                 "classification_id",
                 421309130103L
@@ -96,7 +96,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         CommodityType commodityType = new CommodityType(
                 "123e4567-e89b-42d3-a456-556642440100",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -106,7 +106,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         commodityType = new CommodityType(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -127,7 +127,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         CommodityType commodityType = new CommodityType(
                 "123e4567-e89b-42d3-a456-556642440100",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -137,7 +137,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         commodityType = new CommodityType(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -161,7 +161,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         CommodityType commodityType = new CommodityType(
                 "123e4567-e89b-42d3-a456-556642440100",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -173,7 +173,7 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         commodityType = new CommodityType(
                 "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
