@@ -11,7 +11,6 @@ import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
@@ -28,6 +27,7 @@ import static org.smartregister.stock.openlmis.widget.LotFactory.DISPENSING_UNIT
 import static org.smartregister.stock.openlmis.widget.LotFactory.NET_CONTENT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM;
 import static org.smartregister.util.JsonFormUtils.FIELDS;
+import static org.smartregister.util.JsonFormUtils.STEP1;
 
 
 /**
@@ -39,12 +39,13 @@ public class ReviewFactory implements FormWidgetFactory {
     public final static String DATE = "date";
     public final static String FACILITY = "facility";
     public final static String REASON = "reason";
+    public final static String OTHER = "Other";
     public final static String STEP2 = "step2";
     public final static String STOCK_LOTS = "stockLots";
 
 
     @Override
-    public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
+    public List<View> getViewsFromJson(String stepName, Context context, final JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
 
         String tradeItem = jsonObject.getString(TRADE_ITEM);
         long netContent = jsonObject.getLong(NET_CONTENT);
@@ -59,15 +60,19 @@ public class ReviewFactory implements FormWidgetFactory {
 
         ((TextView) root.findViewById(R.id.date)).setText(JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(DATE)));
         String facility = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(FACILITY));
-        if (StringUtils.isBlank(facility))
-            facility = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(FACILITY + "_Other"));
         String reason = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(REASON));
-        if (StringUtils.isBlank(facility))
-            reason = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(REASON + "_Other"));
+        if (reason.equalsIgnoreCase(OTHER))
+            reason = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(REASON) + "_" + OTHER);
         ((TextView) root.findViewById(R.id.facility)).setText(facility);
         ((TextView) root.findViewById(R.id.reason)).setText(reason);
         views.add(root);
 
+        root.findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToFirstStep(formFragment);
+            }
+        });
         step1Fields = formJSon.getJSONObject(STEP2).getJSONArray(FIELDS);
 
         String lotsJSON = JsonFormUtils.getFieldValue(step1Fields, STOCK_LOTS);
@@ -89,5 +94,11 @@ public class ReviewFactory implements FormWidgetFactory {
             totalQuantity += lot.getQuantity();
         jsonFormFragment.setBottomNavigationText(context.getString(R.string.issued_dose_formatter,
                 totalQuantity, dispensingUnit, totalQuantity * netContent));
+    }
+
+    private void navigateToFirstStep(JsonFormFragment formFragment) {
+        JsonFormFragment next = OpenLMISJsonFormFragment.getFormFragment(STEP1);
+        formFragment.hideKeyBoard();
+        formFragment.transactThis(next);
     }
 }

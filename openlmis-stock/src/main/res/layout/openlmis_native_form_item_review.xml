@@ -30,25 +30,23 @@
 
     <TextView
         android:id="@+id/date_label"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/review_margin"
         android:text="@string/date"
+        android:textColor="@color/stock_list_light_text"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@id/date"
-        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/review_type_border" />
 
     <TextView
         android:id="@+id/date"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/review_margin"
+        android:textColor="@color/stock_list_dark_text"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintStart_toEndOf="@id/date_label"
+        app:layout_constraintStart_toStartOf="@id/facility"
         app:layout_constraintTop_toBottomOf="@id/review_type_border" />
 
 
@@ -58,6 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/review_margin"
         android:text="@string/issue_to"
+        android:textColor="@color/stock_list_light_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@id/facility"
         app:layout_constraintHorizontal_weight="1"
@@ -69,34 +68,41 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/review_margin"
+        android:textColor="@color/stock_list_dark_text"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/edit_button"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@id/facility_label"
         app:layout_constraintTop_toBottomOf="@id/date_label" />
 
+    <ImageView
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:src="@drawable/ic_stock_edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_label" />
 
     <TextView
         android:id="@+id/reason_label"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/review_margin"
         android:text="@string/reason"
+        android:textColor="@color/stock_list_light_text"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@id/date"
-        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/facility_label" />
 
     <TextView
         android:id="@+id/reason"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/review_margin"
+        android:textColor="@color/stock_list_dark_text"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintStart_toEndOf="@id/date_label"
+        app:layout_constraintStart_toStartOf="@id/facility"
         app:layout_constraintTop_toBottomOf="@id/facility_label" />
 
     <View
