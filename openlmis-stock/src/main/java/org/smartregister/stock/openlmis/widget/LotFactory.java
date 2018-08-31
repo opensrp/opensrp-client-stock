@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
@@ -44,14 +42,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.vijay.jsonwizard.constants.JsonFormConstants.ERR;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.OPENMRS_ENTITY;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.OPENMRS_ENTITY_ID;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.OPENMRS_ENTITY_PARENT;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.V_REQUIRED;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_MONTHS_WARNING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET;
@@ -100,9 +92,6 @@ public class LotFactory implements FormWidgetFactory {
 
     private Map<String, Integer> lotStockBalances;
 
-    public LotFactory() {
-    }
-
     @Override
     public List<View> getViewsFromJson(String stepName, final Context context, JsonFormFragment jsonFormFragment, JSONObject jsonObject, CommonListener commonListener) throws Exception {
         this.stepName = stepName;
@@ -128,7 +117,7 @@ public class LotFactory implements FormWidgetFactory {
 
         root.findViewById(R.id.add_lot).setOnClickListener(lotListener);
 
-        String selectedLotDTosJSON = jsonObject.optString(JsonFormConstants.VALUE);
+        String selectedLotDTosJSON = jsonObject.optString(VALUE);
         if (!selectedLotDTosJSON.isEmpty()) {
             Type listType = new TypeToken<List<LotDto>>() {
             }.getType();
@@ -241,29 +230,6 @@ public class LotFactory implements FormWidgetFactory {
 
         }
 
-    }
-
-    private void populateProperties(TextInputEditText editText, JSONObject jsonObject) {
-        String key = jsonObject.optString(KEY);
-        String type = jsonObject.optString(TYPE);
-        String openMrsEntityParent = jsonObject.optString(OPENMRS_ENTITY_PARENT);
-        String openMrsEntity = jsonObject.optString(OPENMRS_ENTITY);
-        String openMrsEntityId = jsonObject.optString(OPENMRS_ENTITY_ID);
-        editText.setTag(com.vijay.jsonwizard.R.id.key, key);
-        editText.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent, openMrsEntityParent);
-        editText.setTag(com.vijay.jsonwizard.R.id.openmrs_entity, openMrsEntity);
-        editText.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_id, openMrsEntityId);
-        editText.setTag(com.vijay.jsonwizard.R.id.type, type);
-
-        JSONObject requiredObject = jsonObject.optJSONObject(V_REQUIRED);
-        String valueToSelect;
-        if (requiredObject != null) {
-            valueToSelect = requiredObject.optString(VALUE);
-            if (!TextUtils.isEmpty(valueToSelect)) {
-                editText.setTag(com.vijay.jsonwizard.R.id.v_required, valueToSelect);
-                editText.setTag(com.vijay.jsonwizard.R.id.error, requiredObject.optString(ERR));
-            }
-        }
     }
 
     private void populateStatusOptions(final Context context, final TextInputEditText editText) {

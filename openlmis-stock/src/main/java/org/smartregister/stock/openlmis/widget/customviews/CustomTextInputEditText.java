@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class CustomTextInputEditText extends TextInputEditText {
 
-    List<METValidator> validators = new ArrayList<>();
+    private List<METValidator> validators = new ArrayList<>();
 
     public CustomTextInputEditText(Context context) {
         super(context);
