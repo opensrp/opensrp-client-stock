@@ -178,7 +178,9 @@ public class TestDataUtils {
 
         for (int i = 0; i < numberOfLots; i++) {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DATE, random.nextInt(300));
+            int expiry = random.nextInt(300);
+            expiry = random.nextBoolean() ? expiry : -expiry;
+            calendar.add(Calendar.DATE, expiry);
             Lot lot = new Lot(UUID.randomUUID(), "LC" + (1000 + random.nextInt(8000)), new LocalDate(calendar.getTimeInMillis()),
                     new LocalDate(System.currentTimeMillis()),
                     new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),

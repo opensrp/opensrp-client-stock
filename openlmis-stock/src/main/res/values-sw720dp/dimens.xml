@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="lot_margin">48dp</dimen>
+    <dimen name="lot_row_padding">16dp</dimen>
+
+    <dimen name="bottom_navigation_margin">10dp</dimen>
+    <dimen name="bottom_navigation_padding">40dp</dimen>
+    <dimen name="cancel_padding">10dp</dimen>
+</resources>

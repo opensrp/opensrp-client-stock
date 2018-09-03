@@ -20,6 +20,7 @@ import org.smartregister.stock.util.Constants;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_LABEL;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NO_PADDING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS_LABEL;
 
@@ -33,6 +34,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
     private Button previousButton;
     private Button nextButton;
     private TextView informationTextView;
+    private String stepName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,6 +48,12 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         setupCustomToolbar();
         rootView.findViewById(R.id.previous_button).setOnClickListener(navigationListener);
         rootView.findViewById(R.id.next_button).setOnClickListener(navigationListener);
+        if (getArguments() != null) {
+            stepName = getArguments().getString(Constants.STEPNAME);
+            if (getStep(stepName).optBoolean(NO_PADDING))
+                mMainView.setPadding(0, 0, 0, 0);
+        }
+
         return rootView;
     }
 
@@ -73,8 +81,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         return jsonFormFragment;
     }
 
-    private void initializeBottomNavigation() {
-        String stepName = getArguments().getString(Constants.STEPNAME);
+    protected void initializeBottomNavigation() {
         JSONObject step = getStep(stepName);
         if (step.has(PREVIOUS)) {
             previousButton.setVisibility(View.VISIBLE);

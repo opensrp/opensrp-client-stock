@@ -26,6 +26,8 @@ public interface OpenLMISConstants {
 
         String NEXT_LABEL = "next_label";
 
+        String NO_PADDING = "no_padding";
+
     }
 
     interface Forms {
