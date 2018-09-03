@@ -39,5 +39,11 @@
         <activity
             android:name="org.smartregister.stock.openlmis.view.StockDetailsActivity"
             android:parentActivityName="org.smartregister.stock.openlmis.view.StockListActivity" />
+        <receiver android:name=".receiver.OnBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.OpenLMISAlarmReceiver" />
     </application>
 </manifest>

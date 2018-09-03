@@ -3,6 +3,8 @@ package org.smartregister.stock.management.application;
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.repository.Repository;
+import org.smartregister.stock.management.BuildConfig;
+import org.smartregister.stock.management.receiver.OpenLMISAlarmReceiver;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.intent.CommodityTypeSyncIntentService;
@@ -18,6 +20,8 @@ import org.smartregister.stock.openlmis.intent.TradeItemSyncIntentService;
 import org.smartregister.stock.openlmis.repository.StockManagementRepository;
 import org.smartregister.view.activity.DrishtiApplication;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_OPENLMIS_METADATA;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_STOCK;
 import static org.smartregister.util.Log.logError;
 
 public class Application extends DrishtiApplication {
@@ -33,18 +37,6 @@ public class Application extends DrishtiApplication {
 
         //Initialize OpenLMISLibrary
         OpenLMISLibrary.init(context, getRepository());
-
-        // Initialize sync intent services
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), CommodityTypeSyncIntentService.class);
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), DispensableSyncIntentService.class);
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), LotSyncIntentService.class);
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), OrderableSyncIntentService.class);
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), ProgramOrderableSyncIntentService.class);
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), ReasonSyncIntentService.class);
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), TradeItemClassificationSyncIntentService.class);
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), TradeItemSyncIntentService.class);
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), ProgramSyncIntentService.class);
-        org.smartregister.stock.management.util.ServiceUtils.startService(getInstance().getApplicationContext(), OpenLMISStockSyncIntentService.class);
     }
 
 
@@ -69,5 +61,8 @@ public class Application extends DrishtiApplication {
 
     }
 
-
+    public static void setAlarms(android.content.Context context) {
+        OpenLMISAlarmReceiver.setAlarm(context, BuildConfig.OPENLMIS_METADATA_SYNC_INTERVAL_MIN, SYNC_OPENLMIS_METADATA);
+        OpenLMISAlarmReceiver.setAlarm(context, BuildConfig.STOCK_SYNC_INTERVAL_MIN, SYNC_STOCK);
+    }
 }

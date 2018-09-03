@@ -38,13 +38,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "int", "OPENLMIS_METADATA_SYNC_INTERVAL_MIN", "5"
+            buildConfigField "int", "STOCK_SYNC_INTERVAL_MIN", "5"
         }
 
         debug {
             testCoverageEnabled true
+            buildConfigField "int", "OPENLMIS_METADATA_SYNC_INTERVAL_MIN", "1"
+            buildConfigField "int", "STOCK_SYNC_INTERVAL_MIN", "1"
         }
     }
-
 }
 
 dependencies {

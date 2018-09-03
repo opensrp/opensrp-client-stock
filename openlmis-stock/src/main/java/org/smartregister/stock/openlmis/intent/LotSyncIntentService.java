@@ -25,6 +25,7 @@ import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
+import static org.smartregister.util.Log.logInfo;
 
 public class LotSyncIntentService extends IntentService implements SyncIntentService  {
 
@@ -68,30 +69,29 @@ public class LotSyncIntentService extends IntentService implements SyncIntentSer
                 timestampStr
         );
         // TODO: make baseUrl configurable
-        while (true) {
-            try {
-                String jsonPayload = makeGetRequest(uri);
-                if (jsonPayload == null) {
-                    logError("Lots pull failed.");
-                    return;
-                }
-                // store lots
-                Long highestTimeStamp = 0L;
-                List<Lot> lots = new Gson().fromJson(jsonPayload, new TypeToken<List<Lot>>(){}.getType());
-                LotRepository repository = OpenLMISLibrary.getInstance().getLotRepository();
-                for (Lot lot : lots) {
-                    repository.addOrUpdate(lot);
-                    if (lot.getServerVersion() > highestTimeStamp) {
-                        highestTimeStamp = lot.getServerVersion();
-                    }
-                }
-                // save highest server version
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
-                editor.commit();
-            } catch (Exception e) {
-                logError(e.getMessage());
+        try {
+            String jsonPayload = makeGetRequest(uri);
+            if (jsonPayload == null) {
+                logError("Lots pull failed.");
+                return;
             }
+            logInfo("Lots pulled successfully!");
+            // store lots
+            Long highestTimeStamp = 0L;
+            List<Lot> lots = new Gson().fromJson(jsonPayload, new TypeToken<List<Lot>>(){}.getType());
+            LotRepository repository = OpenLMISLibrary.getInstance().getLotRepository();
+            for (Lot lot : lots) {
+                repository.addOrUpdate(lot);
+                if (lot.getServerVersion() > highestTimeStamp) {
+                    highestTimeStamp = lot.getServerVersion();
+                }
+            }
+            // save highest server version
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+            editor.commit();
+        } catch (Exception e) {
+            logError(e.getMessage());
         }
     }
 }

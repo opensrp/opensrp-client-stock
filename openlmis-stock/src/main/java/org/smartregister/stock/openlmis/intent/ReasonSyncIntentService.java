@@ -25,6 +25,7 @@ import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
+import static org.smartregister.util.Log.logInfo;
 
 public class ReasonSyncIntentService extends IntentService implements SyncIntentService {
 
@@ -68,30 +69,29 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
                 timestampStr
         );
         // TODO: make baseUrl configurable
-        while (true) {
-            try {
-                String jsonPayload = makeGetRequest(uri);
-                if (jsonPayload == null) {
-                    logError("Reasons pull failed.");
-                    return;
-                }
-                // store reasons
-                Long highestTimeStamp = 0L;
-                List<Reason> reasons = new Gson().fromJson(jsonPayload, new TypeToken<List<Reason>>(){}.getType());
-                ReasonRepository repository = OpenLMISLibrary.getInstance().getReasonRepository();
-                for (Reason reason : reasons) {
-                    repository.addOrUpdate(reason);
-                    if (reason.getServerVersion() > highestTimeStamp) {
-                        highestTimeStamp = reason.getServerVersion();
-                    }
-                }
-                // save highest server version
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
-                editor.commit();
-            } catch (Exception e) {
-                logError(e.getMessage());
+        try {
+            String jsonPayload = makeGetRequest(uri);
+            if (jsonPayload == null) {
+                logError("Reasons pull failed.");
+                return;
             }
+            logInfo("Reasons successfully pulled!");
+            // store reasons
+            Long highestTimeStamp = 0L;
+            List<Reason> reasons = new Gson().fromJson(jsonPayload, new TypeToken<List<Reason>>(){}.getType());
+            ReasonRepository repository = OpenLMISLibrary.getInstance().getReasonRepository();
+            for (Reason reason : reasons) {
+                repository.addOrUpdate(reason);
+                if (reason.getServerVersion() > highestTimeStamp) {
+                    highestTimeStamp = reason.getServerVersion();
+                }
+            }
+            // save highest server version
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+            editor.commit();
+        } catch (Exception e) {
+            logError(e.getMessage());
         }
     }
 }

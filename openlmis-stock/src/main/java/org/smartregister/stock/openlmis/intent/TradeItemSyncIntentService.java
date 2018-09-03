@@ -34,6 +34,7 @@ import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
+import static org.smartregister.util.Log.logInfo;
 
 public class TradeItemSyncIntentService extends IntentService implements SyncIntentService {
 
@@ -77,39 +78,38 @@ public class TradeItemSyncIntentService extends IntentService implements SyncInt
                 timestampStr
         );
         // TODO: make baseUrl configurable
-        while (true) {
-            try {
-                String jsonPayload = makeGetRequest(uri);
-                if (jsonPayload == null) {
-                    logError("TradeItemClassifications pull failed.");
-                    return;
-                }
-                // store tradeItems
-                Long highestTimeStamp = 0L;
-                List<TradeItem> tradeItems = new Gson().fromJson(jsonPayload, new TypeToken<List<TradeItem>>(){}.getType());
-                TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
-                TradeItemClassificationRepository tradeItemClassificationRepository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
-                for (TradeItem tradeItem : tradeItems) {
-                    tradeItemRepository.addOrUpdate(tradeItem);
-                    // save trade item classifications
-                    List<TradeItemClassification> tradeItemClassifications = tradeItem.getClassifications();
-                    if (tradeItemClassifications.size() > 0) {
-                        for (TradeItemClassification tradeItemClassification : tradeItemClassifications) {
-                            tradeItemClassification.setTradeItem(tradeItem);
-                            tradeItemClassificationRepository.addOrUpdate(tradeItemClassification);
-                        }
-                    }
-                    if (tradeItem.getServerVersion() > highestTimeStamp) {
-                        highestTimeStamp = tradeItem.getServerVersion();
-                    }
-                }
-                // save highest server version
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
-                editor.commit();
-            } catch (Exception e) {
-                logError(e.getMessage());
+        try {
+            String jsonPayload = makeGetRequest(uri);
+            if (jsonPayload == null) {
+                logError("TradeItems pull failed.");
+                return;
             }
+            logInfo("TradeItems pulled successfully!");
+            // store tradeItems
+            Long highestTimeStamp = 0L;
+            List<TradeItem> tradeItems = new Gson().fromJson(jsonPayload, new TypeToken<List<TradeItem>>(){}.getType());
+            TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
+            TradeItemClassificationRepository tradeItemClassificationRepository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
+            for (TradeItem tradeItem : tradeItems) {
+                tradeItemRepository.addOrUpdate(tradeItem);
+                // save trade item classifications
+                List<TradeItemClassification> tradeItemClassifications = tradeItem.getClassifications();
+                if (tradeItemClassifications.size() > 0) {
+                    for (TradeItemClassification tradeItemClassification : tradeItemClassifications) {
+                        tradeItemClassification.setTradeItem(tradeItem);
+                        tradeItemClassificationRepository.addOrUpdate(tradeItemClassification);
+                    }
+                }
+                if (tradeItem.getServerVersion() > highestTimeStamp) {
+                    highestTimeStamp = tradeItem.getServerVersion();
+                }
+            }
+            // save highest server version
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+            editor.commit();
+        } catch (Exception e) {
+            logError(e.getMessage());
         }
     }
 }

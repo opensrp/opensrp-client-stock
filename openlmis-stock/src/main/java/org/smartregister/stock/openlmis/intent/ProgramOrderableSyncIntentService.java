@@ -24,6 +24,7 @@ import java.util.List;
 import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
+import static org.smartregister.util.Log.logInfo;
 
 public class ProgramOrderableSyncIntentService extends IntentService implements SyncIntentService {
 
@@ -62,38 +63,37 @@ public class ProgramOrderableSyncIntentService extends IntentService implements 
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
         }
 
-        while (true) {
-            long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
-            String timestampStr = String.valueOf(timestamp);
-            String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
-                    BASE_URL,
-                    LOT_SYNC_URL,
-                    timestampStr
-            );
-            // make request
-            try {
-                String jsonPayload = makeGetRequest(uri);
-                if (jsonPayload == null) {
-                    logError("ProgramOrderables pull failed.");
-                    return;
-                }
-                // store programOrderables
-                Long highestTimeStamp = 0L;
-                List<ProgramOrderable> programOrderables = new Gson().fromJson(jsonPayload, new TypeToken<List<ProgramOrderable>>(){}.getType());
-                ProgramOrderableRepository repository = OpenLMISLibrary.getInstance().getProgramOrderableRepository();
-                for (ProgramOrderable programOrderable : programOrderables) {
-                    repository.addOrUpdate(programOrderable);
-                    if (programOrderable.getServerVersion() > highestTimeStamp) {
-                        highestTimeStamp = programOrderable.getServerVersion();
-                    }
-                }
-                // save highest server version
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
-                editor.commit();
-            } catch (Exception e) {
-                logError(e.getMessage());
+        long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
+        String timestampStr = String.valueOf(timestamp);
+        String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
+                BASE_URL,
+                LOT_SYNC_URL,
+                timestampStr
+        );
+        // make request
+        try {
+            String jsonPayload = makeGetRequest(uri);
+            if (jsonPayload == null) {
+                logError("ProgramOrderables pull failed.");
+                return;
             }
+            logInfo("ProgramOrderables successfully pulled!");
+            // store programOrderables
+            Long highestTimeStamp = 0L;
+            List<ProgramOrderable> programOrderables = new Gson().fromJson(jsonPayload, new TypeToken<List<ProgramOrderable>>(){}.getType());
+            ProgramOrderableRepository repository = OpenLMISLibrary.getInstance().getProgramOrderableRepository();
+            for (ProgramOrderable programOrderable : programOrderables) {
+                repository.addOrUpdate(programOrderable);
+                if (programOrderable.getServerVersion() > highestTimeStamp) {
+                    highestTimeStamp = programOrderable.getServerVersion();
+                }
+            }
+            // save highest server version
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+            editor.commit();
+        } catch (Exception e) {
+            logError(e.getMessage());
         }
     }
 }

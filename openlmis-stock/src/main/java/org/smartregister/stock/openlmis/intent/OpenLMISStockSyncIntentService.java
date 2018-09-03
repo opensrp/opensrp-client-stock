@@ -28,6 +28,7 @@ import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSI
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.stock.openlmis.util.Utils.makePostRequest;
 import static org.smartregister.util.Log.logError;
+import static org.smartregister.util.Log.logInfo;
 
 public class OpenLMISStockSyncIntentService extends IntentService {
     private static final String STOCK_Add_PATH = "rest/stockresource/add/";
@@ -72,34 +73,33 @@ public class OpenLMISStockSyncIntentService extends IntentService {
                 anmId,
                 timeStampString
         );
-        while (true) {
-            String jsonPayload = makeGetRequest(uri);
-            if (jsonPayload == null) {
-                logError("Stock pull failed.");
-                return;
-            }
-            ArrayList<Stock> Stock_arrayList = getStockFromPayload(jsonPayload);
-            Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong(LAST_STOCK_SYNC, highestTimestamp);
-            editor.commit();
-            if (Stock_arrayList.isEmpty()) {
-                return;
-            } else {
-                StockRepository stockRepository = OpenLMISLibrary.getInstance().getStockRepository();
-                for (int j = 0; j < Stock_arrayList.size(); j++) {
-                    Stock fromServer = Stock_arrayList.get(j);
-                    List<Stock> existingStock = stockRepository.findUniqueStock(fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
-                            String.valueOf(fromServer.getValue()), String.valueOf(fromServer.getDateCreated()), fromServer.getToFrom());
-                    if (!existingStock.isEmpty()) {
-                        for (Stock stock : existingStock) {
-                            fromServer.setId(stock.getId());
-                        }
+        String jsonPayload = makeGetRequest(uri);
+        if (jsonPayload == null) {
+            logError("Stock pull failed.");
+            return;
+        }
+        logInfo("Stock pulled successfully!");
+        ArrayList<Stock> Stock_arrayList = getStockFromPayload(jsonPayload);
+        Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(LAST_STOCK_SYNC, highestTimestamp);
+        editor.commit();
+        if (Stock_arrayList.isEmpty()) {
+            return;
+        } else {
+            StockRepository stockRepository = OpenLMISLibrary.getInstance().getStockRepository();
+            for (int j = 0; j < Stock_arrayList.size(); j++) {
+                Stock fromServer = Stock_arrayList.get(j);
+                List<Stock> existingStock = stockRepository.findUniqueStock(fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
+                        String.valueOf(fromServer.getValue()), String.valueOf(fromServer.getDateCreated()), fromServer.getToFrom());
+                if (!existingStock.isEmpty()) {
+                    for (Stock stock : existingStock) {
+                        fromServer.setId(stock.getId());
                     }
-                    stockRepository.addOrUpdate(fromServer);
                 }
-
+                stockRepository.addOrUpdate(fromServer);
             }
+
         }
     }
 

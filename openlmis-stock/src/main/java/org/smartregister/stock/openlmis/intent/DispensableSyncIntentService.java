@@ -25,6 +25,7 @@ import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
+import static org.smartregister.util.Log.logInfo;
 
 public class DispensableSyncIntentService extends IntentService implements SyncIntentService  {
     private static final String DISPENSABLE_SYNC_URL = "rest/dispensables/sync";
@@ -67,30 +68,29 @@ public class DispensableSyncIntentService extends IntentService implements SyncI
                 timestampStr
         );
         // TODO: make baseUrl configurable
-        while (true) {
-            try {
-                String jsonPayload = makeGetRequest(uri);
-                if (jsonPayload == null) {
-                    logError("Dispensables pull failed.");
-                    return;
-                }
-                // store dispensables
-                Long highestTimeStamp = 0L;
-                List<Dispensable> dispensables = new Gson().fromJson(jsonPayload, new TypeToken<List<Dispensable>>(){}.getType());
-                DispensableRepository repository = OpenLMISLibrary.getInstance().getDispensableRepository();
-                for (Dispensable dispensable : dispensables) {
-                    repository.addOrUpdate(dispensable);
-                    if (dispensable.getServerVersion() > highestTimeStamp) {
-                        highestTimeStamp = dispensable.getServerVersion();
-                    }
-                }
-                // save highest server version
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
-                editor.commit();
-            } catch (Exception e) {
-                logError(e.getMessage());
+        try {
+            String jsonPayload = makeGetRequest(uri);
+            if (jsonPayload == null) {
+                logError("Dispensables pull failed.");
+                return;
             }
+            logInfo("Dispensables pulled succesfully!");
+            // store dispensables
+            Long highestTimeStamp = 0L;
+            List<Dispensable> dispensables = new Gson().fromJson(jsonPayload, new TypeToken<List<Dispensable>>(){}.getType());
+            DispensableRepository repository = OpenLMISLibrary.getInstance().getDispensableRepository();
+            for (Dispensable dispensable : dispensables) {
+                repository.addOrUpdate(dispensable);
+                if (dispensable.getServerVersion() > highestTimeStamp) {
+                    highestTimeStamp = dispensable.getServerVersion();
+                }
+            }
+            // save highest server version
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+            editor.commit();
+        } catch (Exception e) {
+            logError(e.getMessage());
         }
     }
 }

@@ -25,6 +25,7 @@ import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
+import static org.smartregister.util.Log.logInfo;
 
 public class ProgramSyncIntentService extends IntentService implements SyncIntentService {
 
@@ -69,30 +70,29 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
                 timestampStr
         );
         // TODO: make baseUrl configurable
-        while (true) {
-            try {
-                String jsonPayload = makeGetRequest(uri);
-                if (jsonPayload == null) {
-                    logError("Programs pull failed.");
-                    return;
-                }
-                // store programs
-                Long highestTimeStamp = 0L;
-                List<Program> programs = new Gson().fromJson(jsonPayload, new TypeToken<List<Program>>(){}.getType());
-                ProgramRepository repository = OpenLMISLibrary.getInstance().getProgramRepository();
-                for (Program program : programs) {
-                    repository.addOrUpdate(program);
-                    if (program.getServerVersion() > highestTimeStamp) {
-                        highestTimeStamp = program.getServerVersion();
-                    }
-                }
-                // save highest server version
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
-                editor.commit();
-            } catch (Exception e) {
-                logError(e.getMessage());
+        try {
+            String jsonPayload = makeGetRequest(uri);
+            if (jsonPayload == null) {
+                logError("Programs pull failed.");
+                return;
             }
+            logInfo("Programs successfully pulled!");
+            // store programs
+            Long highestTimeStamp = 0L;
+            List<Program> programs = new Gson().fromJson(jsonPayload, new TypeToken<List<Program>>(){}.getType());
+            ProgramRepository repository = OpenLMISLibrary.getInstance().getProgramRepository();
+            for (Program program : programs) {
+                repository.addOrUpdate(program);
+                if (program.getServerVersion() > highestTimeStamp) {
+                    highestTimeStamp = program.getServerVersion();
+                }
+            }
+            // save highest server version
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+            editor.commit();
+        } catch (Exception e) {
+            logError(e.getMessage());
         }
     }
 }

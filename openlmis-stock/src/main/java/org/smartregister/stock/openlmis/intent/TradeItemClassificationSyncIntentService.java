@@ -73,30 +73,29 @@ public class TradeItemClassificationSyncIntentService extends IntentService impl
                 timestampStr
         );
         // TODO: make baseUrl configurable
-        while (true) {
-            try {
-                String jsonPayload = makeGetRequest(uri);
-                if (jsonPayload == null) {
-                    logError("TradeItemClassifications pull failed.");
-                    return;
-                }
-                // store tradeItemClassifications
-                Long highestTimeStamp = 0L;
-                List<TradeItemClassification> tradeItemClassifications = new Gson().fromJson(jsonPayload, new TypeToken<List<TradeItemClassification>>(){}.getType());
-                TradeItemClassificationRepository repository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
-                for (TradeItemClassification tradeItemClassification : tradeItemClassifications) {
-                    repository.addOrUpdate(tradeItemClassification);
-                    if (tradeItemClassification.getServerVersion() > highestTimeStamp) {
-                        highestTimeStamp = tradeItemClassification.getServerVersion();
-                    }
-                }
-                // save highest server version
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
-                editor.commit();
-            } catch (Exception e) {
-                logError(e.getMessage());
+        try {
+            String jsonPayload = makeGetRequest(uri);
+            if (jsonPayload == null) {
+                logError("TradeItemClassifications pull failed.");
+                return;
             }
+            logInfo("TradeItemClassifications pulled successfully!");
+            // store tradeItemClassifications
+            Long highestTimeStamp = 0L;
+            List<TradeItemClassification> tradeItemClassifications = new Gson().fromJson(jsonPayload, new TypeToken<List<TradeItemClassification>>(){}.getType());
+            TradeItemClassificationRepository repository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
+            for (TradeItemClassification tradeItemClassification : tradeItemClassifications) {
+                repository.addOrUpdate(tradeItemClassification);
+                if (tradeItemClassification.getServerVersion() > highestTimeStamp) {
+                    highestTimeStamp = tradeItemClassification.getServerVersion();
+                }
+            }
+            // save highest server version
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+            editor.commit();
+        } catch (Exception e) {
+            logError(e.getMessage());
         }
     }
 }
