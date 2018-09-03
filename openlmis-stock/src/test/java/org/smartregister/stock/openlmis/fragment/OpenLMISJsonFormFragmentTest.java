@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.widgets.EditTextFactory;
 
 import org.json.JSONObject;
@@ -116,7 +117,10 @@ public class OpenLMISJsonFormFragmentTest extends BaseUnitTest {
         RelativeLayout relativeLayout = (RelativeLayout) new EditTextFactory().getViewsFromJson("step1", activity, formFragment, new JSONObject(EDIT_TEXT_JSON), formFragment).get(0);
         assertFalse(view.findViewById(R.id.next_button).isEnabled());
         doReturn(true).when(formFragment).isVisible();
-        ((TextView) relativeLayout.getChildAt(0)).setText("31-08-2018");
+        try {
+            ((MaterialEditText) relativeLayout.getChildAt(0)).setText("31-08-2018");
+        } catch (VerifyError e) {
+        }
         formFragment.validateActivateNext();
         assertTrue(view.findViewById(R.id.next_button).isEnabled());
     }
@@ -129,6 +133,5 @@ public class OpenLMISJsonFormFragmentTest extends BaseUnitTest {
         assertEquals("Initializing Test", ((TextView) view.findViewById(R.id.information_textView)).getText());
         assertEquals(View.VISIBLE, view.findViewById(R.id.information_textView).getVisibility());
     }
-
 
 }

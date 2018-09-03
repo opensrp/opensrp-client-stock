@@ -34,11 +34,7 @@ public class StockListInteractor {
     private StockRepository stockRepository;
 
     public StockListInteractor() {
-
-        programRepository = new ProgramRepository(OpenLMISLibrary.getInstance().getRepository());
-        commodityTypeRepository = new CommodityTypeRepository(OpenLMISLibrary.getInstance().getRepository());
-        tradeItemRepository = new TradeItemRepository(OpenLMISLibrary.getInstance().getRepository());
-        stockRepository = new StockRepository(OpenLMISLibrary.getInstance().getRepository());
+        this(new ProgramRepository(OpenLMISLibrary.getInstance().getRepository()), new CommodityTypeRepository(OpenLMISLibrary.getInstance().getRepository()), new TradeItemRepository(OpenLMISLibrary.getInstance().getRepository()), new StockRepository(OpenLMISLibrary.getInstance().getRepository()));
     }
 
     @VisibleForTesting

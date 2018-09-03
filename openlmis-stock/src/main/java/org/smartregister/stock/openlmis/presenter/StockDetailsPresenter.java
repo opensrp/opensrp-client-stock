@@ -1,7 +1,5 @@
 package org.smartregister.stock.openlmis.presenter;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -112,24 +109,22 @@ public class StockDetailsPresenter {
         }
     }
 
-    public void processFormJsonResult(String jsonString) {
+    public void processFormJsonResult(String jsonString, String provider) {
         try {
             totalStockAdjustment = 0;
             JSONObject jsonForm = new JSONObject(jsonString);
             JSONObject step = jsonForm.getJSONObject(STEP1);
             String FormTitle = step.getString("title");
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(stockDetailsView.getContext());
-            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
             boolean processed = false;
             if (FormTitle.contains("Issue")) {
-                processed = processStockIssued(jsonForm, allSharedPreferences.fetchRegisteredANM());
+                processed = processStockIssued(jsonForm, provider);
             } else if (FormTitle.contains("Receive")) {
-                processed = processStockReceived(jsonForm, allSharedPreferences.fetchRegisteredANM());
+                processed = processStockReceived(jsonForm, provider);
             }
             if (processed)
                 stockDetailsView.refreshStockDetails(totalStockAdjustment);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "error processing Stock form", e);
         }
 
     }

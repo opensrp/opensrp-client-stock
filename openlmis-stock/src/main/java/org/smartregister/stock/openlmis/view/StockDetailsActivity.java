@@ -3,7 +3,9 @@ package org.smartregister.stock.openlmis.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONObject;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.adapter.LotAdapter;
@@ -153,7 +156,9 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         if (resultCode == Activity.RESULT_OK && data != null) {
             String jsonString = data.getStringExtra("json");
             android.util.Log.d("JSONResult", jsonString);
-            stockDetailsPresenter.processFormJsonResult(jsonString);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            stockDetailsPresenter.processFormJsonResult(jsonString, allSharedPreferences.fetchRegisteredANM());
         }
     }
 

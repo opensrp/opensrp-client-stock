@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -32,10 +31,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
+import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 import org.smartregister.stock.openlmis.widget.helper.LotDto;
 
 import java.lang.reflect.Type;
@@ -44,14 +43,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.vijay.jsonwizard.constants.JsonFormConstants.ERR;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.OPENMRS_ENTITY;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.OPENMRS_ENTITY_ID;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.OPENMRS_ENTITY_PARENT;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.V_REQUIRED;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_MONTHS_WARNING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET;
@@ -69,11 +61,11 @@ public class LotFactory implements FormWidgetFactory {
     public final static String TRADE_ITEM_ID = "trade_item_id";
     public final static String NET_CONTENT = "net_content";
     public final static String DISPENSING_UNIT = "dispensing_unit";
-    private final static String IS_STOCK_ISSUE = "is_stock_issue";
+    protected final static String IS_STOCK_ISSUE = "is_stock_issue";
 
     public final static Gson gson = new GsonBuilder().create();
 
-    private LinearLayout lotsContainer;
+    protected LinearLayout lotsContainer;
 
     private Context context;
 
@@ -101,7 +93,10 @@ public class LotFactory implements FormWidgetFactory {
 
     private Map<String, Integer> lotStockBalances;
 
-    public LotFactory() {
+    private LotRepository lotRepository;
+
+    public LotFactory(LotRepository lotRepository) {
+        this.lotRepository = lotRepository;
     }
 
     @Override
@@ -141,10 +136,10 @@ public class LotFactory implements FormWidgetFactory {
         List<Lot> lots;
         String tradeItemId = jsonObject.getString(TRADE_ITEM_ID);
         if (isStockIssue) {
-            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(tradeItemId, true);
-            lotStockBalances = OpenLMISLibrary.getInstance().getLotRepository().getStockByLot(tradeItemId);
+            lots = lotRepository.findLotsByTradeItem(tradeItemId, true);
+            lotStockBalances = lotRepository.getStockByLot(tradeItemId);
         } else {
-            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(tradeItemId);
+            lots = lotRepository.findLotsByTradeItem(tradeItemId);
         }
         for (Lot lot : lots) {
             if (!selectedLotDTos.isEmpty() && selectedLotDTos.contains(new LotDto(lot.getId().toString())))
@@ -242,29 +237,6 @@ public class LotFactory implements FormWidgetFactory {
 
         }
 
-    }
-
-    private void populateProperties(TextInputEditText editText, JSONObject jsonObject) {
-        String key = jsonObject.optString(KEY);
-        String type = jsonObject.optString(TYPE);
-        String openMrsEntityParent = jsonObject.optString(OPENMRS_ENTITY_PARENT);
-        String openMrsEntity = jsonObject.optString(OPENMRS_ENTITY);
-        String openMrsEntityId = jsonObject.optString(OPENMRS_ENTITY_ID);
-        editText.setTag(com.vijay.jsonwizard.R.id.key, key);
-        editText.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent, openMrsEntityParent);
-        editText.setTag(com.vijay.jsonwizard.R.id.openmrs_entity, openMrsEntity);
-        editText.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_id, openMrsEntityId);
-        editText.setTag(com.vijay.jsonwizard.R.id.type, type);
-
-        JSONObject requiredObject = jsonObject.optJSONObject(V_REQUIRED);
-        String valueToSelect;
-        if (requiredObject != null) {
-            valueToSelect = requiredObject.optString(VALUE);
-            if (!TextUtils.isEmpty(valueToSelect)) {
-                editText.setTag(com.vijay.jsonwizard.R.id.v_required, valueToSelect);
-                editText.setTag(com.vijay.jsonwizard.R.id.error, requiredObject.optString(ERR));
-            }
-        }
     }
 
     private void populateStatusOptions(final Context context, final TextInputEditText editText) {
@@ -410,6 +382,8 @@ public class LotFactory implements FormWidgetFactory {
             TextInputEditText status = lotsContainer.getChildAt(i).findViewById(R.id.status_dropdown);
             if (StringUtils.isBlank(lot.getText()) || StringUtils.isBlank(quantity.getText()) ||
                     StringUtils.isBlank(status.getText()))
+                isValid = false;
+            else if (StringUtils.isNotBlank(quantity.getText()) && "0".equals(quantity.getText().toString()))
                 isValid = false;
             if (lot.getTag(R.id.is_stock_issue) != null && Boolean.valueOf(lot.getTag(R.id.is_stock_issue).toString())
                     && StringUtils.isNotBlank(quantity.getText()) && quantity.getTag(R.id.stock_balance) != null
