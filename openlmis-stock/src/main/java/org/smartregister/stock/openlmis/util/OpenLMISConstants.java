@@ -8,6 +8,8 @@ public interface OpenLMISConstants {
 
     String LOT_WIDGET = "lot";
 
+    String REVIEW_WIDGET = "review";
+
     interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";
@@ -24,7 +26,11 @@ public interface OpenLMISConstants {
 
         String NEXT = "next";
 
+        String NEXT_TYPE = "next_type";
+
         String NEXT_LABEL = "next_label";
+
+        String SUBMIT = "submit";
 
         String NO_PADDING = "no_padding";
 

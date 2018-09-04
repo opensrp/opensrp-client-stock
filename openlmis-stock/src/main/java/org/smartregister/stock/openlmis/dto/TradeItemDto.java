@@ -75,6 +75,10 @@ public class TradeItemDto implements Parcelable {
         return name;
     }
 
+    public void setTotalStock(Integer totalStock) {
+        this.totalStock = totalStock;
+    }
+
     public Integer getTotalStock() {
         return totalStock;
     }

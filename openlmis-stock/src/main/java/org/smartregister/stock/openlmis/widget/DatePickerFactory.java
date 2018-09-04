@@ -51,7 +51,7 @@ public class DatePickerFactory implements FormWidgetFactory {
 
     @Override
     public List<View> getViewsFromJson(String stepName, final Context context, JsonFormFragment formFragment, JSONObject jsonObject,
-                                       CommonListener listener) throws Exception {
+                                       CommonListener listener) {
         List<View> views = new ArrayList<>(1);
         try {
 

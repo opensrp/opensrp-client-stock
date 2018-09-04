@@ -86,6 +86,7 @@ public class LotRepository extends BaseRepository {
         return findLotsByTradeItem(tradeItemId, false);
     }
 
+
     public List<Lot> findLotsByTradeItem(String tradeItemId, boolean filterWithoutStock) {
         String query;
         if (filterWithoutStock)

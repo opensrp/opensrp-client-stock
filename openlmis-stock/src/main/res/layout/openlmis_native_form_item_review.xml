@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="16dp">
+
+    <TextView
+        android:id="@+id/review_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:paddingBottom="@dimen/review_margin"
+        android:paddingEnd="@dimen/default_right_margin"
+        android:paddingStart="@dimen/default_left_margin"
+        android:textColor="@color/text_black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <View
+        android:id="@+id/review_type_border"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/trade_item_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/review_type" />
+
+
+    <TextView
+        android:id="@+id/date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:paddingStart="@dimen/default_left_margin"
+        android:text="@string/date"
+        android:textColor="@color/stock_list_light_text"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/review_type_border" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:textColor="@color/stock_list_dark_text"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@id/facility"
+        app:layout_constraintTop_toBottomOf="@id/review_type_border" />
+
+
+    <TextView
+        android:id="@+id/facility_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:paddingStart="@dimen/default_left_margin"
+        android:text="@string/issue_to"
+        android:textColor="@color/stock_list_light_text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/facility"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_label" />
+
+    <TextView
+        android:id="@+id/facility"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:textColor="@color/stock_list_dark_text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@id/edit_button"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toEndOf="@id/facility_label"
+        app:layout_constraintTop_toBottomOf="@id/date_label" />
+
+    <ImageView
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:paddingEnd="@dimen/default_left_margin"
+        android:src="@drawable/ic_stock_edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_label" />
+
+    <TextView
+        android:id="@+id/reason_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:paddingStart="@dimen/default_left_margin"
+        android:text="@string/reason"
+        android:textColor="@color/stock_list_light_text"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/facility_label" />
+
+    <TextView
+        android:id="@+id/reason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:textColor="@color/stock_list_dark_text"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@id/facility"
+        app:layout_constraintTop_toBottomOf="@id/facility_label" />
+
+    <View
+        android:id="@+id/details_border"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/review_margin"
+        android:background="@color/trade_item_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reason_label" />
+
+
+    <TextView
+        android:id="@+id/items"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:paddingStart="@dimen/default_left_margin"
+        android:text="@string/items"
+        android:textColor="@color/text_black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/lot_code"
+        app:layout_constraintHorizontal_weight="1.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_border" />
+
+    <TextView
+        android:id="@+id/lot_code"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:text="@string/lot_code_and_expiry"
+        android:textColor="@color/text_black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/quantity"
+        app:layout_constraintHorizontal_weight="2.2"
+        app:layout_constraintStart_toEndOf="@id/items"
+        app:layout_constraintTop_toBottomOf="@id/details_border" />
+
+    <TextView
+        android:id="@+id/quantity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:text="@string/quantity"
+        android:textColor="@color/text_black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/status"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/lot_code"
+        app:layout_constraintTop_toBottomOf="@id/details_border" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/review_margin"
+        android:paddingEnd="@dimen/default_left_margin"
+        android:text="@string/status"
+        android:textColor="@color/text_black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/quantity"
+        app:layout_constraintTop_toBottomOf="@id/details_border" />
+
+
+    <View
+        android:id="@+id/header_border"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/review_margin"
+        android:background="@color/trade_item_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/items" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/review_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="50dp"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_border" />
+
+
+</android.support.constraint.ConstraintLayout>

@@ -6,4 +6,6 @@
     <dimen name="bottom_navigation_margin">10dp</dimen>
     <dimen name="bottom_navigation_padding">40dp</dimen>
     <dimen name="cancel_padding">10dp</dimen>
+
+    <dimen name="review_margin">24dp</dimen>
 </resources>

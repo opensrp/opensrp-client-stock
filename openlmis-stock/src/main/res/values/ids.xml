@@ -6,4 +6,5 @@
     <item name="lot_id" type="id" />
     <item name="is_stock_issue" type="id" />
     <item name="stock_balance" type="id" />
+    <item name="submit" type="id" />
 </resources>

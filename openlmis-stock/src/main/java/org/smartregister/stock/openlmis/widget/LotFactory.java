@@ -30,10 +30,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
+import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 import org.smartregister.stock.openlmis.widget.helper.LotDto;
 
 import java.lang.reflect.Type;
@@ -56,15 +56,16 @@ public class LotFactory implements FormWidgetFactory {
     private final static String STATUS_FIELD_NAME = "lot_status";
     private final static String TAG = "LotFactory";
 
-    private final static String TRADE_ITEM = "trade_item";
-    private final static String TRADE_ITEM_ID = "trade_item_id";
-    private final static String NET_CONTENT = "net_content";
-    private final static String DISPENSING_UNIT = "dispensing_unit";
-    private final static String IS_STOCK_ISSUE = "is_stock_issue";
 
-    private final static Gson gson = new GsonBuilder().create();
+    public final static String TRADE_ITEM = "trade_item";
+    public final static String TRADE_ITEM_ID = "trade_item_id";
+    public final static String NET_CONTENT = "net_content";
+    public final static String DISPENSING_UNIT = "dispensing_unit";
+    protected final static String IS_STOCK_ISSUE = "is_stock_issue";
 
-    private LinearLayout lotsContainer;
+    public final static Gson gson = new GsonBuilder().create();
+
+    protected LinearLayout lotsContainer;
 
     private Context context;
 
@@ -91,6 +92,12 @@ public class LotFactory implements FormWidgetFactory {
     private boolean isStockIssue;
 
     private Map<String, Integer> lotStockBalances;
+
+    private LotRepository lotRepository;
+
+    public LotFactory(LotRepository lotRepository) {
+        this.lotRepository = lotRepository;
+    }
 
     @Override
     public List<View> getViewsFromJson(String stepName, final Context context, JsonFormFragment jsonFormFragment, JSONObject jsonObject, CommonListener commonListener) throws Exception {
@@ -129,10 +136,10 @@ public class LotFactory implements FormWidgetFactory {
         List<Lot> lots;
         String tradeItemId = jsonObject.getString(TRADE_ITEM_ID);
         if (isStockIssue) {
-            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(tradeItemId, true);
-            lotStockBalances = OpenLMISLibrary.getInstance().getLotRepository().getStockByLot(tradeItemId);
+            lots = lotRepository.findLotsByTradeItem(tradeItemId, true);
+            lotStockBalances = lotRepository.getStockByLot(tradeItemId);
         } else {
-            lots = OpenLMISLibrary.getInstance().getLotRepository().findLotsByTradeItem(tradeItemId);
+            lots = lotRepository.findLotsByTradeItem(tradeItemId);
         }
         for (Lot lot : lots) {
             if (!selectedLotDTos.isEmpty() && selectedLotDTos.contains(new LotDto(lot.getId().toString())))
@@ -291,7 +298,8 @@ public class LotFactory implements FormWidgetFactory {
                         editText.setTag(R.id.lot_id, selectedLotId);
                         showQuantityAndStatus(editText, selectedLotId, null);
                         if (!selectedLotDTos.contains(new LotDto(selectedLotId))) {
-                            selectedLotDTos.add(new LotDto(selectedLotId, previousDto.getQuantity(), previousDto.getLotStatus()));
+                            selectedLotDTos.add(new LotDto(selectedLotId, previousDto.getQuantity(),
+                                    previousDto.getLotStatus(), menuItem.getTitle().toString()));
                         }
                         selectedLotsMap.put(selectedLotId, lotMap.remove(selectedLotId));
                         writeValues();
@@ -374,6 +382,8 @@ public class LotFactory implements FormWidgetFactory {
             TextInputEditText status = lotsContainer.getChildAt(i).findViewById(R.id.status_dropdown);
             if (StringUtils.isBlank(lot.getText()) || StringUtils.isBlank(quantity.getText()) ||
                     StringUtils.isBlank(status.getText()))
+                isValid = false;
+            else if (StringUtils.isNotBlank(quantity.getText()) && "0".equals(quantity.getText().toString()))
                 isValid = false;
             if (lot.getTag(R.id.is_stock_issue) != null && Boolean.valueOf(lot.getTag(R.id.is_stock_issue).toString())
                     && StringUtils.isNotBlank(quantity.getText()) && quantity.getTag(R.id.stock_balance) != null

@@ -83,15 +83,15 @@
         "type": "native_radio",
         "options": [
           {
-            "key": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
+            "key": "Comfort Health Clinic",
             "text": "Comfort Health Clinic"
           },
           {
-            "key": "13037147-1769-4735-90a7-b9b310d128b8",
+            "key": "Balaka District Warehouse",
             "text": "Balaka District Warehouse"
           }
         ],
-        "value": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
+        "value": "Comfort Health Clinic",
         "v_required": {
           "value": true,
           "err": "Please select where stock was issued"
@@ -104,7 +104,7 @@
         "top_margin": "10dp"
       },
       {
-        "key": "Reason",
+        "key": "Issued_Stock_Reason",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -112,15 +112,15 @@
         "type": "native_radio",
         "options": [
           {
-            "key": "b5c27da7-bdda-4790-925a-9484c5dfb594",
+            "key": "Consumed",
             "text": "Consumed"
           },
           {
-            "key": "c1fc3cf3-da18-44b0-a220-77c985202e06",
+            "key": "Transfer Out",
             "text": "Transfer Out"
           },
           {
-            "key": "5b09202e-b8a7-4f77-9e0e-8156f8efc613",
+            "key": "Damage",
             "text": "Damage"
           },
           {
@@ -128,14 +128,14 @@
             "text": "Other"
           }
         ],
-        "value": "b5c27da7-bdda-4790-925a-9484c5dfb594",
+        "value": "Consumed",
         "v_required": {
           "value": true,
           "err": "Please select reason stock was issued"
         }
       },
       {
-        "key": "Reason_Other",
+        "key": "Issued_Stock_Reason_Other",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -147,7 +147,7 @@
           "err": "Please specify reason stock was issued"
         },
         "relevance": {
-          "step1:Reason": {
+          "step1:Issued_Stock_Reason": {
             "type": "string",
             "ex": "equalTo(., \"Other\")"
           }
@@ -172,8 +172,8 @@
         "net_content": "[net_content]",
         "is_stock_issue": "true",
         "lot_status": [
-          "VMM1",
-          "VMM2"
+          "VVM1",
+          "VVM2"
         ]
       }
     ]
@@ -182,11 +182,21 @@
     "title": "Review",
     "previous": "step2",
     "bottom_navigation": "true",
+    "next_type": "submit",
+    "next_label": "Submit",
+    "no_padding": true,
     "fields": [
       {
-        "key": "labelReview",
-        "type": "label",
-        "text": "Stock Review Widget (Step 3)"
+        "key": "stockReview",
+        "type": "review",
+        "trade_item": "[trade_item]",
+        "trade_item_id": "[trade_item_id]",
+        "dispensing_unit": "[dispensing_unit]",
+        "net_content": "[net_content]",
+        "review_type": "Review Your Issue",
+        "date": "Date_Stock_Issued",
+        "facility": "Issued_Stock_To",
+        "reason": "Issued_Stock_Reason"
       }
     ]
   }

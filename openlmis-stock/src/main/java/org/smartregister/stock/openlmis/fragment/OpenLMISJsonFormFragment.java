@@ -23,6 +23,8 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.N
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NO_PADDING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS_LABEL;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_TYPE;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.SUBMIT;
 
 /**
  * Created by samuelgithengi on 8/16/18.
@@ -90,16 +92,25 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
         if (step.has(NEXT)) {
             nextButton.setVisibility(View.VISIBLE);
-            if (step.has(NEXT_LABEL))
-                nextButton.setText(step.optString(NEXT_LABEL));
+        } else if (step.optString(NEXT_TYPE).equalsIgnoreCase(SUBMIT)) {
+            nextButton.setTag(R.id.submit, true);
+            nextButton.setVisibility(View.VISIBLE);
+            nextButton.setEnabled(true);
+            nextButton.setTextColor(getContext().getResources().getColor(R.color.white));
         }
+        if (step.has(NEXT_LABEL))
+            nextButton.setText(step.optString(NEXT_LABEL));
     }
 
     private class BottomNavigationListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.next_button) {
-                next();
+                Object isSubmit = v.getTag(R.id.submit);
+                if (isSubmit != null && Boolean.valueOf(isSubmit.toString()))
+                    save(true);
+                else
+                    next();
             } else if (v.getId() == R.id.previous_button) {
                 assert getFragmentManager() != null;
                 getFragmentManager().popBackStack();

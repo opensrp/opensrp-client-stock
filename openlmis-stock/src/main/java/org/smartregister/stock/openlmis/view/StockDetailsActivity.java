@@ -1,7 +1,11 @@
 package org.smartregister.stock.openlmis.view;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -12,8 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONObject;
-import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.adapter.LotAdapter;
 import org.smartregister.stock.openlmis.adapter.StockTransactionAdapter;
 import org.smartregister.stock.openlmis.dto.TradeItemDto;
@@ -48,6 +53,10 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     private TradeItemDto tradeItemDto;
 
+    private RecyclerView transactionsRecyclerView;
+
+    private TextView dosesTextView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +72,7 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         TextView itemNameTextView = findViewById(R.id.itemNameTextView);
         itemNameTextView.setText(tradeItemDto.getName());
 
-        TextView dosesTextView = findViewById(R.id.doseTextView);
+        dosesTextView = findViewById(R.id.doseTextView);
         dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
                 tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
 
@@ -82,7 +91,7 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
 
 
-        RecyclerView transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
+        transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
 
         collapseExpandButton.setOnClickListener(this);
@@ -126,6 +135,33 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         collapseExpandButton.setImageResource(R.drawable.ic_keyboard_arrow_up);
     }
 
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void refreshStockDetails(int totalStockAdjustment) {
+        lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
+        transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
+        tradeItemDto.setTotalStock(tradeItemDto.getTotalStock() + totalStockAdjustment);
+        dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
+                tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            String jsonString = data.getStringExtra("json");
+            android.util.Log.d("JSONResult", jsonString);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            stockDetailsPresenter.processFormJsonResult(jsonString, allSharedPreferences.fetchRegisteredANM());
+        }
+    }
+
     private void startJsonForm(String formName) {
         Intent intent = new Intent(getApplicationContext(), OpenLMISJsonForm.class);
         try {
@@ -140,5 +176,6 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
             Log.logDebug(e.getMessage());
         }
     }
+
 
 }

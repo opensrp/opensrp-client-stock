@@ -23,4 +23,5 @@
     <dimen name="lot_margin">8dp</dimen>
     <dimen name="lot_row_padding">0dp</dimen>
     <dimen name="cancel_padding">0dp</dimen>
+    <dimen name="review_margin">8dp</dimen>
 </resources>

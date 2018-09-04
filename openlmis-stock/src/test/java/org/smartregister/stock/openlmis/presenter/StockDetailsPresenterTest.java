@@ -26,9 +26,13 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.stock.openlmis.TestData.ISSUE_JSON_FORM_DATA;
+import static org.smartregister.stock.openlmis.TestData.RECEIVE_JSON_FORM_DATA;
 
 /**
  * Created by samuelgithengi on 8/3/18.
@@ -213,6 +217,20 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
         stockDetailsPresenter.collapseExpandClicked(View.GONE);
         verify(stockDetailsView).expandLots();
         verify(stockDetailsView, never()).collapseLots();
+    }
+
+    @Test
+    public void testProcessReceiveFormJsonResult() {
+        stockDetailsPresenter.processFormJsonResult(RECEIVE_JSON_FORM_DATA, "tester1");
+        verify(stockDetailsInteractor, times(2)).addStock(any(Stock.class));
+        verify(stockDetailsView).refreshStockDetails(15);
+    }
+
+    @Test
+    public void testProcessIssueFormJsonResult() {
+        stockDetailsPresenter.processFormJsonResult(ISSUE_JSON_FORM_DATA, "tester1");
+        verify(stockDetailsInteractor).addStock(any(Stock.class));
+        verify(stockDetailsView).refreshStockDetails(-7);
     }
 
 }

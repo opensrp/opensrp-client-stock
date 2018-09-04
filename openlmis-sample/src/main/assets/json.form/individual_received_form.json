@@ -72,7 +72,7 @@
         "key": "labelRecieveFrom",
         "type": "label",
         "text": "Receive from *",
-        "top_margin":"10dp"
+        "top_margin": "10dp"
       },
       {
         "key": "Receive_Stock_From",
@@ -83,15 +83,15 @@
         "type": "native_radio",
         "options": [
           {
-            "key": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
+            "key": "Comfort Health Clinic",
             "text": "Comfort Health Clinic"
           },
           {
-            "key": "13037147-1769-4735-90a7-b9b310d128b8",
+            "key": "Balaka District Warehouse",
             "text": "Balaka District Warehouse"
           }
         ],
-        "value": "13037147-1769-4735-90a7-b9b310d128b8",
+        "value": "Balaka District Warehouse",
         "v_required": {
           "value": true,
           "err": "Please select where stock was received from"
@@ -104,7 +104,7 @@
         "top_margin": "10dp"
       },
       {
-        "key": "Reason",
+        "key": "Receive_Stock_Reason",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -112,13 +112,15 @@
         "type": "native_radio",
         "options": [
           {
-            "key": "313f2f5f-0c22-4626-8c49-3554ef763de3",
+            "key": "Receipts",
             "text": "Receipts"
-          }, {
-            "key": "e3fc3cf3-da18-44b0-a220-77c985202e06",
+          },
+          {
+            "key": "Transfer In",
             "text": "Transfer In"
-          }, {
-            "key": "84eb13c3-3e54-4687-8a5f-a9f20dcd0dac",
+          },
+          {
+            "key": "Beginning Balance Excess",
             "text": "Beginning Balance Excess"
           },
           {
@@ -126,14 +128,14 @@
             "text": "Other"
           }
         ],
-        "value": "313f2f5f-0c22-4626-8c49-3554ef763de3",
+        "value": "Receipts",
         "v_required": {
           "value": true,
           "err": "Please select reason stock was received"
         }
       },
       {
-        "key": "Reason_Other",
+        "key": "Receive_Stock_Reason_Other",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -145,7 +147,7 @@
           "err": "Please specify reason stock was received"
         },
         "relevance": {
-          "step1:Reason": {
+          "step1:Receive_Stock_Reason": {
             "type": "string",
             "ex": "equalTo(., \"Other\")"
           }
@@ -169,8 +171,8 @@
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
         "lot_status": [
-          "VMM1",
-          "VMM2"
+          "VVM1",
+          "VVM2"
         ]
       }
     ]
@@ -179,11 +181,21 @@
     "title": "Review",
     "previous": "step2",
     "bottom_navigation": "true",
+    "next_type": "submit",
+    "next_label": "Submit",
+    "no_padding": true,
     "fields": [
       {
-        "key": "labelReview",
-        "type": "label",
-        "text": "Stock Review Widget (Step 3)"
+        "key": "stockReview",
+        "type": "review",
+        "trade_item": "[trade_item]",
+        "trade_item_id": "[trade_item_id]",
+        "dispensing_unit": "[dispensing_unit]",
+        "net_content": "[net_content]",
+        "review_type": "Review Your Receipt",
+        "date": "Date_Stock_Received",
+        "facility": "Receive_Stock_From",
+        "reason": "Receive_Stock_Reason"
       }
     ]
   }
