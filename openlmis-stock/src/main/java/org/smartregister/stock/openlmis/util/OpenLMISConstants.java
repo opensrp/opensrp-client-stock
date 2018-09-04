@@ -40,5 +40,7 @@ public interface OpenLMISConstants {
         String INDIVIDUAL_ISSUED_FORM = "individual_issued_form";
 
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
+
+        String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
     }
 }

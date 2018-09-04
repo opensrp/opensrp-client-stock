@@ -62,6 +62,7 @@ public class LotFactory implements FormWidgetFactory {
     public final static String NET_CONTENT = "net_content";
     public final static String DISPENSING_UNIT = "dispensing_unit";
     protected final static String IS_STOCK_ISSUE = "is_stock_issue";
+    protected final static String IS_STOCK_ADJUSTMENT = "is_stock_adjustment";
 
     public final static Gson gson = new GsonBuilder().create();
 
@@ -91,6 +92,8 @@ public class LotFactory implements FormWidgetFactory {
 
     private boolean isStockIssue;
 
+    private boolean isStockAdjustment;
+
     private Map<String, Integer> lotStockBalances;
 
     private LotRepository lotRepository;
@@ -110,7 +113,10 @@ public class LotFactory implements FormWidgetFactory {
 
         key = jsonObject.getString(KEY);
         List<View> views = new ArrayList<>(1);
-        View root = LayoutInflater.from(context).inflate(R.layout.openlmis_native_form_item_lot, null);
+
+        isStockAdjustment = jsonObject.optBoolean(IS_STOCK_ADJUSTMENT);
+        View root = LayoutInflater.from(context).inflate(isStockAdjustment ?
+                R.layout.openlmis_native_form_item_lot_adjustment : R.layout.openlmis_native_form_item_lot, null);
 
         TextView tradeItem = root.findViewById(R.id.trade_item);
         tradeItem.setText(jsonObject.getString(TRADE_ITEM));
@@ -182,7 +188,8 @@ public class LotFactory implements FormWidgetFactory {
 
 
     private TextInputEditText addLotRow() {
-        View lotView = LayoutInflater.from(context).inflate(R.layout.native_form_lot_row, null);
+        View lotView = LayoutInflater.from(context).inflate(isStockAdjustment ?
+                R.layout.native_form_lot_adjustment_row : R.layout.native_form_lot_row, null);
         int viewIndex = lotsContainer.getChildCount() - 1;
         View cancelButton = lotView.findViewById(R.id.cancel_button);
         cancelButton.setVisibility(View.VISIBLE);

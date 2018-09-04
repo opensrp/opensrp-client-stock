@@ -41,4 +41,8 @@
     <string name="issue_to">Issue To</string>
     <string name="reason">Reason</string>
     <string name="stock_issued_more_balance">Stock being Issued %1d is more than Stock on Hand %1d</string>
+    <string name="physical_count">Physical count</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="difference">Difference</string>
 </resources>

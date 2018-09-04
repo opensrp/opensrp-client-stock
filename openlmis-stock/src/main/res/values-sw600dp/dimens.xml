@@ -8,4 +8,6 @@
     <dimen name="bottom_navigation_padding">24dp</dimen>
     <dimen name="cancel_padding">4dp</dimen>
     <dimen name="review_margin">16dp</dimen>
+
+    <dimen name="add_subtract_padding">8dp</dimen>
 </resources>

@@ -14,4 +14,14 @@
         <item name="android:textSize">14sp</item>
         <item name="android:paddingTop">10dp</item>
     </style>
+
+    <style name="Lot.Add.Subtract" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/light_blue</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingStart">@dimen/add_subtract_padding</item>
+        <item name="android:paddingEnd">@dimen/add_subtract_padding</item>
+        <item name="android:background">@drawable/add_subtract_border</item>
+        <item name="android:layout_marginStart">@dimen/add_subtract_padding</item>
+    </style>
+
 </resources>
