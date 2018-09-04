@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
@@ -44,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_MONTHS_WARNING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET;
@@ -124,7 +124,7 @@ public class LotFactory implements FormWidgetFactory {
 
         root.findViewById(R.id.add_lot).setOnClickListener(lotListener);
 
-        String selectedLotDTosJSON = jsonObject.optString(JsonFormConstants.VALUE);
+        String selectedLotDTosJSON = jsonObject.optString(VALUE);
         if (!selectedLotDTosJSON.isEmpty()) {
             Type listType = new TypeToken<List<LotDto>>() {
             }.getType();

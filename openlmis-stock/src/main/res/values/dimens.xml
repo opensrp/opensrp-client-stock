@@ -18,9 +18,10 @@
 
     <dimen name="date_picker_min_width">300dp</dimen>
     <dimen name="form_cardview_margin">8dp</dimen>
-    <dimen name="bottom_navigation_margin">10dp</dimen>
-    <dimen name="bottom_navigation_padding">40dp</dimen>
-    <dimen name="lot_margin">50dp</dimen>
-
-    <dimen name="review_margin">20dp</dimen>
+    <dimen name="bottom_navigation_margin">8dp</dimen>
+    <dimen name="bottom_navigation_padding">8dp</dimen>
+    <dimen name="lot_margin">8dp</dimen>
+    <dimen name="lot_row_padding">0dp</dimen>
+    <dimen name="cancel_padding">0dp</dimen>
+    <dimen name="review_margin">8dp</dimen>
 </resources>

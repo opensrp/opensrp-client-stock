@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:padding="@dimen/list_stock_margin"
+        android:padding="@dimen/cancel_padding"
         android:src="@drawable/ic_cancel"
         android:visibility="invisible" />
 

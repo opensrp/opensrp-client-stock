@@ -161,6 +161,7 @@
     "next": "step3",
     "next_label": "Review",
     "bottom_navigation": "true",
+    "no_padding": true,
     "fields": [
       {
         "key": "stockLots",
