@@ -141,8 +141,8 @@ public class LotFactory implements FormWidgetFactory {
         isStockIssue = jsonObject.optBoolean(IS_STOCK_ISSUE);
         List<Lot> lots;
         String tradeItemId = jsonObject.getString(TRADE_ITEM_ID);
-        if (isStockIssue) {
-            lots = lotRepository.findLotsByTradeItem(tradeItemId, true);
+        if (isStockIssue || isStockAdjustment) {
+            lots = lotRepository.findLotsByTradeItem(tradeItemId, isStockIssue);
             lotStockBalances = lotRepository.getStockByLot(tradeItemId);
         } else {
             lots = lotRepository.findLotsByTradeItem(tradeItemId);
@@ -221,7 +221,8 @@ public class LotFactory implements FormWidgetFactory {
 
 
     private void showQuantityAndStatus(View view, String lotId, @Nullable LotDto lotDto) {
-        View lotRow = lotsContainer.getChildAt(Integer.parseInt(view.getTag(R.id.lot_position).toString()));
+        int viewIndex = Integer.parseInt(view.getTag(R.id.lot_position).toString());
+        View lotRow = lotsContainer.getChildAt(viewIndex);
         lotRow.findViewById(R.id.lot_quantity).setVisibility(View.VISIBLE);
         lotRow.findViewById(R.id.lot_status).setVisibility(View.VISIBLE);
         TextInputEditText quantity = lotRow.findViewById(R.id.quantity_textview);
@@ -229,6 +230,29 @@ public class LotFactory implements FormWidgetFactory {
         quantity.addTextChangedListener(new QuantityTextWatcher(quantity));
         if (isStockIssue)
             quantity.setTag(R.id.stock_balance, lotStockBalances.get(lotId));
+        else if (isStockAdjustment) {
+            quantity.setTag(R.id.stock_balance, lotStockBalances.get(lotId));
+            String balance = "0";
+            if (lotStockBalances.containsKey(lotId)) {
+                balance = lotStockBalances.get(lotId).toString();
+            }
+            quantity.setText(balance);
+            TextInputEditText stockOnHand = lotRow.findViewById(R.id.stock_on_hand_textview);
+            stockOnHand.setVisibility(View.VISIBLE);
+            stockOnHand.setText(balance);
+            lotRow.findViewById(R.id.stock_on_hand).setVisibility(View.VISIBLE);
+
+            View subtract = lotRow.findViewById(R.id.subtract_stock);
+            subtract.setVisibility(View.VISIBLE);
+            subtract.setTag(R.id.lot_position, viewIndex);
+            subtract.setOnClickListener(lotListener);
+
+            View add = lotRow.findViewById(R.id.add_stock);
+            add.setVisibility(View.VISIBLE);
+            add.setTag(R.id.lot_position, viewIndex);
+            add.setOnClickListener(lotListener);
+
+        }
         TextInputEditText status = lotRow.findViewById(R.id.status_dropdown);
         status.setTag(R.id.lot_id, lotId);
         if (lotDto != null) {
@@ -303,11 +327,11 @@ public class LotFactory implements FormWidgetFactory {
                         String selectedLotId = menuItem.getActionView().getTag(R.id.lot_id).toString();
                         editText.setText(menuItem.getTitle().toString());
                         editText.setTag(R.id.lot_id, selectedLotId);
-                        showQuantityAndStatus(editText, selectedLotId, null);
                         if (!selectedLotDTos.contains(new LotDto(selectedLotId))) {
                             selectedLotDTos.add(new LotDto(selectedLotId, previousDto.getQuantity(),
                                     previousDto.getLotStatus(), menuItem.getTitle().toString()));
                         }
+                        showQuantityAndStatus(editText, selectedLotId, null);
                         selectedLotsMap.put(selectedLotId, lotMap.remove(selectedLotId));
                         writeValues();
                         displayDosesQuantity();
@@ -316,6 +340,31 @@ public class LotFactory implements FormWidgetFactory {
                 });
             }
         });
+    }
+
+    private void adjustStock(View view, boolean add) {
+        View lotRow = lotsContainer.getChildAt(Integer.parseInt(view.getTag(R.id.lot_position).toString()));
+        TextInputEditText quantity = lotRow.findViewById(R.id.quantity_textview);
+        int adjustment = add ? 1 : -1;
+        if (StringUtils.isNotBlank(quantity.getText()))
+            quantity.setText(String.valueOf(Integer.parseInt(quantity.getText().toString()) + adjustment));
+        else
+            quantity.setText(String.valueOf(adjustment));
+
+        TextInputEditText adjustmentTextView = lotRow.findViewById(R.id.adjustment_textview);
+        if (StringUtils.isBlank(adjustmentTextView.getText())) {
+            adjustmentTextView.setText(String.format("%s %s", add ? "+" : "", adjustment));
+        } else {
+            adjustment = Integer.parseInt(adjustmentTextView.getText().toString().replace("+", "").trim()) + adjustment;
+            if (adjustment <= 0)
+                adjustmentTextView.setText(String.valueOf(adjustment));
+            else
+                adjustmentTextView.setText(String.format("+ %s", adjustment));
+        }
+
+        lotRow.findViewById(R.id.adjustment).setVisibility(View.VISIBLE);
+        lotRow.findViewById(R.id.reason).setVisibility(View.VISIBLE);
+
     }
 
     private void displayDosesQuantity() {
@@ -340,9 +389,14 @@ public class LotFactory implements FormWidgetFactory {
                 removeLotRow(view);
             else if (view.getId() == R.id.lot_dropdown)
                 showQuantityAndStatus(view, view.getTag(R.id.lot_id).toString(), null);
+            else if (view.getId() == R.id.add_stock)
+                adjustStock(view, true);
+            else if (view.getId() == R.id.subtract_stock)
+                adjustStock(view, false);
 
         }
     }
+
 
     private class QuantityTextWatcher implements TextWatcher {
 
