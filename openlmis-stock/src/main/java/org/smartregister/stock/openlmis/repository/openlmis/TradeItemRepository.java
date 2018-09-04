@@ -35,7 +35,7 @@ public class TradeItemRepository extends BaseRepository {
             "CREATE TABLE " + TRADE_ITEM_TABLE
             + "("
                     + ID + " VARCHAR NOT NULL PRIMARY KEY,"
-                    + GTIN + " VARCHAR NOT NULL,"
+                    + GTIN + " VARCHAR,"
                     + MANUFACTURER_OF_TRADE_ITEM + " VARCHAR NOT NULL,"
                     + DATE_UPDATED + " INTEGER"
             + ")";
