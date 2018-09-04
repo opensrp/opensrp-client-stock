@@ -20,7 +20,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
 
     private String tradeItem;
     private List<LotDto> lotDtoList;
-    private Context context;
 
     public ReviewAdapter(String tradeItem, List<LotDto> lotDtoList) {
         this.tradeItem = tradeItem;
@@ -30,7 +29,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewHolder> {
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        this.context = viewGroup.getContext();
+        Context context = viewGroup.getContext();
         View view = LayoutInflater.from(context).inflate(
                 R.layout.openlmis_native_form_item_review_row, viewGroup, false);
         return new ReviewViewHolder(view);

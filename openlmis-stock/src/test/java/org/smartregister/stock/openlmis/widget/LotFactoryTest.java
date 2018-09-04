@@ -1,7 +1,6 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Intent;
-import android.os.Build;
 import android.view.View;
 import android.widget.EditText;
 
@@ -14,16 +13,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.Robolectric;
-import org.robolectric.annotation.Config;
 import org.smartregister.stock.openlmis.BaseUnitTest;
-import org.smartregister.stock.openlmis.BuildConfig;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
-import org.smartregister.stock.openlmis.shadow.ShadowTextInputLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +39,6 @@ import static org.smartregister.stock.openlmis.widget.LotFactory.IS_STOCK_ISSUE;
 /**
  * Created by samuelgithengi on 9/3/18.
  */
-@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, shadows = {ShadowTextInputLayout.class})
 public class LotFactoryTest extends BaseUnitTest {
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();

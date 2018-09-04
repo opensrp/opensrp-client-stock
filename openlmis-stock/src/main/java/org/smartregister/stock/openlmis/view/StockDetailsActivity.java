@@ -55,7 +55,7 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     private RecyclerView transactionsRecyclerView;
 
-    TextView dosesTextView;
+    private TextView dosesTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
