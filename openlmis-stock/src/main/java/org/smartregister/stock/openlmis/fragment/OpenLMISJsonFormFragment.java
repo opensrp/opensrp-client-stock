@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
@@ -18,7 +19,10 @@ import org.smartregister.stock.openlmis.presenter.OpenLMISJsonFormFragmentPresen
 import org.smartregister.stock.util.Constants;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_LABEL;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NO_PADDING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS_LABEL;
 
 /**
  * Created by samuelgithengi on 8/16/18.
@@ -29,18 +33,27 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
     private BottomNavigationListener navigationListener = new BottomNavigationListener();
     private Button previousButton;
     private Button nextButton;
+    private TextView informationTextView;
+    private String stepName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.openlmis_native_form_fragment_json_wizard, (ViewGroup) null);
+        View rootView = inflater.inflate(R.layout.openlmis_native_form_fragment_json_wizard, null);
         this.mMainView = rootView.findViewById(R.id.main_layout);
         this.mScrollView = rootView.findViewById(R.id.scroll_view);
         previousButton = rootView.findViewById(R.id.previous_button);
         nextButton = rootView.findViewById(R.id.next_button);
         nextButton.setEnabled(false);
+        informationTextView = rootView.findViewById(R.id.information_textView);
         setupCustomToolbar();
         rootView.findViewById(R.id.previous_button).setOnClickListener(navigationListener);
         rootView.findViewById(R.id.next_button).setOnClickListener(navigationListener);
+        if (getArguments() != null) {
+            stepName = getArguments().getString(Constants.STEPNAME);
+            if (getStep(stepName).optBoolean(NO_PADDING))
+                mMainView.setPadding(0, 0, 0, 0);
+        }
+
         return rootView;
     }
 
@@ -68,14 +81,17 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         return jsonFormFragment;
     }
 
-    private void initializeBottomNavigation() {
-        String stepName = getArguments().getString(Constants.STEPNAME);
+    protected void initializeBottomNavigation() {
         JSONObject step = getStep(stepName);
         if (step.has(PREVIOUS)) {
             previousButton.setVisibility(View.VISIBLE);
+            if (step.has(PREVIOUS_LABEL))
+                previousButton.setText(step.optString(PREVIOUS_LABEL));
         }
         if (step.has(NEXT)) {
             nextButton.setVisibility(View.VISIBLE);
+            if (step.has(NEXT_LABEL))
+                nextButton.setText(step.optString(NEXT_LABEL));
         }
     }
 
@@ -91,12 +107,13 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
     }
 
-    private void validateActivateNext() {
+    public void validateActivateNext() {
         if (!isVisible())//form fragment is initializing
             return;
         ValidationStatus validationStatus = null;
         for (View dataView : getJsonApi().getFormDataViews()) {
-            validationStatus = presenter.validate(this, dataView, false);
+
+            validationStatus = getPresenter().validate(this, dataView, false);
             if (!validationStatus.isValid()) {
                 break;
             }
@@ -123,5 +140,13 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
                                    openMrsEntityId) {
         super.writeValue(stepName, prentKey, childObjectKey, childKey, value, openMrsEntityParent, openMrsEntity, openMrsEntityId);
         validateActivateNext();
+    }
+
+    public void setBottomNavigationText(String text) {
+        informationTextView.setText(text);
+    }
+
+    private OpenLMISJsonFormFragmentPresenter getPresenter() {
+        return (OpenLMISJsonFormFragmentPresenter) presenter;
     }
 }

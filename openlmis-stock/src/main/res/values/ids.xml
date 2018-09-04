@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="trade_item_updated_key" type="id" />
+    <item name="trade_item_id_key" type="id" />
+    <item name="lot_position" type="id" />
+    <item name="lot_id" type="id" />
+    <item name="is_stock_issue" type="id" />
+    <item name="stock_balance" type="id" />
+</resources>

@@ -96,7 +96,7 @@ public class TestDataUtils {
         for (TradeItem tradeItem : lotHashMap.keySet()) {
             List<Lot> lots = lotHashMap.get(tradeItem);
             for (Lot lot : lots) {
-                for (int i = 0; i < random.nextInt(15); i++) {
+                for (int i = 0; i < random.nextInt(2); i++) {
                     Calendar dateCreated = Calendar.getInstance();
                     dateCreated.add(Calendar.DATE, -random.nextInt(120));
                     int type = random.nextInt(3);
@@ -178,7 +178,9 @@ public class TestDataUtils {
 
         for (int i = 0; i < numberOfLots; i++) {
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DATE, random.nextInt(300));
+            int expiry = random.nextInt(300);
+            expiry = random.nextBoolean() ? expiry : -expiry;
+            calendar.add(Calendar.DATE, expiry);
             Lot lot = new Lot(UUID.randomUUID(), "LC" + (1000 + random.nextInt(8000)), new LocalDate(calendar.getTimeInMillis()),
                     new LocalDate(System.currentTimeMillis()),
                     new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),
@@ -186,7 +188,7 @@ public class TestDataUtils {
             lot.setLotStatus("VMM1");
             lots.add(lot);
         }
-        if (numberOfLots >1) {
+        if (numberOfLots > 1) {
             Lot lot = new Lot(UUID.randomUUID(), "LC" + (1000 + random.nextInt(8000)),
                     lots.get(random.nextInt(numberOfLots - 1)).getExpirationDate(),
                     new LocalDate(System.currentTimeMillis()),

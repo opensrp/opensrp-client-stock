@@ -28,8 +28,10 @@ import java.util.Date;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_RECEIVED_FORM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM_ID;
 
 public class StockDetailsActivity extends AppCompatActivity implements StockDetailsView, View.OnClickListener {
 
@@ -129,7 +131,9 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         try {
             JSONObject form = FormUtils.getInstance(getApplicationContext()).getFormJson(formName);
             String formMetadata = form.toString().replace(TRADE_ITEM, tradeItemDto.getName());
+            formMetadata = formMetadata.replace(TRADE_ITEM_ID, tradeItemDto.getId());
             formMetadata = formMetadata.replace(NET_CONTENT, tradeItemDto.getNetContent().toString());
+            formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
             intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {

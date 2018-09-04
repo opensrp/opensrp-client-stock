@@ -157,12 +157,21 @@
     "title": "Receive [trade_item]",
     "previous": "step1",
     "next": "step3",
+    "next_label": "Review",
     "bottom_navigation": "true",
+    "no_padding": true,
     "fields": [
       {
-        "key": "labellots",
-        "type": "label",
-        "text": "Lots Selection Widget (Step 2)"
+        "key": "stockLots",
+        "type": "lot",
+        "trade_item": "[trade_item]",
+        "trade_item_id": "[trade_item_id]",
+        "dispensing_unit": "[dispensing_unit]",
+        "net_content": "[net_content]",
+        "lot_status": [
+          "VMM1",
+          "VMM2"
+        ]
       }
     ]
   },

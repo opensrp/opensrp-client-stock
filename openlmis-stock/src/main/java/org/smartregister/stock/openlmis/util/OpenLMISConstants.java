@@ -2,23 +2,32 @@ package org.smartregister.stock.openlmis.util;
 
 public interface OpenLMISConstants {
 
+    int EXPIRING_MONTHS_WARNING = 3;
+
     String TRADE_ITEM = "TRADE_ITEM";
+
+    String LOT_WIDGET = "lot";
 
     interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";
 
+        String TRADE_ITEM_ID = "[trade_item_id]";
+
         String NET_CONTENT = "[net_content]";
+
+        String DISPENSING_UNIT = "[dispensing_unit]";
 
         String PREVIOUS = "previous";
 
+        String PREVIOUS_LABEL = "previous_label";
+
         String NEXT = "next";
 
-        String BACKGROUND = "background";
+        String NEXT_LABEL = "next_label";
 
-        String UNDERLINE_COLOR = "underline_color";
+        String NO_PADDING = "no_padding";
 
-        String VALUE = "value";
     }
 
     interface Forms {

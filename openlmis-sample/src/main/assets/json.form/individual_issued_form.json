@@ -72,7 +72,7 @@
         "key": "labelIssuedTo",
         "type": "label",
         "text": "Issued to *",
-        "top_margin":"10dp"
+        "top_margin": "10dp"
       },
       {
         "key": "Issued_Stock_To",
@@ -114,10 +114,12 @@
           {
             "key": "b5c27da7-bdda-4790-925a-9484c5dfb594",
             "text": "Consumed"
-          }, {
+          },
+          {
             "key": "c1fc3cf3-da18-44b0-a220-77c985202e06",
             "text": "Transfer Out"
-          }, {
+          },
+          {
             "key": "5b09202e-b8a7-4f77-9e0e-8156f8efc613",
             "text": "Damage"
           },
@@ -157,12 +159,22 @@
     "title": "Issue [trade_item]",
     "previous": "step1",
     "next": "step3",
+    "next_label": "Review",
     "bottom_navigation": "true",
+    "no_padding": true,
     "fields": [
       {
-        "key": "labellots",
-        "type": "label",
-        "text": "Lots Selection Widget (Step 2)"
+        "key": "stockLots",
+        "type": "lot",
+        "trade_item": "[trade_item]",
+        "trade_item_id": "[trade_item_id]",
+        "dispensing_unit": "[dispensing_unit]",
+        "net_content": "[net_content]",
+        "is_stock_issue": "true",
+        "lot_status": [
+          "VMM1",
+          "VMM2"
+        ]
       }
     ]
   },
