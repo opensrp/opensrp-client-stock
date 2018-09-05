@@ -34,6 +34,7 @@ import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ReasonsRepository;
 import org.smartregister.stock.openlmis.widget.helper.LotDto;
 
 import java.lang.reflect.Type;
@@ -98,8 +99,11 @@ public class LotFactory implements FormWidgetFactory {
 
     private LotRepository lotRepository;
 
-    public LotFactory(LotRepository lotRepository) {
+    private ReasonsRepository reasonsRepository;
+
+    public LotFactory(LotRepository lotRepository, ReasonsRepository reasonRepository) {
         this.lotRepository = lotRepository;
+        this.reasonsRepository = reasonRepository;
     }
 
     @Override
@@ -163,6 +167,8 @@ public class LotFactory implements FormWidgetFactory {
         TextInputEditText statusDropdown = root.findViewById(R.id.status_dropdown);
         statusOptions = jsonObject.getJSONArray(STATUS_FIELD_NAME);
         populateStatusOptions(context, statusDropdown);
+        if (isStockAdjustment)
+            populateReasonsOptions(context, (TextInputEditText) root.findViewById(R.id.reason_dropdown));
         views.add(root);
 
         ((JsonApi) context).addFormDataView(lotsContainer);
@@ -199,6 +205,8 @@ public class LotFactory implements FormWidgetFactory {
         lotDropdown.setTag(R.id.is_stock_issue, isStockIssue);
         populateLotOptions(context, lotDropdown);
         populateStatusOptions(context, (TextInputEditText) lotView.findViewById(R.id.status_dropdown));
+        if (isStockAdjustment)
+            populateReasonsOptions(context, (TextInputEditText) lotView.findViewById(R.id.reason_dropdown));
         cancelButton.setOnClickListener(lotListener);
         lotsContainer.addView(lotView, viewIndex);
         writeValues();
@@ -255,6 +263,8 @@ public class LotFactory implements FormWidgetFactory {
         }
         TextInputEditText status = lotRow.findViewById(R.id.status_dropdown);
         status.setTag(R.id.lot_id, lotId);
+        if (isStockAdjustment)
+            lotRow.findViewById(R.id.reason_dropdown).setTag(R.id.lot_id, lotId);
         if (lotDto != null) {
             quantity.setText(String.valueOf(lotDto.getQuantity()));
             quantity.setTag(R.id.lot_id, lotDto.getLotId());
@@ -342,6 +352,31 @@ public class LotFactory implements FormWidgetFactory {
         });
     }
 
+    private void populateReasonsOptions(final Context context, final TextInputEditText editText) {
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                ReasonsRepository reasonsRepository = new ReasonsRepository();
+                for (String reason : reasonsRepository.getAdjustmentReasons()) {
+                    popupMenu.getMenu().add(reason);
+                }
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        editText.setText(menuItem.getTitle());
+                        String lotId = editText.getTag(R.id.lot_id).toString();
+                        LotDto lotDto = selectedLotDTos.get(selectedLotDTos.indexOf(new LotDto(lotId)));
+                        lotDto.setReason(menuItem.getTitle().toString());
+                        writeValues();
+                        return true;
+                    }
+                });
+            }
+        });
+    }
+
     private void adjustStock(View view, boolean add) {
         View lotRow = lotsContainer.getChildAt(Integer.parseInt(view.getTag(R.id.lot_position).toString()));
         TextInputEditText quantity = lotRow.findViewById(R.id.quantity_textview);
@@ -369,10 +404,18 @@ public class LotFactory implements FormWidgetFactory {
 
     private void displayDosesQuantity() {
         int totalQuantity = 0;
-        for (LotDto lot : selectedLotDTos)
-            totalQuantity += lot.getQuantity();
-        jsonFormFragment.setBottomNavigationText(context.getString(R.string.issued_dose_formatter,
-                totalQuantity, dispensingUnit, totalQuantity * netContent));
+        for (LotDto lot : selectedLotDTos) {
+            if (isStockAdjustment && lot.getQuantity() != 0) {
+                totalQuantity += 1;
+            } else if (!isStockAdjustment)
+                totalQuantity += lot.getQuantity();
+        }
+        if (isStockAdjustment)
+            jsonFormFragment.setBottomNavigationText(context.getResources().getQuantityString(R.plurals.adjusted_lots,
+                    totalQuantity, totalQuantity));
+        else
+            jsonFormFragment.setBottomNavigationText(context.getString(R.string.issued_dose_formatter,
+                    totalQuantity, dispensingUnit, totalQuantity * netContent));
     }
 
     private void writeValues() {
@@ -422,7 +465,14 @@ public class LotFactory implements FormWidgetFactory {
                 lotDto.setQuantity(0);
             else {
                 try {
-                    lotDto.setQuantity(Integer.parseInt(editable.toString()));
+                    int value = Integer.parseInt(editable.toString());
+                    if (isStockAdjustment && lotStockBalances.containsKey(lotId)) {
+                        //record adjustment for stock adjustment
+                        lotDto.setQuantity(value - lotStockBalances.get(lotId));
+                    } else {
+                        lotDto.setQuantity(value);
+                    }
+
                 } catch (NumberFormatException e) {
                     Log.e(TAG, "quantity is too large");
                     editText.setError("Quantity is too large");

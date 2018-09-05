@@ -58,7 +58,7 @@ public class LotFactoryTest extends BaseUnitTest {
     @Before
     public void setUp() {
         lots = new ArrayList<>();
-        lotFactory = new LotFactory(lotRepository);
+        lotFactory = new LotFactory(lotRepository, reasonRepository);
         Intent intent = new Intent();
         intent.putExtra("json", ISSUE_FORM_JSON);
         activity = Robolectric.buildActivity(OpenLMISJsonForm.class, intent).create().get();

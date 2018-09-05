@@ -45,4 +45,11 @@
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="difference">Difference</string>
+    <string name="adjusted_lots_formatter">%1d %2s adjusted</string>
+
+    <plurals name="adjusted_lots">
+        <item quantity="one">%1d lot is adjusted</item>
+        <item quantity="other">%1d lots are adjusted</item>
+    </plurals>
+
 </resources>
