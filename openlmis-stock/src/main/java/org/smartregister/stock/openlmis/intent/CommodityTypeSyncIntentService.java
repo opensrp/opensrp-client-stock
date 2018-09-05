@@ -16,6 +16,7 @@ import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
+import org.smartregister.stock.openlmis.util.SynchronizedUpdater;
 import org.smartregister.stock.util.NetworkUtils;
 
 import java.text.MessageFormat;
@@ -75,17 +76,13 @@ public class CommodityTypeSyncIntentService extends IntentService implements Syn
                 Long highestTimeStamp = 0L;
                 List<CommodityType> commodityTypes = new Gson().fromJson(jsonPayload, new TypeToken<List<CommodityType>>(){}.getType());
                 CommodityTypeRepository commodityTypeRepository = OpenLMISLibrary.getInstance().getCommodityTypeRepository();
-                org.smartregister.stock.openlmis.repository.TradeItemRepository tradeItemRegisterRepository = OpenLMISLibrary.getInstance().getTradeItemRegisterRepository();
                 TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
                 for (CommodityType commodityType : commodityTypes) {
                     commodityTypeRepository.addOrUpdate(commodityType);
+                    // update trade item register repository
+                    SynchronizedUpdater.getInstance().updateInfo(commodityType);
+                    // update trade item repository
                     for (TradeItem tradeItem : commodityType.getTradeItems()) {
-                        // update trade item register repository
-                        org.smartregister.stock.openlmis.domain.TradeItem tradeItemRegister = tradeItemRegisterRepository.getTradeItemById(tradeItem.getId());
-                        tradeItemRegister = tradeItemRegister == null ? new org.smartregister.stock.openlmis.domain.TradeItem(tradeItem.getId()) : tradeItemRegister;
-                        tradeItemRegister.setCommodityTypeId(commodityType.getId());
-                        tradeItemRegisterRepository.addOrUpdate(tradeItemRegister);
-                        // update trade item repository
                         tradeItemRepository.addOrUpdate(tradeItem);
                     }
                     if (commodityType.getServerVersion() > highestTimeStamp) {

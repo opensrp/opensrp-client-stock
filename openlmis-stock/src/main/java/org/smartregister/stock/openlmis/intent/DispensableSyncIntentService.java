@@ -9,13 +9,13 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.smartregister.domain.Response;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
+import org.smartregister.stock.openlmis.util.SynchronizedUpdater;
 import org.smartregister.stock.util.NetworkUtils;
 
 import java.text.MessageFormat;
@@ -75,12 +75,14 @@ public class DispensableSyncIntentService extends IntentService implements SyncI
                 return;
             }
             logInfo("Dispensables pulled succesfully!");
+
             // store dispensables
             Long highestTimeStamp = 0L;
             List<Dispensable> dispensables = new Gson().fromJson(jsonPayload, new TypeToken<List<Dispensable>>(){}.getType());
             DispensableRepository repository = OpenLMISLibrary.getInstance().getDispensableRepository();
             for (Dispensable dispensable : dispensables) {
                 repository.addOrUpdate(dispensable);
+                SynchronizedUpdater.getInstance().updateInfo(dispensable);
                 if (dispensable.getServerVersion() > highestTimeStamp) {
                     highestTimeStamp = dispensable.getServerVersion();
                 }

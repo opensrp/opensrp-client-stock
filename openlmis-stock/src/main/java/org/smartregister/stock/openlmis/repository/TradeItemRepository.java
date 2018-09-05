@@ -113,6 +113,10 @@ public class TradeItemRepository extends BaseRepository {
     }
 
     public TradeItem getTradeItemById(String tradeItemId) {
+
+        if (tradeItemId == null) {
+            return null;
+        }
         String query = String.format("SELECT * FROM %s WHERE %s=?", TRADE_ITEM_TABLE, ID);
         Cursor cursor = null;
         try {

@@ -34,7 +34,6 @@ public class Application extends DrishtiApplication {
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         CoreLibrary.init(context);
-
         //Initialize OpenLMISLibrary
         OpenLMISLibrary.init(context, getRepository());
     }
