@@ -235,32 +235,13 @@ public class LotFactory implements FormWidgetFactory {
         lotRow.findViewById(R.id.lot_status).setVisibility(View.VISIBLE);
         TextInputEditText quantity = lotRow.findViewById(R.id.quantity_textview);
         quantity.setTag(R.id.lot_id, lotId);
-        quantity.addTextChangedListener(new QuantityTextWatcher(quantity));
+        quantity.setTag(R.id.lot_position, viewIndex);
         if (isStockIssue)
             quantity.setTag(R.id.stock_balance, lotStockBalances.get(lotId));
         else if (isStockAdjustment) {
-            quantity.setTag(R.id.stock_balance, lotStockBalances.get(lotId));
-            String balance = "0";
-            if (lotStockBalances.containsKey(lotId)) {
-                balance = lotStockBalances.get(lotId).toString();
-            }
-            quantity.setText(balance);
-            TextInputEditText stockOnHand = lotRow.findViewById(R.id.stock_on_hand_textview);
-            stockOnHand.setVisibility(View.VISIBLE);
-            stockOnHand.setText(balance);
-            lotRow.findViewById(R.id.stock_on_hand).setVisibility(View.VISIBLE);
-
-            View subtract = lotRow.findViewById(R.id.subtract_stock);
-            subtract.setVisibility(View.VISIBLE);
-            subtract.setTag(R.id.lot_position, viewIndex);
-            subtract.setOnClickListener(lotListener);
-
-            View add = lotRow.findViewById(R.id.add_stock);
-            add.setVisibility(View.VISIBLE);
-            add.setTag(R.id.lot_position, viewIndex);
-            add.setOnClickListener(lotListener);
-
+            showAdjustmentAndReason(lotRow, quantity, viewIndex, lotId, true);
         }
+        quantity.addTextChangedListener(new QuantityTextWatcher(quantity));
         TextInputEditText status = lotRow.findViewById(R.id.status_dropdown);
         status.setTag(R.id.lot_id, lotId);
         if (isStockAdjustment)
@@ -409,6 +390,45 @@ public class LotFactory implements FormWidgetFactory {
 
     }
 
+
+    private void showAdjustmentAndReason(View lotRow, TextInputEditText quantity, int viewIndex, String lotId, boolean updateQuantity) {
+        quantity.setTag(R.id.stock_balance, lotStockBalances.get(lotId));
+        String balance = "0";
+        if (lotStockBalances.containsKey(lotId)) {
+            balance = lotStockBalances.get(lotId).toString();
+        }
+        if (updateQuantity)
+            quantity.setText(balance);
+        TextInputEditText stockOnHand = lotRow.findViewById(R.id.stock_on_hand_textview);
+        stockOnHand.setVisibility(View.VISIBLE);
+        stockOnHand.setText(balance);
+        lotRow.findViewById(R.id.stock_on_hand).setVisibility(View.VISIBLE);
+
+        View subtract = lotRow.findViewById(R.id.subtract_stock);
+        subtract.setVisibility(View.VISIBLE);
+        subtract.setTag(R.id.lot_position, viewIndex);
+        subtract.setOnClickListener(lotListener);
+
+        View add = lotRow.findViewById(R.id.add_stock);
+        add.setVisibility(View.VISIBLE);
+        add.setTag(R.id.lot_position, viewIndex);
+        add.setOnClickListener(lotListener);
+
+    }
+
+    private void updateStockAdjustment(LotDto lotDto, TextInputEditText quantity) {
+        int viewIndex = Integer.parseInt(quantity.getTag(R.id.lot_position).toString());
+        View lotRow = lotsContainer.getChildAt(viewIndex);
+        showAdjustmentAndReason(lotRow, quantity, viewIndex, lotDto.getLotId(), false);
+        TextInputEditText adjustmentTextView = lotRow.findViewById(R.id.adjustment_textview);
+        if (lotDto.getQuantity() <= 0)
+            adjustmentTextView.setText(String.valueOf(lotDto.getQuantity()));
+        else
+            adjustmentTextView.setText(String.format("+ %s", lotDto.getQuantity()));
+        lotRow.findViewById(R.id.adjustment).setVisibility(View.VISIBLE);
+        lotRow.findViewById(R.id.reason).setVisibility(View.VISIBLE);
+    }
+
     private void displayDosesQuantity() {
         int totalQuantity = 0;
         for (LotDto lot : selectedLotDTos) {
@@ -479,6 +499,10 @@ public class LotFactory implements FormWidgetFactory {
                     } else {
                         lotDto.setQuantity(value);
                     }
+                    if (isStockAdjustment) {
+                        updateStockAdjustment(lotDto, editText);
+                    }
+
 
                 } catch (NumberFormatException e) {
                     Log.e(TAG, "quantity is too large");
