@@ -381,10 +381,17 @@ public class LotFactory implements FormWidgetFactory {
         View lotRow = lotsContainer.getChildAt(Integer.parseInt(view.getTag(R.id.lot_position).toString()));
         TextInputEditText quantity = lotRow.findViewById(R.id.quantity_textview);
         int adjustment = add ? 1 : -1;
+        int physicalCount = adjustment;
         if (StringUtils.isNotBlank(quantity.getText()))
-            quantity.setText(String.valueOf(Integer.parseInt(quantity.getText().toString()) + adjustment));
-        else
-            quantity.setText(String.valueOf(adjustment));
+            physicalCount = Integer.parseInt(quantity.getText().toString()) + adjustment;
+        quantity.setText(String.valueOf(physicalCount));
+        if (physicalCount < 0) {
+            quantity.setError(context.getString(R.string.negative_balance));
+            quantity.requestFocus();
+        } else {
+            quantity.setError(null);
+            quantity.clearFocus();
+        }
 
         TextInputEditText adjustmentTextView = lotRow.findViewById(R.id.adjustment_textview);
         if (StringUtils.isBlank(adjustmentTextView.getText())) {
