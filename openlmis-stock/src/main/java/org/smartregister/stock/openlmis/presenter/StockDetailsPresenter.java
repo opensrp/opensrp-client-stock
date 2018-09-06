@@ -53,7 +53,7 @@ public class StockDetailsPresenter {
 
     private int totalStockAdjustment;
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 
 
     public StockDetailsPresenter(StockDetailsView stockDetailsView) {
@@ -205,11 +205,9 @@ public class StockDetailsPresenter {
         }
 
         for (LotDto lot : selectedLotDTos) {
-            if (facility == null)
-                facility = lot.getReason();
             Stock stock = new Stock(null, transactionType,
                     provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
-                    encounterDate.getTime(), facility, "unsynched",
+                    encounterDate.getTime(), facility == null ? lot.getReason() : facility, "unsynched",
                     System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);

@@ -8,7 +8,6 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,8 +54,6 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET
 public class LotFactory implements FormWidgetFactory {
 
     private final static String STATUS_FIELD_NAME = "lot_status";
-    private final static String TAG = "LotFactory";
-
 
     public final static String TRADE_ITEM = "trade_item";
     public final static String TRADE_ITEM_ID = "trade_item_id";
@@ -152,7 +149,7 @@ public class LotFactory implements FormWidgetFactory {
             lots = lotRepository.findLotsByTradeItem(tradeItemId);
         }
         for (Lot lot : lots) {
-            if (!selectedLotDTos.isEmpty() && selectedLotDTos.contains(new LotDto(lot.getId().toString())))
+            if (selectedLotDTos.contains(new LotDto(lot.getId().toString())))
                 selectedLotsMap.put(lot.getId().toString(), lot);
             else
                 lotMap.put(lot.getId().toString(), lot);
@@ -174,22 +171,24 @@ public class LotFactory implements FormWidgetFactory {
 
         ((JsonApi) context).addFormDataView(lotsContainer);
 
-        if (!selectedLotDTos.isEmpty()) {
-            showQuantityAndStatus(lotDropdown, selectedLotDTos.get(0).getLotId(), selectedLotDTos.get(0));
-            if (selectedLotDTos.size() == 1)
-                this.jsonFormFragment.validateActivateNext();
-            else
-                restoreAdditionalLotRows();
-        }
+        restoreAdditionalLotRows(lotDropdown);
 
         return views;
     }
 
-    private void restoreAdditionalLotRows() {
-        for (int i = 1; i < selectedLotDTos.size(); i++) {
-            LotDto lotDto = selectedLotDTos.get(i);
-            showQuantityAndStatus(addLotRow(), lotDto.getLotId(), lotDto);
+    private void restoreAdditionalLotRows(TextInputEditText lotDropdown) {
+        if (selectedLotDTos.isEmpty()) {
+            return;
         }
+        showQuantityAndStatus(lotDropdown, selectedLotDTos.get(0).getLotId(), selectedLotDTos.get(0));
+        if (selectedLotDTos.size() == 1)
+            this.jsonFormFragment.validateActivateNext();
+        else
+
+            for (int i = 1; i < selectedLotDTos.size(); i++) {
+                LotDto lotDto = selectedLotDTos.get(i);
+                showQuantityAndStatus(addLotRow(), lotDto.getLotId(), lotDto);
+            }
         this.jsonFormFragment.validateActivateNext();
     }
 
@@ -492,8 +491,7 @@ public class LotFactory implements FormWidgetFactory {
 
 
                 } catch (NumberFormatException e) {
-                    Log.e(TAG, "quantity is too large");
-                    editText.setError("Quantity is too large");
+                    editText.setError(context.getString(R.string.quantity_to_large));
                 }
             }
             writeValues();
