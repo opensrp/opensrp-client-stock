@@ -3,6 +3,7 @@ package org.smartregister.stock.openlmis.widget;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
@@ -263,11 +264,13 @@ public class LotFactory implements FormWidgetFactory {
 
     }
 
-    private void populateStatusOptions(final Context context, final TextInputEditText editText) {
+    @VisibleForTesting
+    protected PopupMenu populateStatusOptions(final Context context, final TextInputEditText editText) {
+        final PopupMenu popupMenu = new PopupMenu(context, editText);
         editText.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
                 for (int i = 0; i < statusOptions.length(); i++) {
                     popupMenu.getMenu().add(statusOptions.optString(i));
                 }
@@ -284,14 +287,17 @@ public class LotFactory implements FormWidgetFactory {
                     }
                 });
             }
+
         });
+        return popupMenu;
     }
 
-    private void populateLotOptions(final Context context, final TextInputEditText editText) {
+    @VisibleForTesting
+    protected PopupMenu populateLotOptions(final Context context, final TextInputEditText editText) {
+        final PopupMenu popupMenu = new PopupMenu(context, editText);
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
                 LocalDate expiringDateWarning = new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING);
                 for (Lot lot : lotMap.values()) {
                     MenuItem menuitem = popupMenu.getMenu().add(context.getString(R.string.lotcode_and_expiry,
@@ -333,13 +339,15 @@ public class LotFactory implements FormWidgetFactory {
                 });
             }
         });
+        return popupMenu;
     }
 
-    private void populateReasonsOptions(final Context context, final TextInputEditText editText) {
+    @VisibleForTesting
+    protected PopupMenu populateReasonsOptions(final Context context, final TextInputEditText editText) {
+        final PopupMenu popupMenu = new PopupMenu(context, editText);
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popupMenu = new PopupMenu(context, view);
                 for (String reason : reasonsRepository.getAdjustmentReasons()) {
                     popupMenu.getMenu().add(reason);
                 }
@@ -357,6 +365,7 @@ public class LotFactory implements FormWidgetFactory {
                 });
             }
         });
+        return popupMenu;
     }
 
     private void adjustStock(View view, boolean add) {
@@ -415,7 +424,7 @@ public class LotFactory implements FormWidgetFactory {
         if (lotDto.getQuantity() <= 0)
             adjustmentTextView.setText(String.valueOf(lotDto.getQuantity()));
         else
-            adjustmentTextView.setText(String.format("+ %s", lotDto.getQuantity()));
+            adjustmentTextView.setText(String.format("+%s", lotDto.getQuantity()));
         lotRow.findViewById(R.id.adjustment).setVisibility(View.VISIBLE);
         lotRow.findViewById(R.id.reason).setVisibility(View.VISIBLE);
     }
@@ -448,8 +457,6 @@ public class LotFactory implements FormWidgetFactory {
                 addLotRow();
             else if (view.getId() == R.id.cancel_button)
                 removeLotRow(view);
-            else if (view.getId() == R.id.lot_dropdown)
-                showQuantityAndStatus(view, view.getTag(R.id.lot_id).toString(), null);
             else if (view.getId() == R.id.add_stock)
                 adjustStock(view, true);
             else if (view.getId() == R.id.subtract_stock)
@@ -544,4 +551,7 @@ public class LotFactory implements FormWidgetFactory {
 
     }
 
+    public List<LotDto> getSelectedLotDTos() {
+        return selectedLotDTos;
+    }
 }

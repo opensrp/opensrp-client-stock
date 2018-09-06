@@ -175,6 +175,17 @@ public class StockDetailsPresenter {
 
     }
 
+    private String extractTradeItemId(JSONArray stepFields) throws JSONException {
+        for (int i = 0; i < stepFields.length(); i++) {
+            JSONObject jsonObject = getJSONObject(stepFields, i);
+            String keyValue = jsonObject.getString(KEY);
+            if (STOCK_LOTS.equals(keyValue)) {
+                return jsonObject.getString(TRADE_ITEM_ID);
+            }
+        }
+        return null;
+    }
+
     private boolean processStock(String step, JSONObject jsonString, String provider, String date,
                                  String facility, String reason, String transactionType) throws JSONException {
         JSONArray stepFields = jsonString.getJSONObject(step).getJSONArray(FIELDS);
@@ -186,15 +197,7 @@ public class StockDetailsPresenter {
 
         List<LotDto> selectedLotDTos = LotFactory.gson.fromJson(lotsJSON, listType);
 
-        String tradeItem = null;
-
-        for (int i = 0; i < stepFields.length(); i++) {
-            JSONObject jsonObject = getJSONObject(stepFields, i);
-            String keyValue = jsonObject.getString(KEY);
-            if (keyValue != null && keyValue.equals(STOCK_LOTS)) {
-                tradeItem = jsonObject.getString(TRADE_ITEM_ID);
-            }
-        }
+        String tradeItem = extractTradeItemId(stepFields);
 
         Date encounterDate;
         try {

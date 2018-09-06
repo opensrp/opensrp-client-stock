@@ -243,7 +243,7 @@ public class TestData {
             "      }";
 
 
-    public static final String LOT_WIDGET_WITH_DATA_JSON = "{\n" +
+    public static final String LOT_WIDGET_TWO_EXISTING_JSON = "{\n" +
             "        \"key\": \"stockLots\",\n" +
             "        \"type\": \"lot\",\n" +
             "        \"trade_item\": \"GSK BCG 20\",\n" +
@@ -273,5 +273,31 @@ public class TestData {
             "        \"openmrs_entity_id\": \"\"\n" +
             "      }";
 
+    public static final String LOT_WIDGET_ONE_EXISTING_JSON = "{\n" +
+            "        \"key\": \"stockLots\",\n" +
+            "        \"type\": \"lot\",\n" +
+            "        \"trade_item\": \"GSK BCG 20\",\n" +
+            "        \"trade_item_id\": \"0cf8b2f4-3e1b-4d35-b839-5a4268ef03d6\",\n" +
+            "        \"dispensing_unit\": \"vials\",\n" +
+            "        \"net_content\": \"4\",\n" +
+            "        \"lot_status\": [\n" +
+            "          \"VVM1\",\n" +
+            "          \"VVM2\"\n" +
+            "        ],\n" +
+            "        \"value\": [\n" +
+            "          {\n" +
+            "            \"lotCodeAndExpiry\": \"LC1265 Exp. 21-09-2018\",\n" +
+            "            \"lotId\": \"7c6d239f-0bbc-4cab-b218-888d8be89d24\",\n" +
+            "            \"lotStatus\": \"VVM1\",\n" +
+            "            \"quantity\": 12\n" +
+            "          }\n" +
+            "        ],\n" +
+            "        \"openmrs_entity_parent\": \"\",\n" +
+            "        \"openmrs_entity\": \"\",\n" +
+            "        \"openmrs_entity_id\": \"\"\n" +
+            "      }";
+
     public static final String REVIEW_WIDGET_JSON = "{\"key\":\"stockReview\",\"type\":\"review\",\"trade_item\":\"GSK BCG 20\",\"trade_item_id\":\"0cf8b2f4-3e1b-4d35-b839-5a4268ef03d6\",\"dispensing_unit\":\"vials\",\"net_content\":\"4\",\"review_type\":\"Review Your Receipt\",\"date\":\"Date_Stock_Received\",\"facility\":\"Receive_Stock_From\",\"reason\":\"Receive_Stock_Reason\"}]}";
+
+    public static final String ADJUST_WIDGET_JSON = "{\"key\":\"stockLots\",\"type\":\"lot\",\"trade_item\":\"Intervax BCG 20\",\"trade_item_id\":\"0cf8b2f4-3e1b-4d35-b839-5a4268ef03d6\",\"dispensing_unit\":\"vials\",\"net_content\":\"6\",\"is_stock_adjustment\":\"true\",\"lot_status\":[\"VVM1\",\"VVM2\"]}";
 }
