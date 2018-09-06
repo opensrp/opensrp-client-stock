@@ -106,7 +106,8 @@
         android:src="@drawable/ic_cancel"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lot_quantity" />
+        app:layout_constraintTop_toBottomOf="@id/lot_quantity"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
     <android.support.design.widget.TextInputLayout

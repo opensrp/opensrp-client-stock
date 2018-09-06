@@ -3,6 +3,7 @@ package org.smartregister.stock.openlmis.widget;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -399,6 +400,10 @@ public class LotFactory implements FormWidgetFactory {
         add.setVisibility(View.VISIBLE);
         add.setTag(R.id.lot_position, viewIndex);
         add.setOnClickListener(lotListener);
+
+        View cancel = lotRow.findViewById(R.id.cancel_button);
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) cancel.getLayoutParams();
+        params.topToTop = -1;
 
     }
 
