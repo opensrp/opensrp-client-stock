@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +35,7 @@ import static org.smartregister.stock.domain.Stock.loss_adjustment;
 import static org.smartregister.stock.domain.Stock.received;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
+import static org.smartregister.stock.openlmis.widget.ReviewFactory.OTHER;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STEP2;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STOCK_LOTS;
 import static org.smartregister.util.JsonFormUtils.FIELDS;
@@ -139,11 +139,8 @@ public class StockDetailsPresenter {
 
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Issued");
         String facility = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_To");
-        if (StringUtils.isBlank(facility)) {
-            facility = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_TO_Other");
-        }
         String reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason");
-        if (StringUtils.isBlank(facility)) {
+        if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason_Other");
         }
 
@@ -155,11 +152,8 @@ public class StockDetailsPresenter {
 
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Received");
         String facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From");
-        if (StringUtils.isBlank(facility)) {
-            facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From_Other");
-        }
         String reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason");
-        if (StringUtils.isBlank(facility)) {
+        if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason_Other");
         }
 
