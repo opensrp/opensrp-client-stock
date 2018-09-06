@@ -373,20 +373,6 @@ public class LotFactory implements FormWidgetFactory {
             quantity.clearFocus();
         }
 
-        TextInputEditText adjustmentTextView = lotRow.findViewById(R.id.adjustment_textview);
-        if (StringUtils.isBlank(adjustmentTextView.getText())) {
-            adjustmentTextView.setText(String.format("%s %s", add ? "+" : "", adjustment));
-        } else {
-            adjustment = Integer.parseInt(adjustmentTextView.getText().toString().replace("+", "").trim()) + adjustment;
-            if (adjustment <= 0)
-                adjustmentTextView.setText(String.valueOf(adjustment));
-            else
-                adjustmentTextView.setText(String.format("+ %s", adjustment));
-        }
-
-        lotRow.findViewById(R.id.adjustment).setVisibility(View.VISIBLE);
-        lotRow.findViewById(R.id.reason).setVisibility(View.VISIBLE);
-
     }
 
 
@@ -415,7 +401,7 @@ public class LotFactory implements FormWidgetFactory {
 
     }
 
-    private void updateStockAdjustment(LotDto lotDto, TextInputEditText quantity) {
+    private void displayStockAdjustment(LotDto lotDto, TextInputEditText quantity) {
         int viewIndex = Integer.parseInt(quantity.getTag(R.id.lot_position).toString());
         View lotRow = lotsContainer.getChildAt(viewIndex);
         showAdjustmentAndReason(lotRow, quantity, viewIndex, lotDto.getLotId(), false);
@@ -499,7 +485,7 @@ public class LotFactory implements FormWidgetFactory {
                         lotDto.setQuantity(value);
                     }
                     if (isStockAdjustment) {
-                        updateStockAdjustment(lotDto, editText);
+                        displayStockAdjustment(lotDto, editText);
                     }
 
 
