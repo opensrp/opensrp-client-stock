@@ -20,6 +20,7 @@ import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ReasonsRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public class LotFactoryTest extends BaseUnitTest {
     @Before
     public void setUp() {
         lots = new ArrayList<>();
-        lotFactory = new LotFactory(lotRepository, reasonRepository);
+        lotFactory = new LotFactory(lotRepository, new ReasonsRepository());
         Intent intent = new Intent();
         intent.putExtra("json", ISSUE_FORM_JSON);
         activity = Robolectric.buildActivity(OpenLMISJsonForm.class, intent).create().get();

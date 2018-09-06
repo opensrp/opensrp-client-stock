@@ -338,7 +338,6 @@ public class LotFactory implements FormWidgetFactory {
             @Override
             public void onClick(View view) {
                 PopupMenu popupMenu = new PopupMenu(context, view);
-                ReasonsRepository reasonsRepository = new ReasonsRepository();
                 for (String reason : reasonsRepository.getAdjustmentReasons()) {
                     popupMenu.getMenu().add(reason);
                 }
