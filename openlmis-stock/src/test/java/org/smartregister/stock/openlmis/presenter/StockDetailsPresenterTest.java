@@ -239,7 +239,6 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
             assertEquals(received, stock.getTransactionType());
             assertEquals("Balaka District Warehouse", stock.getToFrom());
             assertEquals("Receipts", stock.getReason());
-            assertEquals(1535922000000l, stock.getDateCreated().longValue());
         }
     }
 
@@ -252,7 +251,6 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
             assertEquals(issued, stock.getTransactionType());
             assertEquals("Comfort Health Clinic", stock.getToFrom());
             assertEquals("Consumed", stock.getReason());
-            assertEquals(1535922000000l, stock.getDateCreated().longValue());
         }
     }
 
