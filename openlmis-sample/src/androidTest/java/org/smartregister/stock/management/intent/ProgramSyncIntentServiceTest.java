@@ -2,23 +2,29 @@ package org.smartregister.stock.management.intent;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.smartregister.stock.management.application.Application;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.intent.ProgramSyncIntentService;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
-
-import java.util.concurrent.TimeUnit;
+import org.smartregister.stock.openlmis.util.Utils;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.smartregister.stock.management.util.ServiceUtils.startService;
 import static org.smartregister.stock.management.util.ServiceUtils.stopService;
-import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
 
 public class ProgramSyncIntentServiceTest extends BaseSyncIntentServiceTest {
 
-    ProgramRepository repository = OpenLMISLibrary.getInstance().getProgramRepository();
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
+    private ProgramRepository repository = OpenLMISLibrary.getInstance().getProgramRepository();
 
     @Before
     @Override
@@ -35,14 +41,38 @@ public class ProgramSyncIntentServiceTest extends BaseSyncIntentServiceTest {
 
     @Test
     public void testProgramsAreSyncedAndSaved() {
-        // this assumes that a program with an id value of "id" has been posted to the programs endpoint
-        try {
-            TimeUnit.SECONDS.sleep(5);
-            assertEquals(1, repository.findPrograms("identifier", "code", "program_name", "1").size());
-            assertEquals(1, repository.findPrograms("identifier_1", "code_1", "program_name_1", "1").size());
-            assertEquals(1, repository.findPrograms("identifier_2", "code_2", "program_name_2", "1").size());
-        } catch (InterruptedException e) {
-            fail("Waiting for the worker thread took too long.");
-        }
+        mockStatic(Utils.class);
+        when(Utils.makeGetRequest(anyString())).thenReturn(responseString());
+        assertEquals(1, repository.findPrograms("identifier", "code", "program_name", "1").size());
+        assertEquals(1, repository.findPrograms("identifier_1", "code_1", "program_name_1", "1").size());
+        assertEquals(1, repository.findPrograms("identifier_2", "code_2", "program_name_2", "1").size());
+    }
+
+    private String responseString() {
+        return "[{\n" +
+                "\t\"id\": \"identifier\",\n" +
+                "\t\"code\": {\n" +
+                "\t\t\"code\": \"code\"\n" +
+                "\t},\n" +
+                "\t\"name\": \"program_name\",\n" +
+                "\t\"description\": \"program_description\",\n" +
+                "\t\"active\": true,\n" +
+                "\t\"periodsSkippable\": false,\n" +
+                "\t\"skipAuthorization\": true,\n" +
+                "\t\"showNonFullSupplyTab\": false,\n" +
+                "\t\"enableDatePhysicalStockCountCompleted\": true\n" +
+                "}, {\n" +
+                "\t\"id\": \"identifier_1\",\n" +
+                "\t\"code\": {\n" +
+                "\t\t\"code\": \"code_1\"\n" +
+                "\t},\n" +
+                "\t\"name\": \"program_name_1\",\n" +
+                "\t\"description\": \"program_description_1\",\n" +
+                "\t\"active\": true,\n" +
+                "\t\"periodsSkippable\": false,\n" +
+                "\t\"skipAuthorization\": true,\n" +
+                "\t\"showNonFullSupplyTab\": true,\n" +
+                "\t\"enableDatePhysicalStockCountCompleted\": true\n" +
+                "}]";
     }
 }

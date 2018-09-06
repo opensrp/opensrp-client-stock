@@ -2,23 +2,29 @@ package org.smartregister.stock.management.intent;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.smartregister.stock.management.application.Application;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.intent.ProgramOrderableSyncIntentService;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
-
-import java.util.concurrent.TimeUnit;
+import org.smartregister.stock.openlmis.util.Utils;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.smartregister.stock.management.util.ServiceUtils.startService;
 import static org.smartregister.stock.management.util.ServiceUtils.stopService;
-import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
 
 public class ProgramOrderableSyncIntentServiceTest extends BaseSyncIntentServiceTest {
 
-    ProgramOrderableRepository repository = OpenLMISLibrary.getInstance().getProgramOrderableRepository();
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
+    private ProgramOrderableRepository repository = OpenLMISLibrary.getInstance().getProgramOrderableRepository();
 
     @Before
     @Override
@@ -35,14 +41,32 @@ public class ProgramOrderableSyncIntentServiceTest extends BaseSyncIntentService
 
     @Test
     public void testProgramOrderablesAreSyncedAndSaved() {
-        // this assumes that a lot with an id value of "id" has been posted to the lots endpoint
-        try {
-            TimeUnit.SECONDS.sleep(5);
-            assertEquals(1, repository.findProgramOrderables("id", "program_id", "orderable_id", "5", "1", "1").size());
-            assertEquals(1, repository.findProgramOrderables("id_1", "program_id_1", "orderable_id_1", "5", "1", "1").size());
-            assertEquals(1, repository.findProgramOrderables("id_2", "program_id_2", "orderable_id_2", "5", "1", "1").size());
-        } catch (InterruptedException e) {
-            fail("Waiting for the worker thread took too long.");
-        }
+        mockStatic(Utils.class);
+        when(Utils.makeGetRequest(anyString())).thenReturn(responseString());
+        assertEquals(1, repository.findProgramOrderables("id", "program_id", "orderable_id", "5", "1", "1").size());
+        assertEquals(1, repository.findProgramOrderables("id_1", "program_id_1", "orderable_id_1", "5", "1", "1").size());
+        assertEquals(1, repository.findProgramOrderables("id_2", "program_id_2", "orderable_id_2", "5", "1", "1").size());
+    }
+
+    private String responseString() {
+        return "[{\n" +
+                "\t\"id\": \"id\",\n" +
+                "\t\"programId\": \"program_id\",\n" +
+                "\t\"orderableId\": \"orderable_id\",\n" +
+                "\t\"dosesPerPatient\": 5,\n" +
+                "\t\"active\": true,\n" +
+                "\t\"fullSupply\": true,\n" +
+                "\t\"serverVersion\": null,\n" +
+                "\t\"dateDeleted\": null\n" +
+                "}, {\n" +
+                "\t\"id\": \"id_1\",\n" +
+                "\t\"programId\": \"program_id_1\",\n" +
+                "\t\"orderableId\": \"orderable_id_1\",\n" +
+                "\t\"dosesPerPatient\": 5,\n" +
+                "\t\"active\": true,\n" +
+                "\t\"fullSupply\": true,\n" +
+                "\t\"serverVersion\": null,\n" +
+                "\t\"dateDeleted\": null\n" +
+                "}]";
     }
 }
