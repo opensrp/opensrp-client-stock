@@ -161,6 +161,7 @@ public class LotFactory implements FormWidgetFactory {
         TextInputEditText lotDropdown = root.findViewById(R.id.lot_dropdown);
         lotDropdown.setTag(R.id.lot_position, 0);
         lotDropdown.setTag(R.id.is_stock_issue, isStockIssue);
+        lotDropdown.setTag(R.id.is_stock_adjustment, isStockAdjustment);
         populateLotOptions(context, lotDropdown);
 
 
@@ -203,6 +204,7 @@ public class LotFactory implements FormWidgetFactory {
         TextInputEditText lotDropdown = lotView.findViewById(R.id.lot_dropdown);
         lotDropdown.setTag(R.id.lot_position, viewIndex);
         lotDropdown.setTag(R.id.is_stock_issue, isStockIssue);
+        lotDropdown.setTag(R.id.is_stock_adjustment, isStockAdjustment);
         populateLotOptions(context, lotDropdown);
         populateStatusOptions(context, (TextInputEditText) lotView.findViewById(R.id.status_dropdown));
         if (isStockAdjustment)
@@ -501,24 +503,34 @@ public class LotFactory implements FormWidgetFactory {
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
                                             LinearLayout lotsContainer) {
-
         boolean isValid = true;
         for (int i = 0; i < lotsContainer.getChildCount() - 1; i++) {
             TextInputEditText lot = lotsContainer.getChildAt(i).findViewById(R.id.lot_dropdown);
             TextInputEditText quantity = lotsContainer.getChildAt(i).findViewById(R.id.quantity_textview);
             TextInputEditText status = lotsContainer.getChildAt(i).findViewById(R.id.status_dropdown);
+            boolean isStockAdjustment = lot.getTag(R.id.is_stock_adjustment) != null
+                    && Boolean.valueOf(lot.getTag(R.id.is_stock_adjustment).toString());
+
             if (StringUtils.isBlank(lot.getText()) || StringUtils.isBlank(quantity.getText()) ||
                     StringUtils.isBlank(status.getText()))
                 isValid = false;
-            else if (StringUtils.isNotBlank(quantity.getText()) && "0".equals(quantity.getText().toString()))
+            else if (StringUtils.isNotBlank(quantity.getText()) && !isStockAdjustment && "0".equals(quantity.getText().toString()))
                 isValid = false;
-            if (lot.getTag(R.id.is_stock_issue) != null && Boolean.valueOf(lot.getTag(R.id.is_stock_issue).toString())
+            else if (lot.getTag(R.id.is_stock_issue) != null && Boolean.valueOf(lot.getTag(R.id.is_stock_issue).toString())
                     && StringUtils.isNotBlank(quantity.getText()) && quantity.getTag(R.id.stock_balance) != null
                     && Integer.parseInt(quantity.getText().toString()) > Integer.parseInt(quantity.getTag(R.id.stock_balance).toString())) {
                 quantity.setError(lotsContainer.getContext().getString(R.string.stock_issued_more_balance,
                         Integer.parseInt(quantity.getText().toString()),
                         Integer.parseInt(quantity.getTag(R.id.stock_balance).toString())));
                 isValid = false;
+            } else if (isStockAdjustment) {
+                TextInputEditText reason = lotsContainer.getChildAt(i).findViewById(R.id.reason_dropdown);
+                if (StringUtils.isBlank(reason.getText()))
+                    isValid = false;
+                else if (Integer.parseInt(quantity.getText().toString()) < 0) {
+                    quantity.setError(lotsContainer.getContext().getString(R.string.negative_balance));
+                    isValid = false;
+                }
             }
         }
         if (isValid)
