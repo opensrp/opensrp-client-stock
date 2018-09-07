@@ -119,7 +119,7 @@ public class StockRepository extends BaseRepository {
 
     public List<Stock> getStockByTradeItem(String tradeItemId) {
         String query = String.format("SELECT * FROM %s WHERE %s=? ORDER BY %s desc", stock_TABLE_NAME
-                , STOCK_TYPE_ID, DATE_CREATED);
+                , STOCK_TYPE_ID, DATE_UPDATED);
         Cursor cursor = null;
         List<Stock> stockList = new ArrayList<>();
         try {
