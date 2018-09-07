@@ -7,11 +7,11 @@ import org.junit.Test;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
+import org.smartregister.stock.openlmis.dto.LotDetailsDto;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -193,21 +193,20 @@ public class StockRepositoryTest extends BaseRepositoryTest {
         stock.setLotId(lotId2.toString());
         stockRepository.addOrUpdate(stock);
 
-        Map<Long, Integer> lots = stockRepository.getNumberOfLotsByTradeItem(tradeItemId.toString());
+        List<LotDetailsDto> lots = stockRepository.getNumberOfLotsByTradeItem(tradeItemId.toString());
 
         assertEquals(1, lots.size());
-
-        assertNotNull(lots.get(lotExpiry.toDate().getTime()));
-        assertEquals(40, lots.get(lotExpiry.toDate().getTime()).longValue());
-
-        assertNull(lots.get(lot2Expiry.toDate().getTime()));
+        assertEquals(lotExpiry.toDate().getTime(), lots.get(0).getMinimumExpiryDate());
+        assertEquals(40, lots.get(0).getTotalStock());
+        assertEquals(lotId.toString(), lots.get(0).getLotId());
 
 
         lots = stockRepository.getNumberOfLotsByTradeItem(tradeItemId2.toString());
         assertEquals(1, lots.size());
 
-        assertNotNull(lots.get(lot2Expiry.toDate().getTime()));
-        assertEquals(44, lots.get(lot2Expiry.toDate().getTime()).longValue());
+        assertEquals(lot2Expiry.toDate().getTime(), lots.get(0).getMinimumExpiryDate());
+        assertEquals(44, lots.get(0).getTotalStock());
+        assertEquals(lotId2.toString(), lots.get(0).getLotId());
 
 
         assertEquals(0, stockRepository.getNumberOfLotsByTradeItem(UUID.randomUUID().toString()).size());
