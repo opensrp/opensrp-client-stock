@@ -23,29 +23,22 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class ProgramOrderableSyncHelper implements BaseSyncHelper {
+public class ProgramOrderableSyncHelper extends BaseSyncHelper {
 
     private static final String LOT_SYNC_URL = "rest/program-orderables/sync";
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
+    private ProgramOrderableRepository repository;
 
     public ProgramOrderableSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.repository = OpenLMISLibrary.getInstance().getProgramOrderableRepository();
         this.context = context;
         this.httpAgent = httpAgent;
         this.actionService = actionService;
     }
 
-    @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         final String PREV_SYNC_SERVER_VERSION = "prev_sync_server_version";
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -83,7 +76,6 @@ public class ProgramOrderableSyncHelper implements BaseSyncHelper {
         // store programOrderables
         Long highestTimeStamp = 0L;
         List<ProgramOrderable> programOrderables = new Gson().fromJson(jsonPayload, new TypeToken<List<ProgramOrderable>>(){}.getType());
-        ProgramOrderableRepository repository = OpenLMISLibrary.getInstance().getProgramOrderableRepository();
         for (ProgramOrderable programOrderable : programOrderables) {
             repository.addOrUpdate(programOrderable);
             if (programOrderable.getServerVersion() > highestTimeStamp) {
@@ -118,5 +110,13 @@ public class ProgramOrderableSyncHelper implements BaseSyncHelper {
 
     public void setActionService(ActionService actionService) {
         this.actionService = actionService;
+    }
+
+    public ProgramOrderableRepository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(ProgramOrderableRepository repository) {
+        this.repository = repository;
     }
 }

@@ -1,8 +1,22 @@
 package org.smartregister.stock.openlmis.intent.helper;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
-public interface BaseSyncHelper {
-    void processIntent();
-    void saveResponse(String response, SharedPreferences preferences);
+public abstract class BaseSyncHelper {
+
+    protected Context context;
+
+    protected abstract String pullFromServer();
+
+    protected abstract void saveResponse(String response, SharedPreferences preferences);
+
+    public void processIntent() {
+        String response = pullFromServer();
+        if (response == null) {
+            return;
+        }
+        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
+    }
 }

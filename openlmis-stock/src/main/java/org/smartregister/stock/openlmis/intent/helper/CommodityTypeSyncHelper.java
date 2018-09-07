@@ -24,29 +24,23 @@ import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSI
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 
-public class CommodityTypeSyncHelper implements BaseSyncHelper {
+public class CommodityTypeSyncHelper extends BaseSyncHelper {
 
     private static final String LOT_SYNC_URL = "rest/commodity-types/sync";
-    private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
+    private CommodityTypeRepository commodityTypeRepository = OpenLMISLibrary.getInstance().getCommodityTypeRepository();
+    private TradeItemRepository tradeItemRepository;
 
     public CommodityTypeSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
         this.context = context;
         this.actionService = actionService;
         this.httpAgent = httpAgent;
     }
 
     @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
@@ -72,12 +66,9 @@ public class CommodityTypeSyncHelper implements BaseSyncHelper {
 
     @Override
     public void saveResponse(String jsonPayload, SharedPreferences preferences) {
-
         // store commodityTypes
         Long highestTimeStamp = 0L;
         List<CommodityType> commodityTypes = new Gson().fromJson(jsonPayload, new TypeToken<List<CommodityType>>(){}.getType());
-        CommodityTypeRepository commodityTypeRepository = OpenLMISLibrary.getInstance().getCommodityTypeRepository();
-        TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
         for (CommodityType commodityType : commodityTypes) {
             commodityTypeRepository.addOrUpdate(commodityType);
             // update trade item register repository
@@ -118,5 +109,21 @@ public class CommodityTypeSyncHelper implements BaseSyncHelper {
 
     public void setActionService(ActionService actionService) {
         this.actionService = actionService;
+    }
+
+    public CommodityTypeRepository getCommodityTypeRepository() {
+        return commodityTypeRepository;
+    }
+
+    public void setCommodityTypeRepository(CommodityTypeRepository commodityTypeRepository) {
+        this.commodityTypeRepository = commodityTypeRepository;
+    }
+
+    public TradeItemRepository getTradeItemRepository() {
+        return tradeItemRepository;
+    }
+
+    public void setTradeItemRepository(TradeItemRepository tradeItemRepository) {
+        this.tradeItemRepository = tradeItemRepository;
     }
 }

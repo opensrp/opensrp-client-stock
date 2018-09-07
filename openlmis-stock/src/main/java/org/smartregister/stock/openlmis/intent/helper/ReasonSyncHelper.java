@@ -23,29 +23,22 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class ReasonSyncHelper implements BaseSyncHelper {
+public class ReasonSyncHelper extends BaseSyncHelper {
 
     private static final String REASON_SYNC_URL = "rest/reasons/sync";
     private Context context;
     private ActionService actionService;
     private HTTPAgent httpAgent;
+    private ReasonRepository repository;
 
     public ReasonSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.repository = OpenLMISLibrary.getInstance().getReasonRepository();
         this.context = context;
         this.actionService = actionService;
         this.httpAgent = httpAgent;
     }
 
-    @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -80,7 +73,6 @@ public class ReasonSyncHelper implements BaseSyncHelper {
         // store reasons
         Long highestTimeStamp = 0L;
         List<Reason> reasons = new Gson().fromJson(jsonPayload, new TypeToken<List<Reason>>(){}.getType());
-        ReasonRepository repository = OpenLMISLibrary.getInstance().getReasonRepository();
         for (Reason reason : reasons) {
             repository.addOrUpdate(reason);
             if (reason.getServerVersion() > highestTimeStamp) {
@@ -115,5 +107,13 @@ public class ReasonSyncHelper implements BaseSyncHelper {
 
     public void setHttpAgent(HTTPAgent httpAgent) {
         this.httpAgent = httpAgent;
+    }
+
+    public ReasonRepository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(ReasonRepository repository) {
+        this.repository = repository;
     }
 }

@@ -24,29 +24,22 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class DispensableSyncHelper implements BaseSyncHelper {
+public class DispensableSyncHelper extends BaseSyncHelper {
 
     private static final String DISPENSABLE_SYNC_URL = "rest/dispensables/sync";
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
+    private DispensableRepository repository;
 
     public DispensableSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.repository = OpenLMISLibrary.getInstance().getDispensableRepository();
         this.context = context;
         this.actionService = actionService;
         this.httpAgent = httpAgent;
     }
 
-    @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -81,7 +74,6 @@ public class DispensableSyncHelper implements BaseSyncHelper {
         // store dispensables
         Long highestTimeStamp = 0L;
         List<Dispensable> dispensables = new Gson().fromJson(jsonPayload, new TypeToken<List<Dispensable>>(){}.getType());
-        DispensableRepository repository = OpenLMISLibrary.getInstance().getDispensableRepository();
         for (Dispensable dispensable : dispensables) {
             repository.addOrUpdate(dispensable);
             SynchronizedUpdater.getInstance().updateInfo(dispensable);
@@ -117,5 +109,13 @@ public class DispensableSyncHelper implements BaseSyncHelper {
 
     public void setActionService(ActionService actionService) {
         this.actionService = actionService;
+    }
+
+    public DispensableRepository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(DispensableRepository repository) {
+        this.repository = repository;
     }
 }

@@ -23,29 +23,22 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class TradeItemClassificationSyncHelper implements BaseSyncHelper {
+public class TradeItemClassificationSyncHelper extends BaseSyncHelper {
 
     private static final String TRADE_ITEM_CLASSIFICATION_SYNC_URL = "rest/trade-item-classifications/sync";
     private Context context;
     private ActionService actionService;
     private HTTPAgent httpAgent;
+    private TradeItemClassificationRepository repository;
 
     public TradeItemClassificationSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.repository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
         this.context = context;
         this.actionService = actionService;
         this.httpAgent = httpAgent;
     }
 
-    @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -79,7 +72,6 @@ public class TradeItemClassificationSyncHelper implements BaseSyncHelper {
         // store tradeItemClassifications
         Long highestTimeStamp = 0L;
         List<TradeItemClassification> tradeItemClassifications = new Gson().fromJson(jsonPayload, new TypeToken<List<TradeItemClassification>>(){}.getType());
-        TradeItemClassificationRepository repository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
         for (TradeItemClassification tradeItemClassification : tradeItemClassifications) {
             repository.addOrUpdate(tradeItemClassification);
             if (tradeItemClassification.getServerVersion() > highestTimeStamp) {
@@ -114,5 +106,13 @@ public class TradeItemClassificationSyncHelper implements BaseSyncHelper {
 
     public void setHttpAgent(HTTPAgent httpAgent) {
         this.httpAgent = httpAgent;
+    }
+
+    public TradeItemClassificationRepository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(TradeItemClassificationRepository repository) {
+        this.repository = repository;
     }
 }

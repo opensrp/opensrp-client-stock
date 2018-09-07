@@ -23,29 +23,22 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class LotSyncHelper implements BaseSyncHelper {
+public class LotSyncHelper extends BaseSyncHelper {
 
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
+    private LotRepository repository;
     private static final String LOT_SYNC_URL = "rest/lots/sync";
 
     public LotSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.repository = OpenLMISLibrary.getInstance().getLotRepository();
         this.context = context;
         this.actionService = actionService;
         this.httpAgent = httpAgent;
     }
 
-    @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -80,7 +73,6 @@ public class LotSyncHelper implements BaseSyncHelper {
         // store lots
         Long highestTimeStamp = 0L;
         List<Lot> lots = new Gson().fromJson(jsonPayload, new TypeToken<List<Lot>>(){}.getType());
-        LotRepository repository = OpenLMISLibrary.getInstance().getLotRepository();
         for (Lot lot : lots) {
             repository.addOrUpdate(lot);
             if (lot.getServerVersion() > highestTimeStamp) {
@@ -91,5 +83,37 @@ public class LotSyncHelper implements BaseSyncHelper {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
         editor.commit();
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public HTTPAgent getHttpAgent() {
+        return httpAgent;
+    }
+
+    public void setHttpAgent(HTTPAgent httpAgent) {
+        this.httpAgent = httpAgent;
+    }
+
+    public ActionService getActionService() {
+        return actionService;
+    }
+
+    public void setActionService(ActionService actionService) {
+        this.actionService = actionService;
+    }
+
+    public LotRepository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(LotRepository repository) {
+        this.repository = repository;
     }
 }

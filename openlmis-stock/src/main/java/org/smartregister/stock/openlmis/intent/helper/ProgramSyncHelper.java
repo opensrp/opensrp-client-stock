@@ -23,29 +23,22 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class ProgramSyncHelper implements BaseSyncHelper {
+public class ProgramSyncHelper extends BaseSyncHelper {
 
     private static final String LOT_SYNC_URL = "rest/programs/sync";
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
+    private ProgramRepository repository;
 
     public ProgramSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.repository = OpenLMISLibrary.getInstance().getProgramRepository();
         this.context = context;
         this.httpAgent = httpAgent;
         this.actionService = actionService;
     }
 
-    @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -80,7 +73,6 @@ public class ProgramSyncHelper implements BaseSyncHelper {
 
         Long highestTimeStamp = 0L;
         List<Program> programs = new Gson().fromJson(jsonPayload, new TypeToken<List<Program>>(){}.getType());
-        ProgramRepository repository = OpenLMISLibrary.getInstance().getProgramRepository();
         for (Program program : programs) {
             repository.addOrUpdate(program);
             if (program.getServerVersion() > highestTimeStamp) {
@@ -115,5 +107,13 @@ public class ProgramSyncHelper implements BaseSyncHelper {
 
     public void setActionService(ActionService actionService) {
         this.actionService = actionService;
+    }
+
+    public ProgramRepository getRepository() {
+        return repository;
+    }
+
+    public void setRepository(ProgramRepository repository) {
+        this.repository = repository;
     }
 }

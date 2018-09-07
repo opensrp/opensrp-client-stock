@@ -25,29 +25,24 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class TradeItemSyncHelper implements BaseSyncHelper {
+public class TradeItemSyncHelper extends BaseSyncHelper {
 
     private static final String TRADE_ITEM_SYNC_URL = "rest/trade-items/sync";
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
+    private TradeItemRepository tradeItemRepository;
+    private TradeItemClassificationRepository tradeItemClassificationRepository;
 
     public TradeItemSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
         this.context = context;
         this.httpAgent = httpAgent;
         this.actionService = actionService;
+        this.tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
+        this.tradeItemClassificationRepository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
     }
 
-    @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -82,8 +77,6 @@ public class TradeItemSyncHelper implements BaseSyncHelper {
         // store tradeItems
         Long highestTimeStamp = 0L;
         List<TradeItem> tradeItems = new Gson().fromJson(jsonPayload, new TypeToken<List<TradeItem>>(){}.getType());
-        TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
-        TradeItemClassificationRepository tradeItemClassificationRepository = OpenLMISLibrary.getInstance().getTradeItemClassificationRepository();
         for (TradeItem tradeItem : tradeItems) {
             tradeItemRepository.addOrUpdate(tradeItem);
             // save trade item classifications
@@ -126,5 +119,21 @@ public class TradeItemSyncHelper implements BaseSyncHelper {
 
     public void setActionService(ActionService actionService) {
         this.actionService = actionService;
+    }
+
+    public TradeItemRepository getTradeItemRepository() {
+        return tradeItemRepository;
+    }
+
+    public void setTradeItemRepository(TradeItemRepository tradeItemRepository) {
+        this.tradeItemRepository = tradeItemRepository;
+    }
+
+    public TradeItemClassificationRepository getTradeItemClassificationRepository() {
+        return tradeItemClassificationRepository;
+    }
+
+    public void setTradeItemClassificationRepository(TradeItemClassificationRepository tradeItemClassificationRepository) {
+        this.tradeItemClassificationRepository = tradeItemClassificationRepository;
     }
 }

@@ -24,29 +24,22 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class OrderableSyncHelper implements BaseSyncHelper {
+public class OrderableSyncHelper extends BaseSyncHelper {
 
     private static final String TRADE_ITEM_SYNC_URL = "rest/orderables/sync";
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
+    private OrderableRepository orderableRepository;
 
     public OrderableSyncHelper(Context context, ActionService actionService,  HTTPAgent httpAgent) {
+        this.orderableRepository = OpenLMISLibrary.getInstance().getOrderableRepository();
         this.context = context;
         this.httpAgent = httpAgent;
         this.actionService = actionService;
     }
 
-    @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -81,7 +74,6 @@ public class OrderableSyncHelper implements BaseSyncHelper {
         // store Orderables
         Long highestTimeStamp = 0L;
         List<Orderable> orderables = new Gson().fromJson(jsonPayload, new TypeToken<List<Orderable>>(){}.getType());
-        OrderableRepository orderableRepository = OpenLMISLibrary.getInstance().getOrderableRepository();
         for (Orderable orderable : orderables) {
             orderableRepository.addOrUpdate(orderable);
             // update trade item that feeds views
@@ -120,5 +112,13 @@ public class OrderableSyncHelper implements BaseSyncHelper {
 
     public void setActionService(ActionService actionService) {
         this.actionService = actionService;
+    }
+
+    public OrderableRepository getOrderableRepository() {
+        return orderableRepository;
+    }
+
+    public void setOrderableRepository(OrderableRepository orderableRepository) {
+        this.orderableRepository = orderableRepository;
     }
 }

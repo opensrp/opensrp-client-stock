@@ -27,7 +27,7 @@ import static org.smartregister.stock.openlmis.util.Utils.makePostRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class OpenLMISStockSyncHelper implements BaseSyncHelper {
+public class OpenLMISStockSyncHelper extends BaseSyncHelper {
 
     private static final String STOCK_Add_PATH = "rest/stockresource/add/";
     private static final String STOCK_SYNC_PATH = "rest/stockresource/sync/";
@@ -36,24 +36,16 @@ public class OpenLMISStockSyncHelper implements BaseSyncHelper {
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
+    private StockRepository stockRepository;
 
     public OpenLMISStockSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.stockRepository = OpenLMISLibrary.getInstance().getStockRepository();
         this.context = context;
         this.actionService = actionService;
         this.httpAgent = httpAgent;
     }
 
-    @Override
-    public void processIntent() {
-        String response = pullFromServer();
-        if (response == null) {
-            return;
-        }
-        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
-        pushStockToServer();
-    }
-
-    private String pullFromServer() {
+    protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
@@ -86,7 +78,6 @@ public class OpenLMISStockSyncHelper implements BaseSyncHelper {
         if (Stock_arrayList.isEmpty()) {
             return;
         } else {
-            StockRepository stockRepository = OpenLMISLibrary.getInstance().getStockRepository();
             for (int j = 0; j < Stock_arrayList.size(); j++) {
                 Stock fromServer = Stock_arrayList.get(j);
                 List<Stock> existingStock = stockRepository.findUniqueStock(fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
@@ -108,7 +99,6 @@ public class OpenLMISStockSyncHelper implements BaseSyncHelper {
         int limit = 50;
         try {
             while (keepSyncing) {
-                StockRepository stockRepository = OpenLMISLibrary.getInstance().getStockRepository();
                 ArrayList<Stock> stocks = (ArrayList<Stock>) stockRepository.findUnSyncedWithLimit(limit);
                 JSONArray stocksarray = createJsonArrayFromStockArray(stocks);
                 if (stocks.isEmpty()) {
@@ -229,5 +219,13 @@ public class OpenLMISStockSyncHelper implements BaseSyncHelper {
 
     public void setActionService(ActionService actionService) {
         this.actionService = actionService;
+    }
+
+    public StockRepository getStockRepository() {
+        return stockRepository;
+    }
+
+    public void setStockRepository(StockRepository stockRepository) {
+        this.stockRepository = stockRepository;
     }
 }
