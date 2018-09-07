@@ -72,7 +72,7 @@ public class StockListInteractorTest extends BaseUnitTest {
     public void testGetCommodityTypes() {
         List<CommodityType> expected = new ArrayList<>();
         UUID uuid = UUID.randomUUID();
-        expected.add(new CommodityType(uuid.toString(), "BCG", "", null,
+        expected.add(new CommodityType(uuid.toString(), "BCG", null, null,
                 null, System.currentTimeMillis()));
         when(commodityTypeRepository.findAllCommodityTypes()).thenReturn(expected);
         List<CommodityType> commodityTypes = stockListInteractor.getCommodityTypes();
@@ -85,7 +85,7 @@ public class StockListInteractorTest extends BaseUnitTest {
     @Test
     public void testGetTradeItemsEmptyTradeItems() {
 
-        CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "BCG", "", null,
+        CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "BCG", null, null,
                 null, System.currentTimeMillis());
         List<TradeItem> expectedTradeItems = new ArrayList<>();
         when(tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString())).thenReturn(expectedTradeItems);
@@ -97,7 +97,7 @@ public class StockListInteractorTest extends BaseUnitTest {
     @Test
     public void testGetTradeItems() {
 
-        CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "BCG", "", null,
+        CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "BCG", null, null,
                 null, System.currentTimeMillis());
         List<TradeItem> expectedTradeItems = new ArrayList<>();
         TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());

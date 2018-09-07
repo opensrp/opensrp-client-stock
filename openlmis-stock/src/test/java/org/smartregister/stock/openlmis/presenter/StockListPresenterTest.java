@@ -70,8 +70,8 @@ public class StockListPresenterTest extends BaseUnitTest {
     public void testGetCommodityTypes() {
         List<CommodityType> expected = new ArrayList<>();
         String uuid = UUID.randomUUID().toString();
-        expected.add(new CommodityType(uuid, "BCG", "", null, null, System.currentTimeMillis()));
-        expected.add(new CommodityType(UUID.randomUUID().toString(), "OPV", "", null, null, System.currentTimeMillis()));
+        expected.add(new CommodityType(uuid, "BCG", null, null, null, System.currentTimeMillis()));
+        expected.add(new CommodityType(UUID.randomUUID().toString(), "OPV", null, null, null, System.currentTimeMillis()));
 
         when(stockListInteractor.getCommodityTypes()).thenReturn(expected);
         List<CommodityType> commodityTypes = stockListPresenter.getCommodityTypes();
@@ -93,7 +93,7 @@ public class StockListPresenterTest extends BaseUnitTest {
         tradeItem.setCommodityTypeId("305730154758");
         expected.add(new TradeItemWrapper(tradeItem));
 
-        CommodityType commodityType = new CommodityType(uuid.toString(), "BCG", "",
+        CommodityType commodityType = new CommodityType(uuid.toString(), "BCG", null,
                 null, null, System.currentTimeMillis());
         when(stockListInteractor.getTradeItems(commodityType)).thenReturn(expected);
 

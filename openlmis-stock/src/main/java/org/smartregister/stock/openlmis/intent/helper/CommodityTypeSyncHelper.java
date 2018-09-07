@@ -29,10 +29,11 @@ public class CommodityTypeSyncHelper extends BaseSyncHelper {
     private static final String LOT_SYNC_URL = "rest/commodity-types/sync";
     private HTTPAgent httpAgent;
     private ActionService actionService;
-    private CommodityTypeRepository commodityTypeRepository = OpenLMISLibrary.getInstance().getCommodityTypeRepository();
+    private CommodityTypeRepository commodityTypeRepository;
     private TradeItemRepository tradeItemRepository;
 
     public CommodityTypeSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.commodityTypeRepository = OpenLMISLibrary.getInstance().getCommodityTypeRepository();
         this.tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
         this.context = context;
         this.actionService = actionService;

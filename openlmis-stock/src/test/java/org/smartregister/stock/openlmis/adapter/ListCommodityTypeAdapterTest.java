@@ -46,14 +46,14 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
     private ListCommodityTypeAdapter listCommodityTypeAdapter;
 
     private CommodityType bcGCommodityType = new CommodityType(UUID.randomUUID().toString(), "BCG",
-            "", null, null, System.currentTimeMillis());
+            null, null, null, System.currentTimeMillis());
 
 
     @Before
     public void setUp() {
         List<CommodityType> expected = new ArrayList<>();
         expected.add(bcGCommodityType);
-        expected.add(new CommodityType(UUID.randomUUID().toString(), "OPV", "", null, null, System.currentTimeMillis()));
+        expected.add(new CommodityType(UUID.randomUUID().toString(), "OPV", null, null, null, System.currentTimeMillis()));
 
         when(stockListPresenter.getCommodityTypes()).thenReturn(expected);
 
