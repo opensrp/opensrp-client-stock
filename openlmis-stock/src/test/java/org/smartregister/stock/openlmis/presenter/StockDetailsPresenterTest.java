@@ -57,7 +57,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
     private StockDetailsInteractor stockDetailsInteractor;
 
     @Captor
-    ArgumentCaptor<Stock> argumentCaptor;
+    private ArgumentCaptor<Stock> argumentCaptor;
 
     private StockDetailsPresenter stockDetailsPresenter;
 
@@ -132,11 +132,11 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
         List<Stock> expected = new ArrayList<>();
         long now = System.currentTimeMillis();
         String tradeItemId = UUID.randomUUID().toString();
-        Stock stock = new Stock(null, Stock.received, "tester11", 50, now,
+        Stock stock = new Stock(null, received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
         expected.add(stock);
 
-        stock = new Stock(null, Stock.issued, "tester11", -12, now,
+        stock = new Stock(null, issued, "tester11", -12, now,
                 "HO", "unsynched", now, tradeItemId);
         expected.add(stock);
 
@@ -177,18 +177,18 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
         List<Stock> stockList = new ArrayList<>();
         long now = System.currentTimeMillis();
 
-        Stock stock = new Stock(1l, Stock.received, "tester11", 50, now,
+        Stock stock = new Stock(1l, received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
         stock.setLotId(lotId);
         stockList.add(stock);
 
-        stock = new Stock(2l, Stock.issued, "tester11", -12, now,
+        stock = new Stock(2l, issued, "tester11", -12, now,
                 "HO", "unsynched", now, tradeItemId);
         stock.setLotId(lotId);
         stockList.add(stock);
 
 
-        stock = new Stock(3l, Stock.loss_adjustment, "tester11", -2, now,
+        stock = new Stock(3l, loss_adjustment, "tester11", -2, now,
                 "HO", "unsynched", now, tradeItemId);
         stock.setLotId(lot2Id);
         stockList.add(stock);
