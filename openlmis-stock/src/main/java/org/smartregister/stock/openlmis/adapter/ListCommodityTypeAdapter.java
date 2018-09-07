@@ -36,6 +36,11 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     }
 
+    public void filterCommodityTypes(String commodityTypeName) {
+        commodityTypes = stockListPresenter.getCommodityTypesByName(commodityTypeName);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public CommodityTypeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

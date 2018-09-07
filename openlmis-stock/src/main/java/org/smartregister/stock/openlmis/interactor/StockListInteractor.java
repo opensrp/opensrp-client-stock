@@ -79,4 +79,7 @@ public class StockListInteractor {
     }
 
 
+    public List<CommodityType> getCommodityTypesByName(String commodityTypeName) {
+        return commodityTypeRepository.findCommodityTypesByName( commodityTypeName);
+    }
 }

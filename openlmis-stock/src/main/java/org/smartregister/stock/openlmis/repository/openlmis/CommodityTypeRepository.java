@@ -44,12 +44,18 @@ public class CommodityTypeRepository extends BaseRepository {
                     + DATE_UPDATED + " INTEGER"
                     + ")";
 
+    private static final String CREATE_COMMODITY_NAME_INDEX =
+
+            "CREATE INDEX " + COMMODITY_TYPE_TABLE + "_" + NAME
+                    + "_INDEX ON " + COMMODITY_TYPE_TABLE + "(" + NAME + ")";
+
     public CommodityTypeRepository(Repository repository) {
         super(repository);
     }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_COMMODITY_TYPE_TABLE);
+        database.execSQL(CREATE_COMMODITY_NAME_INDEX);
     }
 
     public void addOrUpdate(CommodityType commodityType) {
@@ -68,6 +74,7 @@ public class CommodityTypeRepository extends BaseRepository {
             String query = String.format(INSERT_OR_REPLACE, COMMODITY_TYPE_TABLE);
             query += "(" + StringUtils.repeat("?", ",", COMMODITY_TYPE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(commodityType));
+
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -113,15 +120,31 @@ public class CommodityTypeRepository extends BaseRepository {
         return commodityTypes;
     }
 
+
+    public List<CommodityType> findCommodityTypesByName(String commodityTypeName) {
+
+        List<CommodityType> commodityTypes = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            String query = String.format("SELECT * FROM %s WHERE %s LIKE ?", COMMODITY_TYPE_TABLE, NAME);
+            cursor = getReadableDatabase().rawQuery(query, new String[]{"%" + commodityTypeName + "%"});
+            commodityTypes = readCommodityTypes(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return commodityTypes;
+    }
+
     private List<CommodityType> readCommodityTypes(Cursor cursor) {
 
         List<CommodityType> commodityTypes = new ArrayList<>();
         try {
-            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    commodityTypes.add(createCommodityType(cursor));
-                    cursor.moveToNext();
-                }
+            while (cursor.moveToNext()) {
+                commodityTypes.add(createCommodityType(cursor));
             }
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
