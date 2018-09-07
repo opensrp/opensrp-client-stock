@@ -146,13 +146,11 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     @Override
     public void refreshStockDetails(int totalStockAdjustment) {
+        tradeItemDto.setTotalStock(tradeItemDto.getTotalStock() + totalStockAdjustment);
         lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
-        tradeItemDto.setTotalStock(tradeItemDto.getTotalStock() + totalStockAdjustment);
         dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
                 tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
-
-
     }
 
     @Override
