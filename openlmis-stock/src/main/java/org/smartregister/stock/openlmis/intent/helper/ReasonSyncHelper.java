@@ -1,22 +1,18 @@
-package org.smartregister.stock.openlmis.intent;
+package org.smartregister.stock.openlmis.intent.helper;
 
-import android.app.IntentService;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.smartregister.domain.Response;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
-import org.smartregister.stock.util.NetworkUtils;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -27,34 +23,29 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class ReasonSyncIntentService extends IntentService implements SyncIntentService {
+public class ReasonSyncHelper implements BaseSyncHelper {
 
     private static final String REASON_SYNC_URL = "rest/reasons/sync";
     private Context context;
-    private HTTPAgent httpAgent;
     private ActionService actionService;
+    private HTTPAgent httpAgent;
 
-    public ReasonSyncIntentService() {
-        super("ReasonSyncIntentService");
+    public ReasonSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.context = context;
+        this.actionService = actionService;
+        this.httpAgent = httpAgent;
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        context = getBaseContext();
-        actionService = OpenLMISLibrary.getInstance().getContext().actionService();
-        httpAgent = OpenLMISLibrary.getInstance().getContext().getHttpAgent();
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent workIntent) {
-        if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer();
+    public void processIntent() {
+        String response = pullFromServer();
+        if (response == null) {
+            return;
         }
+        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
     }
 
-    @Override
-    public void pullFromServer() {
+    private String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -69,29 +60,60 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
                 timestampStr
         );
         // TODO: make baseUrl configurable
+        String jsonPayload = null;
         try {
-            String jsonPayload = makeGetRequest(uri);
+            jsonPayload = makeGetRequest(uri);
             if (jsonPayload == null) {
                 logError("Reasons pull failed.");
-                return;
             }
             logInfo("Reasons successfully pulled!");
-            // store reasons
-            Long highestTimeStamp = 0L;
-            List<Reason> reasons = new Gson().fromJson(jsonPayload, new TypeToken<List<Reason>>(){}.getType());
-            ReasonRepository repository = OpenLMISLibrary.getInstance().getReasonRepository();
-            for (Reason reason : reasons) {
-                repository.addOrUpdate(reason);
-                if (reason.getServerVersion() > highestTimeStamp) {
-                    highestTimeStamp = reason.getServerVersion();
-                }
-            }
-            // save highest server version
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
-            editor.commit();
         } catch (Exception e) {
             logError(e.getMessage());
+            return jsonPayload;
         }
+        return jsonPayload;
+    }
+
+    @Override
+    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+
+        // store reasons
+        Long highestTimeStamp = 0L;
+        List<Reason> reasons = new Gson().fromJson(jsonPayload, new TypeToken<List<Reason>>(){}.getType());
+        ReasonRepository repository = OpenLMISLibrary.getInstance().getReasonRepository();
+        for (Reason reason : reasons) {
+            repository.addOrUpdate(reason);
+            if (reason.getServerVersion() > highestTimeStamp) {
+                highestTimeStamp = reason.getServerVersion();
+            }
+        }
+        // save highest server version
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+        editor.commit();
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public ActionService getActionService() {
+        return actionService;
+    }
+
+    public void setActionService(ActionService actionService) {
+        this.actionService = actionService;
+    }
+
+    public HTTPAgent getHttpAgent() {
+        return httpAgent;
+    }
+
+    public void setHttpAgent(HTTPAgent httpAgent) {
+        this.httpAgent = httpAgent;
     }
 }

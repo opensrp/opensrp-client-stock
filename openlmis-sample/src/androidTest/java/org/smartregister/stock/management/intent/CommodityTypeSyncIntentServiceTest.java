@@ -8,11 +8,9 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.smartregister.stock.management.application.Application;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
-import org.smartregister.stock.openlmis.intent.CommodityTypeSyncIntentService;
+import org.smartregister.stock.openlmis.intent.service.CommodityTypeSyncIntentService;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.util.Utils;
-
-import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
@@ -21,7 +19,6 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.smartregister.stock.management.util.ServiceUtils.startService;
 import static org.smartregister.stock.management.util.ServiceUtils.stopService;
-import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
 
 public class CommodityTypeSyncIntentServiceTest extends BaseSyncIntentServiceTest {
 

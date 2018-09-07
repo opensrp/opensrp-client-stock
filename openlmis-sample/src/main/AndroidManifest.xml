@@ -18,25 +18,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="org.smartregister.stock.openlmis.intent.LotSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.LotSyncIntentService"
             android:exported="false"/>
-        <service android:name="org.smartregister.stock.openlmis.intent.TradeItemSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.TradeItemSyncIntentService"
             android:exported="false"/>
-        <service android:name="org.smartregister.stock.openlmis.intent.ProgramSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.ProgramSyncIntentService"
             android:exported="false"/>
-        <service android:name="org.smartregister.stock.openlmis.intent.ProgramOrderableSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.ProgramOrderableSyncIntentService"
             android:exported="false"/>
-        <service android:name="org.smartregister.stock.openlmis.intent.ReasonSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.ReasonSyncIntentService"
             android:exported="false"/>
-        <service android:name="org.smartregister.stock.openlmis.intent.CommodityTypeSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.CommodityTypeSyncIntentService"
             android:exported="false"/>
-        <service android:name="org.smartregister.stock.openlmis.intent.OrderableSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.OrderableSyncIntentService"
             android:exported="false"/>
-        <service android:name="org.smartregister.stock.openlmis.intent.TradeItemClassificationSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.TradeItemClassificationSyncIntentService"
             android:exported="false"/>
-        <service android:name="org.smartregister.stock.openlmis.intent.DispensableSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.DispensableSyncIntentService"
             android:exported="false"/>
-        <service android:name="org.smartregister.stock.openlmis.intent.OpenLMISStockSyncIntentService"
+        <service android:name="org.smartregister.stock.openlmis.intent.service.OpenLMISStockSyncIntentService"
             android:exported="false"/>
         <activity
             android:name="org.smartregister.stock.openlmis.view.StockDetailsActivity"

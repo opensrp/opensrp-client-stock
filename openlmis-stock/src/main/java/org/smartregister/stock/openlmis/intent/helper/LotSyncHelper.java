@@ -1,22 +1,18 @@
-package org.smartregister.stock.openlmis.intent;
+package org.smartregister.stock.openlmis.intent.helper;
 
-import android.app.IntentService;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.smartregister.domain.Response;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
-import org.smartregister.stock.util.NetworkUtils;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -27,34 +23,29 @@ import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class LotSyncIntentService extends IntentService implements SyncIntentService  {
+public class LotSyncHelper implements BaseSyncHelper {
 
-    private static final String LOT_SYNC_URL = "rest/lots/sync";
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
+    private static final String LOT_SYNC_URL = "rest/lots/sync";
 
-    public LotSyncIntentService() {
-        super("LotSyncIntentService");
+    public LotSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.context = context;
+        this.actionService = actionService;
+        this.httpAgent = httpAgent;
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        context = getBaseContext();
-        actionService =OpenLMISLibrary.getInstance().getContext().actionService();
-        httpAgent = OpenLMISLibrary.getInstance().getContext().getHttpAgent();
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent workIntent) {
-        if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer();
+    public void processIntent() {
+        String response = pullFromServer();
+        if (response == null) {
+            return;
         }
+        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
     }
 
-    @Override
-    public void pullFromServer() {
+    private String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -69,29 +60,36 @@ public class LotSyncIntentService extends IntentService implements SyncIntentSer
                 timestampStr
         );
         // TODO: make baseUrl configurable
+        String jsonPayload = null;
         try {
-            String jsonPayload = makeGetRequest(uri);
+            jsonPayload = makeGetRequest(uri);
             if (jsonPayload == null) {
                 logError("Lots pull failed.");
-                return;
             }
             logInfo("Lots pulled successfully!");
-            // store lots
-            Long highestTimeStamp = 0L;
-            List<Lot> lots = new Gson().fromJson(jsonPayload, new TypeToken<List<Lot>>(){}.getType());
-            LotRepository repository = OpenLMISLibrary.getInstance().getLotRepository();
-            for (Lot lot : lots) {
-                repository.addOrUpdate(lot);
-                if (lot.getServerVersion() > highestTimeStamp) {
-                    highestTimeStamp = lot.getServerVersion();
-                }
-            }
-            // save highest server version
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
-            editor.commit();
         } catch (Exception e) {
             logError(e.getMessage());
+            return jsonPayload;
         }
+        return jsonPayload;
+    }
+
+    @Override
+    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+
+        // store lots
+        Long highestTimeStamp = 0L;
+        List<Lot> lots = new Gson().fromJson(jsonPayload, new TypeToken<List<Lot>>(){}.getType());
+        LotRepository repository = OpenLMISLibrary.getInstance().getLotRepository();
+        for (Lot lot : lots) {
+            repository.addOrUpdate(lot);
+            if (lot.getServerVersion() > highestTimeStamp) {
+                highestTimeStamp = lot.getServerVersion();
+            }
+        }
+        // save highest server version
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+        editor.commit();
     }
 }

@@ -1,8 +1,6 @@
-package org.smartregister.stock.openlmis.intent;
+package org.smartregister.stock.openlmis.intent.helper;
 
-import android.app.IntentService;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -16,7 +14,6 @@ import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.repository.StockRepository;
-import org.smartregister.stock.util.NetworkUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -30,37 +27,34 @@ import static org.smartregister.stock.openlmis.util.Utils.makePostRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-public class OpenLMISStockSyncIntentService extends IntentService {
+public class OpenLMISStockSyncHelper implements BaseSyncHelper {
+
     private static final String STOCK_Add_PATH = "rest/stockresource/add/";
     private static final String STOCK_SYNC_PATH = "rest/stockresource/sync/";
+    private static final String LAST_STOCK_SYNC = "last_stock_sync";
 
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
 
-    public OpenLMISStockSyncIntentService() {
-        super("OpenLMISStockSyncIntentService");
+    public OpenLMISStockSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
+        this.context = context;
+        this.actionService = actionService;
+        this.httpAgent = httpAgent;
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        context = getBaseContext();
-        actionService = OpenLMISLibrary.getInstance().getContext().actionService();
-        httpAgent = OpenLMISLibrary.getInstance().getContext().getHttpAgent();
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent workIntent) {
-        if (NetworkUtils.isNetworkAvailable(context)) {
-            pushStockToServer();
-            pullStockFromServer();
+    public void processIntent() {
+        String response = pullFromServer();
+        if (response == null) {
+            return;
         }
+        saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
+        pushStockToServer();
     }
 
-    private void pullStockFromServer() {
+    private String pullFromServer() {
 
-        final String LAST_STOCK_SYNC = "last_stock_sync";
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
         String anmId = allSharedPreferences.fetchRegisteredANM();
@@ -76,9 +70,14 @@ public class OpenLMISStockSyncIntentService extends IntentService {
         String jsonPayload = makeGetRequest(uri);
         if (jsonPayload == null) {
             logError("Stock pull failed.");
-            return;
         }
         logInfo("Stock pulled successfully!");
+        return jsonPayload;
+    }
+
+    @Override
+    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+
         ArrayList<Stock> Stock_arrayList = getStockFromPayload(jsonPayload);
         Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
         SharedPreferences.Editor editor = preferences.edit();
@@ -100,6 +99,41 @@ public class OpenLMISStockSyncIntentService extends IntentService {
                 stockRepository.addOrUpdate(fromServer);
             }
 
+        }
+    }
+
+    private void pushStockToServer() {
+
+        boolean keepSyncing = true;
+        int limit = 50;
+        try {
+            while (keepSyncing) {
+                StockRepository stockRepository = OpenLMISLibrary.getInstance().getStockRepository();
+                ArrayList<Stock> stocks = (ArrayList<Stock>) stockRepository.findUnSyncedWithLimit(limit);
+                JSONArray stocksarray = createJsonArrayFromStockArray(stocks);
+                if (stocks.isEmpty()) {
+                    return;
+                }
+                // create request body
+                JSONObject request = new JSONObject();
+                request.put(context.getString(org.smartregister.stock.R.string.stocks_key), stocksarray);
+
+                String jsonPayload = request.toString();
+                String response = makePostRequest(
+                        MessageFormat.format(
+                                "{0}/{1}",
+                                BASE_URL,
+                                STOCK_Add_PATH),
+                        jsonPayload);
+                if (response == null) {
+                    Log.e(getClass().getName(), "Stock push sync failed.");
+                    return;
+                }
+                stockRepository.markEventsAsSynced(stocks);
+                Log.i(getClass().getName(), "Stock successfully pushed.");
+            }
+        } catch (JSONException e) {
+            Log.e(getClass().getName(), e.getMessage());
         }
     }
 
@@ -151,41 +185,6 @@ public class OpenLMISStockSyncIntentService extends IntentService {
         return Stock_arrayList;
     }
 
-    private void pushStockToServer() {
-
-        boolean keepSyncing = true;
-        int limit = 50;
-        try {
-            while (keepSyncing) {
-                StockRepository stockRepository = OpenLMISLibrary.getInstance().getStockRepository();
-                ArrayList<Stock> stocks = (ArrayList<Stock>) stockRepository.findUnSyncedWithLimit(limit);
-                JSONArray stocksarray = createJsonArrayFromStockArray(stocks);
-                if (stocks.isEmpty()) {
-                    return;
-                }
-                // create request body
-                JSONObject request = new JSONObject();
-                request.put(context.getString(org.smartregister.stock.R.string.stocks_key), stocksarray);
-
-                String jsonPayload = request.toString();
-                String response = makePostRequest(
-                        MessageFormat.format(
-                                "{0}/{1}",
-                                BASE_URL,
-                                STOCK_Add_PATH),
-                                jsonPayload);
-                if (response == null) {
-                    Log.e(getClass().getName(), "Stock push sync failed.");
-                    return;
-                }
-                stockRepository.markEventsAsSynced(stocks);
-                Log.i(getClass().getName(), "Stock successfully pushed.");
-            }
-        } catch (JSONException e) {
-            Log.e(getClass().getName(), e.getMessage());
-        }
-    }
-
     private JSONArray createJsonArrayFromStockArray(ArrayList<Stock> stocks) {
         JSONArray array = new JSONArray();
         for (int i = 0; i < stocks.size(); i++) {
@@ -206,5 +205,29 @@ public class OpenLMISStockSyncIntentService extends IntentService {
             }
         }
         return array;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public HTTPAgent getHttpAgent() {
+        return httpAgent;
+    }
+
+    public void setHttpAgent(HTTPAgent httpAgent) {
+        this.httpAgent = httpAgent;
+    }
+
+    public ActionService getActionService() {
+        return actionService;
+    }
+
+    public void setActionService(ActionService actionService) {
+        this.actionService = actionService;
     }
 }

@@ -8,11 +8,9 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.smartregister.stock.management.application.Application;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
-import org.smartregister.stock.openlmis.intent.DispensableSyncIntentService;
+import org.smartregister.stock.openlmis.intent.service.DispensableSyncIntentService;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
 import org.smartregister.stock.openlmis.util.Utils;
-
-import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;

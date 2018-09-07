@@ -8,7 +8,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.smartregister.stock.management.application.Application;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
-import org.smartregister.stock.openlmis.intent.ReasonSyncIntentService;
+import org.smartregister.stock.openlmis.intent.service.ReasonSyncIntentService;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.util.Utils;
 
