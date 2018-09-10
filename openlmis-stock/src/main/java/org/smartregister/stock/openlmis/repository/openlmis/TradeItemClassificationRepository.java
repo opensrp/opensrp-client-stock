@@ -126,8 +126,8 @@ public class TradeItemClassificationRepository extends BaseRepository {
     private Object[] createQueryValues(TradeItemClassification tradeItemClassification) {
 
         Object[] values = new Object[] {
-            tradeItemClassification.getId().toString(),
-            tradeItemClassification.getTradeItem().getId().toString(),
+            tradeItemClassification.getId(),
+            tradeItemClassification.getTradeItem().getId(),
             tradeItemClassification.getClassificationSystem(),
             tradeItemClassification.getClassificationId(),
             tradeItemClassification.getDateUpdated()

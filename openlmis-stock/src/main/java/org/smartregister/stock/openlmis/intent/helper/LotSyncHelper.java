@@ -25,7 +25,6 @@ import static org.smartregister.util.Log.logInfo;
 
 public class LotSyncHelper extends BaseSyncHelper {
 
-    private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private LotRepository repository;

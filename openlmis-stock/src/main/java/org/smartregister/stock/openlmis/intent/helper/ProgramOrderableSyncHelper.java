@@ -26,7 +26,6 @@ import static org.smartregister.util.Log.logInfo;
 public class ProgramOrderableSyncHelper extends BaseSyncHelper {
 
     private static final String LOT_SYNC_URL = "rest/program-orderables/sync";
-    private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private ProgramOrderableRepository repository;

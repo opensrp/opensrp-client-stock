@@ -26,7 +26,6 @@ import static org.smartregister.util.Log.logInfo;
 public class TradeItemClassificationSyncHelper extends BaseSyncHelper {
 
     private static final String TRADE_ITEM_CLASSIFICATION_SYNC_URL = "rest/trade-item-classifications/sync";
-    private Context context;
     private ActionService actionService;
     private HTTPAgent httpAgent;
     private TradeItemClassificationRepository repository;

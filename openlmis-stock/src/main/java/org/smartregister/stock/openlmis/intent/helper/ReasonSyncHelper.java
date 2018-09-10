@@ -26,7 +26,6 @@ import static org.smartregister.util.Log.logInfo;
 public class ReasonSyncHelper extends BaseSyncHelper {
 
     private static final String REASON_SYNC_URL = "rest/reasons/sync";
-    private Context context;
     private ActionService actionService;
     private HTTPAgent httpAgent;
     private ReasonRepository repository;

@@ -33,7 +33,6 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
     private static final String STOCK_SYNC_PATH = "rest/stockresource/sync/";
     private static final String LAST_STOCK_SYNC = "last_stock_sync";
 
-    private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private StockRepository stockRepository;

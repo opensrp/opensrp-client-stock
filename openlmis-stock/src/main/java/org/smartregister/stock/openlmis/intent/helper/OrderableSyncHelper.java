@@ -27,7 +27,6 @@ import static org.smartregister.util.Log.logInfo;
 public class OrderableSyncHelper extends BaseSyncHelper {
 
     private static final String TRADE_ITEM_SYNC_URL = "rest/orderables/sync";
-    private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private OrderableRepository orderableRepository;

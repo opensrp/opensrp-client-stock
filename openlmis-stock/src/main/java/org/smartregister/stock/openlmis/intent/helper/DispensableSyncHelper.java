@@ -27,7 +27,6 @@ import static org.smartregister.util.Log.logInfo;
 public class DispensableSyncHelper extends BaseSyncHelper {
 
     private static final String DISPENSABLE_SYNC_URL = "rest/dispensables/sync";
-    private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private DispensableRepository repository;
