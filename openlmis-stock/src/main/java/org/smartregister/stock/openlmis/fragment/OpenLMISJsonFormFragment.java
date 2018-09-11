@@ -19,6 +19,7 @@ import org.smartregister.stock.openlmis.presenter.OpenLMISJsonFormFragmentPresen
 import org.smartregister.stock.util.Constants;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_ENABLED;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_LABEL;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NO_PADDING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS;
@@ -95,8 +96,10 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         } else if (step.optString(NEXT_TYPE).equalsIgnoreCase(SUBMIT)) {
             nextButton.setTag(R.id.submit, true);
             nextButton.setVisibility(View.VISIBLE);
-            nextButton.setEnabled(true);
-            nextButton.setTextColor(getContext().getResources().getColor(R.color.white));
+            if (step.optBoolean(NEXT_ENABLED)) {
+                nextButton.setEnabled(true);
+                nextButton.setTextColor(getContext().getResources().getColor(R.color.white));
+            }
         }
         if (step.has(NEXT_LABEL))
             nextButton.setText(step.optString(NEXT_LABEL));

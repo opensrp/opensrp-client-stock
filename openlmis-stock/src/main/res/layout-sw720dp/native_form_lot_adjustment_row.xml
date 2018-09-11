@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:boxBackgroundColor="@color/edit_text_background"
         app:layout_constraintEnd_toStartOf="@id/stock_on_hand"
-        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintHorizontal_weight="5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -37,7 +37,7 @@
         android:visibility="invisible"
         app:boxBackgroundColor="@color/transparent"
         app:layout_constraintEnd_toStartOf="@id/lot_quantity"
-        app:layout_constraintHorizontal_weight="1.6"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@id/lot_code"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -60,7 +60,7 @@
         android:visibility="invisible"
         app:boxBackgroundColor="@color/edit_text_background"
         app:layout_constraintEnd_toStartOf="@id/subtract_stock"
-        app:layout_constraintHorizontal_weight="1.6"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@id/stock_on_hand"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -138,7 +138,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:boxBackgroundColor="@color/edit_text_background"
-        app:layout_constraintEnd_toEndOf="@id/add_stock"
+        app:layout_constraintEnd_toEndOf="@id/lot_quantity"
         app:layout_constraintStart_toStartOf="@id/lot_quantity"
         app:layout_constraintTop_toBottomOf="@id/lot_quantity">
 
