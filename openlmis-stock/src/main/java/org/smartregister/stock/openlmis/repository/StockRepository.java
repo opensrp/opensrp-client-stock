@@ -10,11 +10,10 @@ import org.joda.time.LocalDate;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.Stock;
+import org.smartregister.stock.openlmis.dto.LotDetailsDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.ID;
@@ -118,8 +117,8 @@ public class StockRepository extends BaseRepository {
 
 
     public List<Stock> getStockByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT * FROM %s WHERE %s=? ORDER BY %s desc", stock_TABLE_NAME
-                , STOCK_TYPE_ID, DATE_CREATED);
+        String query = String.format("SELECT * FROM %s WHERE %s=? ORDER BY %s desc, %s desc", stock_TABLE_NAME
+                , STOCK_TYPE_ID, DATE_CREATED, DATE_UPDATED);
         Cursor cursor = null;
         List<Stock> stockList = new ArrayList<>();
         try {
@@ -138,18 +137,18 @@ public class StockRepository extends BaseRepository {
     }
 
 
-    public Map<Long, Integer> getNumberOfLotsByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT sum(%s),%s FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
-                        " WHERE %s=? AND %s > ? GROUP BY l.%s ",
-                VALUE, EXPIRATION_DATE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID, TRADE_ITEM_ID, EXPIRATION_DATE, ID);
+    public List<LotDetailsDto> getNumberOfLotsByTradeItem(String tradeItemId) {
+        String query = String.format("SELECT l.%s, min(%s), sum(%s) FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
+                        " WHERE %s=? AND %s >= ? GROUP BY l.%s ORDER BY 3 ",
+                ID, EXPIRATION_DATE, VALUE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID, TRADE_ITEM_ID, EXPIRATION_DATE, ID);
         Cursor cursor = null;
-        Map<Long, Integer> lots = new TreeMap<>();
+        List<LotDetailsDto> lots = new ArrayList<>();
         try {
             cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId,
                     String.valueOf(new LocalDate().toDate().getTime())});
 
             while (cursor.moveToNext()) {
-                lots.put(cursor.getLong(1), cursor.getInt(0));
+                lots.add(new LotDetailsDto(cursor.getString(0), cursor.getLong(1), cursor.getInt(2)));
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);

@@ -41,4 +41,16 @@
     <string name="issue_to">Issue To</string>
     <string name="reason">Reason</string>
     <string name="stock_issued_more_balance">Stock being Issued %1d is more than Stock on Hand %1d</string>
+    <string name="physical_count">Physical count</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="difference">Difference</string>
+    <string name="adjusted_lots_formatter">%1d %2s adjusted</string>
+    <string name="quantity_to_large">Quantity is too large</string>
+
+    <plurals name="adjusted_lots">
+        <item quantity="one">%1d lot is adjusted</item>
+        <item quantity="other">%1d lots are adjusted</item>
+    </plurals>
+
 </resources>

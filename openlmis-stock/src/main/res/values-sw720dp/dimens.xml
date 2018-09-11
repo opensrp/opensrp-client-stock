@@ -8,4 +8,7 @@
     <dimen name="cancel_padding">10dp</dimen>
 
     <dimen name="review_margin">24dp</dimen>
+
+    <dimen name="add_subtract_padding">16dp</dimen>
+    <dimen name="add_subtract_margin" >16dp</dimen>
 </resources>

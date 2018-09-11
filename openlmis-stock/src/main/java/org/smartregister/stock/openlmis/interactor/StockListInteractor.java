@@ -7,6 +7,7 @@ import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
+import org.smartregister.stock.openlmis.dto.LotDetailsDto;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
@@ -15,7 +16,6 @@ import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_MONTHS_WARNING;
 
@@ -62,14 +62,14 @@ public class StockListInteractor {
         List<TradeItemWrapper> tradeItemWrappers = new ArrayList<>();
         for (TradeItem tradeItem : tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString())) {
             TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
-            Map<Long, Integer> lots = stockRepository.getNumberOfLotsByTradeItem(tradeItem.getId());
+            List<LotDetailsDto> lots = stockRepository.getNumberOfLotsByTradeItem(tradeItem.getId());
             int totalStock = 0;
-            for (int stock : lots.values())
-                totalStock += stock;
+            for (LotDetailsDto lotDetailsDto : lots)
+                totalStock += lotDetailsDto.getTotalStock();
             tradeItemWrapper.setTotalStock(totalStock);
             tradeItemWrapper.setNumberOfLots(lots.size());
             if (!lots.isEmpty()) {
-                LocalDate maxExpiringDate = new LocalDate(lots.keySet().iterator().next());
+                LocalDate maxExpiringDate = new LocalDate(lots.iterator().next().getMinimumExpiryDate());
                 tradeItemWrapper.setHasLotExpiring(new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING).isAfter(maxExpiringDate));
             }
             tradeItemWrappers.add(tradeItemWrapper);

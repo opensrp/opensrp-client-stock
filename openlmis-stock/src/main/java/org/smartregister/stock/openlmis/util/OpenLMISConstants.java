@@ -30,6 +30,8 @@ public interface OpenLMISConstants {
 
         String NEXT_LABEL = "next_label";
 
+        String NEXT_ENABLED = "next_enabled";
+
         String SUBMIT = "submit";
 
         String NO_PADDING = "no_padding";
@@ -40,5 +42,7 @@ public interface OpenLMISConstants {
         String INDIVIDUAL_ISSUED_FORM = "individual_issued_form";
 
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
+
+        String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
     }
 }

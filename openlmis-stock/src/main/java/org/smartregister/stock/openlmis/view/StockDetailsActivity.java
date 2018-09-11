@@ -31,6 +31,7 @@ import org.smartregister.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ADJUST_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_RECEIVED_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
@@ -98,6 +99,7 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         findViewById(R.id.number_of_lots).setOnClickListener(this);
         findViewById(R.id.issued).setOnClickListener(this);
         findViewById(R.id.received).setOnClickListener(this);
+        findViewById(R.id.loss_adj).setOnClickListener(this);
     }
 
     @Override
@@ -118,6 +120,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
             startJsonForm(INDIVIDUAL_ISSUED_FORM);
         } else if (view.getId() == R.id.received) {
             startJsonForm(INDIVIDUAL_RECEIVED_FORM);
+        } else if (view.getId() == R.id.loss_adj) {
+            startJsonForm(INDIVIDUAL_ADJUST_FORM);
         }
     }
 
@@ -142,13 +146,11 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
 
     @Override
     public void refreshStockDetails(int totalStockAdjustment) {
+        tradeItemDto.setTotalStock(tradeItemDto.getTotalStock() + totalStockAdjustment);
         lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
-        tradeItemDto.setTotalStock(tradeItemDto.getTotalStock() + totalStockAdjustment);
         dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
                 tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
-
-
     }
 
     @Override

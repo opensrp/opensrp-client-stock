@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,9 +31,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.smartregister.stock.domain.Stock.issued;
+import static org.smartregister.stock.domain.Stock.loss_adjustment;
 import static org.smartregister.stock.domain.Stock.received;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
+import static org.smartregister.stock.openlmis.widget.ReviewFactory.OTHER;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STEP2;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STOCK_LOTS;
 import static org.smartregister.util.JsonFormUtils.FIELDS;
@@ -51,6 +52,8 @@ public class StockDetailsPresenter {
     private StockDetailsView stockDetailsView;
 
     private int totalStockAdjustment;
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 
 
     public StockDetailsPresenter(StockDetailsView stockDetailsView) {
@@ -120,6 +123,8 @@ public class StockDetailsPresenter {
                 processed = processStockIssued(jsonForm, provider);
             } else if (FormTitle.contains("Receive")) {
                 processed = processStockReceived(jsonForm, provider);
+            } else if (FormTitle.contains("adjustment")) {
+                processed = processStockAdjusted(jsonForm, provider);
             }
             if (processed)
                 stockDetailsView.refreshStockDetails(totalStockAdjustment);
@@ -134,15 +139,12 @@ public class StockDetailsPresenter {
 
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Issued");
         String facility = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_To");
-        if (StringUtils.isBlank(facility)) {
-            facility = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_TO_Other");
-        }
         String reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason");
-        if (StringUtils.isBlank(facility)) {
+        if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason_Other");
         }
 
-        return processStock(jsonString, provider, date, facility, reason, issued);
+        return processStock(STEP2, jsonString, provider, date, facility, reason, issued);
     }
 
     private boolean processStockReceived(JSONObject jsonString, String provider) throws JSONException {
@@ -150,21 +152,37 @@ public class StockDetailsPresenter {
 
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Received");
         String facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From");
-        if (StringUtils.isBlank(facility)) {
-            facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From_Other");
-        }
         String reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason");
-        if (StringUtils.isBlank(facility)) {
+        if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason_Other");
         }
 
-        return processStock(jsonString, provider, date, facility, reason, received);
+        return processStock(STEP2, jsonString, provider, date, facility, reason, received);
 
 
     }
 
-    private boolean processStock(JSONObject jsonString, String provider, String date, String facility, String reason, String transactionType) throws JSONException {
-        JSONArray stepFields = jsonString.getJSONObject(STEP2).getJSONArray(FIELDS);
+    private boolean processStockAdjusted(JSONObject jsonString, String provider) throws JSONException {
+
+        return processStock(STEP1, jsonString, provider, simpleDateFormat.format(new Date()),
+                null, null, loss_adjustment);
+
+    }
+
+    private String extractTradeItemId(JSONArray stepFields) throws JSONException {
+        for (int i = 0; i < stepFields.length(); i++) {
+            JSONObject jsonObject = getJSONObject(stepFields, i);
+            String keyValue = jsonObject.getString(KEY);
+            if (STOCK_LOTS.equals(keyValue)) {
+                return jsonObject.getString(TRADE_ITEM_ID);
+            }
+        }
+        return null;
+    }
+
+    private boolean processStock(String step, JSONObject jsonString, String provider, String date,
+                                 String facility, String reason, String transactionType) throws JSONException {
+        JSONArray stepFields = jsonString.getJSONObject(step).getJSONArray(FIELDS);
 
         String lotsJSON = JsonFormUtils.getFieldValue(stepFields, STOCK_LOTS);
 
@@ -173,17 +191,8 @@ public class StockDetailsPresenter {
 
         List<LotDto> selectedLotDTos = LotFactory.gson.fromJson(lotsJSON, listType);
 
-        String tradeItem = null;
+        String tradeItem = extractTradeItemId(stepFields);
 
-        for (int i = 0; i < stepFields.length(); i++) {
-            JSONObject jsonObject = getJSONObject(stepFields, i);
-            String keyValue = jsonObject.getString(KEY);
-            if (keyValue != null && keyValue.equals(STOCK_LOTS)) {
-                tradeItem = jsonObject.getString(TRADE_ITEM_ID);
-            }
-        }
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
         Date encounterDate;
         try {
             encounterDate = simpleDateFormat.parse(date);
@@ -195,7 +204,7 @@ public class StockDetailsPresenter {
         for (LotDto lot : selectedLotDTos) {
             Stock stock = new Stock(null, transactionType,
                     provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
-                    encounterDate.getTime(), facility, "unsynched",
+                    encounterDate.getTime(), facility == null ? lot.getReason() : facility, "unsynched",
                     System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
