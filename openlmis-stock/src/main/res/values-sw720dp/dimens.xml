@@ -10,4 +10,5 @@
     <dimen name="review_margin">24dp</dimen>
 
     <dimen name="add_subtract_padding">16dp</dimen>
+    <dimen name="add_subtract_margin" >16dp</dimen>
 </resources>

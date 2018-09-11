@@ -49,6 +49,7 @@
   "step1": {
     "title": "[trade_item] loss/adjustment",
     "next_type": "submit",
+    "next_enabled": "false",
     "next_label": "Save",
     "bottom_navigation": "true",
     "no_padding": true,

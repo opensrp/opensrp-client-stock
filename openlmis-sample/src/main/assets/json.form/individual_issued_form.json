@@ -184,6 +184,7 @@
     "bottom_navigation": "true",
     "next_type": "submit",
     "next_label": "Submit",
+    "next_enabled": "true",
     "no_padding": true,
     "fields": [
       {

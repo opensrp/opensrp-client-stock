@@ -204,6 +204,7 @@ public class TestData {
             "    \"bottom_navigation\": \"true\",\n" +
             "    \"next_type\": \"submit\",\n" +
             "    \"next_label\": \"Submit\",\n" +
+            "    \"next_enabled\": \"true\",\n" +
             "    \"no_padding\": true,\n" +
             "    \"fields\": [\n" +
             "      {\n" +
