@@ -23,7 +23,7 @@
     <string name="lot_code_and_expiry">Lot code and expiry date</string>
     <string name="lot_stock_on_hand">Stock on hand</string>
     <string name="status">Status</string>
-    <string name="stock_on_hand_and_expiry">%1s Exp. %2s</string>
+    <string name="lotcode_and_expiry">%1s Exp. %2s</string>
     <string name="date">Date</string>
     <string name="to_from">To/From</string>
     <string name="lot_code">Lot code</string>
@@ -31,4 +31,26 @@
     <string name="balance">Balance</string>
     <string name="stock_balance">%1d %2s, %3d doses</string>
     <string name="stock_adj">Loss/Adj</string>
+    <string name="previous">Previous</string>
+    <string name="review">Review</string>
+    <string name="next">Next</string>
+    <string name="quantity">Quantity</string>
+    <string name="add_lot">Add Lot</string>
+    <string name="issued_dose_formatter">%1d %2s, %3d doses will be issued</string>
+    <string name="items">Items</string>
+    <string name="issue_to">Issue To</string>
+    <string name="reason">Reason</string>
+    <string name="stock_issued_more_balance">Stock being Issued %1d is more than Stock on Hand %1d</string>
+    <string name="physical_count">Physical count</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="difference">Difference</string>
+    <string name="adjusted_lots_formatter">%1d %2s adjusted</string>
+    <string name="quantity_to_large">Quantity is too large</string>
+
+    <plurals name="adjusted_lots">
+        <item quantity="one">%1d lot is adjusted</item>
+        <item quantity="other">%1d lots are adjusted</item>
+    </plurals>
+
 </resources>

@@ -1,5 +1,7 @@
 package org.smartregister.stock.openlmis.view.contract;
 
+import android.content.Context;
+
 /**
  * Created by samuelgithengi on 8/1/18.
  */
@@ -12,4 +14,8 @@ public interface StockDetailsView {
     void collapseLots();
 
     void expandLots();
+
+    Context getContext();
+
+    void refreshStockDetails(int totalStockAdjustment);
 }

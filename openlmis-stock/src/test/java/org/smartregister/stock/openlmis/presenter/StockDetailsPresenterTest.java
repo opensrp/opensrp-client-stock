@@ -6,6 +6,8 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -25,10 +27,20 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.stock.domain.Stock.issued;
+import static org.smartregister.stock.domain.Stock.loss_adjustment;
+import static org.smartregister.stock.domain.Stock.received;
+import static org.smartregister.stock.openlmis.TestData.ADJUST_WIDGET_FORM_DATA;
+import static org.smartregister.stock.openlmis.TestData.ISSUE_JSON_FORM_DATA;
+import static org.smartregister.stock.openlmis.TestData.RECEIVE_JSON_FORM_DATA;
 
 /**
  * Created by samuelgithengi on 8/3/18.
@@ -43,6 +55,9 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
 
     @Mock
     private StockDetailsInteractor stockDetailsInteractor;
+
+    @Captor
+    private ArgumentCaptor<Stock> argumentCaptor;
 
     private StockDetailsPresenter stockDetailsPresenter;
 
@@ -116,11 +131,11 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
         List<Stock> expected = new ArrayList<>();
         long now = System.currentTimeMillis();
         String tradeItemId = UUID.randomUUID().toString();
-        Stock stock = new Stock(null, Stock.received, "tester11", 50, now,
+        Stock stock = new Stock(null, received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
         expected.add(stock);
 
-        stock = new Stock(null, Stock.issued, "tester11", -12, now,
+        stock = new Stock(null, issued, "tester11", -12, now,
                 "HO", "unsynched", now, tradeItemId);
         expected.add(stock);
 
@@ -161,18 +176,18 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
         List<Stock> stockList = new ArrayList<>();
         long now = System.currentTimeMillis();
 
-        Stock stock = new Stock(1l, Stock.received, "tester11", 50, now,
+        Stock stock = new Stock(1l, received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
         stock.setLotId(lotId);
         stockList.add(stock);
 
-        stock = new Stock(2l, Stock.issued, "tester11", -12, now,
+        stock = new Stock(2l, issued, "tester11", -12, now,
                 "HO", "unsynched", now, tradeItemId);
         stock.setLotId(lotId);
         stockList.add(stock);
 
 
-        stock = new Stock(3l, Stock.loss_adjustment, "tester11", -2, now,
+        stock = new Stock(3l, loss_adjustment, "tester11", -2, now,
                 "HO", "unsynched", now, tradeItemId);
         stock.setLotId(lot2Id);
         stockList.add(stock);
@@ -212,6 +227,50 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
         stockDetailsPresenter.collapseExpandClicked(View.GONE);
         verify(stockDetailsView).expandLots();
         verify(stockDetailsView, never()).collapseLots();
+    }
+
+    @Test
+    public void testProcessReceiveFormJsonResult() {
+        stockDetailsPresenter.processFormJsonResult(RECEIVE_JSON_FORM_DATA, "tester1");
+        verify(stockDetailsInteractor, times(2)).addStock(argumentCaptor.capture());
+        verify(stockDetailsView).refreshStockDetails(15);
+        for (Stock stock : argumentCaptor.getAllValues()) {
+            assertEquals(received, stock.getTransactionType());
+            assertEquals("Balaka District Warehouse", stock.getToFrom());
+            assertEquals("Receipts", stock.getReason());
+        }
+    }
+
+    @Test
+    public void testProcessIssueFormJsonResult() {
+        stockDetailsPresenter.processFormJsonResult(ISSUE_JSON_FORM_DATA, "tester1");
+        verify(stockDetailsInteractor).addStock(argumentCaptor.capture());
+        verify(stockDetailsView).refreshStockDetails(-7);
+        for (Stock stock : argumentCaptor.getAllValues()) {
+            assertEquals(issued, stock.getTransactionType());
+            assertEquals("Comfort Health Clinic", stock.getToFrom());
+            assertEquals("Consumed", stock.getReason());
+        }
+    }
+
+    @Test
+    public void testProcessAdjustFormJsonResult() {
+        stockDetailsPresenter.processFormJsonResult(ADJUST_WIDGET_FORM_DATA, "tester1");
+        verify(stockDetailsInteractor).addStock(argumentCaptor.capture());
+        verify(stockDetailsView).refreshStockDetails(-2);
+        for (Stock stock : argumentCaptor.getAllValues()) {
+            assertEquals(loss_adjustment, stock.getTransactionType());
+            assertEquals(-2, stock.getValue());
+            assertEquals("Transferred", stock.getToFrom());
+            assertNull(stock.getReason());
+        }
+    }
+
+    @Test
+    public void testProcessInvalidJsonResult() {
+        stockDetailsPresenter.processFormJsonResult("12" + ADJUST_WIDGET_FORM_DATA, "tester1");
+        verify(stockDetailsInteractor, never()).addStock(any(Stock.class));
+        verify(stockDetailsView, never()).refreshStockDetails(anyInt());
     }
 
 }

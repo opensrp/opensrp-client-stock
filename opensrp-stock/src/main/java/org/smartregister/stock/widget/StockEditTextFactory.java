@@ -102,9 +102,4 @@ public class StockEditTextFactory extends EditTextFactory {
             return super.getViewsFromJson(stepName, context, formFragment, jsonObject, listener);
         }
     }
-
-    @Override
-    protected int getLayout() {
-        return R.layout.stock_native_form_item_date_picker;
-    }
 }

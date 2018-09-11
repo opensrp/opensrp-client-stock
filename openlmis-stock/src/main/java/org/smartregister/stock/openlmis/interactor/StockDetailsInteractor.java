@@ -24,9 +24,7 @@ public class StockDetailsInteractor {
     private TradeItemRepository tradeItemRepository;
 
     public StockDetailsInteractor() {
-        stockRepository = new StockRepository(OpenLMISLibrary.getInstance().getRepository());
-        lotRepository = new LotRepository(OpenLMISLibrary.getInstance().getRepository());
-        tradeItemRepository = new TradeItemRepository(OpenLMISLibrary.getInstance().getRepository());
+        this(new StockRepository(OpenLMISLibrary.getInstance().getRepository()), new LotRepository(OpenLMISLibrary.getInstance().getRepository()), new TradeItemRepository(OpenLMISLibrary.getInstance().getRepository()));
     }
 
     @VisibleForTesting
@@ -54,5 +52,9 @@ public class StockDetailsInteractor {
 
     public Map<String, String> findLotNames(String tradeItemId) {
         return lotRepository.findLotNames(tradeItemId);
+    }
+
+    public void addStock(Stock stock) {
+        stockRepository.addOrUpdate(stock);
     }
 }

@@ -15,6 +15,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 
+
 /**
  * Created by samuelgithengi on 7/10/18.
  */
@@ -65,77 +66,77 @@ public class OpenLMISLibrary {
 
     public LotRepository getLotRepository() {
         if (lotRepository == null) {
-            return new LotRepository(getRepository());
+            lotRepository = new LotRepository(getRepository());
         }
         return lotRepository;
     }
 
     public TradeItemRepository getTradeItemRepository() {
         if (tradeItemRepository == null)   {
-            return new TradeItemRepository(getRepository());
+            tradeItemRepository = new TradeItemRepository(getRepository());
         }
         return tradeItemRepository;
     }
 
     public org.smartregister.stock.openlmis.repository.TradeItemRepository getTradeItemRegisterRepository() {
         if (tradeItemRegisterRepository == null)   {
-            return new org.smartregister.stock.openlmis.repository.TradeItemRepository(getRepository());
+            tradeItemRegisterRepository = new org.smartregister.stock.openlmis.repository.TradeItemRepository(getRepository());
         }
         return tradeItemRegisterRepository;
     }
 
     public ProgramRepository getProgramRepository() {
         if (programRepository == null) {
-            return new ProgramRepository(getRepository());
+            programRepository = new ProgramRepository(getRepository());
         }
         return programRepository;
     }
 
     public ProgramOrderableRepository getProgramOrderableRepository() {
         if (programOrderableRepository == null) {
-            return new ProgramOrderableRepository(getRepository());
+            programOrderableRepository = new ProgramOrderableRepository(getRepository());
         }
         return programOrderableRepository;
     }
 
     public ReasonRepository getReasonRepository() {
         if (reasonRepository == null) {
-            return new ReasonRepository(getRepository());
+            reasonRepository = new ReasonRepository(getRepository());
         }
         return reasonRepository;
     }
 
     public CommodityTypeRepository getCommodityTypeRepository() {
         if (commodityTypeRepository == null) {
-            return new CommodityTypeRepository(getRepository());
+            commodityTypeRepository = new CommodityTypeRepository(getRepository());
         }
         return commodityTypeRepository;
     }
 
     public OrderableRepository getOrderableRepository() {
         if (orderableRepository == null) {
-           return new OrderableRepository(getRepository());
+           orderableRepository = new OrderableRepository(getRepository());
         }
         return orderableRepository;
     }
 
     public DispensableRepository getDispensableRepository() {
         if (dispensableRepository == null) {
-           return new DispensableRepository(getRepository());
+           dispensableRepository = new DispensableRepository(getRepository());
         }
         return dispensableRepository;
     }
 
     public TradeItemClassificationRepository getTradeItemClassificationRepository() {
         if (tradeItemClassificationRepository == null) {
-            return new TradeItemClassificationRepository(getRepository());
+            tradeItemClassificationRepository = new TradeItemClassificationRepository(getRepository());
         }
         return tradeItemClassificationRepository;
     }
 
     public StockRepository getStockRepository() {
         if (stockRepository == null) {
-            return new StockRepository(getRepository());
+            stockRepository = new StockRepository(getRepository());
         }
         return stockRepository;
     }

@@ -10,6 +10,8 @@ public interface OpenLMISConstants {
 
     String LOT_WIDGET = "lot";
 
+    String REVIEW_WIDGET = "review";
+
     interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";
@@ -28,17 +30,26 @@ public interface OpenLMISConstants {
 
         String NEXT_LABEL = "next_label";
 
+        String NEXT_TYPE = "next_type";
+
+        String NEXT_ENABLED = "next_enabled";
+
+        String SUBMIT = "submit";
+
+        String NO_PADDING = "no_padding";
     }
 
     interface Forms {
         String INDIVIDUAL_ISSUED_FORM = "individual_issued_form";
 
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
+
+        String INDIVIDUAL_ADJUST_FORM = "individual_adjust_form";
     }
 
     public static final class ServiceType {
-
         public static final int SYNC_OPENLMIS_METADATA = 1;
         public static final int SYNC_STOCK = 2;
+        String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
     }
 }

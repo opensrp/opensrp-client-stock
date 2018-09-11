@@ -1,0 +1,203 @@
+{
+  "count": "3",
+  "encounter_type": "",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Receive [trade_item]",
+    "next": "step2",
+    "bottom_navigation": "true",
+    "fields": [
+      {
+        "key": "Date_Stock_Received",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Date",
+        "expanded": false,
+        "min_date": "today-1m",
+        "max_date": "today",
+        "background": "#EAEAEA",
+        "underline_color": "#EAEAEA",
+        "v_required": {
+          "value": "true",
+          "err": "Enter the Stock Receipt date"
+        }
+      },
+      {
+        "key": "labelRecieveFrom",
+        "type": "label",
+        "text": "Receive from *",
+        "top_margin": "10dp"
+      },
+      {
+        "key": "Receive_Stock_From",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "openmrs_data_type": "select one",
+        "type": "native_radio",
+        "options": [
+          {
+            "key": "Comfort Health Clinic",
+            "text": "Comfort Health Clinic"
+          },
+          {
+            "key": "Balaka District Warehouse",
+            "text": "Balaka District Warehouse"
+          }
+        ],
+        "value": "Balaka District Warehouse",
+        "v_required": {
+          "value": true,
+          "err": "Please select where stock was received from"
+        }
+      },
+      {
+        "key": "labelReason",
+        "type": "label",
+        "text": "Reason *",
+        "top_margin": "10dp"
+      },
+      {
+        "key": "Receive_Stock_Reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "openmrs_data_type": "select one",
+        "type": "native_radio",
+        "options": [
+          {
+            "key": "Receipts",
+            "text": "Receipts"
+          },
+          {
+            "key": "Transfer In",
+            "text": "Transfer In"
+          },
+          {
+            "key": "Beginning Balance Excess",
+            "text": "Beginning Balance Excess"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "value": "Receipts",
+        "v_required": {
+          "value": true,
+          "err": "Please select reason stock was received"
+        }
+      },
+      {
+        "key": "Receive_Stock_Reason_Other",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Please specify: *",
+        "edit_type": "name",
+        "v_required": {
+          "value": true,
+          "err": "Please specify reason stock was received"
+        },
+        "relevance": {
+          "step1:Receive_Stock_Reason": {
+            "type": "string",
+            "ex": "equalTo(., \"Other\")"
+          }
+        }
+      }
+    ]
+  },
+  "step2": {
+    "title": "Receive [trade_item]",
+    "previous": "step1",
+    "next": "step3",
+    "next_label": "Review",
+    "bottom_navigation": "true",
+    "no_padding": true,
+    "fields": [
+      {
+        "key": "stockLots",
+        "type": "lot",
+        "trade_item": "[trade_item]",
+        "trade_item_id": "[trade_item_id]",
+        "dispensing_unit": "[dispensing_unit]",
+        "net_content": "[net_content]",
+        "lot_status": [
+          "VVM1",
+          "VVM2"
+        ]
+      }
+    ]
+  },
+  "step3": {
+    "title": "Review",
+    "previous": "step2",
+    "bottom_navigation": "true",
+    "next_type": "submit",
+    "next_label": "Submit",
+    "next_enabled": "true",
+    "no_padding": true,
+    "fields": [
+      {
+        "key": "stockReview",
+        "type": "review",
+        "trade_item": "[trade_item]",
+        "trade_item_id": "[trade_item_id]",
+        "dispensing_unit": "[dispensing_unit]",
+        "net_content": "[net_content]",
+        "review_type": "Review Your Receipt",
+        "date": "Date_Stock_Received",
+        "facility": "Receive_Stock_From",
+        "reason": "Receive_Stock_Reason"
+      }
+    ]
+  }
+}

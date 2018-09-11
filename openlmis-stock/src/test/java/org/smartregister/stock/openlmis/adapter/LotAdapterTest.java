@@ -24,6 +24,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
+import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 
 /**
  * Created by samuelgithengi on 8/3/18.
@@ -70,7 +71,7 @@ public class LotAdapterTest extends BaseUnitTest {
         LotViewHolder lotViewHolder = lotAdapter.onCreateViewHolder(new LinearLayout(context), 0);
         lotAdapter.onBindViewHolder(lotViewHolder, 0);
         assertEquals("59 vials", lotViewHolder.getStockOnHandTextView().getText());
-        assertEquals("LC2018G Exp. 934983", lotViewHolder.getLotCodeTextView().getText());
+        assertEquals("LC2018G Exp. " + new LocalDate(934983l).toString(DATE_FORMAT), lotViewHolder.getLotCodeTextView().getText());
         assertEquals("VMM1", lotViewHolder.getStatusTextView().getText());
     }
 

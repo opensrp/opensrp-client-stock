@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
+import org.smartregister.stock.openlmis.dto.LotDetailsDto;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 
@@ -155,13 +156,17 @@ public class StockRepositoryTest extends BaseRepositoryTest {
         String tradeItemId = UUID.randomUUID().toString();
         String tradeItemId2 = UUID.randomUUID().toString();
 
-        Lot lotId1 = new Lot(UUID.randomUUID().toString(), "LC2018G", 98914892L,
+        Lot lotId1 = new Lot(UUID.randomUUID().toString(), "LC2018G", 389293828778878l,
                 837813919L, tradeItemId, true);
         lotRepository.addOrUpdate(lotId1);
 
-        Lot lotId2 = new Lot(UUID.randomUUID().toString(), "LC2018N", 9482494L,
+        Lot lotId2 = new Lot(UUID.randomUUID().toString(), "LC2018N", 389293828778878l,
                 389189302L, tradeItemId2, true);
         lotRepository.addOrUpdate(lotId2);
+
+        Lot lotId3 = new Lot(UUID.randomUUID().toString(), "LC2018V", 389293828778878l,
+                389189302L, tradeItemId, true);
+        lotRepository.addOrUpdate(lotId3);
 
         long now = System.currentTimeMillis();
         Stock stock = new Stock(null, Stock.received, "tester11", 50, now,
@@ -176,7 +181,7 @@ public class StockRepositoryTest extends BaseRepositoryTest {
 
         stock = new Stock(null, Stock.received, "tester11", 12, now,
                 "HO", "unsynched", now, tradeItemId);
-        stock.setLotId(lotId2.getId());
+        stock.setLotId(lotId3.getId());
         stockRepository.addOrUpdate(stock);
 
         stock = new Stock(null, Stock.received, "tester11", 32, now,

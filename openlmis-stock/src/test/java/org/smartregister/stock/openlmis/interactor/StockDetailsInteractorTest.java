@@ -71,7 +71,7 @@ public class StockDetailsInteractorTest extends BaseUnitTest {
         expected.add(new Lot(lotId.toString(), "LC2018G", 329932l,
                 98489l, null, true));
         when(lotRepository.findLotsByTradeItem(tradeItem)).thenReturn(expected);
-        List<Lot> lots = lotRepository.findLotsByTradeItem(tradeItem);
+        List<Lot> lots = stockDetailsInteractor.findLotsByTradeItem(tradeItem);
         assertEquals(1, lots.size());
         assertEquals(lotId.toString(), lots.get(0).getId());
         assertEquals("LC2018G", lots.get(0).getLotCode());
@@ -120,4 +120,17 @@ public class StockDetailsInteractorTest extends BaseUnitTest {
         assertEquals("LOT32", lotNames.get("2"));
 
     }
+
+    @Test
+    public void testAddStock() {
+        String tradeItemId = UUID.randomUUID().toString();
+        Stock stock = new Stock(119l, Stock.issued, "tester11", -12, 0l,
+                "HO", "unsynched", 120l, tradeItemId);
+        stockDetailsInteractor.addStock(stock);
+        verify(stockRepository).addOrUpdate(stock);
+
+
+    }
+
+
 }
