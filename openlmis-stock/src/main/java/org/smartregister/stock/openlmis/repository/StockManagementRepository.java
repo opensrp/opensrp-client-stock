@@ -9,7 +9,6 @@ import org.smartregister.AllConstants;
 import org.smartregister.repository.DrishtiRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.SettingsRepository;
-import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;

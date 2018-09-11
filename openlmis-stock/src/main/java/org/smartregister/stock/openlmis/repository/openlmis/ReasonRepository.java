@@ -9,7 +9,6 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
-import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
 

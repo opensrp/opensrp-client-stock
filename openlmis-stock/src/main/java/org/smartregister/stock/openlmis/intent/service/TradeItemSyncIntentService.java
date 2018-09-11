@@ -12,7 +12,6 @@ import org.smartregister.stock.util.NetworkUtils;
 
 public class TradeItemSyncIntentService extends IntentService implements SyncIntentService {
 
-    private static final String TRADE_ITEM_SYNC_URL = "rest/trade-items/sync";
     private Context context;
     private TradeItemSyncHelper syncHelper;
 

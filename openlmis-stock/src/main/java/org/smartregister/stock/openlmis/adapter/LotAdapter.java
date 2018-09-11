@@ -14,7 +14,6 @@ import org.smartregister.stock.openlmis.presenter.StockDetailsPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.LotViewHolder;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by samuelgithengi on 8/1/18.

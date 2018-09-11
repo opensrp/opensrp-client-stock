@@ -154,7 +154,7 @@ public class Stock {
         return received;
     }
 
-    public static String getLoss_adjustment() {
+    public static String getLossAdjusment() {
         return loss_adjustment;
     }
 }

@@ -12,7 +12,6 @@ import org.smartregister.stock.util.NetworkUtils;
 
 public class OrderableSyncIntentService extends IntentService implements SyncIntentService {
 
-    private static final String TRADE_ITEM_SYNC_URL = "rest/orderables/sync";
     private Context context;
     private OrderableSyncHelper syncHelper;
 

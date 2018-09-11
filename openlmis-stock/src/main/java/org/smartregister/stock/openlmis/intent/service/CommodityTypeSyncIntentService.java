@@ -12,11 +12,12 @@ import org.smartregister.stock.util.NetworkUtils;
 
 public class CommodityTypeSyncIntentService extends IntentService implements SyncIntentService {
 
+    private CommodityTypeSyncHelper syncHelper;
+    private Context context;
+
     public CommodityTypeSyncIntentService() {
         super("CommodityTypeSyncIntentService");
     }
-    private CommodityTypeSyncHelper syncHelper;
-    private Context context;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

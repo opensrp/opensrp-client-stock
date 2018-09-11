@@ -92,40 +92,6 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
         }
     }
 
-    private void pushStockToServer() {
-
-        boolean keepSyncing = true;
-        int limit = 50;
-        try {
-            while (keepSyncing) {
-                ArrayList<Stock> stocks = (ArrayList<Stock>) stockRepository.findUnSyncedWithLimit(limit);
-                JSONArray stocksarray = createJsonArrayFromStockArray(stocks);
-                if (stocks.isEmpty()) {
-                    return;
-                }
-                // create request body
-                JSONObject request = new JSONObject();
-                request.put(context.getString(org.smartregister.stock.R.string.stocks_key), stocksarray);
-
-                String jsonPayload = request.toString();
-                String response = makePostRequest(
-                        MessageFormat.format(
-                                "{0}/{1}",
-                                BASE_URL,
-                                STOCK_Add_PATH),
-                        jsonPayload);
-                if (response == null) {
-                    Log.e(getClass().getName(), "Stock push sync failed.");
-                    return;
-                }
-                stockRepository.markEventsAsSynced(stocks);
-                Log.i(getClass().getName(), "Stock successfully pushed.");
-            }
-        } catch (JSONException e) {
-            Log.e(getClass().getName(), e.getMessage());
-        }
-    }
-
     private Long getHighestTimestampFromStockPayLoad(String jsonPayload) {
         Long toreturn = 0l;
         try {
@@ -172,28 +138,6 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
             Log.e(getClass().getCanonicalName(), e.getMessage());
         }
         return Stock_arrayList;
-    }
-
-    private JSONArray createJsonArrayFromStockArray(ArrayList<Stock> stocks) {
-        JSONArray array = new JSONArray();
-        for (int i = 0; i < stocks.size(); i++) {
-            JSONObject stock = new JSONObject();
-            try {
-                stock.put("identifier", stocks.get(i).getId());
-                stock.put(context.getString(org.smartregister.stock.R.string.stock_type_id_key), stocks.get(i).getStockTypeId());
-                stock.put(context.getString(org.smartregister.stock.R.string.transaction_type_key), stocks.get(i).getTransactionType());
-                stock.put(context.getString(org.smartregister.stock.R.string.providerid_key), stocks.get(i).getProviderid());
-                stock.put(context.getString(org.smartregister.stock.R.string.date_created_key), stocks.get(i).getDateCreated());
-                stock.put(context.getString(org.smartregister.stock.R.string.value_key), stocks.get(i).getValue());
-                stock.put(context.getString(org.smartregister.stock.R.string.to_from_key), stocks.get(i).getToFrom());
-                stock.put(context.getString(org.smartregister.stock.R.string.date_updated_key), stocks.get(i).getUpdatedAt());
-                stock.put(context.getString(org.smartregister.stock.R.string.lot_id), stocks.get(i).getLotId());
-                array.put(stock);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return array;
     }
 
     public Context getContext() {
