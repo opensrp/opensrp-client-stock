@@ -267,13 +267,12 @@ public class LotFactory implements FormWidgetFactory {
     @VisibleForTesting
     protected PopupMenu populateStatusOptions(final Context context, final TextInputEditText editText) {
         final PopupMenu popupMenu = new PopupMenu(context, editText);
+        for (int i = 0; i < statusOptions.length(); i++) {
+            popupMenu.getMenu().add(statusOptions.optString(i));
+        }
         editText.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
-                for (int i = 0; i < statusOptions.length(); i++) {
-                    popupMenu.getMenu().add(statusOptions.optString(i));
-                }
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -295,23 +294,23 @@ public class LotFactory implements FormWidgetFactory {
     @VisibleForTesting
     protected PopupMenu populateLotOptions(final Context context, final TextInputEditText editText) {
         final PopupMenu popupMenu = new PopupMenu(context, editText);
+        LocalDate expiringDateWarning = new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING);
+        for (Lot lot : lotMap.values()) {
+            MenuItem menuitem = popupMenu.getMenu().add(context.getString(R.string.lotcode_and_expiry,
+                    lot.getLotCode(), lot.getExpirationDate().toString(DATE_FORMAT)));
+            View actionView = new View(context);
+            actionView.setTag(R.id.lot_id, lot.getId());
+            menuitem.setActionView(actionView);
+            if (expiringDateWarning.isAfter(lot.getExpirationDate())) {
+                SpannableString spanString = new SpannableString(menuitem.getTitle());
+                spanString.setSpan(new ForegroundColorSpan(Color.RED), 0, spanString.length(), 0);
+                menuitem.setTitle(spanString);
+            }
+
+        }
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LocalDate expiringDateWarning = new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING);
-                for (Lot lot : lotMap.values()) {
-                    MenuItem menuitem = popupMenu.getMenu().add(context.getString(R.string.lotcode_and_expiry,
-                            lot.getLotCode(), lot.getExpirationDate().toString(DATE_FORMAT)));
-                    View actionView = new View(context);
-                    actionView.setTag(R.id.lot_id, lot.getId());
-                    menuitem.setActionView(actionView);
-                    if (expiringDateWarning.isAfter(lot.getExpirationDate())) {
-                        SpannableString spanString = new SpannableString(menuitem.getTitle());
-                        spanString.setSpan(new ForegroundColorSpan(Color.RED), 0, spanString.length(), 0);
-                        menuitem.setTitle(spanString);
-                    }
-
-                }
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -345,12 +344,12 @@ public class LotFactory implements FormWidgetFactory {
     @VisibleForTesting
     protected PopupMenu populateReasonsOptions(final Context context, final TextInputEditText editText) {
         final PopupMenu popupMenu = new PopupMenu(context, editText);
+        for (String reason : reasonsRepository.getAdjustmentReasons()) {
+            popupMenu.getMenu().add(reason);
+        }
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (String reason : reasonsRepository.getAdjustmentReasons()) {
-                    popupMenu.getMenu().add(reason);
-                }
                 popupMenu.show();
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
