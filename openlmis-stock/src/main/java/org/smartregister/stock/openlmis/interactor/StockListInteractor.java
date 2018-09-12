@@ -40,11 +40,19 @@ public class StockListInteractor {
     private SearchRepository searchRepository;
 
     public StockListInteractor() {
-        this(new ProgramRepository(OpenLMISLibrary.getInstance().getRepository()), new CommodityTypeRepository(OpenLMISLibrary.getInstance().getRepository()), new TradeItemRepository(OpenLMISLibrary.getInstance().getRepository()), new StockRepository(OpenLMISLibrary.getInstance().getRepository()), new SearchRepository(OpenLMISLibrary.getInstance().getRepository()));
+        this(new ProgramRepository(OpenLMISLibrary.getInstance().getRepository()),
+                new CommodityTypeRepository(OpenLMISLibrary.getInstance().getRepository()),
+                new TradeItemRepository(OpenLMISLibrary.getInstance().getRepository()),
+                new StockRepository(OpenLMISLibrary.getInstance().getRepository()),
+                new SearchRepository(OpenLMISLibrary.getInstance().getRepository()));
     }
 
     @VisibleForTesting
-    protected StockListInteractor(ProgramRepository programRepository, CommodityTypeRepository commodityTypeRepository, TradeItemRepository tradeItemRepository, StockRepository stockRepository, SearchRepository searchRepository) {
+    protected StockListInteractor(ProgramRepository programRepository,
+                                  CommodityTypeRepository commodityTypeRepository,
+                                  TradeItemRepository tradeItemRepository,
+                                  StockRepository stockRepository,
+                                  SearchRepository searchRepository) {
         this.programRepository = programRepository;
         this.commodityTypeRepository = commodityTypeRepository;
         this.tradeItemRepository = tradeItemRepository;

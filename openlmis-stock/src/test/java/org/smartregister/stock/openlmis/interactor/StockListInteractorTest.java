@@ -6,7 +6,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.smartregister.Context;
+import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.BaseUnitTest;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Code;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
@@ -21,12 +24,16 @@ import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -53,12 +60,25 @@ public class StockListInteractorTest extends BaseUnitTest {
     @Mock
     private SearchRepository searchRepository;
 
+    @Mock
+    private Context context;
+
+    @Mock
+    private Repository repository;
+
     private StockListInteractor stockListInteractor;
 
     @Before
     public void setUp() {
         stockListInteractor = new StockListInteractor(programRepository, commodityTypeRepository,
                 tradeItemRepository, stockRepository, searchRepository);
+    }
+
+    @Test
+    public void testConstructor() {
+        OpenLMISLibrary.init(context, repository);
+        StockListInteractor stockListInteractor = new StockListInteractor();
+        assertNotNull(stockListInteractor);
     }
 
     @Test
@@ -129,5 +149,78 @@ public class StockListInteractorTest extends BaseUnitTest {
         assertEquals(2, tradeItems.get(0).getNumberOfLots());
         assertEquals(50, tradeItems.get(0).getTotalStock());
         verify(tradeItemRepository).getTradeItemByCommodityType(commodityType.getId().toString());
+    }
+
+    @Test
+    public void testSearchIds() {
+        Map<String, List<String>> expected = new HashMap<>();
+        List<String> tradeItems = new ArrayList<>();
+        String tradeItemId = UUID.randomUUID().toString();
+        tradeItems.add(tradeItemId);
+        String commodityId = UUID.randomUUID().toString();
+        expected.put(commodityId, tradeItems);
+        when(searchRepository.searchIds("BCG")).thenReturn(expected);
+        Map<String, List<String>> actual = stockListInteractor.searchIds("BCG");
+        verify(searchRepository).searchIds("BCG");
+        assertEquals(1, actual.size());
+        assertEquals(1, actual.get(commodityId).size());
+        assertEquals(tradeItemId, actual.get(commodityId).get(0));
+    }
+
+
+    @Test
+    public void testFindTradeItemsByIds() {
+        Set<String> tradeItems = new HashSet<>();
+        String tradeItemId = UUID.randomUUID().toString();
+        tradeItems.add(tradeItemId);
+
+        List<TradeItem> expectedTradeItems = new ArrayList<>();
+        TradeItem tradeItem = new TradeItem(tradeItemId);
+        tradeItem.setName("Intervax BCG 20");
+        tradeItem.setNetContent(16l);
+        tradeItem.setCommodityTypeId(UUID.randomUUID().toString());
+        expectedTradeItems.add(tradeItem);
+
+        when(tradeItemRepository.getTradeItemByIds(tradeItems)).thenReturn(expectedTradeItems);
+
+        List<LotDetailsDto> lots = new ArrayList<>();
+        lots.add(new LotDetailsDto(UUID.randomUUID().toString(), 0l, 12));
+        lots.add(new LotDetailsDto(UUID.randomUUID().toString(), 120l, 20));
+        Map<String, List<LotDetailsDto>> lotMap = new HashMap<>();
+        lotMap.put(tradeItemId, lots);
+        when(stockRepository.getNumberOfLotsByTradeItem(any(List.class))).thenReturn(lotMap);
+
+
+        List<TradeItemWrapper> actual = stockListInteractor.findTradeItemsByIds(new ArrayList<>(tradeItems));
+        verify(tradeItemRepository).getTradeItemByIds(tradeItems);
+        assertEquals(1, actual.size());
+        assertEquals(tradeItem.getId(), actual.get(0).getTradeItem().getId());
+        assertEquals(tradeItem.getNetContent(), actual.get(0).getTradeItem().getNetContent());
+
+        assertEquals(2, actual.get(0).getNumberOfLots());
+
+        assertEquals(32, actual.get(0).getTotalStock());
+
+    }
+
+
+    @Test
+    public void testFindCommodityTypesByIds() {
+
+        Set<String> commodityIds = new HashSet<>();
+        String commodityTypeID = UUID.randomUUID().toString();
+        commodityIds.add(commodityTypeID);
+
+        CommodityType commodityType = new CommodityType(UUID.randomUUID(), "BCG", "", null,
+                null, System.currentTimeMillis());
+        List<CommodityType> expected = new ArrayList<>();
+        expected.add(commodityType);
+        when(commodityTypeRepository.findCommodityTypesByIds(commodityIds)).thenReturn(expected);
+        List<CommodityType> actual = stockListInteractor.findCommodityTypesByIds(commodityIds);
+        verify(commodityTypeRepository).findCommodityTypesByIds(commodityIds);
+        assertEquals(1, actual.size());
+        assertEquals(commodityType.getId(), actual.get(0).getId());
+        assertEquals("BCG", actual.get(0).getName());
+
     }
 }

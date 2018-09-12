@@ -122,7 +122,7 @@ public class TestDataUtils {
 
     }
 
-    private List<TradeItem> createTradeItems(CommodityType commodityType) {
+    public List<TradeItem> createTradeItems(CommodityType commodityType) {
         Calendar calendar = Calendar.getInstance();
         List<TradeItem> tradeItems = new ArrayList<>();
         Random random = new Random();
