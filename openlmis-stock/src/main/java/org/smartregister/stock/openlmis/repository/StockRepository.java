@@ -121,19 +121,18 @@ public class StockRepository extends BaseRepository {
         try {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    stocks.add(
-                            new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
-                                    cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
-                                    cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
-                                    cursor.getInt(cursor.getColumnIndex(VALUE)),
-                                    cursor.getLong(cursor.getColumnIndex(DATE_CREATED)),
-                                    cursor.getString(cursor.getColumnIndex(TO_FROM)),
-                                    cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
-                                    cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
-                                    cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID)),
-                                    cursor.getString(cursor.getColumnIndex(LOT_ID))
-                            ));
-
+                    Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
+                                            cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
+                                            cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
+                                            cursor.getInt(cursor.getColumnIndex(VALUE)),
+                                            cursor.getLong(cursor.getColumnIndex(DATE_CREATED)),
+                                            cursor.getString(cursor.getColumnIndex(TO_FROM)),
+                                            cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
+                                            cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
+                                            cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID))
+                                        );
+                    stock.setLotId(cursor.getString(cursor.getColumnIndex(LOT_ID)));
+                    stocks.add(stock);
                     cursor.moveToNext();
                 }
             }
@@ -260,8 +259,7 @@ public class StockRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(TO_FROM)),
                 cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
                 cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
-                cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID)),
-                cursor.getString(cursor.getColumnIndex(LOT_ID)));
+                cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID)));
 
         stock.setLotId(cursor.getString(cursor.getColumnIndex(LOT_ID)));
         stock.setReason(cursor.getString(cursor.getColumnIndex(REASON)));

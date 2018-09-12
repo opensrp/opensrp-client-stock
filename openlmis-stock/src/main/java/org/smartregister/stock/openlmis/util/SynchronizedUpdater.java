@@ -17,7 +17,6 @@ public class SynchronizedUpdater {
     private static DispensableRepository dispensableRepository =  OpenLMISLibrary.getInstance().getDispensableRepository();
     private static TradeItemRepository tradeItemRegisterRepository = OpenLMISLibrary.getInstance().getTradeItemRegisterRepository();
     private static OrderableRepository orderableRepository = OpenLMISLibrary.getInstance().getOrderableRepository();
-    private static org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
 
     private SynchronizedUpdater() {}
 

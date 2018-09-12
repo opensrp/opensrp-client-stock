@@ -43,12 +43,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
                 new Code("program_code"),
                 "program_name",
                 "program_description",
-                true,
-                false,
-                false,
-                false,
-                false,
-                4918234891L
+                true
         );
 
         database.addOrUpdate(program);
@@ -68,12 +63,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
                 new Code("program_code"),
                 "program_name_two",
                 "program_description",
-                true,
-                false,
-                false,
-                false,
-                false,
-                4918234891L
+                true
         );
         database.addOrUpdate(program);
 
@@ -83,12 +73,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
                 new Code("program_code"),
                 "program_name_two",
                 "program_description",
-                true,
-                false,
-                false,
-                false,
-                false,
-                4918234891L
+                true
         );
         database.addOrUpdate(program);
 
@@ -112,12 +97,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
                 new Code("program_code"),
                 "program_name",
                 "program_description",
-                true,
-                false,
-                false,
-                false,
-                false,
-                4918234891L
+                true
         );
         database.addOrUpdate(program);
 
@@ -126,12 +106,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
                 new Code("program_code"),
                 "program_name",
                 "program_description",
-                true,
-                false,
-                false,
-                false,
-                false,
-                4918234891L
+                true
         );
         database.addOrUpdate(program);
 
@@ -151,12 +126,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
                 new Code("program_code"),
                 "program_name",
                 "program_description",
-                true,
-                false,
-                false,
-                false,
-                false,
-                4918234891L
+                true
         );
         database.addOrUpdate(program);
 
@@ -165,12 +135,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
                 new Code("program_code"),
                 "program_name",
                 "program_description",
-                true,
-                false,
-                false,
-                false,
-                false,
-                4918234891L
+                true
         );
         database.addOrUpdate(program);
 
@@ -193,12 +158,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
                 new Code("program_code"),
                 "program_name",
                 "program_description",
-                true,
-                false,
-                false,
-                false,
-                false,
-                4918234891L
+                true
         );
         database.addOrUpdate(program);
 
@@ -209,12 +169,7 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
                 new Code("program_code"),
                 "program_name",
                 "program_description",
-                true,
-                false,
-                false,
-                false,
-                false,
-                4918234891L
+                true
         );
         database.addOrUpdate(program);
 
@@ -222,5 +177,4 @@ public class ProgramRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(database.findAllPrograms().size(), 2);
     }
-
 }

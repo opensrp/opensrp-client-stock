@@ -108,11 +108,14 @@ public class Utils {
         StockRepository repository = OpenLMISLibrary.getInstance().getStockRepository();
 
         List<Stock> stocks = new ArrayList<>();
-        Stock stock = new Stock(null, "debit", "provider_id", 1, 1L, "to_from", "Unsynced", 1L, "trade_item_id", "lot_id");
+        Stock stock = new Stock(null, "debit", "provider_id", 1, 1L, "to_from", "Unsynced", 1L, "trade_item_id");
+        stock.setLotId("lot_id");
         stocks.add(stock);
-        stock = new Stock(null, "debit", "provider_id_1", 1, 1L, "to_from", "Unsynced", 1L, "trade_item_id_1", "lot_id_1");
+        stock = new Stock(null, "debit", "provider_id_1", 1, 1L, "to_from", "Unsynced", 1L, "trade_item_id_1");
+        stock.setLotId("lot_id_1");
         stocks.add(stock);
-        stock = new Stock(null, "debit", "provider_id_2", 1, 1L, "to_from", "Unsynced", 1L, "trade_item_id_2", "lot_id_2");
+        stock = new Stock(null, "debit", "provider_id_2", 1, 1L, "to_from", "Unsynced", 1L, "trade_item_id_2");
+        stock.setLotId("lot_id_2");
         stocks.add(stock);
 
         for (Stock stk : stocks) {
