@@ -42,21 +42,34 @@ public class SearchRepository extends BaseRepository {
     }
 
     public void addOrUpdate(CommodityType commodityType, List<TradeItem> tradeItems) {
-        if (commodityType == null || tradeItems == null)
+        if (commodityType == null)
             return;
-        for (TradeItem tradeItem : tradeItems) {
+        if (tradeItems == null || tradeItems.isEmpty()) {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(PHRASE, withSub(commodityType.getName()).concat("|").concat(withSub(tradeItem.getName())));
-            if (exists(commodityType.getId().toString(), tradeItem.getId()))
+            contentValues.put(PHRASE, withSub(commodityType.getName()));
+            if (exists(commodityType.getId().toString()))
                 getWritableDatabase().update(COMMODITY_TYPE_FTS_TABLE, contentValues,
-                        COMMODITY_TYPE_ID + "=? AND " + TRADE_ITEM_ID + "=?",
-                        new String[]{commodityType.getId().toString(), tradeItem.getId()});
+                        COMMODITY_TYPE_ID + "=? AND " + TRADE_ITEM_ID + " IS NULL",
+                        new String[]{commodityType.getId().toString()});
             else {
                 contentValues.put(COMMODITY_TYPE_ID, commodityType.getId().toString());
-                contentValues.put(TRADE_ITEM_ID, tradeItem.getId());
                 getWritableDatabase().insert(COMMODITY_TYPE_FTS_TABLE, null, contentValues);
             }
-        }
+        } else
+            for (TradeItem tradeItem : tradeItems) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(PHRASE, withSub(commodityType.getName()).concat("|").concat(withSub(tradeItem.getName())));
+                if (exists(commodityType.getId().toString(), tradeItem.getId()))
+                    getWritableDatabase().update(COMMODITY_TYPE_FTS_TABLE, contentValues,
+                            COMMODITY_TYPE_ID + "=? AND " + TRADE_ITEM_ID + "=?",
+                            new String[]{commodityType.getId().toString(), tradeItem.getId()});
+                else {
+                    contentValues.put(COMMODITY_TYPE_ID, commodityType.getId().toString());
+                    contentValues.put(TRADE_ITEM_ID, tradeItem.getId());
+                    getWritableDatabase().insert(COMMODITY_TYPE_FTS_TABLE, null, contentValues);
+                }
+            }
+
     }
 
     private boolean exists(String commodityTypeId, String tradeItemId) {
@@ -65,6 +78,23 @@ public class SearchRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             cursor = getReadableDatabase().rawQuery(query, new String[]{commodityTypeId, tradeItemId});
+            return cursor.moveToFirst();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return false;
+    }
+
+    private boolean exists(String commodityTypeId) {
+        String query = String.format("SELECT 1 FROM %s WHERE %s=?",
+                COMMODITY_TYPE_FTS_TABLE, COMMODITY_TYPE_ID);
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{commodityTypeId});
             return cursor.moveToFirst();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
