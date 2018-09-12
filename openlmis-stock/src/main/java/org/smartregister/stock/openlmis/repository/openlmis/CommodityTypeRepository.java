@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.repository.openlmis;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -13,7 +14,9 @@ import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
@@ -44,18 +47,12 @@ public class CommodityTypeRepository extends BaseRepository {
                     + DATE_UPDATED + " INTEGER"
                     + ")";
 
-    private static final String CREATE_COMMODITY_NAME_INDEX =
-
-            "CREATE INDEX " + COMMODITY_TYPE_TABLE + "_" + NAME
-                    + "_INDEX ON " + COMMODITY_TYPE_TABLE + "(" + NAME + ")";
-
     public CommodityTypeRepository(Repository repository) {
         super(repository);
     }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_COMMODITY_TYPE_TABLE);
-        database.execSQL(CREATE_COMMODITY_NAME_INDEX);
     }
 
     public void addOrUpdate(CommodityType commodityType) {
@@ -74,7 +71,6 @@ public class CommodityTypeRepository extends BaseRepository {
             String query = String.format(INSERT_OR_REPLACE, COMMODITY_TYPE_TABLE);
             query += "(" + StringUtils.repeat("?", ",", COMMODITY_TYPE_TABLE_COLUMNS.length) + ")";
             database.execSQL(query, createQueryValues(commodityType));
-
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
@@ -121,13 +117,14 @@ public class CommodityTypeRepository extends BaseRepository {
     }
 
 
-    public List<CommodityType> findCommodityTypesByName(String commodityTypeName) {
-
+    public List<CommodityType> findCommodityTypesByIds(Set<String> commodityTypeIds) {
+        int len = commodityTypeIds.size();
         List<CommodityType> commodityTypes = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String query = String.format("SELECT * FROM %s WHERE %s LIKE ?", COMMODITY_TYPE_TABLE, NAME);
-            cursor = getReadableDatabase().rawQuery(query, new String[]{"%" + commodityTypeName + "%"});
+            String query = String.format("SELECT * FROM %s WHERE %s IN (%s)", COMMODITY_TYPE_TABLE,
+                    ID, TextUtils.join(",", Collections.nCopies(len, "?")));
+            cursor = getReadableDatabase().rawQuery(query, commodityTypeIds.toArray(new String[len]));
             commodityTypes = readCommodityTypes(cursor);
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));

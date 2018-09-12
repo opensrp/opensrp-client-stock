@@ -32,7 +32,7 @@ public class StockManagementRepository extends Repository {
         createTables(database);
     }
 
-    public static void createTables(SQLiteDatabase database) {
+    private void createTables(SQLiteDatabase database) {
         OrderableRepository.createTable(database);
         CommodityTypeRepository.createTable(database);
         ProgramRepository.createTable(database);
@@ -44,6 +44,7 @@ public class StockManagementRepository extends Repository {
         LotRepository.createTable(database);
         org.smartregister.stock.openlmis.repository.TradeItemRepository.createTable(database);
         StockRepository.createTable(database);
+        SearchRepository.createTable(database);
     }
 
     @Override

@@ -10,6 +10,8 @@ import org.smartregister.stock.openlmis.view.contract.StockListView;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 7/13/18.
@@ -61,7 +63,15 @@ public class StockListPresenter {
     }
 
 
-    public List<CommodityType> getCommodityTypesByName(String commodityTypeName) {
-        return stockListInteractor.getCommodityTypesByName(commodityTypeName);
+    public List<CommodityType> findCommodityTypesByIds(Set<String> ids) {
+        return stockListInteractor.findCommodityTypesByIds(ids);
+    }
+
+    public Map<String, List<String>> searchIds(String searchPhrase) {
+        return stockListInteractor.searchIds(searchPhrase);
+    }
+
+    public List<TradeItemWrapper> findTradeItemsByIds(List<String> tradeItemIds) {
+        return stockListInteractor.findTradeItemsByIds(tradeItemIds);
     }
 }

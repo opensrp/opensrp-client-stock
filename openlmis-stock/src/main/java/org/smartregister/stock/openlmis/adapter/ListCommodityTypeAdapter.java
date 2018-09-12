@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.listener.ExpandCollapseListener;
@@ -16,6 +17,7 @@ import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by samuelgithengi on 7/13/18.
@@ -27,6 +29,8 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     private List<ExpandCollapseListener> expandCollapseListeners = new ArrayList<>();
 
+    private Map<String, List<String>> searchedIds;
+
     private Context context;
 
     public ListCommodityTypeAdapter(StockListPresenter stockListPresenter, Context context) {
@@ -36,8 +40,14 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     }
 
-    public void filterCommodityTypes(String commodityTypeName) {
-        commodityTypes = stockListPresenter.getCommodityTypesByName(commodityTypeName);
+    public void filterCommodityTypes(String searchPhrase) {
+        if (StringUtils.isBlank(searchPhrase)) {
+            commodityTypes = stockListPresenter.getCommodityTypes();
+            searchedIds = null;
+        } else {
+            searchedIds = stockListPresenter.searchIds(searchPhrase);
+            commodityTypes = stockListPresenter.findCommodityTypesByIds(searchedIds.keySet());
+        }
         notifyDataSetChanged();
     }
 
@@ -53,7 +63,11 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     @Override
     public void onBindViewHolder(@NonNull CommodityTypeViewHolder holder, int position) {
         CommodityType commodityType = commodityTypes.get(position);
-        List<TradeItemWrapper> tradeItems = stockListPresenter.getTradeItems(commodityType);
+        List<TradeItemWrapper> tradeItems;
+        if (searchedIds == null)
+            tradeItems = stockListPresenter.getTradeItems(commodityType);
+        else
+            tradeItems = stockListPresenter.findTradeItemsByIds(searchedIds.get(commodityType.getId().toString()));
         int totalDoses = 0;
         for (TradeItemWrapper tradeItem : tradeItems)
             totalDoses += tradeItem.getTotalStock() * tradeItem.getTradeItem().getNetContent();
