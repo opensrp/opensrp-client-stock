@@ -79,23 +79,27 @@ public class StockListInteractor {
     }
 
     public List<TradeItemWrapper> findTradeItemsByIds(List<String> tradeItemIds) {
-        return populateTradeItemWrapper(tradeItemRepository.getTradeItemByIds(new HashSet<String>(tradeItemIds)));
+        return populateTradeItemWrapper(tradeItemRepository.getTradeItemByIds(new HashSet<>(tradeItemIds)));
     }
 
     private List<TradeItemWrapper> populateTradeItemWrapper(List<TradeItem> tradeItems) {
         List<TradeItemWrapper> tradeItemWrappers = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
+        for (TradeItem tradeItem : tradeItems)
+            ids.add(tradeItem.getId());
+        Map<String, List<LotDetailsDto>> lotsListMap = stockRepository.getNumberOfLotsByTradeItem(ids);
         for (TradeItem tradeItem : tradeItems) {
             TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
-            List<LotDetailsDto> lots = stockRepository.getNumberOfLotsByTradeItem(tradeItem.getId());
+            List<LotDetailsDto> lots = lotsListMap.get(tradeItem.getId());
             int totalStock = 0;
-            for (LotDetailsDto lotDetailsDto : lots)
-                totalStock += lotDetailsDto.getTotalStock();
-            tradeItemWrapper.setTotalStock(totalStock);
-            tradeItemWrapper.setNumberOfLots(lots.size());
-            if (!lots.isEmpty()) {
+            if (lots != null) {
+                for (LotDetailsDto lotDetailsDto : lots)
+                    totalStock += lotDetailsDto.getTotalStock();
+                tradeItemWrapper.setNumberOfLots(lots.size());
                 LocalDate maxExpiringDate = new LocalDate(lots.iterator().next().getMinimumExpiryDate());
                 tradeItemWrapper.setHasLotExpiring(new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING).isAfter(maxExpiringDate));
             }
+            tradeItemWrapper.setTotalStock(totalStock);
             tradeItemWrappers.add(tradeItemWrapper);
         }
         return tradeItemWrappers;
