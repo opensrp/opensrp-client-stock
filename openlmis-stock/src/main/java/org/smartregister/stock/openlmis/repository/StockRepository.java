@@ -144,7 +144,7 @@ public class StockRepository extends BaseRepository {
     public Map<String, List<LotDetailsDto>> getNumberOfLotsByTradeItem(List<String> tradeItems) {
         int len = tradeItems.size();
         String query = String.format("SELECT l.%s ,l.%s, min(%s), sum(%s) FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
-                        " WHERE %s IN (%s) AND %s >= ? GROUP BY l.%s ",
+                        " WHERE %s IN (%s) AND %s >= ? GROUP BY l.%s ORDER BY 3 ",
                 TRADE_ITEM_ID, ID, EXPIRATION_DATE, VALUE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID,
                 TRADE_ITEM_ID, TextUtils.join(",", Collections.nCopies(len, "?")),
                 EXPIRATION_DATE, ID);

@@ -12,6 +12,7 @@ import org.smartregister.stock.openlmis.domain.openlmis.Code;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.dto.LotDetailsDto;
+import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
@@ -19,7 +20,9 @@ import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static junit.framework.TestCase.assertTrue;
@@ -47,12 +50,15 @@ public class StockListInteractorTest extends BaseUnitTest {
     @Mock
     private StockRepository stockRepository;
 
+    @Mock
+    private SearchRepository searchRepository;
+
     private StockListInteractor stockListInteractor;
 
     @Before
     public void setUp() {
         stockListInteractor = new StockListInteractor(programRepository, commodityTypeRepository,
-                tradeItemRepository, stockRepository);
+                tradeItemRepository, stockRepository, searchRepository);
     }
 
     @Test
@@ -106,9 +112,14 @@ public class StockListInteractorTest extends BaseUnitTest {
         expectedTradeItems.add(tradeItem);
         when(tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString())).thenReturn(expectedTradeItems);
         List<LotDetailsDto> lots = new ArrayList<>();
-        lots.add(new LotDetailsDto("lot1",1l,20));
-        lots.add(new LotDetailsDto("lot2",30l,30));
-        when(stockRepository.getNumberOfLotsByTradeItem(tradeItem.getId())).thenReturn(lots);
+        lots.add(new LotDetailsDto("lot1", 1l, 20));
+        lots.add(new LotDetailsDto("lot2", 30l, 30));
+        Map<String, List<LotDetailsDto>> lotsMap = new HashMap<>();
+        lotsMap.put(tradeItem.getId(), lots);
+
+        List<String> ids = new ArrayList<>();
+        ids.add(tradeItem.getId());
+        when(stockRepository.getNumberOfLotsByTradeItem(ids)).thenReturn(lotsMap);
         List<TradeItemWrapper> tradeItems = stockListInteractor.getTradeItems(commodityType);
         assertEquals(1, tradeItems.size());
         assertEquals(tradeItem.getId(), tradeItems.get(0).getTradeItem().getId());
