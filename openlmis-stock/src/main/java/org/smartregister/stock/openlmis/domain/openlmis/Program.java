@@ -20,19 +20,12 @@ public class Program extends BaseEntity {
         this.id = id;
     }
 
-    public Program(String id, Code code, String name, String description, Boolean active, Boolean periodsSkippable, Boolean skipAuthorization,
-                   Boolean showNonFullSupplyTab, Boolean enableDatePhysicalStockCountCompleted, Long dateUpdated) {
-
+    public Program(String id, Code code, String name, String description, Boolean active) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.description = description;
         this.active = active;
-        this.periodsSkippable = periodsSkippable;
-        this.skipAuthorization = skipAuthorization;
-        this.showNonFullSupplyTab = showNonFullSupplyTab;
-        this.enableDatePhysicalStockCountCompleted = enableDatePhysicalStockCountCompleted;
-        this.dateUpdated = dateUpdated;
     }
 
     /**

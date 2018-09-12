@@ -155,13 +155,8 @@ public class ProgramRepository extends BaseRepository {
                 new Code(cursor.getString(cursor.getColumnIndex(CODE))),
                 cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(DESCRIPTION)),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE))),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(PERIODS_SKIPPABLE))),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(SKIP_AUTHORIZATION))),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(SHOW_NON_FULL_SUPPLY_TAB))),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ENABLE_DATE_PHYSICAL_STOCK_COUNT_COMPLETED))),
-                cursor.getLong(cursor.getColumnIndex(DATE_UPDATED))
-        );
+                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE)))
+               );
     }
 
     private Object[] createQueryValues(Program program) {

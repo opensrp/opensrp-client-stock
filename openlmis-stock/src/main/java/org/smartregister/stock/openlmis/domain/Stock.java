@@ -19,13 +19,6 @@ public class Stock extends org.smartregister.stock.domain.Stock {
                 tradeItemId);
     }
 
-    public Stock(Long id, String transactionType, String providerid, int value, Long dateCreated,
-                 String toFrom, String syncStatus, Long dateUpdated, String tradeItemId, String lotId) {
-        super(id, transactionType, providerid, value, dateCreated, toFrom, syncStatus, dateUpdated,
-                tradeItemId);
-        this.lotId = lotId;
-    }
-
     public String getLotId() {
         return lotId;
     }

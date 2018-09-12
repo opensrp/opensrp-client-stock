@@ -59,8 +59,7 @@ public class StockListInteractorTest extends BaseUnitTest {
     public void testGetPrograms() {
         List<Program> expected = new ArrayList<>();
         expected.add(new Program(UUID.randomUUID().toString(), new Code("PRG002"), "Essential Drugs",
-                null, true, true, true,
-                true, true, null));
+                null, true));
         when(programRepository.findAllPrograms()).thenReturn(expected);
         List<String> programs = stockListInteractor.getPrograms();
         assertEquals(1, programs.size());
