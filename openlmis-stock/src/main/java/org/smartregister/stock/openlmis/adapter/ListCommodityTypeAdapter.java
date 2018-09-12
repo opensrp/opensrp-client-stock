@@ -44,11 +44,14 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         if (StringUtils.isBlank(searchPhrase)) {
             commodityTypes = stockListPresenter.getCommodityTypes();
             searchedIds = null;
+            notifyDataSetChanged();
+            collapseAllViews();
         } else {
             searchedIds = stockListPresenter.searchIds(searchPhrase);
             commodityTypes = stockListPresenter.findCommodityTypesByIds(searchedIds.keySet());
+            notifyDataSetChanged();
+            expandAllViews();
         }
-        notifyDataSetChanged();
     }
 
     @NonNull
