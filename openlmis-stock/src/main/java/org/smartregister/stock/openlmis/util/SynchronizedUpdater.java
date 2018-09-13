@@ -44,13 +44,19 @@ public class SynchronizedUpdater {
 
         if (orderable.getCommodityTypeId() != null) {
             List<org.smartregister.stock.openlmis.domain.TradeItem> registerTradeItems = tradeItemRegisterRepository.getTradeItemByCommodityType(orderable.getCommodityTypeId());
-            if (registerTradeItems.size() == 0) { return; }
             for (org.smartregister.stock.openlmis.domain.TradeItem registerTradeItem : registerTradeItems) {
-                registerTradeItem.setName(orderable.getFullProductName());
-                tradeItemRegisterRepository.addOrUpdate(registerTradeItem);
+                if (registerTradeItem.getName() == null) {
+                    Dispensable dispensable = dispensableRepository.findDispensable(orderable.getDispensableId());
+                    if (dispensable != null) {
+                        registerTradeItem.setDispensable(dispensable);
+                    }
+                    registerTradeItem.setName(orderable.getFullProductName());
+                    tradeItemRegisterRepository.addOrUpdate(registerTradeItem);
+                }
             }
+            return;
         }
-        
+
         org.smartregister.stock.openlmis.domain.TradeItem registerTradeItem = tradeItemRegisterRepository.getTradeItemById(orderable.getTradeItemId());
         registerTradeItem = registerTradeItem == null ? new org.smartregister.stock.openlmis.domain.TradeItem(orderable.getTradeItemId()) : registerTradeItem;
         registerTradeItem.setNetContent(orderable.getNetContent());
@@ -63,14 +69,17 @@ public class SynchronizedUpdater {
     }
 
     public void updateInformation(Dispensable dispensable) {
-
-        if (dispensableRepository.findDispensable(dispensable.getId()) == null) {
-            List<Orderable> orderables = orderableRepository.findOrderables(null, null, null, null, dispensable.getId(), null, null);
-            for (Orderable orderable : orderables) {
-                org.smartregister.stock.openlmis.domain.TradeItem tradeItem = tradeItemRegisterRepository.getTradeItemById(orderable.getTradeItemId());
-                if (tradeItem != null) {
-                    tradeItem.setDispensable(dispensable);
-                    tradeItemRegisterRepository.addOrUpdate(tradeItem);
+        List<Orderable> orderables = orderableRepository.findOrderables(null, null, null, null, dispensable.getId(), null, null);
+        for (Orderable orderable : orderables) {
+            org.smartregister.stock.openlmis.domain.TradeItem tradeItem = tradeItemRegisterRepository.getTradeItemById(orderable.getTradeItemId());
+            List<org.smartregister.stock.openlmis.domain.TradeItem> tradeItemsByCommodityType = tradeItemRegisterRepository.getTradeItemByCommodityType(orderable.getCommodityTypeId());
+            if (tradeItem != null) {
+                tradeItem.setDispensable(dispensable);
+                tradeItemRegisterRepository.addOrUpdate(tradeItem);
+            } else if (tradeItemsByCommodityType.size() > 0) {
+                for (org.smartregister.stock.openlmis.domain.TradeItem savedTradeItem : tradeItemsByCommodityType) {
+                    savedTradeItem.setDispensable(dispensable);
+                    tradeItemRegisterRepository.addOrUpdate(savedTradeItem);
                 }
             }
         }
@@ -89,6 +98,11 @@ public class SynchronizedUpdater {
             if (savedTradeItems.size() > 0) {
                 savedTradeItem = savedTradeItems.get(0);
                 tradeItemRegister.setDateUpdated(savedTradeItem.getDateUpdated());
+            }
+
+            List<Orderable> savedOrderables = orderableRepository.findOrderables(null, null, null, null, null, null, commodityType.getId());
+            for (Orderable savedOrderable : savedOrderables) {
+                updateInformation(savedOrderable);
             }
             tradeItemRegisterRepository.addOrUpdate(tradeItemRegister);
         }

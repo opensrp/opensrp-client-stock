@@ -116,7 +116,7 @@ public class TradeItemRepository extends BaseRepository {
         try {
             return new TradeItem(
                     cursor.getString(cursor.getColumnIndex(ID)),
-                    new Gtin(cursor.getString(cursor.getColumnIndex(GTIN))),
+                    cursor.getString(cursor.getColumnIndex(GTIN)) == null ? null : new Gtin(cursor.getString(cursor.getColumnIndex(GTIN))),
                     cursor.getString(cursor.getColumnIndex(MANUFACTURER_OF_TRADE_ITEM)),
                     cursor.getLong(cursor.getColumnIndex(DATE_UPDATED))
             );

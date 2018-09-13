@@ -14,6 +14,7 @@ import org.smartregister.stock.openlmis.repository.StockRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.SYNC_COMPLETE_INTENT_ACTION;
 import static org.smartregister.util.Log.logError;
 
 public class Utils {
@@ -127,8 +128,8 @@ public class Utils {
 
     public static void sendSyncCompleteBroadCast(Context context) {
         Intent intent = new Intent();
-        intent.setAction("com.example.broadcast.MY_NOTIFICATION");
-        intent.putExtra("data","Notice me senpai!");
+        intent.setAction(SYNC_COMPLETE_INTENT_ACTION);
+        intent.putExtra("data","A sync intent service recently completed syncing.");
         context.sendBroadcast(intent);
     }
 }

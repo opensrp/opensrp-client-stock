@@ -74,11 +74,11 @@ public class DispensableSyncHelper extends BaseSyncHelper {
         Long highestTimeStamp = 0L;
         List<Dispensable> dispensables = new Gson().fromJson(jsonPayload, new TypeToken<List<Dispensable>>(){}.getType());
         for (Dispensable dispensable : dispensables) {
-            repository.addOrUpdate(dispensable);
             SynchronizedUpdater.getInstance().updateInfo(dispensable);
             if (dispensable.getServerVersion() > highestTimeStamp) {
                 highestTimeStamp = dispensable.getServerVersion();
             }
+            repository.addOrUpdate(dispensable);
         }
         // save highest server version
         SharedPreferences.Editor editor = preferences.edit();

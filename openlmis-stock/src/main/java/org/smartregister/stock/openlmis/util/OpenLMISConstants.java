@@ -12,6 +12,8 @@ public interface OpenLMISConstants {
 
     String REVIEW_WIDGET = "review";
 
+    String SYNC_COMPLETE_INTENT_ACTION = "org.smartregister.stock.openlmis.SYNC_COMPLETE_NOTIFICATION";
+
     interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";
