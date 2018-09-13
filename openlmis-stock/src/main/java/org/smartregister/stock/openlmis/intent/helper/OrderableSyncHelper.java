@@ -75,10 +75,8 @@ public class OrderableSyncHelper extends BaseSyncHelper {
         List<Orderable> orderables = new Gson().fromJson(jsonPayload, new TypeToken<List<Orderable>>(){}.getType());
         for (Orderable orderable : orderables) {
             orderableRepository.addOrUpdate(orderable);
-            // update trade item that feeds views
-            if (orderable.getTradeItemId() != null) {
-                SynchronizedUpdater.getInstance().updateInfo(orderable);
-            }
+            // update trade item that feeds views 
+            SynchronizedUpdater.getInstance().updateInfo(orderable);
             if (orderable.getServerVersion() > highestTimeStamp) {
                 highestTimeStamp = orderable.getServerVersion();
             }

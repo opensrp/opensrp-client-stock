@@ -17,6 +17,7 @@ public class SynchronizedUpdater {
     private static DispensableRepository dispensableRepository =  OpenLMISLibrary.getInstance().getDispensableRepository();
     private static TradeItemRepository tradeItemRegisterRepository = OpenLMISLibrary.getInstance().getTradeItemRegisterRepository();
     private static OrderableRepository orderableRepository = OpenLMISLibrary.getInstance().getOrderableRepository();
+    private static org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
 
     private SynchronizedUpdater() {}
 
@@ -41,6 +42,15 @@ public class SynchronizedUpdater {
 
     public void updateInformation(Orderable orderable) {
 
+        if (orderable.getCommodityTypeId() != null) {
+            List<org.smartregister.stock.openlmis.domain.TradeItem> registerTradeItems = tradeItemRegisterRepository.getTradeItemByCommodityType(orderable.getCommodityTypeId());
+            if (registerTradeItems.size() == 0) { return; }
+            for (org.smartregister.stock.openlmis.domain.TradeItem registerTradeItem : registerTradeItems) {
+                registerTradeItem.setName(orderable.getFullProductName());
+                tradeItemRegisterRepository.addOrUpdate(registerTradeItem);
+            }
+        }
+        
         org.smartregister.stock.openlmis.domain.TradeItem registerTradeItem = tradeItemRegisterRepository.getTradeItemById(orderable.getTradeItemId());
         registerTradeItem = registerTradeItem == null ? new org.smartregister.stock.openlmis.domain.TradeItem(orderable.getTradeItemId()) : registerTradeItem;
         registerTradeItem.setNetContent(orderable.getNetContent());
@@ -73,6 +83,13 @@ public class SynchronizedUpdater {
             org.smartregister.stock.openlmis.domain.TradeItem tradeItemRegister = tradeItemRegisterRepository.getTradeItemById(tradeItem.getId());
             tradeItemRegister = tradeItemRegister == null ? new org.smartregister.stock.openlmis.domain.TradeItem(tradeItem.getId()) : tradeItemRegister;
             tradeItemRegister.setCommodityTypeId(commodityType.getId());
+
+            List<TradeItem> savedTradeItems = tradeItemRepository.findTradeItems(tradeItem.getId(), null, null);
+            TradeItem savedTradeItem;
+            if (savedTradeItems.size() > 0) {
+                savedTradeItem = savedTradeItems.get(0);
+                tradeItemRegister.setDateUpdated(savedTradeItem.getDateUpdated());
+            }
             tradeItemRegisterRepository.addOrUpdate(tradeItemRegister);
         }
     }

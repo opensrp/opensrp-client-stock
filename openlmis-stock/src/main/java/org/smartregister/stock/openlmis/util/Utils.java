@@ -1,5 +1,7 @@
 package org.smartregister.stock.openlmis.util;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Pair;
 
 import org.smartregister.domain.Response;
@@ -121,5 +123,12 @@ public class Utils {
         for (Stock stk : stocks) {
             repository.addOrUpdate(stk);
         }
+    }
+
+    public static void sendSyncCompleteBroadCast(Context context) {
+        Intent intent = new Intent();
+        intent.setAction("com.example.broadcast.MY_NOTIFICATION");
+        intent.putExtra("data","Notice me senpai!");
+        context.sendBroadcast(intent);
     }
 }

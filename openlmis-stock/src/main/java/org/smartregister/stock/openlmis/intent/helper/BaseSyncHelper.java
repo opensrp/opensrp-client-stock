@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import static org.smartregister.stock.openlmis.util.Utils.sendSyncCompleteBroadCast;
+
 public abstract class BaseSyncHelper {
 
     protected Context context;
@@ -18,5 +20,6 @@ public abstract class BaseSyncHelper {
             return;
         }
         saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
+        sendSyncCompleteBroadCast(context);
     }
 }

@@ -72,12 +72,12 @@ public class CommodityTypeSyncHelper extends BaseSyncHelper {
         List<CommodityType> commodityTypes = new Gson().fromJson(jsonPayload, new TypeToken<List<CommodityType>>(){}.getType());
         for (CommodityType commodityType : commodityTypes) {
             commodityTypeRepository.addOrUpdate(commodityType);
-            // update trade item register repository
-            SynchronizedUpdater.getInstance().updateInfo(commodityType);
             // update trade item repository
             for (TradeItem tradeItem : commodityType.getTradeItems()) {
                 tradeItemRepository.addOrUpdate(tradeItem);
             }
+            // update trade item register repository
+            SynchronizedUpdater.getInstance().updateInfo(commodityType);
             if (commodityType.getServerVersion() > highestTimeStamp) {
                 highestTimeStamp = commodityType.getServerVersion();
             }
