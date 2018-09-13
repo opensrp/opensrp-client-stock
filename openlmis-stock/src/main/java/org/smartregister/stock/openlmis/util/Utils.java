@@ -74,7 +74,7 @@ public class Utils {
     }
 
     public static Long getCurrentTime() {
-        return System.nanoTime();
+        return System.currentTimeMillis();
     }
 
     public static String makeGetRequest(String uri) {
