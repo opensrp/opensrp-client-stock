@@ -33,6 +33,8 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     private Context context;
 
+    private String programId;
+
     public ListCommodityTypeAdapter(StockListPresenter stockListPresenter, Context context) {
         this.stockListPresenter = stockListPresenter;
         this.commodityTypes = stockListPresenter.getCommodityTypes();
@@ -77,7 +79,7 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter,
                 commodityType.getName(), tradeItems.size()));
         holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, totalDoses));
-        holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, context));
+        holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, programId, context));
     }
 
     @Override
@@ -97,5 +99,9 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public void registerExpandCollapseListeners(ExpandCollapseListener listener) {
         expandCollapseListeners.add(listener);
+    }
+
+    public void setProgramId(String programId) {
+        this.programId = programId;
     }
 }

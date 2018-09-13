@@ -5,6 +5,7 @@ import android.view.View;
 
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
+import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.interactor.StockListInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
@@ -38,7 +39,7 @@ public class StockListPresenter {
         this.commodityTypeAdapter = commodityTypeAdapter;
     }
 
-    public List<String> getPrograms() {
+    public List<Program> getPrograms() {
         return stockListInteractor.getPrograms();
     }
 

@@ -20,10 +20,12 @@ import java.util.List;
 public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHolder> {
 
     private List<TradeItemWrapper> tradeItems;
+    private String programId;
     private Context context;
 
-    public ListTradeItemAdapter(List<TradeItemWrapper> tradeItems, Context context) {
+    public ListTradeItemAdapter(List<TradeItemWrapper> tradeItems, String programId, Context context) {
         this.tradeItems = tradeItems;
+        this.programId = programId;
         this.context = context;
     }
 
@@ -39,6 +41,7 @@ public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHold
         TradeItemWrapper tradeItemWrapper = tradeItems.get(position);
         TradeItem tradeItem = tradeItemWrapper.getTradeItem();
         holder.setTradeItemWrapper(tradeItemWrapper);
+        holder.setProgramId(programId);
         holder.getNameTextView().setText(tradeItem.getName());
         holder.getNameTextView().setTag(R.id.trade_item_updated_key, tradeItem.getDateUpdated());
         holder.getNameTextView().setTag(R.id.trade_item_id_key, tradeItem.getId());

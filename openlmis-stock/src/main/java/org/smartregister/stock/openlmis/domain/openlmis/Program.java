@@ -133,6 +133,11 @@ public class Program extends BaseEntity {
     public void setDateUpdated(Long dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
 
 

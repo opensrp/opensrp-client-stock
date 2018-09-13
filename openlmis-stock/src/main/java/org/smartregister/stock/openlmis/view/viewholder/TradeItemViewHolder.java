@@ -26,6 +26,8 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
 
     private TradeItemWrapper tradeItemWrapper;
 
+    private String programId;
+
 
     public TradeItemViewHolder(View itemView) {
         super(itemView);
@@ -44,7 +46,7 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
         TradeItemDto tradeItemDto = new TradeItemDto(tradeItem.getId(),
                 tradeItem.getName(), tradeItemWrapper.getTotalStock(),
                 tradeItem.getDateUpdated(), tradeItemWrapper.getNumberOfLots(),
-                tradeItem.getDispensable().getKeyDispensingUnit(), tradeItem.getNetContent());
+                tradeItem.getDispensable().getKeyDispensingUnit(), tradeItem.getNetContent(), programId);
         intent.putExtra(OpenLMISConstants.TRADE_ITEM, tradeItemDto);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -72,5 +74,9 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
 
     public Context getContext() {
         return context;
+    }
+
+    public void setProgramId(String programId) {
+        this.programId = programId;
     }
 }

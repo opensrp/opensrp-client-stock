@@ -60,13 +60,8 @@ public class StockListInteractor {
         this.searchRepository = searchRepository;
     }
 
-    public List<String> getPrograms() {
-
-        List<Program> programList = programRepository.findAllPrograms();
-        List<String> programs = new ArrayList<>();
-        for (Program program : programList)
-            programs.add(program.getName());
-        return programs;
+    public List<Program> getPrograms() {
+        return programRepository.findAllPrograms();
     }
 
     public List<CommodityType> getCommodityTypes() {

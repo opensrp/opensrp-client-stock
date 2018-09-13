@@ -20,6 +20,8 @@ public interface OpenLMISConstants {
 
         String DISPENSING_UNIT = "[dispensing_unit]";
 
+        String PROGRAM_ID = "[program_id]";
+
         String PREVIOUS = "previous";
 
         String PREVIOUS_LABEL = "previous_label";
