@@ -15,9 +15,14 @@ import org.smartregister.stock.openlmis.domain.openlmis.ProgramOrderable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import static org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository.COMMODITY_TYPE_ID;
+import static org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository.ORDERABLE_TABLE;
+import static org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository.TRADE_ITEM_ID;
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.convertBooleanToInt;
 import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
@@ -40,7 +45,7 @@ public class ProgramOrderableRepository extends BaseRepository {
     public static final String CREATE_PROGRAM_ORDERABLE_TABLE =
 
             "CREATE TABLE " + PROGRAM_ORDERABLE_TABLE
-            + "("
+                    + "("
                     + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + PROGRAM + " VARCHAR NOT NULL,"
                     + ORDERABLE + " VARCHAR NOT NULL,"
@@ -48,9 +53,11 @@ public class ProgramOrderableRepository extends BaseRepository {
                     + ACTIVE + " TINYINT,"
                     + FULL_SUPPLY + " TINYINT,"
                     + DATE_UPDATED + " INTEGER"
-            + ")";
+                    + ")";
 
-    public ProgramOrderableRepository(Repository repository) { super(repository); }
+    public ProgramOrderableRepository(Repository repository) {
+        super(repository);
+    }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_PROGRAM_ORDERABLE_TABLE);
@@ -83,9 +90,9 @@ public class ProgramOrderableRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String[] selectionArgs = new String[]{id, program, orderable, dosesPerPatient, active, fullSupply};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString =  query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(PROGRAM_ORDERABLE_TABLE, PROGRAM_ORDERABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
@@ -135,15 +142,36 @@ public class ProgramOrderableRepository extends BaseRepository {
 
     private Object[] createQueryValues(ProgramOrderable programOrderable) {
 
-        Object[] values = new Object[] {
-            programOrderable.getId().toString(),
-            programOrderable.getProgram().getId().toString(),
-            programOrderable.getOrderable().getId().toString(),
-            programOrderable.getDosesPerPatient(),
-            convertBooleanToInt(programOrderable.isActive()),
-            convertBooleanToInt(programOrderable.isFullSupply()),
-            programOrderable.getDateUpdated()
+        Object[] values = new Object[]{
+                programOrderable.getId().toString(),
+                programOrderable.getProgram().getId().toString(),
+                programOrderable.getOrderable().getId().toString(),
+                programOrderable.getDosesPerPatient(),
+                convertBooleanToInt(programOrderable.isActive()),
+                convertBooleanToInt(programOrderable.isFullSupply()),
+                programOrderable.getDateUpdated()
         };
         return values;
+    }
+
+    public Set<String> searchIdsByPrograms(String programId) {
+        Cursor cursor = null;
+        Set<String> ids = new HashSet<>();
+        String query = String.format("SELECT IFNULL(o.%s,o.%s) FROM %s p JOIN %s  o on p.%s = o.%s WHERE p.%s =? ",
+                COMMODITY_TYPE_ID, TRADE_ITEM_ID, PROGRAM_ORDERABLE_TABLE, ORDERABLE_TABLE, ORDERABLE,
+                OrderableRepository.ID, PROGRAM);
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{programId});
+            while (cursor.moveToNext()) {
+                ids.add(cursor.getString(0));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return ids;
     }
 }

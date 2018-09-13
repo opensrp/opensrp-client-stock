@@ -64,11 +64,12 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                adapter.setProgramId(null);
             }
         });
 
-        adapter.setProgramId(dataAdapter.getItem(0).getId().toString());
+        if (dataAdapter.getCount() > 0)
+            adapter.setProgramId(dataAdapter.getItem(0).getId().toString());
 
         findViewById(R.id.expandAll).setOnClickListener(this);
 

@@ -75,4 +75,8 @@ public class StockListPresenter {
     public List<TradeItemWrapper> findTradeItemsByIds(List<String> tradeItemIds) {
         return stockListInteractor.findTradeItemsByIds(tradeItemIds);
     }
+
+    public Set<String> searchIdsByPrograms(String programId) {
+        return stockListInteractor.searchIdsByPrograms(programId);
+    }
 }

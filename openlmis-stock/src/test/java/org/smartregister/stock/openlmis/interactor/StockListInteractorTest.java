@@ -71,7 +71,7 @@ public class StockListInteractorTest extends BaseUnitTest {
     @Before
     public void setUp() {
         stockListInteractor = new StockListInteractor(programRepository, commodityTypeRepository,
-                tradeItemRepository, stockRepository, searchRepository);
+                tradeItemRepository, stockRepository, searchRepository, programOrderableRepository);
     }
 
     @Test
