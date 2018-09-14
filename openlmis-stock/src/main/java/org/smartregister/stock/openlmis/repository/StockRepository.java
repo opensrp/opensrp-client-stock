@@ -65,7 +65,7 @@ public class StockRepository extends BaseRepository {
             TEAM_ID + " VARCHAR," +
             TEAM_NAME + " VARCHAR)";
 
-    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED};
+    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME};
 
 
     public StockRepository(Repository repository) {
@@ -119,23 +119,10 @@ public class StockRepository extends BaseRepository {
     private List<Stock> readAllstocks(Cursor cursor) {
         List<Stock> stocks = new ArrayList<>();
         try {
-            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
-                                            cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
-                                            cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
-                                            cursor.getInt(cursor.getColumnIndex(VALUE)),
-                                            cursor.getLong(cursor.getColumnIndex(DATE_CREATED)),
-                                            cursor.getString(cursor.getColumnIndex(TO_FROM)),
-                                            cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
-                                            cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
-                                            cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID))
-                                        );
-                    stock.setLotId(cursor.getString(cursor.getColumnIndex(LOT_ID)));
-                    stocks.add(stock);
-                    cursor.moveToNext();
-                }
+            while (cursor.moveToNext()) {
+                stocks.add(createStock(cursor));
             }
+
         } catch (Exception e) {
             Log.e(getClass().getCanonicalName(), e.getMessage());
         } finally {

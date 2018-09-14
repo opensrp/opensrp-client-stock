@@ -8,7 +8,6 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
@@ -136,6 +135,8 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
                             stockObject.getString(context.getString(org.smartregister.stock.R.string.stock_type_id_key))
                     );
                     stock.setLotId(stockObject.getString(context.getString(org.smartregister.stock.R.string.lot_id)));
+                    stock.setReason(stockObject.getString(context.getString(org.smartregister.stock.R.string.reason_id)));
+                    stock.setProgramId(stockObject.getString(context.getString(org.smartregister.stock.R.string.program_id)));
                     Stock_arrayList.add(stock);
                 }
             }
