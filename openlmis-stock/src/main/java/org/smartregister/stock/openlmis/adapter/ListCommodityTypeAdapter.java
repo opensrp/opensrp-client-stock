@@ -18,7 +18,6 @@ import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by samuelgithengi on 7/13/18.
@@ -31,8 +30,6 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     private List<ExpandCollapseListener> expandCollapseListeners = new ArrayList<>();
 
     private Map<String, List<String>> searchedIds;
-
-    private Set<String> programTradeItems;
 
     private Context context;
 
@@ -74,8 +71,6 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         List<TradeItemWrapper> tradeItems;
         if (searchedIds != null) {
             tradeItems = stockListPresenter.findTradeItemsByIds(searchedIds.get(commodityType.getId().toString()));
-        } else if (programTradeItems != null && !programTradeItems.isEmpty()) {
-            tradeItems = stockListPresenter.findTradeItemsByIds(new ArrayList<>(programTradeItems));
         } else {
             tradeItems = stockListPresenter.getTradeItems(commodityType);
         }
@@ -109,7 +104,7 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public void setProgramId(String programId) {
         this.programId = programId;
-        programTradeItems = stockListPresenter.searchIdsByPrograms(programId);
-        commodityTypes = stockListPresenter.findCommodityTypesByIds(programTradeItems);
+        searchedIds = stockListPresenter.searchIdsByPrograms(programId);
+        commodityTypes = stockListPresenter.findCommodityTypesByIds(searchedIds.keySet());
     }
 }

@@ -131,9 +131,8 @@ public class TestDataUtils {
         OrderableRepository orderableRepository = new OrderableRepository(OpenLMISLibrary.getInstance().getRepository());
         ProgramOrderableRepository programOrderableRepository = new ProgramOrderableRepository(OpenLMISLibrary.getInstance().getRepository());
         List<Program> programs = programRepository.findAllPrograms();
-        Random random = new Random();
         for (CommodityType commodityType : commodityTypeRepository.findAllCommodityTypes()) {
-            Orderable commodityOrderable = new Orderable(UUID.randomUUID(), new Code(commodityType.getName().substring(2)), commodityType.getName(), 0l, 0l, true, new Dispensable(UUID.randomUUID()), null, commodityType.getId().toString());
+            Orderable commodityOrderable = new Orderable(UUID.randomUUID(), new Code(commodityType.getName().substring(0, 2)), commodityType.getName(), 0l, 0l, true, new Dispensable(UUID.randomUUID()), null, commodityType.getId().toString());
             orderableRepository.addOrUpdate(commodityOrderable);
             if (commodityType.getName().equals("BCG") || commodityType.getName().equals("OPV")) {
                 ProgramOrderable programOrderable = new ProgramOrderable(UUID.randomUUID(), programs.get(0), commodityOrderable, 20, true, true, commodityType.getDateUpdated());
@@ -143,12 +142,12 @@ public class TestDataUtils {
                 programOrderableRepository.addOrUpdate(programOrderable);
             }
             for (TradeItem tradeItem : tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString())) {
-                Orderable tradeItemOrderable = new Orderable(UUID.randomUUID(), new Code(tradeItem.getName().substring(2)), tradeItem.getName(), 0l, 0l, true, new Dispensable(UUID.randomUUID()), tradeItem.getId(), null);
+                Orderable tradeItemOrderable = new Orderable(UUID.randomUUID(), new Code(tradeItem.getName().substring(0, 2)), tradeItem.getName(), 0l, 0l, true, new Dispensable(UUID.randomUUID()), tradeItem.getId(), null);
                 orderableRepository.addOrUpdate(tradeItemOrderable);
-                if (commodityType.getName().equals("BCG") || commodityType.getName().equals("OPV")) {
+                if (commodityType.getName().equals("BCG")) {
                     ProgramOrderable programOrderable = new ProgramOrderable(UUID.randomUUID(), programs.get(0), tradeItemOrderable, 20, true, true, tradeItem.getDateUpdated());
                     programOrderableRepository.addOrUpdate(programOrderable);
-                } else if (commodityType.getName().equals("Penta")) {
+                } else if (commodityType.getName().equals("Measles") && tradeItem.getName().contains("20")) {
                     ProgramOrderable programOrderable = new ProgramOrderable(UUID.randomUUID(), programs.get(1), tradeItemOrderable, 20, true, true, tradeItem.getDateUpdated());
                     programOrderableRepository.addOrUpdate(programOrderable);
                 }

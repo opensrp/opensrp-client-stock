@@ -113,7 +113,7 @@ public class StockListInteractor {
         return tradeItemWrappers;
     }
 
-    public Set<String> searchIdsByPrograms(String programId) {
+    public Map<String, List<String>> searchIdsByPrograms(String programId) {
         return programOrderableRepository.searchIdsByPrograms(programId);
     }
 }

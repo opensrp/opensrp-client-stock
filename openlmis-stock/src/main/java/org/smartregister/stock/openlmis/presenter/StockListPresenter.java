@@ -76,7 +76,7 @@ public class StockListPresenter {
         return stockListInteractor.findTradeItemsByIds(tradeItemIds);
     }
 
-    public Set<String> searchIdsByPrograms(String programId) {
+    public Map<String, List<String>> searchIdsByPrograms(String programId) {
         return stockListInteractor.searchIdsByPrograms(programId);
     }
 }

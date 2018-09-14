@@ -24,11 +24,11 @@ public class TradeItemRepository extends BaseRepository {
 
     private static final String TAG = TradeItemRepository.class.getName();
 
-    private static final String TRADE_ITEM_TABLE = "trade_item_register";
+    public static final String TRADE_ITEM_TABLE = "trade_item_register";
 
-    private static final String ID = "_id";
+    public static final String ID = "_id";
 
-    private static final String COMMODITY_TYPE_ID = "commodity_type_id";
+    public static final String COMMODITY_TYPE_ID = "commodity_type_id";
 
     private static final String NAME = "name";
 
@@ -52,6 +52,9 @@ public class TradeItemRepository extends BaseRepository {
             DISPENSING_SIZE + " VARCHAR, " +
             DISPENSING_ADMINISTRATION + " VARCHAR)";
 
+    private static final String CREATE_TRADE_ITEM_INDEX = "CREATE INDEX "
+            + TRADE_ITEM_TABLE + "_INDEX ON "
+            + TRADE_ITEM_TABLE + "(" + COMMODITY_TYPE_ID + "," + ID + ")";
 
     public TradeItemRepository(Repository repository) {
         super(repository);
@@ -59,6 +62,7 @@ public class TradeItemRepository extends BaseRepository {
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_TRADE_ITEM_TABLE);
+        database.execSQL(CREATE_TRADE_ITEM_INDEX);
     }
 
     public void addOrUpdate(TradeItem tradeItem) {
