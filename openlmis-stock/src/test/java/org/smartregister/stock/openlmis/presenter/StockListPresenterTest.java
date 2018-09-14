@@ -58,16 +58,17 @@ public class StockListPresenterTest extends BaseUnitTest {
 
     @Test
     public void testGetPrograms() {
-        List<String> expected = new ArrayList<>();
+        List<Program> expected = new ArrayList<>();
         Program program = new Program("ESSD");
         program.setName("Essential Drugs");
-        expected.add(program.getName());
+        expected.add(program);
 
         when(stockListInteractor.getPrograms()).thenReturn(expected);
-        List<String> returnedPrograms = stockListPresenter.getPrograms();
+        List<Program> returnedPrograms = stockListPresenter.getPrograms();
         verify(stockListInteractor, only()).getPrograms();
         assertEquals(1, returnedPrograms.size());
-        assertEquals("Essential Drugs", returnedPrograms.get(0));
+        assertEquals("ESSD", returnedPrograms.get(0).getCode().toString());
+        assertEquals("Essential Drugs", returnedPrograms.get(0).getName());
     }
 
     @Test
@@ -153,23 +154,23 @@ public class StockListPresenterTest extends BaseUnitTest {
 
     @Test
     public void testSearchIds() {
-        Map<String, List<String>> expected = new HashMap<>();
-        List<String> tradeItems = new ArrayList<>();
+        Map<String, Set<String>> expected = new HashMap<>();
+        Set<String> tradeItems = new HashSet<>();
         String tradeItemId = UUID.randomUUID().toString();
         tradeItems.add(tradeItemId);
         String commodityId = UUID.randomUUID().toString();
         expected.put(commodityId, tradeItems);
         when(stockListInteractor.searchIds("BCG")).thenReturn(expected);
-        Map<String, List<String>> actual = stockListPresenter.searchIds("BCG");
+        Map<String, Set<String>> actual = stockListPresenter.searchIds("BCG");
         verify(stockListInteractor).searchIds("BCG");
         assertEquals(1, actual.size());
         assertEquals(1, actual.get(commodityId).size());
-        assertEquals(tradeItemId, actual.get(commodityId).get(0));
+        assertEquals(tradeItemId, actual.get(commodityId).iterator().next());
     }
 
     @Test
     public void testFindTradeItemsByIds() {
-        List<String> tradeItems = new ArrayList<>();
+        Set<String> tradeItems = new HashSet<>();
         String tradeItemId = UUID.randomUUID().toString();
         tradeItems.add(tradeItemId);
 
@@ -187,7 +188,7 @@ public class StockListPresenterTest extends BaseUnitTest {
         when(stockListInteractor.findTradeItemsByIds(tradeItems)).thenReturn(expectedTradeItems);
 
 
-        List<TradeItemWrapper> actual = stockListPresenter.findTradeItemsByIds(new ArrayList<>(tradeItems));
+        List<TradeItemWrapper> actual = stockListPresenter.findTradeItemsByIds(tradeItems);
         verify(stockListInteractor).findTradeItemsByIds(tradeItems);
         assertEquals(1, actual.size());
         assertEquals(tradeItem.getId(), actual.get(0).getTradeItem().getId());

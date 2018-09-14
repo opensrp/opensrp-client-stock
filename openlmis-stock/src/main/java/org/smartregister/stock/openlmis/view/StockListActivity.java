@@ -25,8 +25,6 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
     private StockListPresenter stockListPresenter;
 
-    private Spinner programsFilter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +44,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         mRecyclerView.setAdapter(adapter);
         stockListPresenter.setCommodityTypeAdapter(adapter);
 
-        programsFilter = findViewById(R.id.filterPrograms);
+        Spinner programsFilter = findViewById(R.id.filterPrograms);
 
         final ArrayAdapter<Program> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stockListPresenter.getPrograms());
 

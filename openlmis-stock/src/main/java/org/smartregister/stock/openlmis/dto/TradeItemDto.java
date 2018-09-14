@@ -24,7 +24,7 @@ public class TradeItemDto implements Parcelable {
 
     public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
                         @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
-                        @NonNull Long netContent, @NonNull String programId) {
+                        @NonNull Long netContent, String programId) {
         this.id = id;
         this.name = name;
         this.totalStock = totalStock;
@@ -47,6 +47,13 @@ public class TradeItemDto implements Parcelable {
         dispensingUnit = data[5];
         netContent = Long.valueOf(data[6]);
         programId = data[7];
+    }
+
+    public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
+                        @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
+                        @NonNull Long netContent) {
+        this(id, name, totalStock, lastUpdated, numberOfLots, dispensingUnit, netContent, null);
+
     }
 
     @Override

@@ -83,6 +83,8 @@ public class StockListPresenter {
 
     public Map<String, Set<String>> filterValidPrograms(Map<String, Set<String>> programIds,
                                                         Map<String, Set<String>> searchedIds) {
+        if (programIds == null)
+            return searchedIds;
         Map<String, Set<String>> filteredIds = new HashMap<>();
         for (String key : searchedIds.keySet()) {
             if (programIds.containsKey(key)) {
