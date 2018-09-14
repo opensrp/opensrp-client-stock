@@ -67,12 +67,14 @@ public class ReasonSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+    public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
 
         // store reasons
         Long highestTimeStamp = 0L;
         List<Reason> reasons = new Gson().fromJson(jsonPayload, new TypeToken<List<Reason>>(){}.getType());
+        boolean isEmptyResponse = true;
         for (Reason reason : reasons) {
+            isEmptyResponse = false;
             repository.addOrUpdate(reason);
             if (reason.getServerVersion() > highestTimeStamp) {
                 highestTimeStamp = reason.getServerVersion();
@@ -82,6 +84,8 @@ public class ReasonSyncHelper extends BaseSyncHelper {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
         editor.commit();
+
+        return isEmptyResponse;
     }
 
     public Context getContext() {

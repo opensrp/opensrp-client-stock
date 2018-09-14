@@ -67,12 +67,14 @@ public class LotSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+    public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
 
         // store lots
         Long highestTimeStamp = 0L;
         List<Lot> lots = new Gson().fromJson(jsonPayload, new TypeToken<List<Lot>>(){}.getType());
+        boolean isEmptyResponse = true;
         for (Lot lot : lots) {
+            isEmptyResponse = false;
             repository.addOrUpdate(lot);
             if (lot.getServerVersion() > highestTimeStamp) {
                 highestTimeStamp = lot.getServerVersion();
@@ -82,6 +84,8 @@ public class LotSyncHelper extends BaseSyncHelper {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
         editor.commit();
+
+        return isEmptyResponse;
     }
 
     public Context getContext() {

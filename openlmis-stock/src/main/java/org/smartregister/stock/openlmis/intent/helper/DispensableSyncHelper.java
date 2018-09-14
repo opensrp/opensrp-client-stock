@@ -68,12 +68,14 @@ public class DispensableSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+    public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
 
         // store dispensables
         Long highestTimeStamp = 0L;
         List<Dispensable> dispensables = new Gson().fromJson(jsonPayload, new TypeToken<List<Dispensable>>(){}.getType());
+        boolean isEmptyResponse = true;
         for (Dispensable dispensable : dispensables) {
+            isEmptyResponse = false;
             SynchronizedUpdater.getInstance().updateInfo(dispensable);
             if (dispensable.getServerVersion() > highestTimeStamp) {
                 highestTimeStamp = dispensable.getServerVersion();
@@ -84,6 +86,8 @@ public class DispensableSyncHelper extends BaseSyncHelper {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
         editor.commit();
+
+        return isEmptyResponse;
     }
 
     public Context getContext() {

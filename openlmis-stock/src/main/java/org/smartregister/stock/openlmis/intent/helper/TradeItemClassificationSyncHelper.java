@@ -67,11 +67,13 @@ public class TradeItemClassificationSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+    public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
         // store tradeItemClassifications
         Long highestTimeStamp = 0L;
         List<TradeItemClassification> tradeItemClassifications = new Gson().fromJson(jsonPayload, new TypeToken<List<TradeItemClassification>>(){}.getType());
+        boolean isEmptyResponse = true;
         for (TradeItemClassification tradeItemClassification : tradeItemClassifications) {
+            isEmptyResponse = false;
             repository.addOrUpdate(tradeItemClassification);
             if (tradeItemClassification.getServerVersion() > highestTimeStamp) {
                 highestTimeStamp = tradeItemClassification.getServerVersion();
@@ -81,6 +83,8 @@ public class TradeItemClassificationSyncHelper extends BaseSyncHelper {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
         editor.commit();
+
+        return isEmptyResponse;
     }
 
     public Context getContext() {

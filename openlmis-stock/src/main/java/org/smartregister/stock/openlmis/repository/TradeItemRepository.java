@@ -94,6 +94,10 @@ public class TradeItemRepository extends BaseRepository {
     }
 
     public List<TradeItem> getTradeItemByCommodityType(String commodityTypeId) {
+
+        if (commodityTypeId == null) {
+            return new ArrayList<>();
+        }
         String query = String.format("SELECT * FROM %s WHERE %s=?", TRADE_ITEM_TABLE, COMMODITY_TYPE_ID);
         Cursor cursor = null;
         List<TradeItem> tradeItems = new ArrayList<>();

@@ -68,12 +68,14 @@ public class OrderableSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+    public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
 
         // store Orderables
         Long highestTimeStamp = 0L;
         List<Orderable> orderables = new Gson().fromJson(jsonPayload, new TypeToken<List<Orderable>>(){}.getType());
+        boolean isEmptyResponse = true;
         for (Orderable orderable : orderables) {
+            isEmptyResponse = false;
             orderableRepository.addOrUpdate(orderable);
             // update trade item that feeds views 
             SynchronizedUpdater.getInstance().updateInfo(orderable);
@@ -85,6 +87,8 @@ public class OrderableSyncHelper extends BaseSyncHelper {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
         editor.commit();
+
+        return isEmptyResponse;
     }
 
     public Context getContext() {

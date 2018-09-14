@@ -73,29 +73,28 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+    public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
 
         ArrayList<Stock> Stock_arrayList = getStockFromPayload(jsonPayload);
         Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(LAST_STOCK_SYNC, highestTimestamp);
         editor.commit();
-        if (Stock_arrayList.isEmpty()) {
-            return;
-        } else {
-            for (int j = 0; j < Stock_arrayList.size(); j++) {
-                Stock fromServer = Stock_arrayList.get(j);
-                List<Stock> existingStock = stockRepository.findUniqueStock(fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
-                        String.valueOf(fromServer.getValue()), String.valueOf(fromServer.getDateCreated()), fromServer.getToFrom());
-                if (!existingStock.isEmpty()) {
-                    for (Stock stock : existingStock) {
-                        fromServer.setId(stock.getId());
-                    }
+        boolean isEmptyResponse = true;
+        for (int j = 0; j < Stock_arrayList.size(); j++) {
+            isEmptyResponse = false;
+            Stock fromServer = Stock_arrayList.get(j);
+            List<Stock> existingStock = stockRepository.findUniqueStock(fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
+                    String.valueOf(fromServer.getValue()), String.valueOf(fromServer.getDateCreated()), fromServer.getToFrom());
+            if (!existingStock.isEmpty()) {
+                for (Stock stock : existingStock) {
+                    fromServer.setId(stock.getId());
                 }
-                stockRepository.addOrUpdate(fromServer);
             }
-
+            stockRepository.addOrUpdate(fromServer);
         }
+
+        return isEmptyResponse;
     }
 
     private Long getHighestTimestampFromStockPayLoad(String jsonPayload) {

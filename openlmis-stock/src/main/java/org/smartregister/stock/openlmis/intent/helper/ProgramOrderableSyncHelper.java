@@ -70,12 +70,14 @@ public class ProgramOrderableSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+    public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
 
         // store programOrderables
         Long highestTimeStamp = 0L;
         List<ProgramOrderable> programOrderables = new Gson().fromJson(jsonPayload, new TypeToken<List<ProgramOrderable>>(){}.getType());
+        boolean isEmptyResponse = true;
         for (ProgramOrderable programOrderable : programOrderables) {
+            isEmptyResponse = false;
             repository.addOrUpdate(programOrderable);
             if (programOrderable.getServerVersion() > highestTimeStamp) {
                 highestTimeStamp = programOrderable.getServerVersion();
@@ -85,6 +87,8 @@ public class ProgramOrderableSyncHelper extends BaseSyncHelper {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
         editor.commit();
+
+        return isEmptyResponse;
     }
 
     public Context getContext() {
