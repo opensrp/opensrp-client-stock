@@ -20,7 +20,11 @@ import org.smartregister.stock.openlmis.view.viewholder.CommodityTypeViewHolder;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -48,14 +52,16 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
     private CommodityType bcGCommodityType = new CommodityType(UUID.randomUUID(), "BCG",
             "", null, null, System.currentTimeMillis());
 
+    private List<CommodityType> commodityTypeList;
+
 
     @Before
     public void setUp() {
-        List<CommodityType> expected = new ArrayList<>();
-        expected.add(bcGCommodityType);
-        expected.add(new CommodityType(UUID.randomUUID(), "OPV", "", null, null, System.currentTimeMillis()));
+        commodityTypeList = new ArrayList<>();
+        commodityTypeList.add(bcGCommodityType);
+        commodityTypeList.add(new CommodityType(UUID.randomUUID(), "OPV", "", null, null, System.currentTimeMillis()));
 
-        when(stockListPresenter.getCommodityTypes()).thenReturn(expected);
+        when(stockListPresenter.getCommodityTypes()).thenReturn(commodityTypeList);
 
         listCommodityTypeAdapter = new ListCommodityTypeAdapter(stockListPresenter, context);
     }
@@ -129,6 +135,71 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         listCommodityTypeAdapter.registerExpandCollapseListeners(listener);
         listCommodityTypeAdapter.collapseAllViews();
         verify(listener).collapseView();
+    }
+
+
+    @Test
+    public void testFilterCommodityTypesInvalidPhrase() {
+        when(stockListPresenter.searchIds("BCG")).thenReturn(new HashMap<String, List<String>>());
+        LinearLayout vg = new LinearLayout(context);
+        CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
+        listCommodityTypeAdapter.onBindViewHolder(holder, 0);
+        listCommodityTypeAdapter.onBindViewHolder(holder, 1);
+        listCommodityTypeAdapter.filterCommodityTypes("BCG");
+        assertEquals(0, listCommodityTypeAdapter.getItemCount());
+
+    }
+
+
+    @Test
+    public void testFilterCommodityTypes() {
+        Map<String, List<String>> expected = new HashMap<>();
+        expected.put(bcGCommodityType.getId().toString(), null);
+        when(stockListPresenter.searchIds("BCG")).thenReturn(expected);
+        Set<String> commodityTypeId = new HashSet<>();
+        commodityTypeId.add(bcGCommodityType.getId().toString());
+        commodityTypeList.remove(1);
+        when(stockListPresenter.findCommodityTypesByIds(commodityTypeId)).thenReturn(commodityTypeList);
+        LinearLayout vg = new LinearLayout(context);
+        CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
+        listCommodityTypeAdapter.onBindViewHolder(holder, 0);
+        listCommodityTypeAdapter.filterCommodityTypes("BCG");
+        assertEquals(1, listCommodityTypeAdapter.getItemCount());
+
+    }
+
+
+    @Test
+    public void testFilterTradeItemsTypes() {
+        Map<String, List<String>> expected = new HashMap<>();
+        List<String> tradeItemIds = new ArrayList<>();
+        tradeItemIds.add(UUID.randomUUID().toString());
+        expected.put(bcGCommodityType.getId().toString(), tradeItemIds);
+        when(stockListPresenter.searchIds("BCG")).thenReturn(expected);
+        Set<String> commodityTypeId = new HashSet<>();
+        commodityTypeId.add(bcGCommodityType.getId().toString());
+        commodityTypeList.remove(1);
+        when(stockListPresenter.findCommodityTypesByIds(commodityTypeId)).thenReturn(commodityTypeList);
+        List<TradeItemWrapper> tradeItemWrappers = new ArrayList<>();
+        tradeItemWrappers.add(new TradeItemWrapper(new TradeItem(UUID.randomUUID().toString())));
+        tradeItemWrappers.get(0).setTotalStock(12);
+        tradeItemWrappers.get(0).getTradeItem().setNetContent(10l);
+        when(stockListPresenter.findTradeItemsByIds(tradeItemIds)).thenReturn(tradeItemWrappers);
+
+        LinearLayout vg = new LinearLayout(context);
+        CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
+        listCommodityTypeAdapter.onBindViewHolder(holder, 0);
+
+
+        listCommodityTypeAdapter.filterCommodityTypes("BCG1");
+        assertEquals(0, listCommodityTypeAdapter.getItemCount());
+
+        listCommodityTypeAdapter.filterCommodityTypes("BCG");
+        assertEquals(1, listCommodityTypeAdapter.getItemCount());
+
+        listCommodityTypeAdapter.onBindViewHolder(holder, 0);
+        assertEquals("120 doses", holder.getDoseTextView().getText());
+
     }
 
 

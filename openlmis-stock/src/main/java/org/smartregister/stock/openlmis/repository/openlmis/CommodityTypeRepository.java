@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.repository.openlmis;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -13,7 +14,9 @@ import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
@@ -113,15 +116,32 @@ public class CommodityTypeRepository extends BaseRepository {
         return commodityTypes;
     }
 
+
+    public List<CommodityType> findCommodityTypesByIds(Set<String> commodityTypeIds) {
+        int len = commodityTypeIds.size();
+        List<CommodityType> commodityTypes = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            String query = String.format("SELECT * FROM %s WHERE %s IN (%s)", COMMODITY_TYPE_TABLE,
+                    ID, TextUtils.join(",", Collections.nCopies(len, "?")));
+            cursor = getReadableDatabase().rawQuery(query, commodityTypeIds.toArray(new String[len]));
+            commodityTypes = readCommodityTypes(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return commodityTypes;
+    }
+
     private List<CommodityType> readCommodityTypes(Cursor cursor) {
 
         List<CommodityType> commodityTypes = new ArrayList<>();
         try {
-            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    commodityTypes.add(createCommodityType(cursor));
-                    cursor.moveToNext();
-                }
+            while (cursor.moveToNext()) {
+                commodityTypes.add(createCommodityType(cursor));
             }
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));

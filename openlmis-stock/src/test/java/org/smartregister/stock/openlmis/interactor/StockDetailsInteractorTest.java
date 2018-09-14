@@ -8,7 +8,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.smartregister.Context;
+import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.BaseUnitTest;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -23,6 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,12 +48,25 @@ public class StockDetailsInteractorTest extends BaseUnitTest {
     @Mock
     private TradeItemRepository tradeItemRepository;
 
+    @Mock
+    private Context context;
+
+    @Mock
+    private Repository repository;
+
     private StockDetailsInteractor stockDetailsInteractor;
 
 
     @Before
     public void setUp() {
         stockDetailsInteractor = new StockDetailsInteractor(stockRepository, lotRepository, tradeItemRepository);
+    }
+
+    @Test
+    public void testConstructor() {
+        OpenLMISLibrary.init(context, repository);
+        StockDetailsInteractor stockDetailsInteractor = new StockDetailsInteractor();
+        assertNotNull(stockDetailsInteractor);
     }
 
     @Test
