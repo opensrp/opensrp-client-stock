@@ -53,7 +53,6 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
     protected String pullFromServer() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
 
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
         String timeStampString = String.valueOf(timestamp);
@@ -74,6 +73,9 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
     public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
 
         ArrayList<Stock> Stock_arrayList = getStockFromPayload(jsonPayload);
+        if (Stock_arrayList.size() == 0) {
+            return true;
+        }
         Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(LAST_STOCK_SYNC, highestTimestamp);
