@@ -189,6 +189,8 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
                 stock.put(context.getString(org.smartregister.stock.R.string.to_from_key), stocks.get(i).getToFrom());
                 stock.put(context.getString(org.smartregister.stock.R.string.date_updated_key), stocks.get(i).getUpdatedAt());
                 stock.put(context.getString(org.smartregister.stock.R.string.lot_id), stocks.get(i).getLotId());
+                stock.put(context.getString(org.smartregister.stock.R.string.reason_id), stocks.get(i).getReason());
+                stock.put(context.getString(org.smartregister.stock.R.string.program_id), stocks.get(i).getProgramId());
                 array.put(stock);
             } catch (JSONException e) {
                 e.printStackTrace();
