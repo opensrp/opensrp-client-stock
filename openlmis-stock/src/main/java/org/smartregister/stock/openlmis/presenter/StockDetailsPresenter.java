@@ -175,7 +175,7 @@ public class StockDetailsPresenter {
             JSONObject jsonObject = getJSONObject(stepFields, i);
             String keyValue = jsonObject.getString(KEY);
             if (STOCK_LOTS.equals(keyValue)) {
-                return jsonObject.getString(key);
+                return jsonObject.optString(key);
             }
         }
         return null;

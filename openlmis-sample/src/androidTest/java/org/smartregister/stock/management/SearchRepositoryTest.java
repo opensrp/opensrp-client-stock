@@ -167,7 +167,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(1, ids.keySet().size());
         assertTrue(ids.containsKey(commodityTypePolio.getId().toString()));
-        assertEquals(1, ids.get(commodityTypePolio.getId().toString()).size());
+        assertEquals(0, ids.get(commodityTypePolio.getId().toString()).size());
 
 
         ids = searchRepository.searchIds("P");
@@ -175,7 +175,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
         assertEquals(2, ids.keySet().size());
         assertTrue(ids.containsKey(commodityTypePolio.getId().toString()));
         assertTrue(ids.containsKey(commodityTypePenta.getId().toString()));
-        assertEquals(1, ids.get(commodityTypePolio.getId().toString()).size());
+        assertEquals(0, ids.get(commodityTypePolio.getId().toString()).size());
         assertEquals(4, ids.get(commodityTypePenta.getId().toString()).size());
 
     }
