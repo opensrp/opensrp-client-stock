@@ -54,7 +54,6 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
-        String anmId = allSharedPreferences.fetchRegisteredANM();
 
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
         String timeStampString = String.valueOf(timestamp);
@@ -157,15 +156,9 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
             JSONObject request = new JSONObject();
             request.put(context.getString(org.smartregister.stock.R.string.stocks_key), stocksarray);
             String jsonPayload = request.toString();
-            String response = makePostRequest(
-                    MessageFormat.format(
-                            "{0}/{1}",
-                            BASE_URL,
-                            STOCK_Add_PATH),
-                    jsonPayload);
-            if (response == null) {
-                Log.e(getClass().getName(), "Stock push sync failed.");
-                return;
+            boolean isFailure = makePostRequest(MessageFormat.format("{0}/{1}", BASE_URL, STOCK_Add_PATH), jsonPayload);
+            if (isFailure) {
+                Log.i(getClass().getName(), "Stock push failed.");
             }
             stockRepository.markEventsAsSynced(stocks);
             Log.i(getClass().getName(), "Stock successfully pushed.");

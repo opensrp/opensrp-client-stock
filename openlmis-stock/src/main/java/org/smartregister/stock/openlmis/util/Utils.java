@@ -93,18 +93,18 @@ public class Utils {
         return response.payload();
     }
 
-    public static String makePostRequest(String uri, String payload) {
+    public static boolean makePostRequest(String uri, String payload) {
 
         AllSettings settings = OpenLMISLibrary.getInstance().getContext().allSettings();
         settings.registerANM(USERNAME, PASSWORD);
         Response<String> response;
         try {
             response = httpAgent.post(uri, payload);
+            return response.isFailure();
         } catch (Exception e) {
             logError(e.getMessage());
-            return null;
+            return false;
         }
-        return response.payload();
     }
 
     public static void populateDBWithStock() {
