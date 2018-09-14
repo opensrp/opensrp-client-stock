@@ -46,8 +46,8 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
 
     @Override
     public void processIntent() {
-        super.processIntent();
         pushStockToServer();
+        super.processIntent();
     }
 
     protected String pullFromServer() {
@@ -146,32 +146,30 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
     }
 
     private void pushStockToServer() {
-        boolean keepSyncing = true;
+
         int limit = 50;
         try {
-            while (keepSyncing) {
-                ArrayList<Stock> stocks = (ArrayList<Stock>) stockRepository.findUnSyncedWithLimit(limit);
-                JSONArray stocksarray = createJsonArrayFromStockArray(stocks);
-                if (stocks.isEmpty()) {
-                    return;
-                }
-                // create request body
-                JSONObject request = new JSONObject();
-                request.put(context.getString(org.smartregister.stock.R.string.stocks_key), stocksarray);
-                String jsonPayload = request.toString();
-                String response = makePostRequest(
-                        MessageFormat.format(
-                                "{0}/{1}",
-                                BASE_URL,
-                                STOCK_Add_PATH),
-                        jsonPayload);
-                if (response == null) {
-                    Log.e(getClass().getName(), "Stock push sync failed.");
-                    return;
-                }
-                stockRepository.markEventsAsSynced(stocks);
-                Log.i(getClass().getName(), "Stock successfully pushed.");
+            ArrayList<Stock> stocks = (ArrayList<Stock>) stockRepository.findUnSyncedWithLimit(limit);
+            JSONArray stocksarray = createJsonArrayFromStockArray(stocks);
+            if (stocks.isEmpty()) {
+                return;
             }
+            // create request body
+            JSONObject request = new JSONObject();
+            request.put(context.getString(org.smartregister.stock.R.string.stocks_key), stocksarray);
+            String jsonPayload = request.toString();
+            String response = makePostRequest(
+                    MessageFormat.format(
+                            "{0}/{1}",
+                            BASE_URL,
+                            STOCK_Add_PATH),
+                    jsonPayload);
+            if (response == null) {
+                Log.e(getClass().getName(), "Stock push sync failed.");
+                return;
+            }
+            stockRepository.markEventsAsSynced(stocks);
+            Log.i(getClass().getName(), "Stock successfully pushed.");
         } catch (JSONException e) {
             Log.e(getClass().getName(), e.getMessage());
         }

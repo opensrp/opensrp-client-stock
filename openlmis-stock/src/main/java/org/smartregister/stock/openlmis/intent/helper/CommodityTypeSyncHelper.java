@@ -66,11 +66,13 @@ public class CommodityTypeSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    public void saveResponse(String jsonPayload, SharedPreferences preferences) {
+    public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
         // store commodityTypes
         Long highestTimeStamp = 0L;
         List<CommodityType> commodityTypes = new Gson().fromJson(jsonPayload, new TypeToken<List<CommodityType>>(){}.getType());
+        boolean isEmptyResponse = true;
         for (CommodityType commodityType : commodityTypes) {
+            isEmptyResponse = false;
             commodityTypeRepository.addOrUpdate(commodityType);
             // update trade item repository
             for (TradeItem tradeItem : commodityType.getTradeItems()) {
@@ -86,6 +88,8 @@ public class CommodityTypeSyncHelper extends BaseSyncHelper {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
         editor.commit();
+
+        return isEmptyResponse;
     }
 
     public Context getContext() {
