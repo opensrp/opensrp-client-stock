@@ -58,10 +58,9 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
 
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
         String timeStampString = String.valueOf(timestamp);
-        String uri = MessageFormat.format("{0}/{1}?providerid={2}&serverVersion={3}",
+        String uri = MessageFormat.format("{0}/{1}?serverVersion={2}",
                 BASE_URL,
                 STOCK_SYNC_PATH,
-                anmId,
                 timeStampString
         );
         String jsonPayload = makeGetRequest(uri);
