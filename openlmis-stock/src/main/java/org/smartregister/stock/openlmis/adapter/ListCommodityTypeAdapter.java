@@ -18,6 +18,7 @@ import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 7/13/18.
@@ -29,7 +30,9 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     private List<ExpandCollapseListener> expandCollapseListeners = new ArrayList<>();
 
-    private Map<String, List<String>> searchedIds;
+    private Map<String, Set<String>> searchedIds;
+
+    private Map<String, Set<String>> programIds;
 
     private Context context;
 
@@ -44,12 +47,17 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public void filterCommodityTypes(String searchPhrase) {
         if (StringUtils.isBlank(searchPhrase)) {
-            commodityTypes = stockListPresenter.getCommodityTypes();
+            if (programIds != null) {
+                commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
+            } else {
+                commodityTypes = stockListPresenter.getCommodityTypes();
+            }
             searchedIds = null;
             notifyDataSetChanged();
             collapseAllViews();
         } else {
-            searchedIds = stockListPresenter.searchIds(searchPhrase);
+            searchedIds = stockListPresenter.filterValidPrograms(programIds,
+                    stockListPresenter.searchIds(searchPhrase));
             commodityTypes = stockListPresenter.findCommodityTypesByIds(searchedIds.keySet());
             notifyDataSetChanged();
             expandAllViews();
@@ -71,6 +79,8 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         List<TradeItemWrapper> tradeItems;
         if (searchedIds != null) {
             tradeItems = stockListPresenter.findTradeItemsByIds(searchedIds.get(commodityType.getId().toString()));
+        } else if (programIds != null) {
+            tradeItems = stockListPresenter.findTradeItemsByIds(programIds.get(commodityType.getId().toString()));
         } else {
             tradeItems = stockListPresenter.getTradeItems(commodityType);
         }
@@ -104,7 +114,7 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public void setProgramId(String programId) {
         this.programId = programId;
-        searchedIds = stockListPresenter.searchIdsByPrograms(programId);
-        commodityTypes = stockListPresenter.findCommodityTypesByIds(searchedIds.keySet());
+        programIds = stockListPresenter.searchIdsByPrograms(programId);
+        commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
     }
 }

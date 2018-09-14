@@ -11,10 +11,11 @@ import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 9/12/18.
@@ -120,10 +121,10 @@ public class SearchRepository extends BaseRepository {
         return withSub.trim();
     }
 
-    public Map<String, List<String>> searchIds(String phrase) {
+    public Map<String, Set<String>> searchIds(String phrase) {
 
         Cursor cursor = null;
-        Map<String, List<String>> ids = new HashMap<>();
+        Map<String, Set<String>> ids = new HashMap<>();
 
         try {
             String query = String.format("SELECT * FROM %s WHERE %s MATCH ?", COMMODITY_TYPE_FTS_TABLE, PHRASE);
@@ -131,12 +132,13 @@ public class SearchRepository extends BaseRepository {
             while (cursor.moveToNext()) {
                 String commodityType = cursor.getString(0);
                 String tradeItem = cursor.getString(1);
-                if (ids.containsKey(commodityType)) {
+                if (ids.containsKey(commodityType) && tradeItem != null) {
                     ids.get(commodityType).add(tradeItem);
 
                 } else {
-                    List<String> tradeItems = new ArrayList<>();
-                    tradeItems.add(tradeItem);
+                    Set<String> tradeItems = new HashSet<>();
+                    if (tradeItem != null)
+                        tradeItems.add(tradeItem);
                     ids.put(commodityType, tradeItems);
                 }
             }

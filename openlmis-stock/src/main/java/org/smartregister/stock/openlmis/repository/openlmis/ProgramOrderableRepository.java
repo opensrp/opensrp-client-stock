@@ -17,8 +17,10 @@ import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.repository.TradeItemRepository.COMMODITY_TYPE_ID;
@@ -160,9 +162,9 @@ public class ProgramOrderableRepository extends BaseRepository {
         return values;
     }
 
-    public Map<String, List<String>> searchIdsByPrograms(String programId) {
+    public Map<String, Set<String>> searchIdsByPrograms(String programId) {
         Cursor cursor = null;
-        Map<String, List<String>> ids = new HashMap<>();
+        Map<String, Set<String>> ids = new HashMap<>();
         String query = String.format("SELECT t.%s,t.%s FROM %s p " +
                         " JOIN %s o on p.%s = o.%s" +
                         " JOIN %s t on t.%s=o.%s or t.%s=o.%s WHERE p.%s =? ",
@@ -179,7 +181,7 @@ public class ProgramOrderableRepository extends BaseRepository {
                     ids.get(commodityType).add(tradeItem);
 
                 } else {
-                    List<String> tradeItems = new ArrayList<>();
+                    Set<String> tradeItems = new HashSet<>();
                     tradeItems.add(tradeItem);
                     ids.put(commodityType, tradeItems);
                 }

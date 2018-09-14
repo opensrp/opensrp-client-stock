@@ -17,7 +17,6 @@ import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,12 +81,12 @@ public class StockListInteractor {
         return commodityTypeRepository.findCommodityTypesByIds(ids);
     }
 
-    public Map<String, List<String>> searchIds(String searchPhrase) {
+    public Map<String, Set<String>> searchIds(String searchPhrase) {
         return searchRepository.searchIds(searchPhrase);
     }
 
-    public List<TradeItemWrapper> findTradeItemsByIds(List<String> tradeItemIds) {
-        return populateTradeItemWrapper(tradeItemRepository.getTradeItemByIds(new HashSet<>(tradeItemIds)));
+    public List<TradeItemWrapper> findTradeItemsByIds(Set<String> tradeItemIds) {
+        return populateTradeItemWrapper(tradeItemRepository.getTradeItemByIds(tradeItemIds));
     }
 
     private List<TradeItemWrapper> populateTradeItemWrapper(List<TradeItem> tradeItems) {
@@ -113,7 +112,7 @@ public class StockListInteractor {
         return tradeItemWrappers;
     }
 
-    public Map<String, List<String>> searchIdsByPrograms(String programId) {
+    public Map<String, Set<String>> searchIdsByPrograms(String programId) {
         return programOrderableRepository.searchIdsByPrograms(programId);
     }
 }
