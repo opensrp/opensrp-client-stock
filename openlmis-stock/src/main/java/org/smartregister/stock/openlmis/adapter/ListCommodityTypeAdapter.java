@@ -76,4 +76,9 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     public void registerExpandCollapseListeners(ExpandCollapseListener listener) {
         expandCollapseListeners.add(listener);
     }
+
+    public void refresh(){
+        commodityTypes = stockListPresenter.getCommodityTypes();
+        notifyDataSetChanged();
+    }
 }

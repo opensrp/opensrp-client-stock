@@ -2,7 +2,7 @@ package org.smartregister.stock.openlmis.util;
 
 public interface OpenLMISConstants {
 
-    String tradeItem="tradeItem";
+    String tradeItem = "tradeItem";
 
     int EXPIRING_MONTHS_WARNING = 3;
 
@@ -45,13 +45,12 @@ public interface OpenLMISConstants {
         String INDIVIDUAL_ISSUED_FORM = "individual_issued_form";
 
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
-
-        String INDIVIDUAL_ADJUST_FORM = "individual_adjust_form";
+        
+        String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
     }
 
-    public static final class ServiceType {
-        public static final int SYNC_OPENLMIS_METADATA = 1;
-        public static final int SYNC_STOCK = 2;
-        String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
+    interface ServiceType {
+        int SYNC_OPENLMIS_METADATA = 1;
+        int SYNC_STOCK = 2;
     }
 }

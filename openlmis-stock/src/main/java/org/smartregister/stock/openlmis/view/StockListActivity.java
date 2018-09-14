@@ -15,12 +15,16 @@ import android.widget.Spinner;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
+import org.smartregister.stock.openlmis.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.stock.openlmis.util.TestDataUtils;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
-public class StockListActivity extends AppCompatActivity implements StockListView, View.OnClickListener {
+public class StockListActivity extends AppCompatActivity implements StockListView, View.OnClickListener
+        , SyncStatusBroadcastReceiver.SyncStatusListener {
 
     private StockListPresenter stockListPresenter;
+
+    private ListCommodityTypeAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         RecyclerView mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
-        ListCommodityTypeAdapter adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
+        adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
         mRecyclerView.setAdapter(adapter);
         stockListPresenter.setCommodityTypeAdapter(adapter);
 
@@ -52,6 +56,8 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         findViewById(R.id.expandAll).setOnClickListener(this);
 
         findViewById(R.id.collapseAll).setOnClickListener(this);
+
+        SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
 
     }
 
@@ -79,5 +85,16 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
             stockListPresenter.expandAllClicked();
         else if (view.getId() == R.id.collapseAll)
             stockListPresenter.collapseAllClicked();
+    }
+
+    @Override
+    public void onSyncComplete() {
+        adapter.refresh();
+    }
+
+    @Override
+    protected void onDestroy() {
+        SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
+        super.onDestroy();
     }
 }

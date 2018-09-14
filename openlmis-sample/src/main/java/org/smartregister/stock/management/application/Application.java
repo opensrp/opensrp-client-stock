@@ -6,6 +6,7 @@ import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.BuildConfig;
 import org.smartregister.stock.management.receiver.OpenLMISAlarmReceiver;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.stock.openlmis.repository.StockManagementRepository;
 import org.smartregister.view.activity.DrishtiApplication;
 
@@ -21,10 +22,11 @@ public class Application extends DrishtiApplication {
 
         mInstance = this;
         context = Context.getInstance();
-        context.updateApplicationContext(getApplicationContext());
+        context.updateApplicationContext(this);
         CoreLibrary.init(context);
         OpenLMISLibrary.init(context, getRepository());  // Initialize OpenLMISLibrary
         setAlarms(getApplicationContext());
+        SyncStatusBroadcastReceiver.init(this);
     }
 
 
@@ -47,6 +49,12 @@ public class Application extends DrishtiApplication {
     @Override
     public void logoutCurrentUser() {
 
+    }
+
+    @Override
+    public void onTerminate() {
+        SyncStatusBroadcastReceiver.destroy(this);
+        super.onTerminate();
     }
 
     public static void setAlarms(android.content.Context context) {
