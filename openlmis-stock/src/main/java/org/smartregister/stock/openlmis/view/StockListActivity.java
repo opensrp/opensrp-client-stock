@@ -42,7 +42,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         RecyclerView mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
-        final ListCommodityTypeAdapter adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
+        adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
 
         mRecyclerView.setAdapter(adapter);
         stockListPresenter.setCommodityTypeAdapter(adapter);
