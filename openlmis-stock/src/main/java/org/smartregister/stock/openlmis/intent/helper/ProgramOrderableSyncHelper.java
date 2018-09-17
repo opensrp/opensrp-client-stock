@@ -17,15 +17,15 @@ import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepo
 import java.text.MessageFormat;
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PREV_SYNC_SERVER_VERSION_PROGRAM_ORDERABLE;
 import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
-import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
 public class ProgramOrderableSyncHelper extends BaseSyncHelper {
 
-    private static final String LOT_SYNC_URL = "rest/program-orderables/sync";
+    private static final String PROGRAM_ORDERABLE_SYNC_URL = "rest/program-orderables/sync";
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private ProgramOrderableRepository repository;
@@ -39,7 +39,6 @@ public class ProgramOrderableSyncHelper extends BaseSyncHelper {
 
     protected String pullFromServer() {
 
-        final String PREV_SYNC_SERVER_VERSION = "prev_sync_server_version";
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -47,11 +46,11 @@ public class ProgramOrderableSyncHelper extends BaseSyncHelper {
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
         }
 
-        long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
+        long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION_PROGRAM_ORDERABLE, 0);
         String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
-                LOT_SYNC_URL,
+                PROGRAM_ORDERABLE_SYNC_URL,
                 timestampStr
         );
         // make request
@@ -85,7 +84,7 @@ public class ProgramOrderableSyncHelper extends BaseSyncHelper {
         }
         // save highest server version
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+        editor.putLong(PREV_SYNC_SERVER_VERSION_PROGRAM_ORDERABLE, highestTimeStamp);
         editor.commit();
 
         return isEmptyResponse;

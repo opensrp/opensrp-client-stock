@@ -18,8 +18,8 @@ import org.smartregister.stock.openlmis.util.SynchronizedUpdater;
 import java.text.MessageFormat;
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PREV_SYNC_SERVER_VERSION_DISPENSABLE;
 import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
-import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
@@ -45,7 +45,7 @@ public class DispensableSyncHelper extends BaseSyncHelper {
         if (baseUrl.endsWith(context.getString(R.string.url_separator))) {
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
         }
-        long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
+        long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION_DISPENSABLE, 0);
         String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
@@ -84,7 +84,7 @@ public class DispensableSyncHelper extends BaseSyncHelper {
         }
         // save highest server version
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(PREV_SYNC_SERVER_VERSION, highestTimeStamp);
+        editor.putLong(PREV_SYNC_SERVER_VERSION_DISPENSABLE, highestTimeStamp);
         editor.commit();
 
         return isEmptyResponse;

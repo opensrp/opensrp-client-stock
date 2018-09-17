@@ -8,7 +8,6 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
@@ -20,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.smartregister.repository.BaseRepository.TYPE_Synced;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PREV_SYNC_SERVER_VERSION_STOCK;
 import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
-import static org.smartregister.stock.openlmis.util.Utils.PREV_SYNC_SERVER_VERSION;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.stock.openlmis.util.Utils.makePostRequest;
 import static org.smartregister.util.Log.logError;
@@ -54,7 +53,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION, 0);
+        long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION_STOCK, 0);
         String timeStampString = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?serverVersion={2}",
                 BASE_URL,
@@ -78,7 +77,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
         }
         Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(LAST_STOCK_SYNC, highestTimestamp);
+        editor.putLong(PREV_SYNC_SERVER_VERSION_STOCK, highestTimestamp);
         editor.commit();
         boolean isEmptyResponse = true;
         for (int j = 0; j < Stock_arrayList.size(); j++) {
