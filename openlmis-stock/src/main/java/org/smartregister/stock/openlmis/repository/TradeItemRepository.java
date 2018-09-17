@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.repository;
 
 import android.content.ContentValues;
+import android.text.TextUtils;
 import android.util.Log;
 
 import net.sqlcipher.Cursor;
@@ -12,7 +13,9 @@ import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 26/7/18.
@@ -136,6 +139,27 @@ public class TradeItemRepository extends BaseRepository {
             }
         }
         return null;
+    }
+
+    public List<TradeItem> getTradeItemByIds(Set<String> tradeItemIds) {
+        int len = tradeItemIds.size();
+        String query = String.format("SELECT * FROM %s WHERE %s IN (%s)", TRADE_ITEM_TABLE, ID,
+                TextUtils.join(",", Collections.nCopies(len, "?")));
+        Cursor cursor = null;
+        List<TradeItem> tradeItems = new ArrayList<>();
+        try {
+            cursor = getReadableDatabase().rawQuery(query, tradeItemIds.toArray(new String[len]));
+            while (cursor.moveToNext()) {
+                tradeItems.add(createTradeItem(cursor));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return tradeItems;
     }
 
     private TradeItem createTradeItem(Cursor cursor) {

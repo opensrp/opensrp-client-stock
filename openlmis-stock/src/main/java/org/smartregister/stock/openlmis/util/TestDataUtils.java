@@ -9,6 +9,7 @@ import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
+import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
@@ -73,11 +74,16 @@ public class TestDataUtils {
 
 
     private void populateTradeItems() {
-        for (CommodityType commodityType : commodityTypeRepository.findAllCommodityTypes())
-            for (TradeItem tradeItem : createTradeItems(commodityType)) {
+        SearchRepository searchRepository = new SearchRepository(OpenLMISLibrary.getInstance().getRepository());
+
+        for (CommodityType commodityType : commodityTypeRepository.findAllCommodityTypes()) {
+            List<TradeItem> tradeItems = createTradeItems(commodityType);
+            for (TradeItem tradeItem : tradeItems) {
                 tradeItemRepository.addOrUpdate(tradeItem);
                 lotHashMap.put(tradeItem, null);
             }
+            searchRepository.addOrUpdate(commodityType, tradeItems);
+        }
     }
 
     private void populateLots() {
@@ -117,7 +123,7 @@ public class TestDataUtils {
 
     }
 
-    private List<TradeItem> createTradeItems(CommodityType commodityType) {
+    public List<TradeItem> createTradeItems(CommodityType commodityType) {
         Calendar calendar = Calendar.getInstance();
         List<TradeItem> tradeItems = new ArrayList<>();
         Random random = new Random();

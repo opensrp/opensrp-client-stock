@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -41,7 +42,8 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         RecyclerView mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
-        adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
+        final ListCommodityTypeAdapter adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
+
         mRecyclerView.setAdapter(adapter);
         stockListPresenter.setCommodityTypeAdapter(adapter);
 
@@ -59,6 +61,19 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
 
+        SearchView searchView = findViewById(R.id.searchStock);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.filterCommodityTypes(s);
+                return false;
+            }
+        });
     }
 
     public void populateTestData() {

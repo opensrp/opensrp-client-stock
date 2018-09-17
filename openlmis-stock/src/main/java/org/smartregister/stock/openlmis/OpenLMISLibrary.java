@@ -55,7 +55,6 @@ public class OpenLMISLibrary {
         return instance;
     }
 
-
     public Context getContext() {
         return context;
     }

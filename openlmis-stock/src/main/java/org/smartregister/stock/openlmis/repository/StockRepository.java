@@ -2,6 +2,7 @@ package org.smartregister.stock.openlmis.repository;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -13,7 +14,10 @@ import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.dto.LotDetailsDto;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.ID;
@@ -171,17 +175,30 @@ public class StockRepository extends BaseRepository {
     }
 
 
-    public List<LotDetailsDto> getNumberOfLotsByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT l.%s, min(%s), sum(%s) FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
-                        " WHERE %s=? AND %s >= ? GROUP BY l.%s ORDER BY 3 ",
-                ID, EXPIRATION_DATE, VALUE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID, TRADE_ITEM_ID, EXPIRATION_DATE, ID);
+    public Map<String, List<LotDetailsDto>> getNumberOfLotsByTradeItem(List<String> tradeItems) {
+        int len = tradeItems.size();
+        String query = String.format("SELECT l.%s ,l.%s, min(%s), sum(%s) FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
+                        " WHERE %s IN (%s) AND %s >= ? GROUP BY l.%s ORDER BY 3 ",
+                TRADE_ITEM_ID, ID, EXPIRATION_DATE, VALUE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID,
+                TRADE_ITEM_ID, TextUtils.join(",", Collections.nCopies(len, "?")),
+                EXPIRATION_DATE, ID);
         Cursor cursor = null;
-        List<LotDetailsDto> lots = new ArrayList<>();
+        Map<String, List<LotDetailsDto>> lots = new HashMap<>();
         try {
-            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId,
-                    String.valueOf(new LocalDate().toDate().getTime())});
+            String[] params = tradeItems.toArray(new String[len + 1]);
+            params[len] = String.valueOf(new LocalDate().toDate().getTime());
+            cursor = getReadableDatabase().rawQuery(query, params);
+
             while (cursor.moveToNext()) {
-                lots.add(new LotDetailsDto(cursor.getString(0), cursor.getLong(1), cursor.getInt(2)));
+                String tradeItemId = cursor.getString(0);
+                LotDetailsDto lot = new LotDetailsDto(cursor.getString(1), cursor.getLong(2), cursor.getInt(3));
+                if (lots.containsKey(tradeItemId)) {
+                    lots.get(tradeItemId).add(lot);
+                } else {
+                    List<LotDetailsDto> lotDetailsDtos = new ArrayList<>();
+                    lotDetailsDtos.add(lot);
+                    lots.put(tradeItemId, lotDetailsDtos);
+                }
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
