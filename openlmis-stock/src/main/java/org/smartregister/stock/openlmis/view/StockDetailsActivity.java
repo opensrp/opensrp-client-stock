@@ -33,7 +33,7 @@ import java.util.Date;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ADJUST_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_RECEIVED_FORM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_RECEIPT_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM;
@@ -119,7 +119,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         } else if (view.getId() == R.id.issued) {
             startJsonForm(INDIVIDUAL_ISSUED_FORM);
         } else if (view.getId() == R.id.received) {
-            startJsonForm(INDIVIDUAL_RECEIVED_FORM);
+            startJsonForm(INDIVIDUAL_NON_LOT_RECEIPT_FORM);
+            // startJsonForm(INDIVIDUAL_RECEIVED_FORM);
         } else if (view.getId() == R.id.loss_adj) {
             startJsonForm(INDIVIDUAL_ADJUST_FORM);
         }

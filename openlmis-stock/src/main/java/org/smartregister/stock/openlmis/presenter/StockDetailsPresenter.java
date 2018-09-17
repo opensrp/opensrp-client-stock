@@ -38,6 +38,8 @@ import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.OTHER;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STEP2;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STOCK_LOTS;
+import static org.smartregister.stock.openlmis.widget.ReviewFactory.STOCK_STATUS;
+import static org.smartregister.stock.repository.StockRepository.TYPE_Unsynced;
 import static org.smartregister.util.JsonFormUtils.FIELDS;
 import static org.smartregister.util.JsonFormUtils.KEY;
 import static org.smartregister.util.JsonFormUtils.STEP1;
@@ -143,8 +145,7 @@ public class StockDetailsPresenter {
         if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason_Other");
         }
-
-        return processStock(STEP2, jsonString, provider, date, facility, reason, issued);
+        return processStockWithLots(STEP2, jsonString, provider, date, facility, reason, issued);
     }
 
     private boolean processStockReceived(JSONObject jsonString, String provider) throws JSONException {
@@ -153,18 +154,22 @@ public class StockDetailsPresenter {
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Received");
         String facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From");
         String reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason");
+        int steps =  Integer.parseInt((String)jsonString.get("count"));
         if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason_Other");
         }
 
-        return processStock(STEP2, jsonString, provider, date, facility, reason, received);
-
-
+        if (steps == 1) {
+            String status = JsonFormUtils.getFieldValue(stepFields, "Status");
+            int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Received"));
+            return processStockWithoutLots(jsonString, provider, date, facility, reason, received, status, quantity);
+        }
+        return processStockWithLots(STEP2, jsonString, provider, date, facility, reason, received);
     }
 
     private boolean processStockAdjusted(JSONObject jsonString, String provider) throws JSONException {
 
-        return processStock(STEP1, jsonString, provider, simpleDateFormat.format(new Date()),
+        return processStockWithLots(STEP1, jsonString, provider, simpleDateFormat.format(new Date()),
                 null, null, loss_adjustment);
 
     }
@@ -173,15 +178,15 @@ public class StockDetailsPresenter {
         for (int i = 0; i < stepFields.length(); i++) {
             JSONObject jsonObject = getJSONObject(stepFields, i);
             String keyValue = jsonObject.getString(KEY);
-            if (STOCK_LOTS.equals(keyValue)) {
+            if (STOCK_LOTS.equals(keyValue) || STOCK_STATUS.equals(keyValue)) {
                 return jsonObject.getString(TRADE_ITEM_ID);
             }
         }
         return null;
     }
 
-    private boolean processStock(String step, JSONObject jsonString, String provider, String date,
-                                 String facility, String reason, String transactionType) throws JSONException {
+    private boolean processStockWithLots(String step, JSONObject jsonString, String provider, String date,
+                                         String facility, String reason, String transactionType) throws JSONException {
         JSONArray stepFields = jsonString.getJSONObject(step).getJSONArray(FIELDS);
 
         String lotsJSON = JsonFormUtils.getFieldValue(stepFields, STOCK_LOTS);
@@ -204,7 +209,7 @@ public class StockDetailsPresenter {
         for (LotDto lot : selectedLotDTos) {
             Stock stock = new Stock(null, transactionType,
                     provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
-                    encounterDate.getTime(), facility == null ? lot.getReason() : facility, "unsynched",
+                    encounterDate.getTime(), facility == null ? lot.getReason() : facility, TYPE_Unsynced,
                     System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
@@ -214,4 +219,29 @@ public class StockDetailsPresenter {
         return true;
     }
 
+    private boolean processStockWithoutLots(JSONObject jsonString, String provider, String date,
+                                            String facility, String reason, String transactionType, String status, int quantity) throws JSONException {
+
+        JSONArray stepFields = jsonString.getJSONObject(STEP1).getJSONArray(FIELDS);
+
+        String tradeItem = extractTradeItemId(stepFields);
+
+        Date encounterDate;
+        try {
+            encounterDate = simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            Log.e(TAG, "error passing stock issue/received date", e);
+            encounterDate = new Date();
+        }
+
+        Stock stock = new Stock(null, transactionType,
+                provider, quantity,
+                encounterDate.getTime(), facility, TYPE_Unsynced,
+                System.currentTimeMillis(), tradeItem);
+        stock.setReason(reason);
+        totalStockAdjustment += stock.getValue();
+        stockDetailsInteractor.addStock(stock);
+
+        return true;
+    }
 }

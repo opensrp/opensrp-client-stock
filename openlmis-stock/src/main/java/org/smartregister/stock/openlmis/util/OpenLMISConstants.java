@@ -36,13 +36,18 @@ public interface OpenLMISConstants {
 
         String NO_PADDING = "no_padding";
 
+        String LIST_OPTIONS = "list_options";
+
     }
 
     interface Forms {
+
         String INDIVIDUAL_ISSUED_FORM = "individual_issued_form";
 
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
 
         String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
+
+        String INDIVIDUAL_NON_LOT_RECEIPT_FORM = "non_lot_individual_receipt_form";
     }
 }

@@ -3,6 +3,7 @@ package org.smartregister.stock.openlmis.widget.customviews;
 import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.util.AttributeSet;
+import android.widget.EditText;
 
 import com.rengwuxian.materialedittext.validation.METValidator;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
@@ -36,6 +37,22 @@ public class CustomTextInputEditText extends TextInputEditText {
 
     public void addValidator(RegexpValidator regexpValidator) {
         validators.add(regexpValidator);
+    }
+
+    /**
+     * Adds a new validator to the View's list of validators
+     * <p/>
+     * This will be checked with the others in {@link #validate()}
+     *
+     * @param validator Validator to add
+     * @return This instance, for easy chaining
+     */
+    public EditText addValidator(METValidator validator) {
+        if (validators == null) {
+            this.validators = new ArrayList<>();
+        }
+        this.validators.add(validator);
+        return this;
     }
 
     public boolean validate() {

@@ -47,10 +47,10 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Issue [trade_item]",
+    "title": "Receive [trade_item]",
     "fields": [
       {
-        "key": "Date_Stock_Issued",
+        "key": "Date_Stock_Received",
         "type": "date_picker",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -63,17 +63,17 @@
         "underline_color": "#EAEAEA",
         "v_required": {
           "value": "true",
-          "err": "Enter the Stock Issue date"
+          "err": "Enter the Stock Receive date"
         }
       },
       {
-        "key": "labelIssuedTo",
+        "key": "labelReceivedFrom",
         "type": "label",
-        "text": "Issued to *",
+        "text": "Receive from *",
         "top_margin":"10dp"
       },
       {
-        "key": "Issued_Stock_To",
+        "key": "Receive_Stock_From",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -81,18 +81,18 @@
         "type": "native_radio",
         "options": [
           {
-            "key": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
+            "key": "Comfort Health Clinic",
             "text": "Comfort Health Clinic"
           },
           {
-            "key": "13037147-1769-4735-90a7-b9b310d128b8",
+            "key": "Balaka District Warehouse",
             "text": "Balaka District Warehouse"
           }
         ],
         "value": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
         "v_required": {
           "value": true,
-          "err": "Please select where stock was issued"
+          "err": "Please select where stock was received from"
         }
       },
       {
@@ -102,7 +102,7 @@
         "top_margin": "10dp"
       },
       {
-        "key": "Reason",
+        "key": "Receive_Stock_Reason",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -131,7 +131,7 @@
         }
       },
       {
-        "key": "Reason_Other",
+        "key": "Receive_Stock_Reason_Other",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -143,7 +143,7 @@
           "err": "Please specify reason stock was received"
         },
         "relevance": {
-          "step1:Reason": {
+          "step1:Receive_Stock_Reason": {
             "type": "string",
             "ex": "equalTo(., \"Other\")"
           }
@@ -163,13 +163,18 @@
         }
       },
       {
-        "key": "stockLots",
-        "type": "lot",
+        "key": "Status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Status",
         "trade_item": "[trade_item]",
         "trade_item_id": "[trade_item_id]",
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
-        "lot_status": [
+        "is_spinnable": true,
+        "list_options": [
           "VMM1",
           "VMM2"
         ]
