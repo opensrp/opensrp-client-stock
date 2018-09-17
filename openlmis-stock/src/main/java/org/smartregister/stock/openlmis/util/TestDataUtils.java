@@ -1,7 +1,6 @@
 package org.smartregister.stock.openlmis.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.joda.time.LocalDate;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;

@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.smartregister.stock.domain.Stock.issued;
 import static org.smartregister.stock.domain.Stock.loss_adjustment;

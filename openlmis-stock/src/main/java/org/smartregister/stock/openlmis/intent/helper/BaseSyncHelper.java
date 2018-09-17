@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.util.List;
-
 import static org.smartregister.stock.openlmis.util.Utils.sendSyncCompleteBroadCast;
 
 public abstract class BaseSyncHelper {

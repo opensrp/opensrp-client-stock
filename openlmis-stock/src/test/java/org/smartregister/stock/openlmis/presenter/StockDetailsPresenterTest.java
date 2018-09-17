@@ -2,7 +2,6 @@ package org.smartregister.stock.openlmis.presenter;
 
 import android.view.View;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
