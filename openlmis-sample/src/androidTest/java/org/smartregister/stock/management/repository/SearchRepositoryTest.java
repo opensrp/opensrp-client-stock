@@ -1,8 +1,9 @@
-package org.smartregister.stock.management;
+package org.smartregister.stock.management.repository;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.smartregister.stock.management.repository.BaseRepositoryTest;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.repository.SearchRepository;
@@ -39,7 +40,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testAddWithoutTradeItem() {
-        CommodityType commodityType = new CommodityType(UUID.randomUUID(), "BCG", "", null, null, System.currentTimeMillis());
+        CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "BCG", null, null, null, System.currentTimeMillis());
         searchRepository.addOrUpdate(commodityType, null);
 
         Map<String, List<String>> ids = searchRepository.searchIds("B");
@@ -54,7 +55,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testAddOrUpdateWithoutTradeItem() {
-        CommodityType commodityType = new CommodityType(UUID.randomUUID(), "OPV", "", null, null, System.currentTimeMillis());
+        CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "OPV", null, null, null, System.currentTimeMillis());
         searchRepository.addOrUpdate(commodityType, null);
 
         Map<String, List<String>> ids = searchRepository.searchIds("PV");
@@ -77,7 +78,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testAddWithTradeItem() {
-        CommodityType commodityType = new CommodityType(UUID.randomUUID(), "BCG", "", null, null, System.currentTimeMillis());
+        CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "BCG", null, null, null, System.currentTimeMillis());
         List<TradeItem> tradeItems = TestDataUtils.getInstance().createTradeItems(commodityType);
 
         searchRepository.addOrUpdate(commodityType, tradeItems);
@@ -95,7 +96,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testAddOrUpdateWithTradeItem() {
-        CommodityType commodityType = new CommodityType(UUID.randomUUID(), "Tetanus", "", null, null, System.currentTimeMillis());
+        CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "Tetanus", null, null, null, System.currentTimeMillis());
         List<TradeItem> tradeItems = TestDataUtils.getInstance().createTradeItems(commodityType);
 
         searchRepository.addOrUpdate(commodityType, tradeItems);
@@ -123,7 +124,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testSearchIds() {
-        CommodityType commodityType = new CommodityType(UUID.randomUUID(), "Tetanus", "", null, null, System.currentTimeMillis());
+        CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "Tetanus", null, null, null, System.currentTimeMillis());
         List<TradeItem> tradeItems = TestDataUtils.getInstance().createTradeItems(commodityType);
         searchRepository.addOrUpdate(commodityType, tradeItems);
 
@@ -155,10 +156,10 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
         assertEquals(1, ids.get(commodityType.getId().toString()).size());
 
 
-        CommodityType commodityTypePolio = new CommodityType(UUID.randomUUID(), "Polio", "", null, null, System.currentTimeMillis());
+        CommodityType commodityTypePolio = new CommodityType(UUID.randomUUID().toString(), "Polio", null, null, null, System.currentTimeMillis());
         searchRepository.addOrUpdate(commodityTypePolio, null);
 
-        CommodityType commodityTypePenta = new CommodityType(UUID.randomUUID(), "Pentavalent", "", null, null, System.currentTimeMillis());
+        CommodityType commodityTypePenta = new CommodityType(UUID.randomUUID().toString(), "Pentavalent", null, null, null, System.currentTimeMillis());
         List<TradeItem> pentaTradeItems = TestDataUtils.getInstance().createTradeItems(commodityTypePenta);
         searchRepository.addOrUpdate(commodityTypePenta, pentaTradeItems);
 

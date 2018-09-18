@@ -14,7 +14,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.createQuery;
@@ -94,6 +93,32 @@ public class DispensableRepository extends BaseRepository {
         return dispensables;
     }
 
+    public Dispensable findDispensable(String id) {
+
+        Dispensable dispensable = null;
+        Cursor cursor = null;
+        try {
+            String[] selectionArgs = new String[]{id};
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+
+            String querySelectString = query.first;
+            selectionArgs = query.second;
+
+            cursor = getReadableDatabase().query(DISPENSABLE_TABLE, DISPENSABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
+            List<Dispensable> dispensables = readDispensables(cursor);
+            if (dispensables.size() > 0) {
+                dispensable = dispensables.get(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return dispensable;
+    }
+
     private List<Dispensable> readDispensables(Cursor cursor) {
 
         List<Dispensable> dispensables = new ArrayList<>();
@@ -117,7 +142,7 @@ public class DispensableRepository extends BaseRepository {
     private Dispensable createDispensable(Cursor cursor) {
 
         return new Dispensable(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
+                cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(DISPENSING_UNIT)),
                 cursor.getString(cursor.getColumnIndex(SIZE_CODE)),
                 cursor.getString(cursor.getColumnIndex(ROUTE_OF_ADMINISTRATION))

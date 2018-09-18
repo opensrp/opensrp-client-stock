@@ -1,7 +1,5 @@
 package org.smartregister.stock.openlmis.domain.openlmis;
 
-import java.util.UUID;
-
 public class Dispensable extends BaseEntity {
 
 
@@ -10,11 +8,11 @@ public class Dispensable extends BaseEntity {
     private String keyRouteOfAdministration;
     private Long dateUpdated;
 
-    public Dispensable(UUID id) {
+    public Dispensable(String id) {
         this.id = id;
     }
 
-    public Dispensable(UUID id, String keyDispensingUnit, String keySizeCode, String keyRouteOfAdministration) {
+    public Dispensable(String id, String keyDispensingUnit, String keySizeCode, String keyRouteOfAdministration) {
         this.id = id;
         this.keyDispensingUnit = keyDispensingUnit;
         this.keySizeCode = keySizeCode;

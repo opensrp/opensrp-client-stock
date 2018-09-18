@@ -15,7 +15,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.createQuery;
@@ -36,7 +35,7 @@ public class TradeItemRepository extends BaseRepository {
             "CREATE TABLE " + TRADE_ITEM_TABLE
             + "("
                     + ID + " VARCHAR NOT NULL PRIMARY KEY,"
-                    + GTIN + " VARCHAR NOT NULL,"
+                    + GTIN + " VARCHAR,"
                     + MANUFACTURER_OF_TRADE_ITEM + " VARCHAR NOT NULL,"
                     + DATE_UPDATED + " INTEGER"
             + ")";
@@ -116,8 +115,8 @@ public class TradeItemRepository extends BaseRepository {
 
         try {
             return new TradeItem(
-                    UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
-                    new Gtin(cursor.getString(cursor.getColumnIndex(GTIN))),
+                    cursor.getString(cursor.getColumnIndex(ID)),
+                    cursor.getString(cursor.getColumnIndex(GTIN)) == null ? null : new Gtin(cursor.getString(cursor.getColumnIndex(GTIN))),
                     cursor.getString(cursor.getColumnIndex(MANUFACTURER_OF_TRADE_ITEM)),
                     cursor.getLong(cursor.getColumnIndex(DATE_UPDATED))
             );
@@ -131,7 +130,7 @@ public class TradeItemRepository extends BaseRepository {
 
         Object[] values = new Object[] {
             tradeItem.getId().toString(),
-            tradeItem.getGtin().toString(),
+            tradeItem.getGtin() == null ? null : tradeItem.getGtin().toString(),
             tradeItem.getManufacturerOfTradeItem(),
             tradeItem.getDateUpdated(),
         };

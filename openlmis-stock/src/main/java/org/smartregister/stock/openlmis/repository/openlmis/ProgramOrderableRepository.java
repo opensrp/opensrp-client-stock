@@ -16,7 +16,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.ProgramOrderable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.convertBooleanToInt;
@@ -123,9 +122,9 @@ public class ProgramOrderableRepository extends BaseRepository {
     private ProgramOrderable createProgramOrderable(Cursor cursor) {
 
         return new ProgramOrderable(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
-                new Program(cursor.getString(cursor.getColumnIndex(PROGRAM))),
-                new Orderable(UUID.fromString(cursor.getString(cursor.getColumnIndex(ORDERABLE)))),
+                cursor.getString(cursor.getColumnIndex(ID)),
+                cursor.getString(cursor.getColumnIndex(PROGRAM)),
+                cursor.getString(cursor.getColumnIndex(ORDERABLE)),
                 cursor.getInt(cursor.getColumnIndex(DOSES_PER_PATIENT)),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE))),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(FULL_SUPPLY))),
@@ -136,9 +135,9 @@ public class ProgramOrderableRepository extends BaseRepository {
     private Object[] createQueryValues(ProgramOrderable programOrderable) {
 
         Object[] values = new Object[] {
-            programOrderable.getId().toString(),
-            programOrderable.getProgram().getId().toString(),
-            programOrderable.getOrderable().getId().toString(),
+            programOrderable.getId(),
+            programOrderable.getProgramId(),
+            programOrderable.getOrderableId(),
             programOrderable.getDosesPerPatient(),
             convertBooleanToInt(programOrderable.isActive()),
             convertBooleanToInt(programOrderable.isFullSupply()),

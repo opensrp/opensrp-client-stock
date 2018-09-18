@@ -1,10 +1,10 @@
 package org.smartregister.stock.openlmis.repository;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
-import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.joda.time.LocalDate;
@@ -69,6 +69,9 @@ public class StockRepository extends BaseRepository {
             TEAM_ID + " VARCHAR," +
             TEAM_NAME + " VARCHAR)";
 
+    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME};
+
+
     public StockRepository(Repository repository) {
         super(repository);
     }
@@ -101,6 +104,37 @@ public class StockRepository extends BaseRepository {
         }
     }
 
+    public List<Stock> findUnSyncedWithLimit(int limit) {
+        List<Stock> stocks = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(stock_TABLE_NAME, STOCK_TABLE_COLUMNS, SYNC_STATUS + " = ?", new String[]{TYPE_Unsynced}, null, null, null, "" + limit);
+            stocks = readAllstocks(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return stocks;
+    }
+
+    private List<Stock> readAllstocks(Cursor cursor) {
+        List<Stock> stocks = new ArrayList<>();
+        try {
+            while (cursor.moveToNext()) {
+                stocks.add(createStock(cursor));
+            }
+
+        } catch (Exception e) {
+            Log.e(getClass().getCanonicalName(), e.getMessage());
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return stocks;
+    }
 
     public int getTotalStockByTradeItem(String tradeItemId) {
         String query = String.format("SELECT sum(%s) FROM %s WHERE %s=?", VALUE, stock_TABLE_NAME, STOCK_TYPE_ID);
@@ -195,6 +229,31 @@ public class StockRepository extends BaseRepository {
         return totalStock;
     }
 
+    public List<Stock> findUniqueStock(String stock_type_id, String transaction_type, String providerid, String value, String date_created, String to_from) {
+        List<Stock> stocks = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(stock_TABLE_NAME, STOCK_TABLE_COLUMNS, STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + DATE_CREATED + " = ? AND " + TO_FROM + " = ?", new String[]{stock_type_id, transaction_type, providerid, value, date_created, to_from}, null, null, null, null);
+            stocks = readAllstocks(cursor);
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return stocks;
+    }
+
+    public void markEventsAsSynced(ArrayList<Stock> stocks) {
+        for (int i = 0; i < stocks.size(); i++) {
+            Stock stockToAdd = stocks.get(i);
+            stockToAdd.setSyncStatus(TYPE_Synced);
+            addOrUpdate(stockToAdd);
+        }
+    }
+
     private Stock createStock(Cursor cursor) {
         Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
                 cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
@@ -205,6 +264,7 @@ public class StockRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
                 cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
                 cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID)));
+
         stock.setLotId(cursor.getString(cursor.getColumnIndex(LOT_ID)));
         stock.setReason(cursor.getString(cursor.getColumnIndex(REASON)));
         stock.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
@@ -213,6 +273,5 @@ public class StockRepository extends BaseRepository {
         stock.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
         return stock;
     }
-
-
 }
+

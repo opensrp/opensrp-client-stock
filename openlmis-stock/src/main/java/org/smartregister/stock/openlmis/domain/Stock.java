@@ -7,6 +7,8 @@ public class Stock extends org.smartregister.stock.domain.Stock {
 
     private String lotId;
 
+    private String programId;
+
     private String reason;
 
     public Stock(Long id, String transactionType, String providerid, int value, Long dateCreated,
@@ -21,6 +23,14 @@ public class Stock extends org.smartregister.stock.domain.Stock {
 
     public void setLotId(String lotId) {
         this.lotId = lotId;
+    }
+
+    public String getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(String programId) {
+        this.programId = programId;
     }
 
     public String getReason() {

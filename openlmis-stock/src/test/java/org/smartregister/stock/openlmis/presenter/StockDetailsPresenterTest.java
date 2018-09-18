@@ -2,7 +2,6 @@ package org.smartregister.stock.openlmis.presenter;
 
 import android.view.View;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -69,8 +68,8 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
     @Test
     public void testGetTotalStockByLot() {
         UUID lotId = UUID.randomUUID();
-        when(stockDetailsInteractor.getTotalStockByLot(lotId)).thenReturn(2);
-        assertEquals(2, stockDetailsPresenter.getTotalStockByLot(lotId));
+        when(stockDetailsInteractor.getTotalStockByLot(lotId.toString())).thenReturn(2);
+        assertEquals(2, stockDetailsPresenter.getTotalStockByLot(lotId.toString()));
     }
 
     @Test
@@ -86,20 +85,19 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
     public void testFindLotsByTradeItemWithLots() {
         String tradeItemId = UUID.randomUUID().toString();
         List<Lot> expectedLots = new ArrayList<>();
-        Lot lot = new Lot(UUID.randomUUID(), "LC2018G", new LocalDate("2019-01-31"),
-                new LocalDate("2017-01-31"),
-                new org.smartregister.stock.openlmis.domain.openlmis.TradeItem(UUID.fromString(tradeItemId)),
+        Lot lot = new Lot(UUID.randomUUID().toString(), "LC2018G", 49398438l,
+                893943l,
+                tradeItemId,
                 true);
         expectedLots.add(lot);
         when(stockDetailsInteractor.findLotsByTradeItem(tradeItemId)).thenReturn(expectedLots);
         List<Lot> returnedLots = stockDetailsPresenter.findLotsByTradeItem(tradeItemId);
         assertEquals(1, returnedLots.size());
         assertEquals("LC2018G", returnedLots.get(0).getLotCode());
-        assertEquals("2019-01-31", returnedLots.get(0).getExpirationDate().toString());
-        assertEquals("2017-01-31", returnedLots.get(0).getManufactureDate().toString());
-        assertEquals(tradeItemId, returnedLots.get(0).getTradeItem().getId().toString());
+        assertEquals(49398438l, returnedLots.get(0).getExpirationDate().longValue());
+        assertEquals(893943l, returnedLots.get(0).getManufactureDate().longValue());
+        assertEquals(tradeItemId, returnedLots.get(0).getTradeItemId());
         verify(stockDetailsView).showLotsHeader();
-
     }
 
 

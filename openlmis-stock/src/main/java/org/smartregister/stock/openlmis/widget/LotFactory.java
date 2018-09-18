@@ -257,7 +257,7 @@ public class LotFactory implements FormWidgetFactory {
 
             TextInputEditText lot = lotRow.findViewById(R.id.lot_dropdown);
             lot.setText(context.getString(R.string.lotcode_and_expiry,
-                    selectedLotsMap.get(lotId).getLotCode(), selectedLotsMap.get(lotId).getExpirationDate().toString(DATE_FORMAT)));
+                    selectedLotsMap.get(lotId).getLotCode(), new LocalDate(selectedLotsMap.get(lotId).getExpirationDate()).toString(DATE_FORMAT)));
             lot.setTag(R.id.lot_id, lotDto.getLotId());
 
         }
@@ -297,11 +297,11 @@ public class LotFactory implements FormWidgetFactory {
         LocalDate expiringDateWarning = new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING);
         for (Lot lot : lotMap.values()) {
             MenuItem menuitem = popupMenu.getMenu().add(context.getString(R.string.lotcode_and_expiry,
-                    lot.getLotCode(), lot.getExpirationDate().toString(DATE_FORMAT)));
+                    lot.getLotCode(), new LocalDate(lot.getExpirationDate()).toString(DATE_FORMAT)));
             View actionView = new View(context);
             actionView.setTag(R.id.lot_id, lot.getId());
             menuitem.setActionView(actionView);
-            if (expiringDateWarning.isAfter(lot.getExpirationDate())) {
+            if (expiringDateWarning.isAfter(new LocalDate(lot.getExpirationDate()))) {
                 SpannableString spanString = new SpannableString(menuitem.getTitle());
                 spanString.setSpan(new ForegroundColorSpan(Color.RED), 0, spanString.length(), 0);
                 menuitem.setTitle(spanString);

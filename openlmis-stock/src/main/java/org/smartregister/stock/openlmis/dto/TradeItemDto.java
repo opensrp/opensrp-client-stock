@@ -4,9 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-public class TradeItemDto implements Parcelable {
-
-    private String id;
+public class TradeItemDto extends BaseDto implements Parcelable {
 
     private String name;
 

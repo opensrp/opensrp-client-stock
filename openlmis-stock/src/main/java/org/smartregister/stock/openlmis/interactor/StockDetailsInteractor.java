@@ -13,7 +13,6 @@ import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class StockDetailsInteractor {
 
@@ -34,8 +33,8 @@ public class StockDetailsInteractor {
         this.tradeItemRepository = tradeItemRepository;
     }
 
-    public int getTotalStockByLot(UUID lotId) {
-        return stockRepository.getTotalStockByLot(lotId.toString());
+    public int getTotalStockByLot(String lotId) {
+        return stockRepository.getTotalStockByLot(lotId);
     }
 
     public List<Lot> findLotsByTradeItem(String tradeItemId) {

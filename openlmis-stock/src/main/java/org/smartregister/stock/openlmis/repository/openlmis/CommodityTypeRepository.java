@@ -17,7 +17,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.createQuery;
@@ -76,12 +75,12 @@ public class CommodityTypeRepository extends BaseRepository {
         }
     }
 
-    public List<CommodityType> findCommodityTypes(String id, String name, String parent, String classificationSystem, String classificationId) {
+    public List<CommodityType> findCommodityTypes(String id, String name, String parentId, String classificationSystem, String classificationId) {
 
         List<CommodityType> commodityTypes = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String[] selectionArgs = new String[]{id, name, parent, classificationSystem, classificationId};
+            String[] selectionArgs = new String[]{id, name, parentId, classificationSystem, classificationId};
             Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
             String querySelectString = query.first;
@@ -156,9 +155,9 @@ public class CommodityTypeRepository extends BaseRepository {
     private CommodityType createCommodityType(Cursor cursor) {
 
         return new CommodityType(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
+                cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
-                cursor.getString(cursor.getColumnIndex(PARENT)),
+                new CommodityType(cursor.getString(cursor.getColumnIndex(PARENT))),
                 cursor.getString(cursor.getColumnIndex(CLASSIFICATION_SYSTEM)),
                 cursor.getString(cursor.getColumnIndex(CLASSIFICATION_ID)),
                 cursor.getLong(cursor.getColumnIndex(DATE_UPDATED))
@@ -170,7 +169,7 @@ public class CommodityTypeRepository extends BaseRepository {
         Object[] values = new Object[]{
                 commodityType.getId().toString(),
                 commodityType.getName(),
-                commodityType.getParentId(),
+                commodityType.getParent() == null ? null : commodityType.getParent().getId(),
                 commodityType.getClassificationSystem(),
                 commodityType.getClassificationId(),
                 commodityType.getDateUpdated()

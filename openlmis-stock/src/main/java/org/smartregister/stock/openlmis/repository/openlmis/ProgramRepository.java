@@ -15,7 +15,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.convertBooleanToInt;
@@ -152,17 +151,12 @@ public class ProgramRepository extends BaseRepository {
     private Program createProgram(Cursor cursor) {
 
         return new Program(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
+                cursor.getString(cursor.getColumnIndex(ID)),
                 new Code(cursor.getString(cursor.getColumnIndex(CODE))),
                 cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(DESCRIPTION)),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE))),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(PERIODS_SKIPPABLE))),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(SKIP_AUTHORIZATION))),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(SHOW_NON_FULL_SUPPLY_TAB))),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ENABLE_DATE_PHYSICAL_STOCK_COUNT_COMPLETED))),
-                cursor.getLong(cursor.getColumnIndex(DATE_UPDATED))
-        );
+                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE)))
+               );
     }
 
     private Object[] createQueryValues(Program program) {

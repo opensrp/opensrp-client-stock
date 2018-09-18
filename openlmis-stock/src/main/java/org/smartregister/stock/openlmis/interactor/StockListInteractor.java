@@ -33,6 +33,7 @@ public class StockListInteractor {
 
     private CommodityTypeRepository commodityTypeRepository;
 
+
     private TradeItemRepository tradeItemRepository;
 
     private StockRepository stockRepository;
@@ -61,7 +62,6 @@ public class StockListInteractor {
     }
 
     public List<String> getPrograms() {
-
         List<Program> programList = programRepository.findAllPrograms();
         List<String> programs = new ArrayList<>();
         for (Program program : programList)
