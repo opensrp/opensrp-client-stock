@@ -30,7 +30,7 @@
             android:layout_marginBottom="@dimen/search_margin"
             android:layout_marginEnd="@dimen/search_margin"
             android:layout_marginStart="@dimen/search_margin"
-            android:background="@color/white"
+            android:background="@drawable/search_background"
             app:iconifiedByDefault="false"
             app:queryBackground="@android:color/transparent"
             app:queryHint="@string/stock_take_search" />
