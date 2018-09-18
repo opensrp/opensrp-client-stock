@@ -11,4 +11,6 @@
 
     <dimen name="add_subtract_padding">16dp</dimen>
     <dimen name="add_subtract_margin" >8dp</dimen>
+
+    <dimen name="search_margin">10dp</dimen>
 </resources>

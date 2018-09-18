@@ -24,5 +24,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+
+        <activity
+            android:name="org.smartregister.stock.openlmis.view.StockTakeActivity"
+            android:parentActivityName="org.smartregister.stock.openlmis.view.StockListActivity" />
     </application>
 </manifest>

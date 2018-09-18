@@ -24,4 +24,11 @@
         <item name="android:layout_marginStart">@dimen/add_subtract_margin</item>
     </style>
 
+    <style name="Search.AppTheme.AppBarOverlay" parent="AppTheme.AppBarOverlay">
+        <item name="android:textColorHint">@color/dark_grey</item>
+        <item name="android:editTextColor">@color/stock_list_dark_text</item>
+        <item name="colorControlNormal">@color/dark_grey</item>
+
+    </style>
+
 </resources>

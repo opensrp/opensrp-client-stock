@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/stock_received" />
-    <item android:title="@string/stock_issued" />
-    <item android:title="@string/stock_take" />
+    <item
+        android:id="@+id/stock_received"
+        android:title="@string/stock_received" />
+    <item
+        android:id="@+id/stock_issued"
+        android:title="@string/stock_issued" />
+    <item
+        android:id="@+id/stock_take"
+        android:title="@string/stock_take" />
 </menu>

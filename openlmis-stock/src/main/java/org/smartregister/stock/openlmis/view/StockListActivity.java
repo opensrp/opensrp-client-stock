@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,16 +22,13 @@ import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.util.TestDataUtils;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
-public class StockListActivity extends AppCompatActivity implements StockListView, View.OnClickListener {
+public class StockListActivity extends BaseActivity implements StockListView, View.OnClickListener {
 
     private StockListPresenter stockListPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock_list);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         stockListPresenter = new StockListPresenter(this);
 
         populateTestData();
@@ -89,6 +87,11 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
     }
 
+    @Override
+    public int getLayoutView() {
+        return R.layout.activity_stock_list;
+    }
+
     public void populateTestData() {
         SharedPreferences sharedPreferences = getSharedPreferences("TestDataUtils", Context.MODE_PRIVATE);
         if (!sharedPreferences.getBoolean("testDataPopulated", false)) {
@@ -101,7 +104,20 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
     public void showStockActionMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
         popupMenu.inflate(R.menu.floating_stock_menu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.stock_take)
+                    startBulkActivity(StockTakeActivity.class);
+                return true;
+            }
+        });
         popupMenu.show();
+    }
+
+    private void startBulkActivity(Class<? extends AppCompatActivity> activity) {
+        Intent intent = new Intent(getApplicationContext(), activity);
+        startActivity(intent);
     }
 
 
