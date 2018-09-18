@@ -84,10 +84,11 @@ public class OrderableSyncHelper extends BaseSyncHelper {
             }
         }
         // save highest server version
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(PREV_SYNC_SERVER_VERSION_ORDERABLE, highestTimeStamp);
-        editor.commit();
-
+        if (!isEmptyResponse) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION_ORDERABLE, highestTimeStamp + 1);
+            editor.commit();
+        }
         return isEmptyResponse;
     }
 

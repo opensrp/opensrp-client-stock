@@ -85,10 +85,11 @@ public class CommodityTypeSyncHelper extends BaseSyncHelper {
             }
         }
         // save highest server version
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(PREV_SYNC_SERVER_VERSION_COMMODITY_TYPE, highestTimeStamp);
-        editor.commit();
-
+        if (!isEmptyResponse) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION_COMMODITY_TYPE, highestTimeStamp + 1);
+            editor.commit();
+        }
         return isEmptyResponse;
     }
 

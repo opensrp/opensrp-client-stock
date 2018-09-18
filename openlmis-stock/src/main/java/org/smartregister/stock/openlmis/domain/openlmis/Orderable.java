@@ -1,5 +1,7 @@
 package org.smartregister.stock.openlmis.domain.openlmis;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Orderable extends BaseEntity {
@@ -16,10 +18,12 @@ public class Orderable extends BaseEntity {
     private String tradeItemId;
     private String dispensableId;
     private String fullProductName;
+    private Map<String, String> extraData;
     private Long dateUpdated;
 
     public Orderable(String id) {
         this.id = id;
+        this.extraData = new HashMap<>();
     }
 
     public Orderable(String id, String fullProductCode, String fullProductName, long netContent, long packRoundingThreshold,
@@ -34,6 +38,7 @@ public class Orderable extends BaseEntity {
         this.dispensableId = dispensableId;
         this.tradeItemId = tradeItemId;
         this.commodityTypeId = commodityTypeId;
+        this.extraData = new HashMap<>();
     }
 
     /**
@@ -160,5 +165,13 @@ public class Orderable extends BaseEntity {
 
     public void setFullProductName(String fullProductName) {
         this.fullProductName = fullProductName;
+    }
+
+    public Map<String, String> getExtraData() {
+        return extraData;
+    }
+
+    public void setExtraData(Map<String, String> extraData) {
+        this.extraData = extraData;
     }
 }

@@ -76,7 +76,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
         }
         Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(PREV_SYNC_SERVER_VERSION_STOCK, highestTimestamp);
+        editor.putLong(PREV_SYNC_SERVER_VERSION_STOCK, highestTimestamp + 1);
         editor.commit();
         boolean isEmptyResponse = true;
         for (int j = 0; j < Stock_arrayList.size(); j++) {

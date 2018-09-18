@@ -81,10 +81,11 @@ public class ProgramSyncHelper extends BaseSyncHelper {
             }
         }
         // save highest server version
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(PREV_SYNC_SERVER_VERSION_PROGRAM, highestTimeStamp);
-        editor.commit();
-
+        if (!isEmptyResponse) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(PREV_SYNC_SERVER_VERSION_PROGRAM, highestTimeStamp + 1);
+            editor.commit();
+        }
         return isEmptyResponse;
     }
 
