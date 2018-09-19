@@ -165,11 +165,11 @@ public class ProgramOrderableRepository extends BaseRepository {
     public Map<String, Set<String>> searchIdsByPrograms(String programId) {
         Cursor cursor = null;
         Map<String, Set<String>> ids = new HashMap<>();
-        String query = String.format("SELECT t.%s,t.%s FROM %s p " +
+        String query = String.format("SELECT IFNULL(t.%s,o.%s),t.%s FROM %s p " +
                         " JOIN %s o on p.%s = o.%s" +
-                        " JOIN %s t on t.%s=o.%s or t.%s=o.%s WHERE p.%s =? ",
-                COMMODITY_TYPE_ID, TradeItemRepository.ID, PROGRAM_ORDERABLE_TABLE,
-                ORDERABLE_TABLE, ORDERABLE, OrderableRepository.ID,
+                        " LEFT JOIN %s t on t.%s=o.%s or t.%s=o.%s WHERE p.%s =? ",
+                COMMODITY_TYPE_ID,OrderableRepository.COMMODITY_TYPE_ID, TradeItemRepository.ID,
+                PROGRAM_ORDERABLE_TABLE,ORDERABLE_TABLE, ORDERABLE, OrderableRepository.ID,
                 TRADE_ITEM_TABLE, COMMODITY_TYPE_ID, OrderableRepository.COMMODITY_TYPE_ID,
                 TradeItemRepository.ID, OrderableRepository.TRADE_ITEM_ID, PROGRAM);
         try {
