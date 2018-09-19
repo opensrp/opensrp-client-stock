@@ -45,6 +45,10 @@ public class StockSyncIntentService extends IntentService {
         super("StockSyncIntentService");
     }
 
+    public StockSyncIntentService(String name) {
+        super(name);
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         context = getBaseContext();

@@ -6,19 +6,18 @@ import android.util.Log;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.joda.time.LocalDate;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
-import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
+import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
+import static org.smartregister.stock.openlmis.util.Utils.getCurrentTime;
 import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
 import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
@@ -33,6 +32,7 @@ public class LotRepository extends BaseRepository {
     private static final String MANUFACTURE_DATE = "manufacture_date";
     public static final String TRADE_ITEM_ID = "trade_item_id";
     private static final String ACTIVE = "active";
+    public static final String DATE_UPDATED = "date_updated";
     private static final String LOT_STATUS = "lot_status";
     public static final String LOT_TABLE = "lots";
     private static final String TAG = LotRepository.class.getName();
@@ -40,7 +40,7 @@ public class LotRepository extends BaseRepository {
     private static final String CREATE_LOT_TABLE = "CREATE TABLE " + LOT_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," + LOT_CODE + " VARCHAR NOT NULL," +
             EXPIRATION_DATE + " INTEGER NOT NULL," + MANUFACTURE_DATE + " INTEGER NOT NULL," +
-            TRADE_ITEM_ID + " VARCHAR NOT NULL," + ACTIVE + " TINYINT," + LOT_STATUS + " VARCHAR);";
+            TRADE_ITEM_ID + " VARCHAR NOT NULL," + ACTIVE + " TINYINT," + LOT_STATUS + " VARCHAR," + DATE_UPDATED + " INTEGER);";
 
     public LotRepository(Repository repository) {
         super(repository);
@@ -68,15 +68,15 @@ public class LotRepository extends BaseRepository {
     public void addOrUpdate(Lot lot) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(LOT_CODE, lot.getLotCode());
-        contentValues.put(EXPIRATION_DATE, lot.getExpirationDate().toDate().getTime());
-        contentValues.put(MANUFACTURE_DATE, lot.getManufactureDate().toDate().getTime());
-        contentValues.put(TRADE_ITEM_ID, lot.getTradeItem().getId().toString());
+        contentValues.put(EXPIRATION_DATE, lot.getExpirationDate());
+        contentValues.put(MANUFACTURE_DATE, lot.getManufactureDate());
+        contentValues.put(TRADE_ITEM_ID, lot.getTradeItemId());
         contentValues.put(ACTIVE, lot.isActive());
-        contentValues.put(LOT_STATUS, lot.getLotStatus());
+        contentValues.put(DATE_UPDATED, (lot.getDateUpdated() == null ? getCurrentTime() : lot.getDateUpdated()));
         if (lotExists(lot.getId().toString())) {
             getWritableDatabase().update(LOT_TABLE, contentValues, ID + "=?", new String[]{lot.getId().toString()});
         } else {
-            contentValues.put(ID, lot.getId().toString());
+            contentValues.put(ID, lot.getId());
             getWritableDatabase().insert(LOT_TABLE, null, contentValues);
         }
 
@@ -104,7 +104,7 @@ public class LotRepository extends BaseRepository {
         Cursor cursor = null;
         List<Lot> lots = new ArrayList<>();
         try {
-            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId, String.valueOf(new LocalDate().toDate().getTime())});
+            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId, getCurrentTime().toString()});
             while (cursor.moveToNext()) {
                 lots.add(createLot(cursor));
             }
@@ -196,12 +196,13 @@ public class LotRepository extends BaseRepository {
 
 
     private Lot createLot(Cursor cursor) {
-        Lot lot = new Lot(UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
+        Lot lot = new Lot(cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(LOT_CODE)),
-                new LocalDate(cursor.getLong(cursor.getColumnIndex(EXPIRATION_DATE))),
-                new LocalDate(cursor.getLong(cursor.getColumnIndex(MANUFACTURE_DATE))),
-                new TradeItem(UUID.fromString(cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)))),
-                cursor.getInt(cursor.getColumnIndex(ACTIVE)) > 0);
+                cursor.getLong(cursor.getColumnIndex(EXPIRATION_DATE)),
+                cursor.getLong(cursor.getColumnIndex(MANUFACTURE_DATE)),
+                cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
+                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE)))
+        );
         lot.setLotStatus(cursor.getString(cursor.getColumnIndex(LOT_STATUS)));
         return lot;
     }

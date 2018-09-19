@@ -1,21 +1,20 @@
 package org.smartregister.stock.openlmis.domain.openlmis;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class ProgramOrderable extends BaseEntity {
 
-    private Program program;
-    private Orderable orderable;
+    private String programId;
+    private String orderableId;
     private Integer dosesPerPatient;
     private boolean active;
     private boolean fullSupply;
     private Long dateUpdated;
 
-    public ProgramOrderable(UUID id, Program program, Orderable orderable, Integer dosesPerPatient, boolean active, boolean fullSupply, long dateUpdated) {
+    public ProgramOrderable(String id, String programId, String orderableId, Integer dosesPerPatient, boolean active, boolean fullSupply, long dateUpdated) {
         this.id = id;
-        this.program = program;
-        this.orderable = orderable;
+        this.programId = programId;
+        this.orderableId = orderableId;
         this.dosesPerPatient = dosesPerPatient;
         this.active = active;
         this.fullSupply = fullSupply;
@@ -28,7 +27,7 @@ public class ProgramOrderable extends BaseEntity {
      * @return true if this association is for the given Program, false otherwise.
      */
     public boolean isForProgram(Program program) {
-        return this.program.equals(program);
+        return this.programId.equals(program);
     }
 
     /**
@@ -45,25 +44,25 @@ public class ProgramOrderable extends BaseEntity {
 
         ProgramOrderable otherProgProduct = (ProgramOrderable) other;
 
-        return Objects.equals(program, otherProgProduct.program)
-                && Objects.equals(orderable, otherProgProduct.orderable);
+        return Objects.equals(getProgramId(), otherProgProduct.getProgramId())
+                && Objects.equals(getOrderableId(), otherProgProduct.orderableId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(program, orderable);
+        return Objects.hash(programId, orderableId);
     }
 
     public boolean isActive() {
         return active;
     }
 
-    public Program getProgram() {
-        return program;
+    public String getProgramId() {
+        return programId;
     }
 
-    public Orderable getOrderable() {
-        return orderable;
+    public String getOrderableId() {
+        return orderableId;
     }
 
     public Integer getDosesPerPatient() {
@@ -82,12 +81,12 @@ public class ProgramOrderable extends BaseEntity {
         this.dateUpdated = dateUpdated;
     }
 
-    public void setProgram(Program program) {
-        this.program = program;
+    public void setProgram(String programId) {
+        this.programId = programId;
     }
 
-    public void setOrderable(Orderable orderable) {
-        this.orderable = orderable;
+    public void setOrderableId(String orderableId) {
+        this.orderableId = orderableId;
     }
 
     public void setDosesPerPatient(Integer dosesPerPatient) {

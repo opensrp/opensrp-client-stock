@@ -1,4 +1,4 @@
-package org.smartregister.stock.management;
+package org.smartregister.stock.management.repository;
 
 import android.content.Context;
 import android.support.test.runner.AndroidJUnit4;

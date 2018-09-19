@@ -1,9 +1,5 @@
 package org.smartregister.stock.openlmis.domain.openlmis;
 
-import org.joda.time.LocalDate;
-
-import java.util.UUID;
-
 /**
  * Created by samuelgithengi on 25/7/18.
  */
@@ -11,23 +7,26 @@ public class Lot extends BaseEntity {
 
     private String lotCode;
 
-    private LocalDate expirationDate;
+    private Long expirationDate;
 
-    private LocalDate manufactureDate;
+    private Long manufactureDate;
 
-    private TradeItem tradeItem;
+    private String tradeItemId;
 
     private boolean active;
 
+    private Long dateDeleted;
+
+    private Long dateUpdated;
+
     private String lotStatus;
 
-    public Lot(UUID id, String lotCode, LocalDate expirationDate, LocalDate manufactureDate,
-               TradeItem tradeItem, boolean active) {
+    public Lot(String id, String lotCode, Long expirationDate, Long manufactureDate, String tradeItemId, boolean active) {
         this.id = id;
         this.lotCode = lotCode;
         this.expirationDate = expirationDate;
         this.manufactureDate = manufactureDate;
-        this.tradeItem = tradeItem;
+        this.tradeItemId = tradeItemId;
         this.active = active;
     }
 
@@ -39,28 +38,28 @@ public class Lot extends BaseEntity {
         this.lotCode = lotCode;
     }
 
-    public LocalDate getExpirationDate() {
+    public Long getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(LocalDate expirationDate) {
+    public void setExpirationDate(Long expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public LocalDate getManufactureDate() {
+    public Long getManufactureDate() {
         return manufactureDate;
     }
 
-    public void setManufactureDate(LocalDate manufactureDate) {
+    public void setManufactureDate(Long manufactureDate) {
         this.manufactureDate = manufactureDate;
     }
 
-    public TradeItem getTradeItem() {
-        return tradeItem;
+    public String getTradeItemId() {
+        return tradeItemId;
     }
 
-    public void setTradeItem(TradeItem tradeItem) {
-        this.tradeItem = tradeItem;
+    public void setTradeItemId(String tradeItemId) {
+        this.tradeItemId = tradeItemId;
     }
 
     public boolean isActive() {
@@ -69,6 +68,22 @@ public class Lot extends BaseEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Long getDateDeleted() {
+        return dateDeleted;
+    }
+
+    public void setDateDeleted(Long dateDeleted) {
+        this.dateDeleted = dateDeleted;
+    }
+
+    public Long getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public void setDateUpdated(Long dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
     public String getLotStatus() {

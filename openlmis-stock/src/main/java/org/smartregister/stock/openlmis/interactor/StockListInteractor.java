@@ -33,6 +33,7 @@ public class StockListInteractor {
 
     private CommodityTypeRepository commodityTypeRepository;
 
+
     private TradeItemRepository tradeItemRepository;
 
     private StockRepository stockRepository;

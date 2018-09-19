@@ -1,7 +1,6 @@
 package org.smartregister.stock.openlmis.domain.openlmis;
 
 import java.util.List;
-import java.util.UUID;
 
 public class TradeItem extends BaseEntity {
 
@@ -10,12 +9,12 @@ public class TradeItem extends BaseEntity {
     private List<TradeItemClassification> classifications;
     private Long dateUpdated;
 
-    public TradeItem(UUID id) {
+    public TradeItem(String id) {
         this.id = id;
     }
 
 
-    public TradeItem(UUID id, Gtin gtin, String manufacturerOfTradeItem, Long dateUpdated) {
+    public TradeItem(String id, Gtin gtin, String manufacturerOfTradeItem, Long dateUpdated) {
         this.id = id;
         this.gtin = gtin;
         this.manufacturerOfTradeItem = manufacturerOfTradeItem;

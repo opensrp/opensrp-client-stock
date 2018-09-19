@@ -117,4 +117,9 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         programIds = stockListPresenter.searchIdsByPrograms(programId);
         commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
     }
+
+    public void refresh(){
+        commodityTypes = stockListPresenter.getCommodityTypes();
+        notifyDataSetChanged();
+    }
 }

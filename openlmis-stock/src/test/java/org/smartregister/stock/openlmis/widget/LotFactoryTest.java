@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -46,6 +45,7 @@ import static org.smartregister.stock.openlmis.TestData.ISSUE_FORM_JSON;
 import static org.smartregister.stock.openlmis.TestData.LOT_WIDGET_JSON;
 import static org.smartregister.stock.openlmis.TestData.LOT_WIDGET_ONE_EXISTING_JSON;
 import static org.smartregister.stock.openlmis.TestData.LOT_WIDGET_TWO_EXISTING_JSON;
+import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.IS_STOCK_ISSUE;
 
 /**
@@ -78,15 +78,15 @@ public class LotFactoryTest extends BaseUnitTest {
         activity.clearFormDataViews();
         activity.clearConstrainedViews();
 
-        TradeItem tradeItem = new TradeItem(UUID.fromString("0cf8b2f4-3e1b-4d35-b839-5a4268ef03d6"));
-        Lot lot = new Lot(UUID.fromString("7c6d239f-0bbc-4cab-b218-888d8be89d24"),
-                "LC1265", new LocalDate("2018-09-21"), new LocalDate(),
-                tradeItem, true);
+        TradeItem tradeItem = new TradeItem("0cf8b2f4-3e1b-4d35-b839-5a4268ef03d6");
+        Lot lot = new Lot("7c6d239f-0bbc-4cab-b218-888d8be89d24",
+                "LC1265", 9889l, 293982l,
+                tradeItem.getId(), true);
 
         lots.add(lot);
-        Lot lot2 = new Lot(UUID.fromString("9da34cac-4753-4763-a749-10741cdcce33"),
-                "LC8063", new LocalDate("2018-10-06"), new LocalDate(),
-                tradeItem, true);
+        Lot lot2 = new Lot("9da34cac-4753-4763-a749-10741cdcce33",
+                "LC8063", 89239490024l, 8323492l,
+                tradeItem.getId(), true);
         lots.add(lot2);
         when(lotRepository.findLotsByTradeItem("0cf8b2f4-3e1b-4d35-b839-5a4268ef03d6")).thenReturn(lots);
 
@@ -270,7 +270,7 @@ public class LotFactoryTest extends BaseUnitTest {
 
         verify(formFragment).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
         assertEquals(1, lotFactory.getSelectedLotDTos().size());
-        assertEquals("LC1265 Exp. 21-09-2018", lotDropdown.getText().toString());
+        assertEquals("LC1265 Exp. " + new LocalDate(9889l).toString(DATE_FORMAT), lotDropdown.getText().toString());
         assertEquals("7c6d239f-0bbc-4cab-b218-888d8be89d24", lotFactory.getSelectedLotDTos().get(0).getLotId());
         assertEquals("7c6d239f-0bbc-4cab-b218-888d8be89d24", lotDropdown.getTag(R.id.lot_id));
     }
@@ -385,7 +385,7 @@ public class LotFactoryTest extends BaseUnitTest {
 
         verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
         assertEquals(1, lotFactory.getSelectedLotDTos().size());
-        assertEquals("LC8063 Exp. 06-10-2018", lotDropdown.getText().toString());
+        assertEquals("LC8063 Exp. " + new LocalDate(89239490024l).toString(DATE_FORMAT), lotDropdown.getText().toString());
         assertEquals("9da34cac-4753-4763-a749-10741cdcce33", lotFactory.getSelectedLotDTos().get(0).getLotId());
         assertEquals("9da34cac-4753-4763-a749-10741cdcce33", lotDropdown.getTag(R.id.lot_id));
 

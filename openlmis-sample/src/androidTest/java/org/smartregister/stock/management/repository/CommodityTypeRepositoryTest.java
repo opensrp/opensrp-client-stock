@@ -1,4 +1,4 @@
-package org.smartregister.stock.management;
+package org.smartregister.stock.management.repository;
 
 import org.junit.After;
 import org.junit.Before;
@@ -7,7 +7,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -39,9 +38,9 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
 
         // insert new CommodityType
         CommodityType commodityType = new CommodityType(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -59,9 +58,9 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
 
         // insert new CommodityType
         CommodityType commodityType = new CommodityType(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440286",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440286"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -70,9 +69,9 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
 
         // update existing CommodityType
         commodityType = new CommodityType(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440286",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440286"),
                 "classification_system_two",
                 "classification_id",
                 421309130103L
@@ -95,9 +94,9 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
 
         // insert new CommodityTypes
         CommodityType commodityType = new CommodityType(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                "123e4567-e89b-42d3-a456-556642440100",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -105,9 +104,9 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(commodityType);
 
         commodityType = new CommodityType(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -126,9 +125,9 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
 
         // insert new CommodityTypes
         CommodityType commodityType = new CommodityType(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                "123e4567-e89b-42d3-a456-556642440100",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -136,9 +135,9 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(commodityType);
 
         commodityType = new CommodityType(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -160,9 +159,9 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
 
         // insert new CommodityTypes
         CommodityType commodityType = new CommodityType(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                "123e4567-e89b-42d3-a456-556642440100",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L
@@ -172,9 +171,9 @@ public class CommodityTypeRepositoryTest extends BaseRepositoryTest {
         assertEquals(database.findAllCommodityTypes().size(), 1);
 
         commodityType = new CommodityType(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "commodity",
-                "123e4567-e89b-42d3-a456-556642440276",
+                new CommodityType("123e4567-e89b-42d3-a456-556642440276"),
                 "classification_system",
                 "classification_id",
                 421309130103L

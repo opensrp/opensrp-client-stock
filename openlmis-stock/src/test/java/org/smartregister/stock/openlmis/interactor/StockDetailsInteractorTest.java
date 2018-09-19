@@ -1,6 +1,5 @@
 package org.smartregister.stock.openlmis.interactor;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -73,10 +72,10 @@ public class StockDetailsInteractorTest extends BaseUnitTest {
     public void testGetTotalStockByLot() {
         UUID uuid = UUID.randomUUID();
         when(stockRepository.getTotalStockByLot(uuid.toString())).thenReturn(10);
-        assertEquals(10, stockDetailsInteractor.getTotalStockByLot(uuid));
+        assertEquals(10, stockDetailsInteractor.getTotalStockByLot(uuid.toString()));
 
         when(stockRepository.getTotalStockByLot(uuid.toString())).thenReturn(3);
-        assertEquals(3, stockDetailsInteractor.getTotalStockByLot(uuid));
+        assertEquals(3, stockDetailsInteractor.getTotalStockByLot(uuid.toString()));
         verify(stockRepository, Mockito.times(2)).getTotalStockByLot(uuid.toString());
     }
 
@@ -85,12 +84,12 @@ public class StockDetailsInteractorTest extends BaseUnitTest {
         String tradeItem = UUID.randomUUID().toString();
         UUID lotId = UUID.randomUUID();
         List<Lot> expected = new ArrayList<>();
-        expected.add(new Lot(lotId, "LC2018G", new LocalDate("2019-01-31"),
-                new LocalDate("2018-01-01"), null, true));
+        expected.add(new Lot(lotId.toString(), "LC2018G", 329932l,
+                98489l, null, true));
         when(lotRepository.findLotsByTradeItem(tradeItem)).thenReturn(expected);
         List<Lot> lots = stockDetailsInteractor.findLotsByTradeItem(tradeItem);
         assertEquals(1, lots.size());
-        assertEquals(lotId, lots.get(0).getId());
+        assertEquals(lotId.toString(), lots.get(0).getId());
         assertEquals("LC2018G", lots.get(0).getLotCode());
         verify(lotRepository).findLotsByTradeItem(tradeItem);
     }
