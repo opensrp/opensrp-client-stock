@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import org.smartregister.stock.openlmis.R;
 
+import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
+
 
 /**
  * Created by samuelgithengi on 9/18/18.
@@ -17,6 +19,7 @@ public class StockTakeActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_close);
         }
+        String programID = getIntent().getStringExtra(PROGRAM_ID);
     }
 
     @Override

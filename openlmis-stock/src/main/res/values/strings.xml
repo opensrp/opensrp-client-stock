@@ -47,7 +47,7 @@
     <string name="difference">Difference</string>
     <string name="adjusted_lots_formatter">%1d %2s adjusted</string>
     <string name="quantity_to_large">Quantity is too large</string>
-    <string name="stock_take_search">Search trade items, commodity types, programs</string>
+    <string name="stock_take_search">Search trade items, commodity types</string>
 
     <plurals name="adjusted_lots">
         <item quantity="one">%1d lot is adjusted</item>

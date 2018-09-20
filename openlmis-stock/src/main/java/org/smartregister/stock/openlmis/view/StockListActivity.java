@@ -22,9 +22,13 @@ import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.util.TestDataUtils;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
+import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
+
 public class StockListActivity extends BaseActivity implements StockListView, View.OnClickListener {
 
     private StockListPresenter stockListPresenter;
+
+    private ListCommodityTypeAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,7 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
 
         RecyclerView mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
-        final ListCommodityTypeAdapter adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
+        adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
         mRecyclerView.setAdapter(adapter);
         stockListPresenter.setCommodityTypeAdapter(adapter);
 
@@ -117,6 +121,7 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
 
     private void startBulkActivity(Class<? extends AppCompatActivity> activity) {
         Intent intent = new Intent(getApplicationContext(), activity);
+        intent.putExtra(PROGRAM_ID, adapter.getProgramId());
         startActivity(intent);
     }
 
