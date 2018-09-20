@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.smartregister.stock.management">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:name=".application.Application"
         android:allowBackup="true"
@@ -16,6 +18,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.LotSyncIntentService"
+            android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.TradeItemSyncIntentService"
+            android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.ProgramSyncIntentService"
+            android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.ProgramOrderableSyncIntentService"
+            android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.ReasonSyncIntentService"
+            android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.CommodityTypeSyncIntentService"
+            android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.OrderableSyncIntentService"
+            android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.TradeItemClassificationSyncIntentService"
+            android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.DispensableSyncIntentService"
+            android:exported="false"/>
+        <service android:name="org.smartregister.stock.openlmis.intent.service.OpenLMISStockSyncIntentService"
+            android:exported="false"/>
         <activity
             android:name="org.smartregister.stock.openlmis.view.StockDetailsActivity"
             android:parentActivityName="org.smartregister.stock.openlmis.view.StockListActivity" />
@@ -24,9 +46,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
         <activity
             android:name="org.smartregister.stock.openlmis.view.StockTakeActivity"
             android:parentActivityName="org.smartregister.stock.openlmis.view.StockListActivity" />
+
+        <receiver android:name=".receiver.OnBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.OpenLMISAlarmReceiver" />
     </application>
 </manifest>

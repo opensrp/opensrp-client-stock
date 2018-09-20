@@ -84,7 +84,7 @@ public class TradeItemRepository extends BaseRepository {
         }
     }
 
-    private boolean tradeItemExists(String tradeItemId) {
+    public boolean tradeItemExists(String tradeItemId) {
         String query = String.format("SELECT 1 FROM %s WHERE %s=?", TRADE_ITEM_TABLE, ID);
         Cursor cursor = null;
         try {
@@ -101,7 +101,11 @@ public class TradeItemRepository extends BaseRepository {
     }
 
     public List<TradeItem> getTradeItemByCommodityType(String commodityTypeId) {
-        String query = String.format("SELECT * FROM %s WHERE %s=?", TRADE_ITEM_TABLE, COMMODITY_TYPE_ID);
+
+        if (commodityTypeId == null) {
+            return new ArrayList<>();
+        }
+        String query = String.format("SELECT * FROM %s WHERE %s=? AND %s IS NOT NULL", TRADE_ITEM_TABLE, COMMODITY_TYPE_ID, NAME);
         Cursor cursor = null;
         List<TradeItem> tradeItems = new ArrayList<>();
         try {
@@ -120,6 +124,10 @@ public class TradeItemRepository extends BaseRepository {
     }
 
     public TradeItem getTradeItemById(String tradeItemId) {
+
+        if (tradeItemId == null) {
+            return null;
+        }
         String query = String.format("SELECT * FROM %s WHERE %s=?", TRADE_ITEM_TABLE, ID);
         Cursor cursor = null;
         try {
@@ -138,11 +146,14 @@ public class TradeItemRepository extends BaseRepository {
     }
 
     public List<TradeItem> getTradeItemByIds(Set<String> tradeItemIds) {
+        List<TradeItem> tradeItems = new ArrayList<>();
+        tradeItemIds.remove(null);
+        if (tradeItemIds.isEmpty())
+            return tradeItems;
         int len = tradeItemIds.size();
         String query = String.format("SELECT * FROM %s WHERE %s IN (%s)", TRADE_ITEM_TABLE, ID,
                 TextUtils.join(",", Collections.nCopies(len, "?")));
         Cursor cursor = null;
-        List<TradeItem> tradeItems = new ArrayList<>();
         try {
             cursor = getReadableDatabase().rawQuery(query, tradeItemIds.toArray(new String[len]));
             while (cursor.moveToNext()) {

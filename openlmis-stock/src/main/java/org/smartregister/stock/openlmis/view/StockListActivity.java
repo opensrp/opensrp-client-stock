@@ -19,12 +19,16 @@ import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
+import org.smartregister.stock.openlmis.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.stock.openlmis.util.TestDataUtils;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
+
 import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
 
-public class StockListActivity extends BaseActivity implements StockListView, View.OnClickListener {
+
+public class StockListActivity extends BaseActivity implements StockListView, View.OnClickListener
+        , SyncStatusBroadcastReceiver.SyncStatusListener {
 
     private StockListPresenter stockListPresenter;
 
@@ -35,7 +39,7 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
         super.onCreate(savedInstanceState);
         stockListPresenter = new StockListPresenter(this);
 
-        populateTestData();
+        //populateTestData();
 
         FloatingActionButton mfFloatingActionButton = findViewById(R.id.stockAction);
         mfFloatingActionButton.setOnClickListener(this);
@@ -43,6 +47,7 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
         RecyclerView mRecyclerView = findViewById(R.id.commodityTypeRecyclerView);
 
         adapter = new ListCommodityTypeAdapter(stockListPresenter, this);
+
         mRecyclerView.setAdapter(adapter);
         stockListPresenter.setCommodityTypeAdapter(adapter);
 
@@ -75,6 +80,8 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
 
         findViewById(R.id.collapseAll).setOnClickListener(this);
 
+        SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
+
         SearchView searchView = findViewById(R.id.searchStock);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -88,7 +95,6 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
                 return false;
             }
         });
-
     }
 
     @Override
@@ -134,5 +140,16 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
             stockListPresenter.expandAllClicked();
         else if (view.getId() == R.id.collapseAll)
             stockListPresenter.collapseAllClicked();
+    }
+
+    @Override
+    public void onSyncComplete() {
+        adapter.refresh();
+    }
+
+    @Override
+    protected void onDestroy() {
+        SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
+        super.onDestroy();
     }
 }

@@ -9,8 +9,6 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
-import org.smartregister.stock.openlmis.domain.openlmis.Orderable;
-import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.domain.openlmis.ProgramOrderable;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 
@@ -21,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.repository.TradeItemRepository.COMMODITY_TYPE_ID;
 import static org.smartregister.stock.openlmis.repository.TradeItemRepository.TRADE_ITEM_TABLE;
@@ -138,9 +135,9 @@ public class ProgramOrderableRepository extends BaseRepository {
     private ProgramOrderable createProgramOrderable(Cursor cursor) {
 
         return new ProgramOrderable(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
-                new Program(cursor.getString(cursor.getColumnIndex(PROGRAM))),
-                new Orderable(UUID.fromString(cursor.getString(cursor.getColumnIndex(ORDERABLE)))),
+                cursor.getString(cursor.getColumnIndex(ID)),
+                cursor.getString(cursor.getColumnIndex(PROGRAM)),
+                cursor.getString(cursor.getColumnIndex(ORDERABLE)),
                 cursor.getInt(cursor.getColumnIndex(DOSES_PER_PATIENT)),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE))),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(FULL_SUPPLY))),
@@ -150,14 +147,14 @@ public class ProgramOrderableRepository extends BaseRepository {
 
     private Object[] createQueryValues(ProgramOrderable programOrderable) {
 
-        Object[] values = new Object[]{
-                programOrderable.getId().toString(),
-                programOrderable.getProgram().getId().toString(),
-                programOrderable.getOrderable().getId().toString(),
-                programOrderable.getDosesPerPatient(),
-                convertBooleanToInt(programOrderable.isActive()),
-                convertBooleanToInt(programOrderable.isFullSupply()),
-                programOrderable.getDateUpdated()
+        Object[] values = new Object[] {
+            programOrderable.getId(),
+            programOrderable.getProgramId(),
+            programOrderable.getOrderableId(),
+            programOrderable.getDosesPerPatient(),
+            convertBooleanToInt(programOrderable.isActive()),
+            convertBooleanToInt(programOrderable.isFullSupply()),
+            programOrderable.getDateUpdated()
         };
         return values;
     }
@@ -165,11 +162,11 @@ public class ProgramOrderableRepository extends BaseRepository {
     public Map<String, Set<String>> searchIdsByPrograms(String programId) {
         Cursor cursor = null;
         Map<String, Set<String>> ids = new HashMap<>();
-        String query = String.format("SELECT t.%s,t.%s FROM %s p " +
+        String query = String.format("SELECT IFNULL(t.%s,o.%s),t.%s FROM %s p " +
                         " JOIN %s o on p.%s = o.%s" +
-                        " JOIN %s t on t.%s=o.%s or t.%s=o.%s WHERE p.%s =? ",
-                COMMODITY_TYPE_ID, TradeItemRepository.ID, PROGRAM_ORDERABLE_TABLE,
-                ORDERABLE_TABLE, ORDERABLE, OrderableRepository.ID,
+                        " LEFT JOIN %s t on t.%s=o.%s or t.%s=o.%s WHERE p.%s =? ",
+                COMMODITY_TYPE_ID,OrderableRepository.COMMODITY_TYPE_ID, TradeItemRepository.ID,
+                PROGRAM_ORDERABLE_TABLE,ORDERABLE_TABLE, ORDERABLE, OrderableRepository.ID,
                 TRADE_ITEM_TABLE, COMMODITY_TYPE_ID, OrderableRepository.COMMODITY_TYPE_ID,
                 TradeItemRepository.ID, OrderableRepository.TRADE_ITEM_ID, PROGRAM);
         try {

@@ -158,8 +158,6 @@ public class StockRepository extends BaseRepository {
     }
 
     public Stock readAllStockforCursorAdapter(Cursor cursor) {
-
-
         return new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
                 cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
                 cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
@@ -173,8 +171,6 @@ public class StockRepository extends BaseRepository {
 
     private List<Stock> readAllstocks(Cursor cursor) {
         List<Stock> stocks = new ArrayList<>();
-
-
         try {
 
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {

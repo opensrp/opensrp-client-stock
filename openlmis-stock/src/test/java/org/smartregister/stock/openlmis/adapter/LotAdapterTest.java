@@ -24,6 +24,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
+import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 
 /**
  * Created by samuelgithengi on 8/3/18.
@@ -47,8 +48,8 @@ public class LotAdapterTest extends BaseUnitTest {
         TradeItemDto tradeItemDto = new TradeItemDto(UUID.randomUUID().toString(),
                 "GHGR", 100, System.currentTimeMillis(), 2, "vials", 5l);
         List<Lot> lots = new ArrayList<>();
-        Lot lot=new Lot(lotId, "LC2018G", new LocalDate("2019-01-31"),
-                new LocalDate("2018-01-01"), null, true);
+        Lot lot=new Lot(lotId.toString(), "LC2018G", 934983l,
+                92903l, null, true);
         lot.setLotStatus("VMM1");
         lots.add(lot);
         when(stockDetailsPresenter.findLotsByTradeItem(tradeItemDto.getId())).thenReturn(lots);
@@ -66,11 +67,11 @@ public class LotAdapterTest extends BaseUnitTest {
 
     @Test
     public void testOnBindViewHolder() {
-        when(stockDetailsPresenter.getTotalStockByLot(lotId)).thenReturn(59);
+        when(stockDetailsPresenter.getTotalStockByLot(lotId.toString())).thenReturn(59);
         LotViewHolder lotViewHolder = lotAdapter.onCreateViewHolder(new LinearLayout(context), 0);
         lotAdapter.onBindViewHolder(lotViewHolder, 0);
         assertEquals("59 vials", lotViewHolder.getStockOnHandTextView().getText());
-        assertEquals("LC2018G Exp. 31-01-2019", lotViewHolder.getLotCodeTextView().getText());
+        assertEquals("LC2018G Exp. " + new LocalDate(934983l).toString(DATE_FORMAT), lotViewHolder.getLotCodeTextView().getText());
         assertEquals("VMM1", lotViewHolder.getStatusTextView().getText());
     }
 
