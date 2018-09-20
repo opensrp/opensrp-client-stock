@@ -146,6 +146,13 @@ public class StockDetailsPresenter {
         if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason_Other");
         }
+
+        int steps =  Integer.parseInt((String)jsonString.get("count"));
+        if (steps == 1) {
+            String status = JsonFormUtils.getFieldValue(stepFields, "Status");
+            int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Issued"));
+            return processStockWithoutLots(jsonString, provider, date, facility, reason, issued, status, quantity);
+        }
         return processStockWithLots(STEP2, jsonString, provider, date, facility, reason, issued);
     }
 
@@ -155,11 +162,11 @@ public class StockDetailsPresenter {
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Received");
         String facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From");
         String reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason");
-        int steps =  Integer.parseInt((String)jsonString.get("count"));
         if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason_Other");
         }
 
+        int steps =  Integer.parseInt((String)jsonString.get("count"));
         if (steps == 1) {
             String status = JsonFormUtils.getFieldValue(stepFields, "Status");
             int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Received"));
@@ -238,8 +245,8 @@ public class StockDetailsPresenter {
         }
 
         Stock stock = new Stock(null, transactionType,
-                provider, quantity,
-                encounterDate.getTime(), facility, TYPE_Unsynced,
+                provider, transactionType.equals(issued) ? -quantity : quantity,
+                encounterDate.getTime(), facility, BaseRepository.TYPE_Unsynced,
                 System.currentTimeMillis(), tradeItem);
         stock.setReason(reason);
         totalStockAdjustment += stock.getValue();
