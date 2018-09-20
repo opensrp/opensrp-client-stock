@@ -21,6 +21,7 @@
     <string name="stock_on_hand">Stock on hand:</string>
     <string name="stock_last_updated">Last updated: %1s</string>
     <string name="lot_code_and_expiry">Lot code and expiry date</string>
+    <string name="vials_received">Vials received</string>
     <string name="lot_stock_on_hand">Stock on hand</string>
     <string name="status">Status</string>
     <string name="lotcode_and_expiry">%1s Exp. %2s</string>

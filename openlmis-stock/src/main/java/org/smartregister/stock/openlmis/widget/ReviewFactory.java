@@ -42,6 +42,7 @@ public class ReviewFactory implements FormWidgetFactory {
     public final static String OTHER = "Other";
     public final static String STEP2 = "step2";
     public final static String STOCK_LOTS = "stockLots";
+    public final static String STOCK_STATUS = "Status";
 
 
     @Override
