@@ -78,9 +78,9 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         CommodityType commodityType = commodityTypes.get(position);
         List<TradeItemWrapper> tradeItems;
         if (searchedIds != null) {
-            tradeItems = stockListPresenter.findTradeItemsByIds(searchedIds.get(commodityType.getId().toString()));
+            tradeItems = stockListPresenter.findTradeItemsByIds(searchedIds.get(commodityType.getId()));
         } else if (programIds != null) {
-            tradeItems = stockListPresenter.findTradeItemsByIds(programIds.get(commodityType.getId().toString()));
+            tradeItems = stockListPresenter.findTradeItemsByIds(programIds.get(commodityType.getId()));
         } else {
             tradeItems = stockListPresenter.getTradeItems(commodityType);
         }
@@ -122,8 +122,11 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         return programId;
     }
 
-    public void refresh(){
-        commodityTypes = stockListPresenter.getCommodityTypes();
+    public void refresh() {
+        if (programId != null)
+            setProgramId(programId);
+        else
+            commodityTypes = stockListPresenter.getCommodityTypes();
         notifyDataSetChanged();
     }
 }
