@@ -29,4 +29,6 @@
     <dimen name="add_subtract_margin" >8dp</dimen>
 
     <dimen name="search_margin">10dp</dimen>
+
+    <dimen name="stock_take_top_margin">120dp</dimen>
 </resources>

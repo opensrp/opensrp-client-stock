@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * Created by samuelgithengi on 7/13/18.
  */
-public class StockListPresenter {
+public class StockListPresenter extends StockListBasePresenter{
 
     private StockListInteractor stockListInteractor;
 
@@ -64,21 +64,12 @@ public class StockListPresenter {
         return stockListInteractor.getTradeItems(commodityType);
     }
 
-
-    public List<CommodityType> findCommodityTypesByIds(Set<String> ids) {
-        return stockListInteractor.findCommodityTypesByIds(ids);
-    }
-
     public Map<String, Set<String>> searchIds(String searchPhrase) {
         return stockListInteractor.searchIds(searchPhrase);
     }
 
     public List<TradeItemWrapper> findTradeItemsByIds(Set<String> tradeItemIds) {
         return stockListInteractor.findTradeItemsByIds(tradeItemIds);
-    }
-
-    public Map<String, Set<String>> searchIdsByPrograms(String programId) {
-        return stockListInteractor.searchIdsByPrograms(programId);
     }
 
     public Map<String, Set<String>> filterValidPrograms(Map<String, Set<String>> programIds,
@@ -94,5 +85,10 @@ public class StockListPresenter {
             }
         }
         return filteredIds;
+    }
+
+    @Override
+    public StockListInteractor getStockListInteractor() {
+        return stockListInteractor;
     }
 }
