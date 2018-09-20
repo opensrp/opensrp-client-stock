@@ -19,6 +19,7 @@ import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
@@ -66,12 +67,15 @@ public class StockListInteractorTest extends BaseUnitTest {
     @Mock
     private Repository repository;
 
+    @Mock
+    private ProgramOrderableRepository programOrderableRepository;
+
     private StockListInteractor stockListInteractor;
 
     @Before
     public void setUp() {
         stockListInteractor = new StockListInteractor(programRepository, commodityTypeRepository,
-                tradeItemRepository, stockRepository, searchRepository);
+                tradeItemRepository, stockRepository, searchRepository, programOrderableRepository);
     }
 
     @Test
@@ -87,9 +91,10 @@ public class StockListInteractorTest extends BaseUnitTest {
         expected.add(new Program(UUID.randomUUID().toString(), new Code("PRG002"), "Essential Drugs",
                 null, true));
         when(programRepository.findAllPrograms()).thenReturn(expected);
-        List<String> programs = stockListInteractor.getPrograms();
+        List<Program> programs = stockListInteractor.getPrograms();
         assertEquals(1, programs.size());
-        assertEquals("Essential Drugs", programs.get(0));
+        assertEquals("PRG002", programs.get(0).getCode().toString());
+        assertEquals("Essential Drugs", programs.get(0).getName());
     }
 
     @Test
@@ -152,18 +157,18 @@ public class StockListInteractorTest extends BaseUnitTest {
 
     @Test
     public void testSearchIds() {
-        Map<String, List<String>> expected = new HashMap<>();
-        List<String> tradeItems = new ArrayList<>();
+        Map<String, Set<String>> expected = new HashMap<>();
+        Set<String> tradeItems = new HashSet<>();
         String tradeItemId = UUID.randomUUID().toString();
         tradeItems.add(tradeItemId);
         String commodityId = UUID.randomUUID().toString();
         expected.put(commodityId, tradeItems);
         when(searchRepository.searchIds("BCG")).thenReturn(expected);
-        Map<String, List<String>> actual = stockListInteractor.searchIds("BCG");
+        Map<String, Set<String>> actual = stockListInteractor.searchIds("BCG");
         verify(searchRepository).searchIds("BCG");
         assertEquals(1, actual.size());
         assertEquals(1, actual.get(commodityId).size());
-        assertEquals(tradeItemId, actual.get(commodityId).get(0));
+        assertEquals(tradeItemId, actual.get(commodityId).iterator().next());
     }
 
 
@@ -190,7 +195,7 @@ public class StockListInteractorTest extends BaseUnitTest {
         when(stockRepository.getNumberOfLotsByTradeItem(any(List.class))).thenReturn(lotMap);
 
 
-        List<TradeItemWrapper> actual = stockListInteractor.findTradeItemsByIds(new ArrayList<>(tradeItems));
+        List<TradeItemWrapper> actual = stockListInteractor.findTradeItemsByIds(tradeItems);
         verify(tradeItemRepository).getTradeItemByIds(tradeItems);
         assertEquals(1, actual.size());
         assertEquals(tradeItem.getId(), actual.get(0).getTradeItem().getId());

@@ -8,12 +8,16 @@ import org.smartregister.stock.openlmis.domain.openlmis.Code;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
+import org.smartregister.stock.openlmis.domain.openlmis.Orderable;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
+import org.smartregister.stock.openlmis.domain.openlmis.ProgramOrderable;
 import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 
 import java.util.ArrayList;
@@ -51,8 +55,8 @@ public class TestDataUtils {
         populateTradeItems();
         populateLots();
         //populateStock();
+        populateProgramOrderables();
     }
-
 
     private void populatePrograms() {
         ProgramRepository programRepository = new ProgramRepository(OpenLMISLibrary.getInstance().getRepository());
@@ -119,6 +123,37 @@ public class TestDataUtils {
                     stockRepository.addOrUpdate(stock);
                 }
             }
+        }
+
+    }
+
+    private void populateProgramOrderables() {
+        ProgramRepository programRepository = new ProgramRepository(OpenLMISLibrary.getInstance().getRepository());
+        OrderableRepository orderableRepository = new OrderableRepository(OpenLMISLibrary.getInstance().getRepository());
+        ProgramOrderableRepository programOrderableRepository = new ProgramOrderableRepository(OpenLMISLibrary.getInstance().getRepository());
+        List<Program> programs = programRepository.findAllPrograms();
+        for (CommodityType commodityType : commodityTypeRepository.findAllCommodityTypes()) {
+            Orderable commodityOrderable = new Orderable(UUID.randomUUID().toString(), commodityType.getName().substring(0, 2), commodityType.getName(), 0l, 0l, true, UUID.randomUUID().toString(), null, commodityType.getId().toString());
+            orderableRepository.addOrUpdate(commodityOrderable);
+            if (commodityType.getName().equals("BCG") || commodityType.getName().equals("OPV")) {
+                ProgramOrderable programOrderable = new ProgramOrderable(UUID.randomUUID().toString(), programs.get(0).getId(), commodityOrderable.getId(), 20, true, true, commodityType.getDateUpdated());
+                programOrderableRepository.addOrUpdate(programOrderable);
+            } else if (commodityType.getName().equals("Penta")) {
+                ProgramOrderable programOrderable = new ProgramOrderable(UUID.randomUUID().toString(), programs.get(1).getId(), commodityOrderable.getId(), 20, true, true, commodityType.getDateUpdated());
+                programOrderableRepository.addOrUpdate(programOrderable);
+            }
+            for (TradeItem tradeItem : tradeItemRepository.getTradeItemByCommodityType(commodityType.getId())) {
+                Orderable tradeItemOrderable = new Orderable(UUID.randomUUID().toString(), tradeItem.getName().substring(0, 2), tradeItem.getName(), 0l, 0l, true, UUID.randomUUID().toString(), tradeItem.getId(), null);
+                orderableRepository.addOrUpdate(tradeItemOrderable);
+                if (commodityType.getName().equals("BCG")) {
+                    ProgramOrderable programOrderable = new ProgramOrderable(UUID.randomUUID().toString(), programs.get(0).getId(), tradeItemOrderable.getId(), 20, true, true, tradeItem.getDateUpdated());
+                    programOrderableRepository.addOrUpdate(programOrderable);
+                } else if (commodityType.getName().equals("Measles") && tradeItem.getName().contains("20")) {
+                    ProgramOrderable programOrderable = new ProgramOrderable(UUID.randomUUID().toString(), programs.get(1).getId(), tradeItemOrderable.getId(), 20, true, true, tradeItem.getDateUpdated());
+                    programOrderableRepository.addOrUpdate(programOrderable);
+                }
+            }
+
         }
 
     }

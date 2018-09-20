@@ -12,11 +12,11 @@ import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,12 +40,15 @@ public class StockListInteractor {
 
     private SearchRepository searchRepository;
 
+    private ProgramOrderableRepository programOrderableRepository;
+
     public StockListInteractor() {
         this(new ProgramRepository(OpenLMISLibrary.getInstance().getRepository()),
                 new CommodityTypeRepository(OpenLMISLibrary.getInstance().getRepository()),
                 new TradeItemRepository(OpenLMISLibrary.getInstance().getRepository()),
                 new StockRepository(OpenLMISLibrary.getInstance().getRepository()),
-                new SearchRepository(OpenLMISLibrary.getInstance().getRepository()));
+                new SearchRepository(OpenLMISLibrary.getInstance().getRepository()),
+                new ProgramOrderableRepository(OpenLMISLibrary.getInstance().getRepository()));
     }
 
     @VisibleForTesting
@@ -53,20 +56,17 @@ public class StockListInteractor {
                                   CommodityTypeRepository commodityTypeRepository,
                                   TradeItemRepository tradeItemRepository,
                                   StockRepository stockRepository,
-                                  SearchRepository searchRepository) {
+                                  SearchRepository searchRepository, ProgramOrderableRepository programOrderableRepository) {
         this.programRepository = programRepository;
         this.commodityTypeRepository = commodityTypeRepository;
         this.tradeItemRepository = tradeItemRepository;
         this.stockRepository = stockRepository;
         this.searchRepository = searchRepository;
+        this.programOrderableRepository = programOrderableRepository;
     }
 
-    public List<String> getPrograms() {
-        List<Program> programList = programRepository.findAllPrograms();
-        List<String> programs = new ArrayList<>();
-        for (Program program : programList)
-            programs.add(program.getName());
-        return programs;
+    public List<Program> getPrograms() {
+        return programRepository.findAllPrograms();
     }
 
     public List<CommodityType> getCommodityTypes() {
@@ -82,12 +82,12 @@ public class StockListInteractor {
         return commodityTypeRepository.findCommodityTypesByIds(ids);
     }
 
-    public Map<String, List<String>> searchIds(String searchPhrase) {
+    public Map<String, Set<String>> searchIds(String searchPhrase) {
         return searchRepository.searchIds(searchPhrase);
     }
 
-    public List<TradeItemWrapper> findTradeItemsByIds(List<String> tradeItemIds) {
-        return populateTradeItemWrapper(tradeItemRepository.getTradeItemByIds(new HashSet<>(tradeItemIds)));
+    public List<TradeItemWrapper> findTradeItemsByIds(Set<String> tradeItemIds) {
+        return populateTradeItemWrapper(tradeItemRepository.getTradeItemByIds(tradeItemIds));
     }
 
     private List<TradeItemWrapper> populateTradeItemWrapper(List<TradeItem> tradeItems) {
@@ -111,5 +111,9 @@ public class StockListInteractor {
             tradeItemWrappers.add(tradeItemWrapper);
         }
         return tradeItemWrappers;
+    }
+
+    public Map<String, Set<String>> searchIdsByPrograms(String programId) {
+        return programOrderableRepository.searchIdsByPrograms(programId);
     }
 }

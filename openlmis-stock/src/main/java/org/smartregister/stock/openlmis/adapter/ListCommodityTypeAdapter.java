@@ -18,6 +18,7 @@ import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 7/13/18.
@@ -29,9 +30,13 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     private List<ExpandCollapseListener> expandCollapseListeners = new ArrayList<>();
 
-    private Map<String, List<String>> searchedIds;
+    private Map<String, Set<String>> searchedIds;
+
+    private Map<String, Set<String>> programIds;
 
     private Context context;
+
+    private String programId;
 
     public ListCommodityTypeAdapter(StockListPresenter stockListPresenter, Context context) {
         this.stockListPresenter = stockListPresenter;
@@ -42,12 +47,17 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public void filterCommodityTypes(String searchPhrase) {
         if (StringUtils.isBlank(searchPhrase)) {
-            commodityTypes = stockListPresenter.getCommodityTypes();
+            if (programIds != null) {
+                commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
+            } else {
+                commodityTypes = stockListPresenter.getCommodityTypes();
+            }
             searchedIds = null;
             notifyDataSetChanged();
             collapseAllViews();
         } else {
-            searchedIds = stockListPresenter.searchIds(searchPhrase);
+            searchedIds = stockListPresenter.filterValidPrograms(programIds,
+                    stockListPresenter.searchIds(searchPhrase));
             commodityTypes = stockListPresenter.findCommodityTypesByIds(searchedIds.keySet());
             notifyDataSetChanged();
             expandAllViews();
@@ -67,17 +77,20 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     public void onBindViewHolder(@NonNull CommodityTypeViewHolder holder, int position) {
         CommodityType commodityType = commodityTypes.get(position);
         List<TradeItemWrapper> tradeItems;
-        if (searchedIds == null)
-            tradeItems = stockListPresenter.getTradeItems(commodityType);
-        else
+        if (searchedIds != null) {
             tradeItems = stockListPresenter.findTradeItemsByIds(searchedIds.get(commodityType.getId().toString()));
+        } else if (programIds != null) {
+            tradeItems = stockListPresenter.findTradeItemsByIds(programIds.get(commodityType.getId().toString()));
+        } else {
+            tradeItems = stockListPresenter.getTradeItems(commodityType);
+        }
         int totalDoses = 0;
         for (TradeItemWrapper tradeItem : tradeItems)
             totalDoses += tradeItem.getTotalStock() * tradeItem.getTradeItem().getNetContent();
         holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter,
                 commodityType.getName(), tradeItems.size()));
         holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, totalDoses));
-        holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, context));
+        holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, programId, context));
     }
 
     @Override
@@ -97,6 +110,12 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public void registerExpandCollapseListeners(ExpandCollapseListener listener) {
         expandCollapseListeners.add(listener);
+    }
+
+    public void setProgramId(String programId) {
+        this.programId = programId;
+        programIds = stockListPresenter.searchIdsByPrograms(programId);
+        commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
     }
 
     public void refresh(){

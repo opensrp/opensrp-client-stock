@@ -11,6 +11,7 @@ import org.smartregister.stock.openlmis.util.TestDataUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -43,10 +44,10 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
         CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "BCG", null, null, null, System.currentTimeMillis());
         searchRepository.addOrUpdate(commodityType, null);
 
-        Map<String, List<String>> ids = searchRepository.searchIds("B");
+        Map<String, Set<String>> ids = searchRepository.searchIds("B");
         assertEquals(1, ids.size());
         assertTrue(ids.containsKey(commodityType.getId().toString()));
-        List<String> tradeItems = ids.get(commodityType.getId().toString());
+        Set<String> tradeItems = ids.get(commodityType.getId().toString());
         for (String tradeItem : tradeItems)
             assertNull(tradeItem);
 
@@ -58,7 +59,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
         CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "OPV", null, null, null, System.currentTimeMillis());
         searchRepository.addOrUpdate(commodityType, null);
 
-        Map<String, List<String>> ids = searchRepository.searchIds("PV");
+        Map<String, Set<String>> ids = searchRepository.searchIds("PV");
         assertEquals(1, ids.size());
         assertTrue(ids.containsKey(commodityType.getId().toString()));
 
@@ -83,11 +84,11 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
 
         searchRepository.addOrUpdate(commodityType, tradeItems);
 
-        Map<String, List<String>> ids = searchRepository.searchIds("B");
+        Map<String, Set<String>> ids = searchRepository.searchIds("B");
         assertEquals(1, ids.keySet().size());
         assertTrue(ids.containsKey(commodityType.getId().toString()));
         assertEquals(4, ids.get(commodityType.getId().toString()).size());
-        List<String> tradeItemsIds = ids.get(commodityType.getId().toString());
+        Set<String> tradeItemsIds = ids.get(commodityType.getId().toString());
         for (String tradeItem : tradeItemsIds)
             assertNotNull(tradeItem);
 
@@ -101,11 +102,11 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
 
         searchRepository.addOrUpdate(commodityType, tradeItems);
 
-        Map<String, List<String>> ids = searchRepository.searchIds("tanus");
+        Map<String, Set<String>> ids = searchRepository.searchIds("tanus");
         assertEquals(1, ids.keySet().size());
         assertTrue(ids.containsKey(commodityType.getId().toString()));
         assertEquals(4, ids.get(commodityType.getId().toString()).size());
-        List<String> tradeItemsIds = ids.get(commodityType.getId().toString());
+        Set<String> tradeItemsIds = ids.get(commodityType.getId().toString());
         for (String tradeItem : tradeItemsIds)
             assertNotNull(tradeItem);
 
@@ -128,7 +129,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
         List<TradeItem> tradeItems = TestDataUtils.getInstance().createTradeItems(commodityType);
         searchRepository.addOrUpdate(commodityType, tradeItems);
 
-        Map<String, List<String>> ids = searchRepository.searchIds("Tetanus");
+        Map<String, Set<String>> ids = searchRepository.searchIds("Tetanus");
 
         assertEquals(1, ids.keySet().size());
         assertTrue(ids.containsKey(commodityType.getId().toString()));
@@ -167,7 +168,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
 
         assertEquals(1, ids.keySet().size());
         assertTrue(ids.containsKey(commodityTypePolio.getId().toString()));
-        assertEquals(1, ids.get(commodityTypePolio.getId().toString()).size());
+        assertEquals(0, ids.get(commodityTypePolio.getId().toString()).size());
 
 
         ids = searchRepository.searchIds("P");
@@ -175,7 +176,7 @@ public class SearchRepositoryTest extends BaseRepositoryTest {
         assertEquals(2, ids.keySet().size());
         assertTrue(ids.containsKey(commodityTypePolio.getId().toString()));
         assertTrue(ids.containsKey(commodityTypePenta.getId().toString()));
-        assertEquals(1, ids.get(commodityTypePolio.getId().toString()).size());
+        assertEquals(0, ids.get(commodityTypePolio.getId().toString()).size());
         assertEquals(4, ids.get(commodityTypePenta.getId().toString()).size());
 
     }

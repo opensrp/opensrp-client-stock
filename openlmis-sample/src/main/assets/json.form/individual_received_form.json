@@ -170,6 +170,7 @@
         "trade_item_id": "[trade_item_id]",
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
+        "program_id": "[program_id]",
         "lot_status": [
           "VVM1",
           "VVM2"

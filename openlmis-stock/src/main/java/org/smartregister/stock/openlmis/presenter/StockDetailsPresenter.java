@@ -34,6 +34,7 @@ import static org.smartregister.stock.domain.Stock.issued;
 import static org.smartregister.stock.domain.Stock.loss_adjustment;
 import static org.smartregister.stock.domain.Stock.received;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
+import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.OTHER;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STEP2;
@@ -169,12 +170,12 @@ public class StockDetailsPresenter {
 
     }
 
-    private String extractTradeItemId(JSONArray stepFields) throws JSONException {
+    private String extractValue(JSONArray stepFields, String key) throws JSONException {
         for (int i = 0; i < stepFields.length(); i++) {
             JSONObject jsonObject = getJSONObject(stepFields, i);
             String keyValue = jsonObject.getString(KEY);
             if (STOCK_LOTS.equals(keyValue)) {
-                return jsonObject.getString(TRADE_ITEM_ID);
+                return jsonObject.optString(key);
             }
         }
         return null;
@@ -191,7 +192,8 @@ public class StockDetailsPresenter {
 
         List<LotDto> selectedLotDTos = LotFactory.gson.fromJson(lotsJSON, listType);
 
-        String tradeItem = extractTradeItemId(stepFields);
+        String tradeItem = extractValue(stepFields, TRADE_ITEM_ID);
+        String programId = extractValue(stepFields, PROGRAM_ID);
 
         Date encounterDate;
         try {
@@ -208,6 +210,7 @@ public class StockDetailsPresenter {
                     System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
+            stock.setProgramId(programId);
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
         }

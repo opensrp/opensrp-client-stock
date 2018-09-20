@@ -144,7 +144,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
     @Test
     public void testFilterCommodityTypesInvalidPhrase() {
-        when(stockListPresenter.searchIds("BCG")).thenReturn(new HashMap<String, List<String>>());
+        when(stockListPresenter.searchIds("BCG")).thenReturn(new HashMap<String, Set<String>>());
         LinearLayout vg = new LinearLayout(context);
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
         listCommodityTypeAdapter.onBindViewHolder(holder, 0);
@@ -157,9 +157,10 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
     @Test
     public void testFilterCommodityTypes() {
-        Map<String, List<String>> expected = new HashMap<>();
+        Map<String, Set<String>> expected = new HashMap<>();
         expected.put(bcGCommodityType.getId().toString(), null);
         when(stockListPresenter.searchIds("BCG")).thenReturn(expected);
+        when(stockListPresenter.filterValidPrograms(null,expected)).thenReturn(expected);
         Set<String> commodityTypeId = new HashSet<>();
         commodityTypeId.add(bcGCommodityType.getId().toString());
         commodityTypeList.remove(1);
@@ -175,11 +176,12 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
     @Test
     public void testFilterTradeItemsTypes() {
-        Map<String, List<String>> expected = new HashMap<>();
-        List<String> tradeItemIds = new ArrayList<>();
+        Map<String, Set<String>> expected = new HashMap<>();
+        Set<String> tradeItemIds = new HashSet<>();
         tradeItemIds.add(UUID.randomUUID().toString());
         expected.put(bcGCommodityType.getId().toString(), tradeItemIds);
         when(stockListPresenter.searchIds("BCG")).thenReturn(expected);
+        when(stockListPresenter.filterValidPrograms(null,expected)).thenReturn(expected);
         Set<String> commodityTypeId = new HashSet<>();
         commodityTypeId.add(bcGCommodityType.getId().toString());
         commodityTypeList.remove(1);

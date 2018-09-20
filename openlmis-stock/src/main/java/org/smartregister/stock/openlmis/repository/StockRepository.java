@@ -50,6 +50,8 @@ public class StockRepository extends BaseRepository {
 
     public static final String LOT_ID = "lot_id";
 
+    public static final String PROGRAM_ID = "program_id";
+
     public static final String REASON = "reason";
 
     private static final String CREATE_STOCK_TABLE = "CREATE TABLE " + stock_TABLE_NAME +
@@ -57,6 +59,7 @@ public class StockRepository extends BaseRepository {
             STOCK_TYPE_ID + " VARCHAR NOT NULL," +
             TRANSACTION_TYPE + " VARCHAR NOT NULL," +
             LOT_ID + " VARCHAR," +
+            PROGRAM_ID + " VARCHAR," +
             VALUE + " INTEGER NOT NULL," +
             REASON + " VARCHAR," +
             DATE_CREATED + " DATETIME NOT NULL," +
@@ -84,6 +87,7 @@ public class StockRepository extends BaseRepository {
         ContentValues contentValues = new ContentValues();
         contentValues.put(STOCK_TYPE_ID, stock.getStockTypeId());
         contentValues.put(TRANSACTION_TYPE, stock.getTransactionType());
+        contentValues.put(PROGRAM_ID, stock.getProgramId());
         contentValues.put(VALUE, stock.getValue());
         contentValues.put(DATE_CREATED, stock.getDateCreated());
         contentValues.put(TO_FROM, stock.getToFrom());
@@ -264,7 +268,7 @@ public class StockRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
                 cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
                 cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID)));
-
+        stock.setProgramId(cursor.getString(cursor.getColumnIndex(PROGRAM_ID)));
         stock.setLotId(cursor.getString(cursor.getColumnIndex(LOT_ID)));
         stock.setReason(cursor.getString(cursor.getColumnIndex(REASON)));
         stock.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));

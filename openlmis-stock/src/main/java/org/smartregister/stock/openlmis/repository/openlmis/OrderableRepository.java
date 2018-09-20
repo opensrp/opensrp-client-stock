@@ -35,14 +35,15 @@ public class OrderableRepository extends BaseRepository {
     public static final String TRADE_ITEM_ID = "trade_item_id";
     public static final String COMMODITY_TYPE_ID = "commodity_type_id";
     public static final String DATE_UPDATED = "date_updated";
+
     public static final String[] ORDERABLE_TABLE_COLUMNS = {ID, FULL_PRODUCT_CODE, FULL_PRODUCT_NAME, NET_CONTENT,
             PACK_ROUNDING_THRESHOLD, ROUND_TO_ZERO, DISPENSABLE_ID, TRADE_ITEM_ID, COMMODITY_TYPE_ID, DATE_UPDATED};
     public static final String[] SELECT_TABLE_COLUMNS = {ID, FULL_PRODUCT_CODE, FULL_PRODUCT_NAME, NET_CONTENT, DISPENSABLE_ID, TRADE_ITEM_ID, COMMODITY_TYPE_ID};
-    
+
     public static final String CREATE_ORDERABLE_TABLE =
 
             "CREATE TABLE " + ORDERABLE_TABLE
-             + "("
+                    + "("
                     + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + FULL_PRODUCT_CODE + " VARCHAR NOT NULL,"
                     + FULL_PRODUCT_NAME + " VARCHAR NOT NULL,"
@@ -53,12 +54,19 @@ public class OrderableRepository extends BaseRepository {
                     + TRADE_ITEM_ID + " VARCHAR,"
                     + COMMODITY_TYPE_ID + " VARCHAR,"
                     + DATE_UPDATED + " INTEGER"
-             + ")";
-    
-    public OrderableRepository(Repository repository) { super(repository); }
+                    + ")";
+
+    private static final String CREATE_ORDERABLES_INDEX = "CREATE INDEX "
+            + ORDERABLE_TABLE + "_INDEX ON "
+            + ORDERABLE_TABLE + "(" + COMMODITY_TYPE_ID + "," + TRADE_ITEM_ID + ")";
+
+    public OrderableRepository(Repository repository) {
+        super(repository);
+    }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_ORDERABLE_TABLE);
+        database.execSQL(CREATE_ORDERABLES_INDEX);
     }
 
     public void addOrUpdate(Orderable orderable) {
@@ -87,10 +95,11 @@ public class OrderableRepository extends BaseRepository {
         List<Orderable> orderables = new ArrayList<>();
         Cursor cursor = null;
         try {
+
             String[] selectionArgs = new String[]{id, fullProductCode, fullProductName, netContent, dispensable, tradeItemId, commodityTypeId};
             Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString =  query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(ORDERABLE_TABLE, ORDERABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
