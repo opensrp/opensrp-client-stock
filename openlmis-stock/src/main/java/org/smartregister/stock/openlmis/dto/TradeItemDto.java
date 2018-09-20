@@ -4,9 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-public class TradeItemDto implements Parcelable {
-
-    private String id;
+public class TradeItemDto extends BaseDto implements Parcelable {
 
     private String name;
 
@@ -19,10 +17,12 @@ public class TradeItemDto implements Parcelable {
     private String dispensingUnit;
 
     private Long netContent;
+    private String programId;
 
 
     public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
-                        @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit, @NonNull Long netContent) {
+                        @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
+                        @NonNull Long netContent, String programId) {
         this.id = id;
         this.name = name;
         this.totalStock = totalStock;
@@ -30,10 +30,11 @@ public class TradeItemDto implements Parcelable {
         this.numberOfLots = numberOfLots == null ? 0 : numberOfLots;
         this.dispensingUnit = dispensingUnit;
         this.netContent = netContent;
+        this.programId = programId;
     }
 
     public TradeItemDto(Parcel in) {
-        String[] data = new String[7];
+        String[] data = new String[8];
 
         in.readStringArray(data);
         id = data[0];
@@ -43,6 +44,14 @@ public class TradeItemDto implements Parcelable {
         numberOfLots = Integer.valueOf(data[4]);
         dispensingUnit = data[5];
         netContent = Long.valueOf(data[6]);
+        programId = data[7];
+    }
+
+    public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
+                        @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
+                        @NonNull Long netContent) {
+        this(id, name, totalStock, lastUpdated, numberOfLots, dispensingUnit, netContent, null);
+
     }
 
     @Override
@@ -54,7 +63,7 @@ public class TradeItemDto implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{id, name,
                 totalStock.toString(), lastUpdated.toString(), numberOfLots.toString(),
-                dispensingUnit, netContent.toString()});
+                dispensingUnit, netContent.toString(), programId});
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -97,5 +106,9 @@ public class TradeItemDto implements Parcelable {
 
     public Long getNetContent() {
         return netContent;
+    }
+
+    public String getProgramId() {
+        return programId;
     }
 }

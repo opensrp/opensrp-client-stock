@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -28,12 +29,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.smartregister.stock.domain.Stock.issued;
 import static org.smartregister.stock.domain.Stock.loss_adjustment;
 import static org.smartregister.stock.domain.Stock.received;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
+import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.OTHER;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STEP2;
@@ -71,7 +72,7 @@ public class StockDetailsPresenter {
 
     }
 
-    public int getTotalStockByLot(UUID lotId) {
+    public int getTotalStockByLot(String lotId) {
         return stockDetailsInteractor.getTotalStockByLot(lotId);
     }
 
@@ -174,7 +175,7 @@ public class StockDetailsPresenter {
 
     }
 
-    private String extractTradeItemId(JSONArray stepFields) throws JSONException {
+    private String extractValue(JSONArray stepFields, String key) throws JSONException {
         for (int i = 0; i < stepFields.length(); i++) {
             JSONObject jsonObject = getJSONObject(stepFields, i);
             String keyValue = jsonObject.getString(KEY);
@@ -196,7 +197,8 @@ public class StockDetailsPresenter {
 
         List<LotDto> selectedLotDTos = LotFactory.gson.fromJson(lotsJSON, listType);
 
-        String tradeItem = extractTradeItemId(stepFields);
+        String tradeItem = extractValue(stepFields, TRADE_ITEM_ID);
+        String programId = extractValue(stepFields, PROGRAM_ID);
 
         Date encounterDate;
         try {
@@ -208,11 +210,12 @@ public class StockDetailsPresenter {
 
         for (LotDto lot : selectedLotDTos) {
             Stock stock = new Stock(null, transactionType,
-                    provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
-                    encounterDate.getTime(), facility == null ? lot.getReason() : facility, TYPE_Unsynced,
-                    System.currentTimeMillis(), tradeItem);
+            provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
+            encounterDate.getTime(), facility == null ? lot.getReason() : facility, TYPE_Unsynced,
+            System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
+            stock.setProgramId(programId);
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
         }
@@ -243,5 +246,16 @@ public class StockDetailsPresenter {
         stockDetailsInteractor.addStock(stock);
 
         return true;
+    }
+
+    private String extractTradeItemId(JSONArray stepFields) throws JSONException {
+        for (int i = 0; i < stepFields.length(); i++) {
+            JSONObject jsonObject = getJSONObject(stepFields, i);
+            String keyValue = jsonObject.getString(KEY);
+            if (STOCK_LOTS.equals(keyValue) || STOCK_STATUS.equals(keyValue)) {
+                return jsonObject.getString(TRADE_ITEM_ID);
+            }
+        }
+        return null;
     }
 }

@@ -1,9 +1,10 @@
 package org.smartregister.stock.openlmis.repository;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.text.TextUtils;
 import android.util.Log;
 
-import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.joda.time.LocalDate;
@@ -13,7 +14,10 @@ import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.dto.LotDetailsDto;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.ID;
@@ -46,6 +50,8 @@ public class StockRepository extends BaseRepository {
 
     public static final String LOT_ID = "lot_id";
 
+    public static final String PROGRAM_ID = "program_id";
+
     public static final String REASON = "reason";
 
     private static final String CREATE_STOCK_TABLE = "CREATE TABLE " + stock_TABLE_NAME +
@@ -53,6 +59,7 @@ public class StockRepository extends BaseRepository {
             STOCK_TYPE_ID + " VARCHAR NOT NULL," +
             TRANSACTION_TYPE + " VARCHAR NOT NULL," +
             LOT_ID + " VARCHAR," +
+            PROGRAM_ID + " VARCHAR," +
             VALUE + " INTEGER NOT NULL," +
             REASON + " VARCHAR," +
             DATE_CREATED + " DATETIME NOT NULL," +
@@ -64,6 +71,9 @@ public class StockRepository extends BaseRepository {
             CHILD_LOCATION_ID + " VARCHAR," +
             TEAM_ID + " VARCHAR," +
             TEAM_NAME + " VARCHAR)";
+
+    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME};
+
 
     public StockRepository(Repository repository) {
         super(repository);
@@ -77,6 +87,7 @@ public class StockRepository extends BaseRepository {
         ContentValues contentValues = new ContentValues();
         contentValues.put(STOCK_TYPE_ID, stock.getStockTypeId());
         contentValues.put(TRANSACTION_TYPE, stock.getTransactionType());
+        contentValues.put(PROGRAM_ID, stock.getProgramId());
         contentValues.put(VALUE, stock.getValue());
         contentValues.put(DATE_CREATED, stock.getDateCreated());
         contentValues.put(TO_FROM, stock.getToFrom());
@@ -97,6 +108,37 @@ public class StockRepository extends BaseRepository {
         }
     }
 
+    public List<Stock> findUnSyncedWithLimit(int limit) {
+        List<Stock> stocks = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(stock_TABLE_NAME, STOCK_TABLE_COLUMNS, SYNC_STATUS + " = ?", new String[]{TYPE_Unsynced}, null, null, null, "" + limit);
+            stocks = readAllstocks(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return stocks;
+    }
+
+    private List<Stock> readAllstocks(Cursor cursor) {
+        List<Stock> stocks = new ArrayList<>();
+        try {
+            while (cursor.moveToNext()) {
+                stocks.add(createStock(cursor));
+            }
+
+        } catch (Exception e) {
+            Log.e(getClass().getCanonicalName(), e.getMessage());
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return stocks;
+    }
 
     public int getTotalStockByTradeItem(String tradeItemId) {
         String query = String.format("SELECT sum(%s) FROM %s WHERE %s=?", VALUE, stock_TABLE_NAME, STOCK_TYPE_ID);
@@ -137,18 +179,30 @@ public class StockRepository extends BaseRepository {
     }
 
 
-    public List<LotDetailsDto> getNumberOfLotsByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT l.%s, min(%s), sum(%s) FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
-                        " WHERE %s=? AND %s >= ? GROUP BY l.%s ORDER BY 3 ",
-                ID, EXPIRATION_DATE, VALUE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID, TRADE_ITEM_ID, EXPIRATION_DATE, ID);
+    public Map<String, List<LotDetailsDto>> getNumberOfLotsByTradeItem(List<String> tradeItems) {
+        int len = tradeItems.size();
+        String query = String.format("SELECT l.%s ,l.%s, min(%s), sum(%s) FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
+                        " WHERE %s IN (%s) AND %s >= ? GROUP BY l.%s ORDER BY 3 ",
+                TRADE_ITEM_ID, ID, EXPIRATION_DATE, VALUE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID,
+                TRADE_ITEM_ID, TextUtils.join(",", Collections.nCopies(len, "?")),
+                EXPIRATION_DATE, ID);
         Cursor cursor = null;
-        List<LotDetailsDto> lots = new ArrayList<>();
+        Map<String, List<LotDetailsDto>> lots = new HashMap<>();
         try {
-            cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId,
-                    String.valueOf(new LocalDate().toDate().getTime())});
+            String[] params = tradeItems.toArray(new String[len + 1]);
+            params[len] = String.valueOf(new LocalDate().toDate().getTime());
+            cursor = getReadableDatabase().rawQuery(query, params);
 
             while (cursor.moveToNext()) {
-                lots.add(new LotDetailsDto(cursor.getString(0), cursor.getLong(1), cursor.getInt(2)));
+                String tradeItemId = cursor.getString(0);
+                LotDetailsDto lot = new LotDetailsDto(cursor.getString(1), cursor.getLong(2), cursor.getInt(3));
+                if (lots.containsKey(tradeItemId)) {
+                    lots.get(tradeItemId).add(lot);
+                } else {
+                    List<LotDetailsDto> lotDetailsDtos = new ArrayList<>();
+                    lotDetailsDtos.add(lot);
+                    lots.put(tradeItemId, lotDetailsDtos);
+                }
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -179,6 +233,31 @@ public class StockRepository extends BaseRepository {
         return totalStock;
     }
 
+    public List<Stock> findUniqueStock(String stock_type_id, String transaction_type, String providerid, String value, String date_created, String to_from) {
+        List<Stock> stocks = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(stock_TABLE_NAME, STOCK_TABLE_COLUMNS, STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + DATE_CREATED + " = ? AND " + TO_FROM + " = ?", new String[]{stock_type_id, transaction_type, providerid, value, date_created, to_from}, null, null, null, null);
+            stocks = readAllstocks(cursor);
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return stocks;
+    }
+
+    public void markEventsAsSynced(ArrayList<Stock> stocks) {
+        for (int i = 0; i < stocks.size(); i++) {
+            Stock stockToAdd = stocks.get(i);
+            stockToAdd.setSyncStatus(TYPE_Synced);
+            addOrUpdate(stockToAdd);
+        }
+    }
+
     private Stock createStock(Cursor cursor) {
         Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
                 cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
@@ -189,6 +268,7 @@ public class StockRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
                 cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
                 cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID)));
+        stock.setProgramId(cursor.getString(cursor.getColumnIndex(PROGRAM_ID)));
         stock.setLotId(cursor.getString(cursor.getColumnIndex(LOT_ID)));
         stock.setReason(cursor.getString(cursor.getColumnIndex(REASON)));
         stock.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
@@ -197,6 +277,5 @@ public class StockRepository extends BaseRepository {
         stock.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
         return stock;
     }
-
-
 }
+

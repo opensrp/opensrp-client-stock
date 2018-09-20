@@ -1,4 +1,4 @@
-package org.smartregister.stock.management;
+package org.smartregister.stock.management.repository;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,13 +33,13 @@ public class TradeItemRegisterRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testAdd() {
-        String commodityTypeId = UUID.randomUUID().toString();
+        String commodityTypeId = UUID.randomUUID().toString().toString();
         long now = System.currentTimeMillis();
-        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
+        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("Intervax BCG 20");
         tradeItem.setNetContent(20l);
         tradeItem.setDateUpdated(now);
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", "10ml", null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "vials", "10ml", null));
         tradeItem.setCommodityTypeId(commodityTypeId);
         tradeItemRepository.addOrUpdate(tradeItem);
 
@@ -54,12 +54,12 @@ public class TradeItemRegisterRepositoryTest extends BaseRepositoryTest {
 
     @Test
     public void testUpdate() {
-        String commodityTypeId = UUID.randomUUID().toString();
+        String commodityTypeId = UUID.randomUUID().toString().toString();
         long now = System.currentTimeMillis();
-        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
+        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("Brand A OPV 5");
         tradeItem.setNetContent(5l);
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "pills", "20 capsules", null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "pills", "20 capsules", null));
         tradeItem.setDateUpdated(now);
         tradeItem.setCommodityTypeId(commodityTypeId);
         tradeItemRepository.addOrUpdate(tradeItem);
@@ -74,7 +74,7 @@ public class TradeItemRegisterRepositoryTest extends BaseRepositoryTest {
 
         tradeItem.setName("Brand A OPV 10");
         tradeItem.setNetContent(10l);
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "pills", "20 pills", null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "pills", "20 pills", null));
         tradeItemRepository.addOrUpdate(tradeItem);
 
         tradeItems = tradeItemRepository.getTradeItemByCommodityType(commodityTypeId);
@@ -88,30 +88,30 @@ public class TradeItemRegisterRepositoryTest extends BaseRepositoryTest {
     @Test
     public void testGetTradeItemByCommodityType() {
 
-        String commodityTypeId = UUID.randomUUID().toString();
+        String commodityTypeId = UUID.randomUUID().toString().toString();
         assertTrue(tradeItemRepository.getTradeItemByCommodityType(commodityTypeId).isEmpty());
 
         long now = System.currentTimeMillis();
 
-        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
+        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("CIntervax BCG 20");
         tradeItem.setNetContent(20l);
         tradeItem.setDateUpdated(now);
         tradeItem.setCommodityTypeId(commodityTypeId);
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", "10 ml", null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "vials", "10 ml", null));
         tradeItemRepository.addOrUpdate(tradeItem);
 
 
-        tradeItem = new TradeItem(UUID.randomUUID().toString());
+        tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("Brand B OPV 5");
         tradeItem.setNetContent(5l);
         tradeItem.setDateUpdated(now);
         tradeItem.setCommodityTypeId(commodityTypeId);
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "pills", "5 pills", null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "pills", "5 pills", null));
         tradeItemRepository.addOrUpdate(tradeItem);
 
-        String commodityTypeId2 = UUID.randomUUID().toString();
-        tradeItem = new TradeItem(UUID.randomUUID().toString());
+        String commodityTypeId2 = UUID.randomUUID().toString().toString();
+        tradeItem = new TradeItem(UUID.randomUUID().toString().toString());
         tradeItem.setName("Acetylsalicylic");
         tradeItem.setNetContent(24l);
         tradeItem.setDateUpdated(now);

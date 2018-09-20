@@ -49,7 +49,7 @@ public class TradeItemViewHolderTest extends BaseUnitTest {
         TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Intervax BCG 20");
         tradeItem.setCommodityTypeId("305730154758");
-        tradeItem.setDispensable(new Dispensable(UUID.randomUUID(), "vials", null, null));
+        tradeItem.setDispensable(new Dispensable(UUID.randomUUID().toString(), "vials", null, null));
         TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
         tradeItemWrapper.setNumberOfLots(10);
         tradeItemWrapper.setTotalStock(50);

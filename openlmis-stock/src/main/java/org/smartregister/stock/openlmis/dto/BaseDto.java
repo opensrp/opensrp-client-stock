@@ -1,7 +1,13 @@
 package org.smartregister.stock.openlmis.dto;
 
-import java.util.UUID;
-
 public class BaseDto {
-    private UUID id;
+    protected String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

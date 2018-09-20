@@ -1,16 +1,24 @@
 package org.smartregister.stock.openlmis.domain.openlmis;
 
-import java.util.UUID;
-
 public class BaseEntity {
 
-    protected UUID id;
+    protected String id;
 
-    public UUID getId() {
+    protected Long serverVersion;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public Long getServerVersion() {
+        return serverVersion;
+    }
+
+    public void setServerVersion(Long serverVersion) {
+        this.serverVersion = serverVersion;
     }
 }

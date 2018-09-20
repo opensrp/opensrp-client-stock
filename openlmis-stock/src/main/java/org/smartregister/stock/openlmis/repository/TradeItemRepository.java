@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.repository;
 
 import android.content.ContentValues;
+import android.text.TextUtils;
 import android.util.Log;
 
 import net.sqlcipher.Cursor;
@@ -12,7 +13,9 @@ import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 26/7/18.
@@ -21,11 +24,11 @@ public class TradeItemRepository extends BaseRepository {
 
     private static final String TAG = TradeItemRepository.class.getName();
 
-    private static final String TRADE_ITEM_TABLE = "trade_item_register";
+    public static final String TRADE_ITEM_TABLE = "trade_item_register";
 
-    private static final String ID = "_id";
+    public static final String ID = "_id";
 
-    private static final String COMMODITY_TYPE_ID = "commodity_type_id";
+    public static final String COMMODITY_TYPE_ID = "commodity_type_id";
 
     private static final String NAME = "name";
 
@@ -49,6 +52,9 @@ public class TradeItemRepository extends BaseRepository {
             DISPENSING_SIZE + " VARCHAR, " +
             DISPENSING_ADMINISTRATION + " VARCHAR)";
 
+    private static final String CREATE_TRADE_ITEM_INDEX = "CREATE INDEX "
+            + TRADE_ITEM_TABLE + "_INDEX ON "
+            + TRADE_ITEM_TABLE + "(" + COMMODITY_TYPE_ID + "," + ID + ")";
 
     public TradeItemRepository(Repository repository) {
         super(repository);
@@ -56,6 +62,7 @@ public class TradeItemRepository extends BaseRepository {
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_TRADE_ITEM_TABLE);
+        database.execSQL(CREATE_TRADE_ITEM_INDEX);
     }
 
     public void addOrUpdate(TradeItem tradeItem) {
@@ -77,7 +84,7 @@ public class TradeItemRepository extends BaseRepository {
         }
     }
 
-    private boolean tradeItemExists(String tradeItemId) {
+    public boolean tradeItemExists(String tradeItemId) {
         String query = String.format("SELECT 1 FROM %s WHERE %s=?", TRADE_ITEM_TABLE, ID);
         Cursor cursor = null;
         try {
@@ -94,7 +101,11 @@ public class TradeItemRepository extends BaseRepository {
     }
 
     public List<TradeItem> getTradeItemByCommodityType(String commodityTypeId) {
-        String query = String.format("SELECT * FROM %s WHERE %s=?", TRADE_ITEM_TABLE, COMMODITY_TYPE_ID);
+
+        if (commodityTypeId == null) {
+            return new ArrayList<>();
+        }
+        String query = String.format("SELECT * FROM %s WHERE %s=? AND %s IS NOT NULL", TRADE_ITEM_TABLE, COMMODITY_TYPE_ID, NAME);
         Cursor cursor = null;
         List<TradeItem> tradeItems = new ArrayList<>();
         try {
@@ -113,6 +124,10 @@ public class TradeItemRepository extends BaseRepository {
     }
 
     public TradeItem getTradeItemById(String tradeItemId) {
+
+        if (tradeItemId == null) {
+            return null;
+        }
         String query = String.format("SELECT * FROM %s WHERE %s=?", TRADE_ITEM_TABLE, ID);
         Cursor cursor = null;
         try {
@@ -128,6 +143,30 @@ public class TradeItemRepository extends BaseRepository {
             }
         }
         return null;
+    }
+
+    public List<TradeItem> getTradeItemByIds(Set<String> tradeItemIds) {
+        List<TradeItem> tradeItems = new ArrayList<>();
+        tradeItemIds.remove(null);
+        if (tradeItemIds.isEmpty())
+            return tradeItems;
+        int len = tradeItemIds.size();
+        String query = String.format("SELECT * FROM %s WHERE %s IN (%s)", TRADE_ITEM_TABLE, ID,
+                TextUtils.join(",", Collections.nCopies(len, "?")));
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().rawQuery(query, tradeItemIds.toArray(new String[len]));
+            while (cursor.moveToNext()) {
+                tradeItems.add(createTradeItem(cursor));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return tradeItems;
     }
 
     private TradeItem createTradeItem(Cursor cursor) {

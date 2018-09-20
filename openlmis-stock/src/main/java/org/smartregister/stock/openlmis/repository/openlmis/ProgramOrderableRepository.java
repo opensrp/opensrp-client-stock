@@ -9,15 +9,20 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
-import org.smartregister.stock.openlmis.domain.openlmis.Orderable;
-import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.domain.openlmis.ProgramOrderable;
+import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
+import java.util.Set;
 
+import static org.smartregister.stock.openlmis.repository.TradeItemRepository.COMMODITY_TYPE_ID;
+import static org.smartregister.stock.openlmis.repository.TradeItemRepository.TRADE_ITEM_TABLE;
+import static org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository.ORDERABLE_TABLE;
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.convertBooleanToInt;
 import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
@@ -40,7 +45,7 @@ public class ProgramOrderableRepository extends BaseRepository {
     public static final String CREATE_PROGRAM_ORDERABLE_TABLE =
 
             "CREATE TABLE " + PROGRAM_ORDERABLE_TABLE
-            + "("
+                    + "("
                     + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + PROGRAM + " VARCHAR NOT NULL,"
                     + ORDERABLE + " VARCHAR NOT NULL,"
@@ -48,12 +53,19 @@ public class ProgramOrderableRepository extends BaseRepository {
                     + ACTIVE + " TINYINT,"
                     + FULL_SUPPLY + " TINYINT,"
                     + DATE_UPDATED + " INTEGER"
-            + ")";
+                    + ")";
 
-    public ProgramOrderableRepository(Repository repository) { super(repository); }
+    private static final String CREATE_PROGRAM_INDEX = "CREATE INDEX "
+            + PROGRAM_ORDERABLE_TABLE + PROGRAM + "_INDEX ON "
+            + PROGRAM_ORDERABLE_TABLE + "(" + PROGRAM + ")";
+
+    public ProgramOrderableRepository(Repository repository) {
+        super(repository);
+    }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_PROGRAM_ORDERABLE_TABLE);
+        database.execSQL(CREATE_PROGRAM_INDEX);
     }
 
     public void addOrUpdate(ProgramOrderable program) {
@@ -83,9 +95,9 @@ public class ProgramOrderableRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String[] selectionArgs = new String[]{id, program, orderable, dosesPerPatient, active, fullSupply};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString =  query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(PROGRAM_ORDERABLE_TABLE, PROGRAM_ORDERABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
@@ -123,9 +135,9 @@ public class ProgramOrderableRepository extends BaseRepository {
     private ProgramOrderable createProgramOrderable(Cursor cursor) {
 
         return new ProgramOrderable(
-                UUID.fromString(cursor.getString(cursor.getColumnIndex(ID))),
-                new Program(cursor.getString(cursor.getColumnIndex(PROGRAM))),
-                new Orderable(UUID.fromString(cursor.getString(cursor.getColumnIndex(ORDERABLE)))),
+                cursor.getString(cursor.getColumnIndex(ID)),
+                cursor.getString(cursor.getColumnIndex(PROGRAM)),
+                cursor.getString(cursor.getColumnIndex(ORDERABLE)),
                 cursor.getInt(cursor.getColumnIndex(DOSES_PER_PATIENT)),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE))),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(FULL_SUPPLY))),
@@ -136,14 +148,48 @@ public class ProgramOrderableRepository extends BaseRepository {
     private Object[] createQueryValues(ProgramOrderable programOrderable) {
 
         Object[] values = new Object[] {
-            programOrderable.getId().toString(),
-            programOrderable.getProgram().getId().toString(),
-            programOrderable.getOrderable().getId().toString(),
+            programOrderable.getId(),
+            programOrderable.getProgramId(),
+            programOrderable.getOrderableId(),
             programOrderable.getDosesPerPatient(),
             convertBooleanToInt(programOrderable.isActive()),
             convertBooleanToInt(programOrderable.isFullSupply()),
             programOrderable.getDateUpdated()
         };
         return values;
+    }
+
+    public Map<String, Set<String>> searchIdsByPrograms(String programId) {
+        Cursor cursor = null;
+        Map<String, Set<String>> ids = new HashMap<>();
+        String query = String.format("SELECT IFNULL(t.%s,o.%s),t.%s FROM %s p " +
+                        " JOIN %s o on p.%s = o.%s" +
+                        " LEFT JOIN %s t on t.%s=o.%s or t.%s=o.%s WHERE p.%s =? ",
+                COMMODITY_TYPE_ID,OrderableRepository.COMMODITY_TYPE_ID, TradeItemRepository.ID,
+                PROGRAM_ORDERABLE_TABLE,ORDERABLE_TABLE, ORDERABLE, OrderableRepository.ID,
+                TRADE_ITEM_TABLE, COMMODITY_TYPE_ID, OrderableRepository.COMMODITY_TYPE_ID,
+                TradeItemRepository.ID, OrderableRepository.TRADE_ITEM_ID, PROGRAM);
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{programId});
+            while (cursor.moveToNext()) {
+                String commodityType = cursor.getString(0);
+                String tradeItem = cursor.getString(1);
+                if (ids.containsKey(commodityType)) {
+                    ids.get(commodityType).add(tradeItem);
+
+                } else {
+                    Set<String> tradeItems = new HashSet<>();
+                    tradeItems.add(tradeItem);
+                    ids.put(commodityType, tradeItems);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return ids;
     }
 }

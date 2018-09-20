@@ -1,4 +1,4 @@
-package org.smartregister.stock.management;
+package org.smartregister.stock.management.repository;
 
 import org.junit.After;
 import org.junit.Before;
@@ -7,9 +7,9 @@ import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.smartregister.stock.openlmis.util.Utils.DATABASE_NAME;
 
 /************** test naming convention followed *****************
@@ -38,7 +38,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // insert new dispensable
         Dispensable dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -51,12 +51,13 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
         assertEquals(dispensables.size(), 1);
     }
 
+
     @Test
     public void testAddOrUpdateShouldUpdateExistingDispensable() {
 
         // insert new Dispensable
         Dispensable dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -65,7 +66,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // update existing Dispensable
         dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration_two"
@@ -88,7 +89,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // insert new Dispensables
         Dispensable dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440100"),
+                "123e4567-e89b-42d3-a456-556642440100",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -96,7 +97,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(dispensable);
 
         dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -111,11 +112,38 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
     }
 
     @Test
+    public void testFindDispensablesById() {
+
+        // insert new Dispensables
+        Dispensable dispensable = new Dispensable(
+                "123e4567-e89b-42d3-a456-556642440100",
+                "dispensing_unit",
+                "size_code",
+                "route_of_administration"
+        );
+        database.addOrUpdate(dispensable);
+
+        dispensable = new Dispensable(
+                "123e4567-e89b-42d3-a456-556642440200",
+                "dispensing_unit",
+                "size_code",
+                "route_of_administration"
+        );
+        database.addOrUpdate(dispensable);
+
+        // ensure all matching rows are returned
+        dispensable = database.findDispensable("123e4567-e89b-42d3-a456-556642440100");
+
+        assertNotNull(dispensable);
+    }
+
+
+    @Test
     public void testFindDispensablesShouldNotReturnAnyMatchingRows() {
 
         // insert new Dispensable
         Dispensable dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration"
@@ -124,7 +152,7 @@ public class DispensableRepositoryTest extends BaseRepositoryTest {
 
         // update existing Dispensable
         dispensable = new Dispensable(
-                UUID.fromString("123e4567-e89b-42d3-a456-556642440200"),
+                "123e4567-e89b-42d3-a456-556642440200",
                 "dispensing_unit",
                 "size_code",
                 "route_of_administration_two"

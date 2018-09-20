@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.joda.time.DateTime;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.dto.TradeItemDto;
@@ -47,12 +48,11 @@ public class LotAdapter extends RecyclerView.Adapter<LotViewHolder> {
     public void onBindViewHolder(@NonNull LotViewHolder holder, int position) {
         Lot lot = lots.get(position);
         holder.getLotCodeTextView().setText(context.getString(R.string.lotcode_and_expiry,
-                lot.getLotCode(), lot.getExpirationDate().toString(DATE_FORMAT)));
+                lot.getLotCode(), new DateTime(lot.getExpirationDate()).toString(DATE_FORMAT)));
         holder.getStockOnHandTextView().setText(context.getString(R.string.dispensable_formatter,
                 stockDetailsPresenter.getTotalStockByLot(lot.getId()),
                 tradeItem.getDispensingUnit()));
         holder.getStatusTextView().setText(lot.getLotStatus());
-
     }
 
     @Override
