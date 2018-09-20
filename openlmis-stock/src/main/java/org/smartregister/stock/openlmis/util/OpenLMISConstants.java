@@ -69,6 +69,8 @@ public interface OpenLMISConstants {
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
         
         String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
+
+        String INDIVIDUAL_NON_LOT_ISSUE_FORM = "non_lot_individual_issue_form";
     }
 
     interface ServiceType {

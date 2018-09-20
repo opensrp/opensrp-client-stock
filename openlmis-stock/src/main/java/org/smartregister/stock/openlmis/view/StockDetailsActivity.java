@@ -33,6 +33,7 @@ import java.util.Date;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ADJUST_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_ISSUE_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_RECEIVED_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
@@ -118,7 +119,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         if (view.getId() == R.id.collapseExpandButton || view.getId() == R.id.number_of_lots) {
             stockDetailsPresenter.collapseExpandClicked(lotsRecyclerView.getVisibility());
         } else if (view.getId() == R.id.issued) {
-            startJsonForm(INDIVIDUAL_ISSUED_FORM);
+            // startJsonForm(INDIVIDUAL_ISSUED_FORM);
+            startJsonForm(INDIVIDUAL_NON_LOT_ISSUE_FORM);
         } else if (view.getId() == R.id.received) {
             startJsonForm(INDIVIDUAL_RECEIVED_FORM);
         } else if (view.getId() == R.id.loss_adj) {
@@ -173,7 +175,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
             formMetadata = formMetadata.replace(TRADE_ITEM_ID, tradeItemDto.getId());
             formMetadata = formMetadata.replace(NET_CONTENT, tradeItemDto.getNetContent().toString());
             formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
-            formMetadata = formMetadata.replace(PROGRAM_ID, tradeItemDto.getProgramId());
+            // formMetadata = formMetadata.replace(PROGRAM_ID, tradeItemDto.getProgramId()); // TODO: UNCOMMENT THIS
+            formMetadata = formMetadata.replace(PROGRAM_ID, "fake_program_id");
             intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
