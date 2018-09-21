@@ -16,12 +16,17 @@
     </style>
 
     <style name="Lot.Add.Subtract" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/light_blue</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#3596BF</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:paddingStart">@dimen/add_subtract_padding</item>
         <item name="android:paddingEnd">@dimen/add_subtract_padding</item>
         <item name="android:background">@drawable/add_subtract_border</item>
         <item name="android:layout_marginStart">@dimen/add_subtract_margin</item>
+    </style>
+
+    <style name="Lot.Add.Subtract.StockTake">
+        <item name="android:paddingStart">@dimen/add_subtract_padding_stock_take</item>
+        <item name="android:paddingEnd">@dimen/add_subtract_padding_stock_take</item>
     </style>
 
     <style name="Search.AppTheme.AppBarOverlay" parent="AppTheme.AppBarOverlay">

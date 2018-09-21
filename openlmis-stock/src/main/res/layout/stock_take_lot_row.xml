@@ -11,8 +11,10 @@
         android:id="@+id/lot_code"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_black"
+        android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@id/stock_on_hand"
-        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintHorizontal_weight="2.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -23,7 +25,6 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         app:boxBackgroundColor="@color/transparent"
         app:layout_constraintEnd_toStartOf="@id/lot_quantity"
         app:layout_constraintHorizontal_weight="1.6"
@@ -46,9 +47,8 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         app:boxBackgroundColor="@color/edit_text_background"
-        app:layout_constraintEnd_toStartOf="@id/subtract_stock"
+        app:layout_constraintEnd_toStartOf="@id/no_change"
         app:layout_constraintHorizontal_weight="1.6"
         app:layout_constraintStart_toEndOf="@id/stock_on_hand"
         app:layout_constraintTop_toTopOf="parent">
@@ -63,40 +63,34 @@
 
     <TextView
         android:id="@+id/subtract_stock"
-        style="@style/Lot.Add.Subtract"
+        style="@style/Lot.Add.Subtract.StockTake"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/minus"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/lot_quantity"
         app:layout_constraintEnd_toStartOf="@id/add_stock"
         app:layout_constraintStart_toEndOf="@id/lot_quantity"
         app:layout_constraintTop_toTopOf="@id/lot_quantity" />
 
     <TextView
         android:id="@+id/add_stock"
-        style="@style/Lot.Add.Subtract"
+        style="@style/Lot.Add.Subtract.StockTake"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/plus"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/lot_quantity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/subtract_stock"
         app:layout_constraintTop_toTopOf="@id/lot_quantity" />
 
-
-    <ImageView
-        android:id="@+id/cancel_button"
+    <TextView
+        android:id="@+id/no_change"
+        style="@style/Lot.Add.Subtract"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:padding="@dimen/cancel_padding"
-        android:src="@drawable/ic_cancel"
-        android:visibility="gone"
+        android:text="@string/no_change"
+        app:layout_constraintBottom_toBottomOf="@id/lot_quantity"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lot_quantity"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/lot_quantity"
+        app:layout_constraintTop_toBottomOf="@id/subtract_stock" />
 
 
     <android.support.design.widget.TextInputLayout
@@ -146,7 +140,6 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:boxBackgroundColor="@color/edit_text_background"
         app:layout_constraintEnd_toEndOf="@id/stock_on_hand"
         app:layout_constraintStart_toStartOf="@id/stock_on_hand"

@@ -14,4 +14,5 @@
 
     <dimen name="search_margin">15dp</dimen>
     <dimen name="stock_take_top_margin">135dp</dimen>
+    <dimen name="add_subtract_padding_stock_take">18dp</dimen>
 </resources>

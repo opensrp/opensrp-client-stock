@@ -27,6 +27,8 @@
             android:id="@+id/lotsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/lots_container_background"
             android:overScrollMode="never"
             android:scrollbars="vertical"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
