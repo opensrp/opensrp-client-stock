@@ -62,6 +62,7 @@
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
         "is_stock_adjustment": "true",
+        "is_non_lot": true,
         "lot_status": [
           "VVM1",
           "VVM2"
