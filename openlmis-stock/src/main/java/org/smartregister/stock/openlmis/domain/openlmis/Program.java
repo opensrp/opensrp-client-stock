@@ -32,21 +32,21 @@ public class Program extends BaseEntity {
      * Equal by a Program's code.
      *
      * @param other the other Program
-     * @return true if the two Program's {@link Code} are equal.
+     * @return true if the two Program's ids are equal.
      */
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof Program)) {
+        if (other == null || !(other instanceof Program)) {
             return false;
         }
 
         Program otherProgram = (Program) other;
-        return code.equals(otherProgram.code);
+        return otherProgram.id.equals(id);
     }
 
     @Override
     public int hashCode() {
-        return code.hashCode();
+        return id.hashCode();
     }
 
     public Code getCode() {
