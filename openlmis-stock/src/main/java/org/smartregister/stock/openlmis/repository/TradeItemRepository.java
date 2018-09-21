@@ -147,6 +147,8 @@ public class TradeItemRepository extends BaseRepository {
 
     public List<TradeItem> getTradeItemByIds(Set<String> tradeItemIds) {
         List<TradeItem> tradeItems = new ArrayList<>();
+        if (tradeItemIds == null)
+            return tradeItems;
         tradeItemIds.remove(null);
         if (tradeItemIds.isEmpty())
             return tradeItems;
