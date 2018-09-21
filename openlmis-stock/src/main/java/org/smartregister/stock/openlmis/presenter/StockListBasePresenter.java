@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.presenter;
 
+import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.interactor.StockListBaseInteractor;
 
@@ -20,5 +21,9 @@ public abstract class StockListBasePresenter {
 
     public List<CommodityType> findCommodityTypesByIds(Set<String> ids) {
         return getStockListInteractor().findCommodityTypesByIds(ids);
+    }
+
+    public List<TradeItem> findTradeItemsByCommodityType(String commodityTypeId) {
+        return getStockListInteractor().getTradeItemsByCommodityType(commodityTypeId);
     }
 }

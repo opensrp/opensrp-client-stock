@@ -21,16 +21,19 @@ import java.util.Set;
  */
 public class StockTakeCommodityTypeAdapter extends RecyclerView.Adapter<StockTakeCommodityTypeViewHolder> {
 
+    private StockTakePresenter stockTakePresenter;
+
     private List<CommodityType> commodityTypeList;
 
     public StockTakeCommodityTypeAdapter(StockTakePresenter stockTakePresenter, String programId) {
+        this.stockTakePresenter = stockTakePresenter;
         Map<String, Set<String>> ids = stockTakePresenter.searchIdsByPrograms(programId);
         this.commodityTypeList = stockTakePresenter.findCommodityTypesByIds(ids.keySet());
     }
 
     @NonNull
     @Override
-    public StockTakeCommodityTypeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public StockTakeCommodityTypeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
         View view = LayoutInflater.from(context).inflate(
                 R.layout.stock_take_commodity_type_row, viewGroup, false);
@@ -40,7 +43,9 @@ public class StockTakeCommodityTypeAdapter extends RecyclerView.Adapter<StockTak
     @Override
     public void onBindViewHolder(@NonNull StockTakeCommodityTypeViewHolder stockTakeCommodityTypeViewHolder, int position) {
         CommodityType commodityType = commodityTypeList.get(position);
-        stockTakeCommodityTypeViewHolder.getCommodityType().setText(commodityType.getName());
+        stockTakeCommodityTypeViewHolder.setCommodityTypeName(commodityType.getName());
+        StockTakeTradeItemAdapter adapter = new StockTakeTradeItemAdapter(stockTakePresenter, commodityType.getId());
+        stockTakeCommodityTypeViewHolder.getTradeItemRecyclerView().setAdapter(adapter);
     }
 
     @Override

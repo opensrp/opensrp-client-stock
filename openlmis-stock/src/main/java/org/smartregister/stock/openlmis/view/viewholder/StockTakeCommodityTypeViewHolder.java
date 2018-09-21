@@ -14,12 +14,19 @@ public class StockTakeCommodityTypeViewHolder extends RecyclerView.ViewHolder {
 
     private TextView commodityType;
 
+    private RecyclerView tradeItemRecyclerView;
+
     public StockTakeCommodityTypeViewHolder(@NonNull View itemView) {
         super(itemView);
         commodityType = itemView.findViewById(R.id.commodityTypeTextView);
+        tradeItemRecyclerView = itemView.findViewById(R.id.tradeItemsRecyclerView);
     }
 
-    public TextView getCommodityType() {
-        return commodityType;
+    public void setCommodityTypeName(String commodityTypeName) {
+        commodityType.setText(commodityTypeName);
+    }
+
+    public RecyclerView getTradeItemRecyclerView() {
+        return tradeItemRecyclerView;
     }
 }

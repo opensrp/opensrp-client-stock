@@ -31,8 +31,6 @@ public class StockListInteractor extends StockListBaseInteractor {
 
     private ProgramRepository programRepository;
 
-    private TradeItemRepository tradeItemRepository;
-
     private StockRepository stockRepository;
 
     private SearchRepository searchRepository;
@@ -53,9 +51,8 @@ public class StockListInteractor extends StockListBaseInteractor {
                                   TradeItemRepository tradeItemRepository,
                                   StockRepository stockRepository,
                                   SearchRepository searchRepository, ProgramOrderableRepository programOrderableRepository) {
-        super(commodityTypeRepository, programOrderableRepository);
+        super(commodityTypeRepository, programOrderableRepository, tradeItemRepository);
         this.programRepository = programRepository;
-        this.tradeItemRepository = tradeItemRepository;
         this.stockRepository = stockRepository;
         this.searchRepository = searchRepository;
     }
@@ -69,7 +66,7 @@ public class StockListInteractor extends StockListBaseInteractor {
     }
 
     public List<TradeItemWrapper> getTradeItems(CommodityType commodityType) {
-        return populateTradeItemWrapper(tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString()));
+        return populateTradeItemWrapper(getTradeItemsByCommodityType(commodityType.getId()));
     }
 
     public Map<String, Set<String>> searchIds(String searchPhrase) {
