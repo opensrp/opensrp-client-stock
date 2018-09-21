@@ -40,7 +40,7 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public ListCommodityTypeAdapter(StockListPresenter stockListPresenter, Context context) {
         this.stockListPresenter = stockListPresenter;
-        this.commodityTypes = stockListPresenter.getCommodityTypes();
+        this.commodityTypes = new ArrayList<>();
         this.context = context;
 
     }
@@ -49,8 +49,6 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         if (StringUtils.isBlank(searchPhrase)) {
             if (programIds != null) {
                 commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
-            } else {
-                commodityTypes = stockListPresenter.getCommodityTypes();
             }
             searchedIds = null;
             notifyDataSetChanged();
@@ -114,8 +112,12 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public void setProgramId(String programId) {
         this.programId = programId;
-        programIds = stockListPresenter.searchIdsByPrograms(programId);
-        commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
+        if (programId == null)
+            commodityTypes = new ArrayList<>();
+        else {
+            programIds = stockListPresenter.searchIdsByPrograms(programId);
+            commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
+        }
     }
 
     public String getProgramId() {
@@ -125,8 +127,6 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
     public void refresh() {
         if (programId != null)
             setProgramId(programId);
-        else
-            commodityTypes = stockListPresenter.getCommodityTypes();
         notifyDataSetChanged();
     }
 }
