@@ -40,7 +40,7 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public ListCommodityTypeAdapter(StockListPresenter stockListPresenter, Context context) {
         this.stockListPresenter = stockListPresenter;
-        this.commodityTypes = stockListPresenter.getCommodityTypes();
+        this.commodityTypes = new ArrayList<>();
         this.context = context;
 
     }
@@ -49,8 +49,6 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         if (StringUtils.isBlank(searchPhrase)) {
             if (programIds != null) {
                 commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
-            } else {
-                commodityTypes = stockListPresenter.getCommodityTypes();
             }
             searchedIds = null;
             notifyDataSetChanged();
@@ -78,9 +76,9 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         CommodityType commodityType = commodityTypes.get(position);
         List<TradeItemWrapper> tradeItems;
         if (searchedIds != null) {
-            tradeItems = stockListPresenter.findTradeItemsByIds(searchedIds.get(commodityType.getId().toString()));
+            tradeItems = stockListPresenter.findTradeItemsByIds(searchedIds.get(commodityType.getId()));
         } else if (programIds != null) {
-            tradeItems = stockListPresenter.findTradeItemsByIds(programIds.get(commodityType.getId().toString()));
+            tradeItems = stockListPresenter.findTradeItemsByIds(programIds.get(commodityType.getId()));
         } else {
             tradeItems = stockListPresenter.getTradeItems(commodityType);
         }
@@ -114,12 +112,21 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
 
     public void setProgramId(String programId) {
         this.programId = programId;
-        programIds = stockListPresenter.searchIdsByPrograms(programId);
-        commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
+        if (programId == null)
+            commodityTypes = new ArrayList<>();
+        else {
+            programIds = stockListPresenter.searchIdsByPrograms(programId);
+            commodityTypes = stockListPresenter.findCommodityTypesByIds(programIds.keySet());
+        }
     }
 
-    public void refresh(){
-        commodityTypes = stockListPresenter.getCommodityTypes();
+    public String getProgramId() {
+        return programId;
+    }
+
+    public void refresh() {
+        if (programId != null)
+            setProgramId(programId);
         notifyDataSetChanged();
     }
 }

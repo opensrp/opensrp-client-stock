@@ -117,8 +117,13 @@ public class CommodityTypeRepository extends BaseRepository {
 
 
     public List<CommodityType> findCommodityTypesByIds(Set<String> commodityTypeIds) {
-        int len = commodityTypeIds.size();
         List<CommodityType> commodityTypes = new ArrayList<>();
+        if (commodityTypeIds == null)
+            return commodityTypes;
+        commodityTypeIds.remove(null);
+        if (commodityTypeIds.isEmpty())
+            return commodityTypes;
+        int len = commodityTypeIds.size();
         Cursor cursor = null;
         try {
             String query = String.format("SELECT * FROM %s WHERE %s IN (%s)", COMMODITY_TYPE_TABLE,
@@ -133,6 +138,26 @@ public class CommodityTypeRepository extends BaseRepository {
             }
         }
         return commodityTypes;
+    }
+
+
+    public CommodityType findCommodityTypeById(String commodityTypeId) {
+        if (commodityTypeId == null)
+            return null;
+        Cursor cursor = null;
+        try {
+            String query = String.format("SELECT * FROM %s WHERE %s=?", COMMODITY_TYPE_TABLE, ID);
+            cursor = getReadableDatabase().rawQuery(query, new String[]{commodityTypeId});
+            if (cursor.moveToFirst())
+                return createCommodityType(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
     }
 
     private List<CommodityType> readCommodityTypes(Cursor cursor) {

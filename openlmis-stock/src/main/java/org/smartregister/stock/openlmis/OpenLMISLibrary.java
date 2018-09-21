@@ -4,6 +4,7 @@ import org.smartregister.Context;
 import org.smartregister.repository.DrishtiRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.SettingsRepository;
+import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
@@ -36,6 +37,7 @@ public class OpenLMISLibrary {
     private TradeItemClassificationRepository tradeItemClassificationRepository;
     private StockRepository stockRepository;
     private SettingsRepository settingsRepository;
+    private SearchRepository searchRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -71,14 +73,14 @@ public class OpenLMISLibrary {
     }
 
     public TradeItemRepository getTradeItemRepository() {
-        if (tradeItemRepository == null)   {
+        if (tradeItemRepository == null) {
             tradeItemRepository = new TradeItemRepository(getRepository());
         }
         return tradeItemRepository;
     }
 
     public org.smartregister.stock.openlmis.repository.TradeItemRepository getTradeItemRegisterRepository() {
-        if (tradeItemRegisterRepository == null)   {
+        if (tradeItemRegisterRepository == null) {
             tradeItemRegisterRepository = new org.smartregister.stock.openlmis.repository.TradeItemRepository(getRepository());
         }
         return tradeItemRegisterRepository;
@@ -114,14 +116,14 @@ public class OpenLMISLibrary {
 
     public OrderableRepository getOrderableRepository() {
         if (orderableRepository == null) {
-           orderableRepository = new OrderableRepository(getRepository());
+            orderableRepository = new OrderableRepository(getRepository());
         }
         return orderableRepository;
     }
 
     public DispensableRepository getDispensableRepository() {
         if (dispensableRepository == null) {
-           dispensableRepository = new DispensableRepository(getRepository());
+            dispensableRepository = new DispensableRepository(getRepository());
         }
         return dispensableRepository;
     }
@@ -142,7 +144,7 @@ public class OpenLMISLibrary {
 
     public SettingsRepository getSettingsRepository() {
         if (settingsRepository == null) {
-            for (DrishtiRepository repository : getContext ().sharedRepositories()) {
+            for (DrishtiRepository repository : getContext().sharedRepositories()) {
                 if (repository instanceof SettingsRepository) {
                     settingsRepository = (SettingsRepository) repository;
                     return settingsRepository;
@@ -150,5 +152,13 @@ public class OpenLMISLibrary {
             }
         }
         return settingsRepository;
+    }
+
+
+    public SearchRepository getSearchRepository() {
+        if (searchRepository == null) {
+            searchRepository = new SearchRepository(getRepository());
+        }
+        return searchRepository;
     }
 }

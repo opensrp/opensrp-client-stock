@@ -20,6 +20,7 @@ import org.smartregister.stock.openlmis.view.viewholder.CommodityTypeViewHolder;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,20 +55,26 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
     private List<CommodityType> commodityTypeList;
 
+    private String tradeItemId = UUID.randomUUID().toString();
+
+    private Map<String, Set<String>> programIds;
+
 
     @Before
     public void setUp() {
-        List<CommodityType> expected = new ArrayList<>();
-        expected.add(bcGCommodityType);
-        expected.add(new CommodityType(UUID.randomUUID().toString(), "OPV", null, null, null, System.currentTimeMillis()));
 
         commodityTypeList = new ArrayList<>();
         commodityTypeList.add(bcGCommodityType);
         commodityTypeList.add(new CommodityType(UUID.randomUUID().toString(), "OPV", null, null, null, System.currentTimeMillis()));
 
-        when(stockListPresenter.getCommodityTypes()).thenReturn(commodityTypeList);
+        String programId = UUID.randomUUID().toString();
+        programIds = Collections.singletonMap(bcGCommodityType.getId(), Collections.singleton(tradeItemId));
+        when(stockListPresenter.searchIdsByPrograms(programId)).thenReturn(programIds);
+        when(stockListPresenter.findCommodityTypesByIds(programIds.keySet())).thenReturn(commodityTypeList);
+
 
         listCommodityTypeAdapter = new ListCommodityTypeAdapter(stockListPresenter, context);
+        listCommodityTypeAdapter.setProgramId(programId);
     }
 
     @Test
@@ -83,18 +90,20 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
 
     @Test
-    public void testOnBindViewHolderWithTradeItem() throws Exception {
+    public void testOnBindViewHolderWithTradeItem() {
 
         List<TradeItemWrapper> expectedTradeItems = new ArrayList<>();
-        TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
-        tradeItem.setCommodityTypeId(bcGCommodityType.getId().toString());
+        TradeItem tradeItem = new TradeItem(tradeItemId);
+        tradeItem.setCommodityTypeId(bcGCommodityType.getId());
         tradeItem.setName("Intervax BCG 20");
         tradeItem.setNetContent(20l);
         TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
         tradeItemWrapper.setTotalStock(60);
         expectedTradeItems.add(tradeItemWrapper);
 
-        when(stockListPresenter.getTradeItems(bcGCommodityType)).thenReturn(expectedTradeItems);
+        Set<String> ids = new HashSet<>();
+        ids.add(tradeItemId);
+        when(stockListPresenter.findTradeItemsByIds(ids)).thenReturn(expectedTradeItems);
 
         LinearLayout vg = new LinearLayout(context);
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
@@ -158,11 +167,11 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
     @Test
     public void testFilterCommodityTypes() {
         Map<String, Set<String>> expected = new HashMap<>();
-        expected.put(bcGCommodityType.getId().toString(), null);
+        expected.put(bcGCommodityType.getId(), Collections.singleton(tradeItemId));
         when(stockListPresenter.searchIds("BCG")).thenReturn(expected);
-        when(stockListPresenter.filterValidPrograms(null,expected)).thenReturn(expected);
+        when(stockListPresenter.filterValidPrograms(programIds, expected)).thenReturn(expected);
         Set<String> commodityTypeId = new HashSet<>();
-        commodityTypeId.add(bcGCommodityType.getId().toString());
+        commodityTypeId.add(bcGCommodityType.getId());
         commodityTypeList.remove(1);
         when(stockListPresenter.findCommodityTypesByIds(commodityTypeId)).thenReturn(commodityTypeList);
         LinearLayout vg = new LinearLayout(context);
@@ -179,11 +188,11 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         Map<String, Set<String>> expected = new HashMap<>();
         Set<String> tradeItemIds = new HashSet<>();
         tradeItemIds.add(UUID.randomUUID().toString());
-        expected.put(bcGCommodityType.getId().toString(), tradeItemIds);
+        expected.put(bcGCommodityType.getId(), tradeItemIds);
         when(stockListPresenter.searchIds("BCG")).thenReturn(expected);
-        when(stockListPresenter.filterValidPrograms(null,expected)).thenReturn(expected);
+        when(stockListPresenter.filterValidPrograms(programIds, expected)).thenReturn(expected);
         Set<String> commodityTypeId = new HashSet<>();
-        commodityTypeId.add(bcGCommodityType.getId().toString());
+        commodityTypeId.add(bcGCommodityType.getId());
         commodityTypeList.remove(1);
         when(stockListPresenter.findCommodityTypesByIds(commodityTypeId)).thenReturn(commodityTypeList);
         List<TradeItemWrapper> tradeItemWrappers = new ArrayList<>();

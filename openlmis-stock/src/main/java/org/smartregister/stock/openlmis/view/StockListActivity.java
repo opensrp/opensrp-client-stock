@@ -22,12 +22,16 @@ import org.smartregister.stock.openlmis.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.stock.openlmis.util.TestDataUtils;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
+import java.util.List;
+
 public class StockListActivity extends AppCompatActivity implements StockListView, View.OnClickListener
         , SyncStatusBroadcastReceiver.SyncStatusListener {
 
     private StockListPresenter stockListPresenter;
 
     private ListCommodityTypeAdapter adapter;
+
+    private ArrayAdapter<Program> programsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +55,16 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         Spinner programsFilter = findViewById(R.id.filterPrograms);
 
-        final ArrayAdapter<Program> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stockListPresenter.getPrograms());
+        programsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, stockListPresenter.getPrograms());
 
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        programsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        programsFilter.setAdapter(dataAdapter);
+        programsFilter.setAdapter(programsAdapter);
 
         programsFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Program program = dataAdapter.getItem(position);
+                Program program = programsAdapter.getItem(position);
                 adapter.setProgramId(program.getId().toString());
                 adapter.notifyDataSetChanged();
             }
@@ -71,8 +75,8 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
             }
         });
 
-        if (dataAdapter.getCount() > 0)
-            adapter.setProgramId(dataAdapter.getItem(0).getId().toString());
+        if (programsAdapter.getCount() > 0)
+            adapter.setProgramId(programsAdapter.getItem(0).getId().toString());
 
         findViewById(R.id.expandAll).setOnClickListener(this);
 
@@ -123,7 +127,17 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
     @Override
     public void onSyncComplete() {
-        adapter.refresh();
+        List<Program> programs = stockListPresenter.getPrograms();
+        if (programs.size() != programsAdapter.getCount()) {
+            programsAdapter.clear();
+            programsAdapter.addAll(programs);
+            //if the current selected program was removed the remove selection and refresh recycler view
+            if (!programs.contains(new Program(adapter.getProgramId()))) {
+                adapter.setProgramId(null);
+                programsAdapter.remove(new Program(adapter.getProgramId()));
+            }
+        } else
+            adapter.refresh();
     }
 
     @Override
