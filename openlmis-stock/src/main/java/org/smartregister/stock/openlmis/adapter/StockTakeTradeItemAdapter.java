@@ -25,7 +25,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
 
     public StockTakeTradeItemAdapter(StockTakePresenter stockTakePresenter, String commodityTypeId) {
         this.stockTakePresenter = stockTakePresenter;
-        tradeItems = stockTakePresenter.findTradeItemsByCommodityType(commodityTypeId);
+        tradeItems = stockTakePresenter.findTradeItemsWithActiveLots(commodityTypeId);
     }
 
     @NonNull

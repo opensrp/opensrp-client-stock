@@ -17,6 +17,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.LOT_TABLE;
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.TRADE_ITEM_ID;
+
 /**
  * Created by samuelgithengi on 26/7/18.
  */
@@ -158,6 +162,31 @@ public class TradeItemRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             cursor = getReadableDatabase().rawQuery(query, tradeItemIds.toArray(new String[len]));
+            while (cursor.moveToNext()) {
+                tradeItems.add(createTradeItem(cursor));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return tradeItems;
+    }
+
+    public List<TradeItem> findTradeItemsWithActiveLotsByCommodityType(String commodityTypeId) {
+        if (commodityTypeId == null) {
+            return new ArrayList<>();
+        }
+        String query = String.format("SELECT t.* FROM %s t JOIN %s l on t.%s=l.%s" +
+                        " WHERE t.%s = ? AND l.%s >=?",
+                TRADE_ITEM_TABLE, LOT_TABLE, ID, TRADE_ITEM_ID, COMMODITY_TYPE_ID, EXPIRATION_DATE);
+        Cursor cursor = null;
+        List<TradeItem> tradeItems = new ArrayList<>();
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{commodityTypeId
+                    , String.valueOf(System.currentTimeMillis())});
             while (cursor.moveToNext()) {
                 tradeItems.add(createTradeItem(cursor));
             }

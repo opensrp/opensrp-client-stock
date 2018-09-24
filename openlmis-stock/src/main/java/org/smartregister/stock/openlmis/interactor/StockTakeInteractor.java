@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.interactor;
 
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
@@ -37,7 +38,11 @@ public class StockTakeInteractor extends StockListBaseInteractor {
         return lotRepository.findLotsByTradeItem(tradeItemId);
     }
 
-    public List<CommodityType> findCommodityTypesWithActiveLotsByIds(Set<String> commodityTypeIds) {
+    public List<CommodityType> findCommodityTypesWithActiveLots(Set<String> commodityTypeIds) {
         return commodityTypeRepository.findCommodityTypesWithActiveLotsByIds(commodityTypeIds);
+    }
+
+    public List<TradeItem> findTradeItemsActiveLots(String commodityTypeId) {
+        return tradeItemRepository.findTradeItemsWithActiveLotsByCommodityType(commodityTypeId);
     }
 }

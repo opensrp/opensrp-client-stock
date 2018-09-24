@@ -42,12 +42,17 @@ public class LotRepository extends BaseRepository {
             EXPIRATION_DATE + " INTEGER NOT NULL," + MANUFACTURE_DATE + " INTEGER NOT NULL," +
             TRADE_ITEM_ID + " VARCHAR NOT NULL," + ACTIVE + " TINYINT," + LOT_STATUS + " VARCHAR," + DATE_UPDATED + " INTEGER);";
 
+    private static final String CREATE_EXPIRY_DATE_INDEX = "CREATE INDEX "
+            + LOT_TABLE + EXPIRATION_DATE + "_INDEX ON "
+            + LOT_TABLE + "(" + EXPIRATION_DATE + ")";
+
     public LotRepository(Repository repository) {
         super(repository);
     }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_LOT_TABLE);
+        database.execSQL(CREATE_EXPIRY_DATE_INDEX);
     }
 
     private boolean lotExists(String id) {
