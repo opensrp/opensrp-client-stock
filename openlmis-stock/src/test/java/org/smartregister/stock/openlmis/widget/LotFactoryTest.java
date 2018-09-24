@@ -19,6 +19,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.smartregister.stock.openlmis.BaseUnitTest;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -71,7 +72,7 @@ public class LotFactoryTest extends BaseUnitTest {
     @Before
     public void setUp() {
         lots = new ArrayList<>();
-        lotFactory = new LotFactory(lotRepository, new ReasonsRepository());
+        lotFactory = new LotFactory(lotRepository, new ReasonsRepository(), OpenLMISLibrary.getInstance().getStockRepository());
         Intent intent = new Intent();
         intent.putExtra("json", ISSUE_FORM_JSON);
         activity = Robolectric.buildActivity(OpenLMISJsonForm.class, intent).create().get();
@@ -173,14 +174,14 @@ public class LotFactoryTest extends BaseUnitTest {
     @Test
     public void testValidateHasValues() throws Exception {
         lotFactory.getViewsFromJson("step2", activity, formFragment, new JSONObject(LOT_WIDGET_JSON), formFragment);
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
         View lotRow = lotFactory.lotsContainer.getChildAt(0);
         ((EditText) lotRow.findViewById(R.id.lot_dropdown)).setText("LC1265 Exp. 21-09-2018");
         ((EditText) lotRow.findViewById(R.id.quantity_textview)).setText(String.valueOf(10));
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
 
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
     }
 
@@ -193,10 +194,10 @@ public class LotFactoryTest extends BaseUnitTest {
         quantity.setText(String.valueOf(0));
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
 
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
         quantity.setText(String.valueOf(1));
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
     }
 
@@ -204,7 +205,7 @@ public class LotFactoryTest extends BaseUnitTest {
     @Test
     public void testValidateNegativeStockBalance() throws Exception {
         lotFactory.getViewsFromJson("step2", activity, formFragment, new JSONObject(LOT_WIDGET_JSON), formFragment);
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
         View lotRow = lotFactory.lotsContainer.getChildAt(0);
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
@@ -215,11 +216,11 @@ public class LotFactoryTest extends BaseUnitTest {
         lotEditText.setTag(R.id.is_stock_issue, true);
         quantityEditText.setTag(R.id.stock_balance, 12);
 
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
         quantityEditText.setText(String.valueOf(10));
 
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
 
     }
@@ -242,7 +243,7 @@ public class LotFactoryTest extends BaseUnitTest {
 
         TextInputEditText status = new TextInputEditText(activity);
         status.setTag(R.id.lot_id, "7c6d239f-0bbc-4cab-b218-888d8be89d24");
-        PopupMenu popup = lotFactory.populateStatusOptions(activity, status);
+        PopupMenu popup = lotFactory.populateStatusOptionsLot(activity, status);
         status.performClick();
 
         MenuItem item = popup.getMenu().getItem(1);
@@ -297,7 +298,7 @@ public class LotFactoryTest extends BaseUnitTest {
         reason.setTag(R.id.lot_id, "7c6d239f-0bbc-4cab-b218-888d8be89d24");
 
 
-        PopupMenu popup = lotFactory.populateReasonsOptions(activity, reason);
+        PopupMenu popup = lotFactory.populateReasonsOptionsLot(activity, reason);
         reason.performClick();
 
 
@@ -344,11 +345,11 @@ public class LotFactoryTest extends BaseUnitTest {
         ((EditText) lotRow.findViewById(R.id.quantity_textview)).setText(String.valueOf(10));
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
 
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
         ((EditText) lotRow.findViewById(R.id.reason_dropdown)).setText("Damaged");
 
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
     }
 
@@ -362,10 +363,10 @@ public class LotFactoryTest extends BaseUnitTest {
         ((EditText) lotRow.findViewById(R.id.quantity_textview)).setText(String.valueOf(10));
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
         ((EditText) lotRow.findViewById(R.id.reason_dropdown)).setText("Damaged");
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
         ((EditText) lotRow.findViewById(R.id.quantity_textview)).setText("-1");
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
 
     }
 

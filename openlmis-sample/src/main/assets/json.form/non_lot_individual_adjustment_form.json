@@ -55,7 +55,7 @@
     "no_padding": true,
     "fields": [
       {
-        "key": "stockLots",
+        "key": "stock",
         "type": "lot",
         "trade_item": "[trade_item]",
         "trade_item_id": "[trade_item_id]",

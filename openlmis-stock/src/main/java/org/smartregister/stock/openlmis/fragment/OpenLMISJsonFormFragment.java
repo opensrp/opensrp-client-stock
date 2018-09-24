@@ -2,6 +2,7 @@ package org.smartregister.stock.openlmis.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +13,24 @@ import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.interactor.OpenLMISJsonFormInteractor;
 import org.smartregister.stock.openlmis.presenter.OpenLMISJsonFormFragmentPresenter;
+import org.smartregister.stock.openlmis.widget.LotFactory;
 import org.smartregister.stock.util.Constants;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_ENABLED;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_LABEL;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_TYPE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NO_PADDING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS_LABEL;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_TYPE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.SUBMIT;
+import static org.smartregister.stock.openlmis.widget.LotFactory.NON_LOT_FIELD;
 
 /**
  * Created by samuelgithengi on 8/16/18.
@@ -103,6 +108,15 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
         if (step.has(NEXT_LABEL))
             nextButton.setText(step.optString(NEXT_LABEL));
+
+        try {
+            boolean isNonLot = step.getJSONArray("fields").getJSONObject(0).getBoolean(NON_LOT_FIELD);
+            if (isNonLot) {
+                informationTextView.setVisibility(View.INVISIBLE);
+            }
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
     }
 
     private class BottomNavigationListener implements View.OnClickListener {
@@ -121,13 +135,13 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
     }
 
-    public void validateActivateNext() {
+    public void validateActivateNext(boolean isLotEnabled) {
         if (!isVisible())//form fragment is initializing
             return;
         ValidationStatus validationStatus = null;
         for (View dataView : getJsonApi().getFormDataViews()) {
 
-            validationStatus = getPresenter().validate(this, dataView, false);
+            validationStatus = getPresenter().validate(this, dataView, false, isLotEnabled);
             if (!validationStatus.isValid()) {
                 break;
             }
@@ -141,11 +155,10 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
     }
 
-    @Override
     public void writeValue(String stepName, String key, String s, String
-            openMrsEntityParent, String openMrsEntity, String openMrsEntityId) {
+            openMrsEntityParent, String openMrsEntity, String openMrsEntityId, boolean isLotEnabled) {
         super.writeValue(stepName, key, s, openMrsEntityParent, openMrsEntity, openMrsEntityId);
-        validateActivateNext();
+        validateActivateNext(isLotEnabled);
     }
 
     @Override
@@ -153,7 +166,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
             childKey, String value, String openMrsEntityParent, String openMrsEntity, String
                                    openMrsEntityId) {
         super.writeValue(stepName, prentKey, childObjectKey, childKey, value, openMrsEntityParent, openMrsEntity, openMrsEntityId);
-        validateActivateNext();
+        validateActivateNext(true);
     }
 
     public void setBottomNavigationText(String text) {
