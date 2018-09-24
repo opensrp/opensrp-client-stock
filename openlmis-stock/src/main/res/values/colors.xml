@@ -17,4 +17,5 @@
 
     <color name="next_button_disabled">#979797</color>
     <color name="edit_text_background">#EAEAEA</color>
+    <color name="add_subtract">#3596BF</color>
 </resources>

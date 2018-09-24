@@ -11,6 +11,7 @@
 
     <dimen name="add_subtract_padding">16dp</dimen>
     <dimen name="add_subtract_margin">16dp</dimen>
+    <dimen name="add_subtract_font">16dp</dimen>
 
     <dimen name="search_margin">15dp</dimen>
     <dimen name="add_subtract_padding_stock_take">24dp</dimen>

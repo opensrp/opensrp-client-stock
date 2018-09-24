@@ -43,6 +43,8 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     private TextInputLayout reason;
 
+    private TextView noChangeTextView;
+
     private int stockOnHand;
 
     private int physicalCount;
@@ -60,8 +62,10 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         difference = itemView.findViewById(R.id.adjustment);
         reasonTextView = itemView.findViewById(R.id.reason_textview);
         reason = itemView.findViewById(R.id.reason);
+        noChangeTextView = itemView.findViewById(R.id.no_change);
         itemView.findViewById(R.id.add_stock).setOnClickListener(this);
         itemView.findViewById(R.id.subtract_stock).setOnClickListener(this);
+        itemView.findViewById(R.id.no_change).setOnClickListener(this);
         statusTextView.setOnClickListener(this);
         reasonTextView.setOnClickListener(this);
     }
@@ -137,7 +141,6 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         popupMenu.show();
     }
 
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.subtract_stock || view.getId() == R.id.add_stock) {
@@ -146,6 +149,14 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
             showReasonsDropdown();
         } else if (view.getId() == R.id.status_textview) {
             showStatusDropdown();
+        } else if (view.getId() == R.id.no_change) {
+            boolean selected = noChangeTextView.isSelected();
+            noChangeTextView.setSelected(!selected);
+            if (selected) {
+                noChangeTextView.setTextColor(context.getResources().getColor(R.color.add_subtract));
+            } else {
+                noChangeTextView.setTextColor(context.getResources().getColor(R.color.white));
+            }
         }
 
     }
