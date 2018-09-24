@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
+import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 import org.smartregister.stock.openlmis.view.viewholder.StockTakeLotViewHolder;
 
@@ -23,9 +24,13 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
     private List<Lot> lots;
 
-    public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String tradeItemId) {
+    private List<Reason> adjustReasons;
+
+
+    public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId, String tradeItemId) {
         this.stockTakePresenter = stockTakePresenter;
         lots = stockTakePresenter.findLotsByTradeItem(tradeItemId);
+        adjustReasons = stockTakePresenter.findAdjustReasons(programId);
     }
 
     @NonNull
@@ -44,6 +49,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
         stockTakeLotViewHolder.setStockOnHand(10);
         stockTakeLotViewHolder.setPhysicalCount(10);
         stockTakeLotViewHolder.setStatus(lot.getLotStatus());
+        stockTakeLotViewHolder.setStockAdjustReasons(adjustReasons);
     }
 
     @Override

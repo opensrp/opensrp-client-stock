@@ -67,8 +67,13 @@ public interface OpenLMISConstants {
         String INDIVIDUAL_ISSUED_FORM = "individual_issued_form";
 
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
-        
+
         String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
+    }
+
+    interface StockStatus {
+        String VVM1 = "VVM1";
+        String VVM2 = "VVM2";
     }
 
     interface ServiceType {
