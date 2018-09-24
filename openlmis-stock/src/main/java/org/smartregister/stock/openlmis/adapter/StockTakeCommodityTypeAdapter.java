@@ -28,7 +28,7 @@ public class StockTakeCommodityTypeAdapter extends RecyclerView.Adapter<StockTak
     public StockTakeCommodityTypeAdapter(StockTakePresenter stockTakePresenter, String programId) {
         this.stockTakePresenter = stockTakePresenter;
         Map<String, Set<String>> ids = stockTakePresenter.searchIdsByPrograms(programId);
-        this.commodityTypeList = stockTakePresenter.findCommodityTypesByIds(ids.keySet());
+        this.commodityTypeList = stockTakePresenter.findCommodityTypesWithActiveLotsByIds(ids.keySet());
     }
 
     @NonNull

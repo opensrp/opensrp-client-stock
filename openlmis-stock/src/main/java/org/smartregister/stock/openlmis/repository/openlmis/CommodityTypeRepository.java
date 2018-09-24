@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
+import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static org.smartregister.stock.openlmis.repository.TradeItemRepository.TRADE_ITEM_TABLE;
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.LOT_TABLE;
 import static org.smartregister.stock.openlmis.util.Utils.INSERT_OR_REPLACE;
 import static org.smartregister.stock.openlmis.util.Utils.createQuery;
 
@@ -140,6 +144,35 @@ public class CommodityTypeRepository extends BaseRepository {
         return commodityTypes;
     }
 
+    public List<CommodityType> findCommodityTypesWithActiveLotsByIds(Set<String> commodityTypeIds) {
+        List<CommodityType> commodityTypes = new ArrayList<>();
+        if (commodityTypeIds == null)
+            return commodityTypes;
+        commodityTypeIds.remove(null);
+        if (commodityTypeIds.isEmpty())
+            return commodityTypes;
+        int len = commodityTypeIds.size();
+        Cursor cursor = null;
+        try {
+            String query = String.format("SELECT * FROM %s c JOIN  %s t on c.%s=t.%s JOIN %s l on l.%s=t.%s" +
+                            " WHERE %s IN (%s) AND l.%s >= ?",
+                    COMMODITY_TYPE_TABLE, TRADE_ITEM_TABLE, ID, TradeItemRepository.COMMODITY_TYPE_ID,
+                    LOT_TABLE, LotRepository.TRADE_ITEM_ID, TradeItemRepository.ID, ID,
+                    TextUtils.join(",", Collections.nCopies(len, "?")), EXPIRATION_DATE);
+            String[] params = commodityTypeIds.toArray(new String[len + 1]);
+            params[len] = String.valueOf(System.currentTimeMillis());
+            cursor = getReadableDatabase().rawQuery(query, params);
+            commodityTypes = readCommodityTypes(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return commodityTypes;
+    }
+
 
     public CommodityType findCommodityTypeById(String commodityTypeId) {
         if (commodityTypeId == null)
@@ -201,4 +234,5 @@ public class CommodityTypeRepository extends BaseRepository {
         };
         return values;
     }
+
 }

@@ -27,6 +27,10 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder {
 
     private TextInputEditText statusTextView;
 
+    private TextInputEditText differenceTextView;
+
+    private TextInputEditText reasonTextView;
+
     public StockTakeLotViewHolder(@NonNull View itemView) {
         super(itemView);
         context = itemView.getContext();
@@ -34,6 +38,8 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder {
         stockOnHandTextView = itemView.findViewById(R.id.stock_on_hand_textview);
         physicalCountTextView = itemView.findViewById(R.id.quantity_textview);
         statusTextView = itemView.findViewById(R.id.status_textview);
+        differenceTextView = itemView.findViewById(R.id.adjustment_textview);
+        reasonTextView = itemView.findViewById(R.id.reason_textview);
     }
 
     public void setLotCodeAndExpiry(String lotCode, long expiryDate) {
