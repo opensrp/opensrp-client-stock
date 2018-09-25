@@ -154,7 +154,7 @@ public class CommodityTypeRepository extends BaseRepository {
         int len = commodityTypeIds.size();
         Cursor cursor = null;
         try {
-            String query = String.format("SELECT c.* FROM %s c JOIN  %s t on c.%s=t.%s JOIN %s l on l.%s=t.%s" +
+            String query = String.format("SELECT DISTINCT c.* FROM %s c JOIN  %s t on c.%s=t.%s JOIN %s l on l.%s=t.%s" +
                             " WHERE %s IN (%s) AND l.%s >= ?",
                     COMMODITY_TYPE_TABLE, TRADE_ITEM_TABLE, ID, TradeItemRepository.COMMODITY_TYPE_ID,
                     LOT_TABLE, LotRepository.TRADE_ITEM_ID, TradeItemRepository.ID, ID,

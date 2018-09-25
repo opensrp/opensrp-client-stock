@@ -57,5 +57,7 @@
     <string name="stock_take_lot">%1s \nExp. %2s</string>
     <string name="no_change">No Change</string>
     <string name="save">Save</string>
+    <string name="submit">Submit</string>
+    <string name="save_as_draft">Save as draft</string>
 
 </resources>

@@ -179,7 +179,7 @@ public class TradeItemRepository extends BaseRepository {
         if (commodityTypeId == null) {
             return new ArrayList<>();
         }
-        String query = String.format("SELECT t.* FROM %s t JOIN %s l on t.%s=l.%s" +
+        String query = String.format("SELECT DISTINCT t.* FROM %s t JOIN %s l on t.%s=l.%s" +
                         " WHERE t.%s = ? AND l.%s >=?",
                 TRADE_ITEM_TABLE, LOT_TABLE, ID, TRADE_ITEM_ID, COMMODITY_TYPE_ID, EXPIRATION_DATE);
         Cursor cursor = null;
