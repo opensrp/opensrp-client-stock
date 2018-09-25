@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
+import org.smartregister.stock.openlmis.listener.SaveStateListener;
 
 import java.util.List;
 
@@ -50,6 +51,8 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
     private int physicalCount;
 
     private List<Reason> stockAdjustReasons;
+
+    private SaveStateListener saveStateListener;
 
     public StockTakeLotViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -154,8 +157,10 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
             noChangeTextView.setSelected(!selected);
             if (selected) {
                 noChangeTextView.setTextColor(context.getResources().getColor(R.color.add_subtract));
+                saveStateListener.disableSave();
             } else {
                 noChangeTextView.setTextColor(context.getResources().getColor(R.color.white));
+                saveStateListener.enableSave();
             }
         }
 
@@ -163,5 +168,9 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     public void setStockAdjustReasons(List<Reason> stockAdjustReasons) {
         this.stockAdjustReasons = stockAdjustReasons;
+    }
+
+    public void setSaveStateListener(SaveStateListener saveStateListener) {
+        this.saveStateListener = saveStateListener;
     }
 }

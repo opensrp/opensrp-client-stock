@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
+import org.smartregister.stock.openlmis.listener.SaveStateListener;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 import org.smartregister.stock.openlmis.view.viewholder.StockTakeLotViewHolder;
 
@@ -20,15 +21,15 @@ import java.util.List;
  */
 public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHolder> {
 
-    private StockTakePresenter stockTakePresenter;
+    private SaveStateListener saveStateListener;
 
     private List<Lot> lots;
 
     private List<Reason> adjustReasons;
 
 
-    public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId, String tradeItemId) {
-        this.stockTakePresenter = stockTakePresenter;
+    public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId, String tradeItemId, SaveStateListener saveStateListener) {
+        this.saveStateListener = saveStateListener;
         lots = stockTakePresenter.findLotsByTradeItem(tradeItemId);
         adjustReasons = stockTakePresenter.findAdjustReasons(programId);
     }
@@ -50,6 +51,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
         stockTakeLotViewHolder.setPhysicalCount(10);
         stockTakeLotViewHolder.setStatus(lot.getLotStatus());
         stockTakeLotViewHolder.setStockAdjustReasons(adjustReasons);
+        stockTakeLotViewHolder.setSaveStateListener(saveStateListener);
     }
 
     @Override

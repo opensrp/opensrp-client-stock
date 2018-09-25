@@ -56,5 +56,6 @@
 
     <string name="stock_take_lot">%1s \nExp. %2s</string>
     <string name="no_change">No Change</string>
+    <string name="save">Save</string>
 
 </resources>
