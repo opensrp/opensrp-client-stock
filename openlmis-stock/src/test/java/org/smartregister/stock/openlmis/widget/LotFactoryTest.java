@@ -25,6 +25,7 @@ import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
+import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonsRepository;
 import org.smartregister.stock.openlmis.shadow.ShadowPopupMenu;
@@ -37,6 +38,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -63,6 +65,9 @@ public class LotFactoryTest extends BaseUnitTest {
     @Mock
     private LotRepository lotRepository;
 
+    @Mock
+    private StockRepository stockRepository;
+
     private OpenLMISJsonForm activity;
 
     private LotFactory lotFactory;
@@ -72,7 +77,7 @@ public class LotFactoryTest extends BaseUnitTest {
     @Before
     public void setUp() {
         lots = new ArrayList<>();
-        lotFactory = new LotFactory(lotRepository, new ReasonsRepository(), OpenLMISLibrary.getInstance().getStockRepository());
+        lotFactory = new LotFactory(lotRepository, new ReasonsRepository(), stockRepository);
         Intent intent = new Intent();
         intent.putExtra("json", ISSUE_FORM_JSON);
         activity = Robolectric.buildActivity(OpenLMISJsonForm.class, intent).create().get();
@@ -250,7 +255,7 @@ public class LotFactoryTest extends BaseUnitTest {
         org.robolectric.shadows.ShadowPopupMenu shadowPopupMenu = Shadows.shadowOf(popup);
         shadowPopupMenu.getOnMenuItemClickListener().onMenuItemClick(item);
 
-        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
         assertEquals("VVM2", status.getText().toString());
         assertEquals("VVM2", lotFactory.getSelectedLotDTos().get(0).getLotStatus());
     }
@@ -269,7 +274,7 @@ public class LotFactoryTest extends BaseUnitTest {
         org.robolectric.shadows.ShadowPopupMenu shadowPopupMenu = Shadows.shadowOf(popup);
         shadowPopupMenu.getOnMenuItemClickListener().onMenuItemClick(item);
 
-        verify(formFragment).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+        verify(formFragment).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
         assertEquals(1, lotFactory.getSelectedLotDTos().size());
         assertEquals("LC1265 Exp. " + new LocalDate(9889l).toString(DATE_FORMAT), lotDropdown.getText().toString());
         assertEquals("7c6d239f-0bbc-4cab-b218-888d8be89d24", lotFactory.getSelectedLotDTos().get(0).getLotId());
@@ -309,7 +314,7 @@ public class LotFactoryTest extends BaseUnitTest {
         assertEquals("Damage", reason.getText().toString());
         assertEquals("Damage", lotFactory.getSelectedLotDTos().get(0).getReason());
 
-        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
 
 
     }
@@ -384,7 +389,7 @@ public class LotFactoryTest extends BaseUnitTest {
         org.robolectric.shadows.ShadowPopupMenu shadowPopupMenu = Shadows.shadowOf(popup);
         shadowPopupMenu.getOnMenuItemClickListener().onMenuItemClick(item);
 
-        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
         assertEquals(1, lotFactory.getSelectedLotDTos().size());
         assertEquals("LC8063 Exp. " + new LocalDate(89239490024l).toString(DATE_FORMAT), lotDropdown.getText().toString());
         assertEquals("9da34cac-4753-4763-a749-10741cdcce33", lotFactory.getSelectedLotDTos().get(0).getLotId());

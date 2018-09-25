@@ -80,7 +80,7 @@ public class LotFactory implements FormWidgetFactory {
 
     private OpenLMISJsonFormFragment jsonFormFragment;
 
-    private LotListener lotListener = new LotListener(false);
+    private LotListener lotListener;
 
     private Map<String, Lot> lotMap;
 
@@ -139,8 +139,6 @@ public class LotFactory implements FormWidgetFactory {
         lotsContainer.setTag(com.vijay.jsonwizard.R.id.address, stepName + ":" + key);
         lotsContainer.setTag(com.vijay.jsonwizard.R.id.type, LOT_WIDGET);
 
-        root.findViewById(R.id.add_lot).setOnClickListener(lotListener);
-
         isStockIssue = jsonObject.optBoolean(IS_STOCK_ISSUE);
         List<Lot> lots;
         String tradeItemId = jsonObject.getString(TRADE_ITEM_ID);
@@ -153,11 +151,13 @@ public class LotFactory implements FormWidgetFactory {
             stock = new Stock();
             stock.setStockTypeId(tradeItemId);
 
+            lotListener = new LotListener(false);
             lotDropdown.setTag(R.id.is_stock_adjustment, true);
             populateStatusOptionsNonLot(context, statusDropdown);
             populateReasonsOptionsNonLot(context, (TextInputEditText) root.findViewById(R.id.reason_dropdown));
             showNonLotViews(root, jsonObject.getString(TRADE_ITEM));
         } else {
+            lotListener = new LotListener(true);
 
             TextView tradeItem = root.findViewById(R.id.trade_item);
             tradeItem.setText(jsonObject.getString(TRADE_ITEM));
@@ -192,6 +192,8 @@ public class LotFactory implements FormWidgetFactory {
 
             restoreAdditionalLotRows(lotDropdown);
         }
+
+        root.findViewById(R.id.add_lot).setOnClickListener(lotListener);
         ((JsonApi) context).addFormDataView(lotsContainer);
         views.add(root);
 

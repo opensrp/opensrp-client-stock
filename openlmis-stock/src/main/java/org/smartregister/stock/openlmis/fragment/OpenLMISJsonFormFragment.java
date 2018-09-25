@@ -110,7 +110,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
             nextButton.setText(step.optString(NEXT_LABEL));
 
         try {
-            boolean isNonLot = step.getJSONArray("fields").getJSONObject(0).getBoolean(NON_LOT_FIELD);
+            boolean isNonLot = step.getJSONArray("fields").getJSONObject(0).optBoolean(NON_LOT_FIELD);
             if (isNonLot) {
                 informationTextView.setVisibility(View.INVISIBLE);
             }
