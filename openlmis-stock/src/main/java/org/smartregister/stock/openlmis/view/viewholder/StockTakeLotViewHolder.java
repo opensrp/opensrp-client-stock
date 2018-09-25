@@ -5,11 +5,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
@@ -71,6 +74,9 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         itemView.findViewById(R.id.no_change).setOnClickListener(this);
         statusTextView.setOnClickListener(this);
         reasonTextView.setOnClickListener(this);
+
+        physicalCountTextView.addTextChangedListener(new PhysicalCountTextWatcher());
+
     }
 
     public void setLotCodeAndExpiry(String lotCode, long expiryDate) {
@@ -86,6 +92,11 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
     public void setPhysicalCount(int physicalCount) {
         this.physicalCount = physicalCount;
         physicalCountTextView.setText(String.valueOf(physicalCount));
+        if (physicalCount < 0)
+            physicalCountTextView.setError(context.getString(R.string.negative_balance));
+        else {
+            physicalCountTextView.setError(null);
+        }
     }
 
     public void setStatus(String status) {
@@ -93,6 +104,8 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
     }
 
     public void setDifference(int difference) {
+        if (difference != 0)
+            displayDifferenceAndReason();
         if (difference > 0)
             differenceTextView.setText("+".concat(String.valueOf(difference)));
         else
@@ -109,7 +122,6 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
     }
 
     private void addOrSubtractStock(boolean isAdd) {
-        displayDifferenceAndReason();
         physicalCount += isAdd ? 1 : -1;
         setDifference(physicalCount - stockOnHand);
         setPhysicalCount(physicalCount);
@@ -123,6 +135,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 statusTextView.setText(item.getTitle());
+                validateData();
                 return true;
             }
         });
@@ -138,6 +151,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 reasonTextView.setText(item.getTitle());
+                validateData();
                 return true;
             }
         });
@@ -163,6 +177,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
                 saveStateListener.enableSave();
             }
         }
+        validateData();
 
     }
 
@@ -172,5 +187,40 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     public void setSaveStateListener(SaveStateListener saveStateListener) {
         this.saveStateListener = saveStateListener;
+    }
+
+    private void validateData() {
+        if (noChangeTextView.isSelected()) {
+            saveStateListener.enableSave();
+        } else if (physicalCount < 0 || StringUtils.isBlank(differenceTextView.getText()) ||
+                StringUtils.isBlank(reasonTextView.getText()) ||
+                StringUtils.isBlank(statusTextView.getText())) {
+            saveStateListener.disableSave();
+        } else {
+            saveStateListener.enableSave();
+
+        }
+    }
+
+    private class PhysicalCountTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {//do nothing
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {//do nothing
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (StringUtils.isBlank(editable.toString())) {
+                physicalCount = 0;
+            } else {
+                physicalCount = Integer.valueOf(editable.toString());
+            }
+            setDifference(physicalCount - stockOnHand);
+            validateData();
+        }
     }
 }

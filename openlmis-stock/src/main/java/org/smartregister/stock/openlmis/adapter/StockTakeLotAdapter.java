@@ -45,13 +45,14 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
     @Override
     public void onBindViewHolder(@NonNull StockTakeLotViewHolder stockTakeLotViewHolder, int position) {
+        stockTakeLotViewHolder.setStockAdjustReasons(adjustReasons);
+        stockTakeLotViewHolder.setSaveStateListener(saveStateListener);
+
         Lot lot = lots.get(position);
         stockTakeLotViewHolder.setLotCodeAndExpiry(lot.getLotCode(), lot.getExpirationDate());
         stockTakeLotViewHolder.setStockOnHand(10);
         stockTakeLotViewHolder.setPhysicalCount(10);
         stockTakeLotViewHolder.setStatus(lot.getLotStatus());
-        stockTakeLotViewHolder.setStockAdjustReasons(adjustReasons);
-        stockTakeLotViewHolder.setSaveStateListener(saveStateListener);
     }
 
     @Override
