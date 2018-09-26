@@ -1,25 +1,32 @@
 package org.smartregister.stock.openlmis.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import org.smartregister.stock.openlmis.domain.openlmis.Orderable;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
+import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.OrderableRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SynchronizedUpdater {
 
     private static SynchronizedUpdater synchronizedUpdater;
-    private static DispensableRepository dispensableRepository =  OpenLMISLibrary.getInstance().getDispensableRepository();
+    private static DispensableRepository dispensableRepository = OpenLMISLibrary.getInstance().getDispensableRepository();
     private static TradeItemRepository tradeItemRegisterRepository = OpenLMISLibrary.getInstance().getTradeItemRegisterRepository();
     private static OrderableRepository orderableRepository = OpenLMISLibrary.getInstance().getOrderableRepository();
     private static org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository tradeItemRepository = OpenLMISLibrary.getInstance().getTradeItemRepository();
+    private SearchRepository searchRepository = OpenLMISLibrary.getInstance().getSearchRepository();
+    private CommodityTypeRepository commodityTypeRepository = OpenLMISLibrary.getInstance().getCommodityTypeRepository();
 
-    private SynchronizedUpdater() {}
+    private SynchronizedUpdater() {
+    }
 
     public static SynchronizedUpdater getInstance() {
         if (synchronizedUpdater == null) {
@@ -66,6 +73,8 @@ public class SynchronizedUpdater {
             registerTradeItem.setDispensable(dispensable);
         }
         tradeItemRegisterRepository.addOrUpdate(registerTradeItem);
+
+
     }
 
     public void updateInformation(Dispensable dispensable) {
@@ -76,11 +85,20 @@ public class SynchronizedUpdater {
             if (tradeItem != null) {
                 tradeItem.setDispensable(dispensable);
                 tradeItemRegisterRepository.addOrUpdate(tradeItem);
+                if (StringUtils.isNotBlank(tradeItem.getCommodityTypeId())) {
+                    searchRepository.addOrUpdate(commodityTypeRepository.findCommodityTypeById(tradeItem.getCommodityTypeId()),
+                            Collections.singletonList(tradeItem));
+                }
             } else if (tradeItemsByCommodityType.size() > 0) {
+                String commodityTypeId = null;
                 for (org.smartregister.stock.openlmis.domain.TradeItem savedTradeItem : tradeItemsByCommodityType) {
                     savedTradeItem.setDispensable(dispensable);
                     tradeItemRegisterRepository.addOrUpdate(savedTradeItem);
+                    if (commodityTypeId == null && StringUtils.isNotBlank(savedTradeItem.getCommodityTypeId()))
+                        commodityTypeId = savedTradeItem.getCommodityTypeId();
                 }
+                searchRepository.addOrUpdate(commodityTypeRepository.findCommodityTypeById(commodityTypeId),
+                        tradeItemsByCommodityType);
             }
         }
     }
@@ -106,5 +124,7 @@ public class SynchronizedUpdater {
             }
             tradeItemRegisterRepository.addOrUpdate(tradeItemRegister);
         }
+
+        searchRepository.addOrUpdate(commodityType, tradeItemRegisterRepository.getTradeItemByCommodityType(commodityType.getId()));
     }
 }
