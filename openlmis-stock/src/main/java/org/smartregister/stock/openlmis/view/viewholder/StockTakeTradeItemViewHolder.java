@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
@@ -20,8 +22,8 @@ import java.util.Set;
  */
 public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implements StockTakeListener {
 
-
     private static final String TAG = "StockTakeTradeItemView";
+
     private StockTakePresenter stockTakePresenter;
 
     private TextView tradeItemTextView;
@@ -30,10 +32,24 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
 
     private Button saveButton;
 
+    private LinearLayout pendingStockTake;
+
+    private RelativeLayout completedStockTake;
+
+    private TextView completedTradeItem;
+
+    private TextView adjustment;
+
     private Set<StockTake> stockTakeSet = new HashSet<>();
+
+    private int stockOnhand = 0;
+
+    private String dispensingUnit = "Vials";
 
     public StockTakeTradeItemViewHolder(@NonNull View itemView) {
         super(itemView);
+        pendingStockTake = itemView.findViewById(R.id.pending_stock_take);
+        completedStockTake = itemView.findViewById(R.id.completed_stock_take);
         tradeItemTextView = itemView.findViewById(R.id.trade_item);
         lotsRecyclerView = itemView.findViewById(R.id.lotsRecyclerView);
         saveButton = itemView.findViewById(R.id.save);
@@ -44,6 +60,10 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
                     stockTakeSaved();
             }
         });
+
+        completedTradeItem = itemView.findViewById(R.id.completed_trade_item);
+        adjustment = itemView.findViewById(R.id.adjustment);
+
 
     }
 
@@ -88,5 +108,18 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
 
     private void stockTakeSaved() {
         Log.d(TAG, "Stock take saved");
+        pendingStockTake.setVisibility(View.GONE);
+        completedStockTake.setVisibility(View.VISIBLE);
+        completedTradeItem.setText(tradeItemTextView.getText());
+        int totalAdjustment = 0;
+        for (StockTake stockTake : stockTakeSet)
+            totalAdjustment += stockTake.getQuantity();
+        if (totalAdjustment != 0) {
+            String totalAdjustmentFormatted = totalAdjustment > 0 ? "+" + totalAdjustment : "" + totalAdjustment;
+            adjustment.setText(adjustment.getContext().getString(R.string.stock_take_adjustment,
+                    stockOnhand + totalAdjustment, dispensingUnit, totalAdjustmentFormatted));
+        } else
+            adjustment.setText(adjustment.getContext().getString(R.string.stock_take_no_adjustment,
+                    stockOnhand + totalAdjustment, dispensingUnit));
     }
 }

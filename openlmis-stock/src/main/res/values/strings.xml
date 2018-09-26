@@ -59,5 +59,7 @@
     <string name="save">Save</string>
     <string name="submit">Submit</string>
     <string name="save_as_draft">Save as draft</string>
+    <string name="stock_take_adjustment">Total: %1d %2s. Difference: %3$s</string>
+    <string name="stock_take_no_adjustment">Total: %1d %2s. No adjustment</string>
 
 </resources>
