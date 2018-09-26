@@ -15,8 +15,10 @@ import android.widget.TextView;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
-import org.smartregister.stock.openlmis.listener.SaveStateListener;
+import org.smartregister.stock.openlmis.listener.StockTakeListener;
+import org.smartregister.stock.openlmis.widget.helper.LotDto;
 
 import java.util.List;
 
@@ -55,7 +57,9 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     private List<Reason> stockAdjustReasons;
 
-    private SaveStateListener saveStateListener;
+    private StockTakeListener stockTakeListener;
+
+    private LotDto lotDto = new LotDto();
 
     public StockTakeLotViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -79,9 +83,10 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     }
 
-    public void setLotCodeAndExpiry(String lotCode, long expiryDate) {
+    public void setLot(Lot lot) {
         lotCodeAndExpiryTextView.setText(context.getString(R.string.stock_take_lot,
-                lotCode, new DateTime(expiryDate).toString(DATE_FORMAT)));
+                lot.getLotCode(), new DateTime(lot.getExpirationDate()).toString(DATE_FORMAT)));
+        lotDto.setLotId(lot.getId());
     }
 
     public void setStockOnHand(int stockOnHand) {
@@ -101,9 +106,11 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     public void setStatus(String status) {
         statusTextView.setText(status);
+        lotDto.setLotStatus(status);
     }
 
     public void setDifference(int difference) {
+        lotDto.setQuantity(difference);
         if (difference != 0)
             displayDifferenceAndReason();
         if (difference > 0)
@@ -114,6 +121,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     public void setReason(String reason) {
         reasonTextView.setText(reason);
+        lotDto.setReason(reason);
     }
 
     private void displayDifferenceAndReason() {
@@ -134,7 +142,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                statusTextView.setText(item.getTitle());
+                setStatus(item.getTitle().toString());
                 validateData();
                 return true;
             }
@@ -150,7 +158,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                reasonTextView.setText(item.getTitle());
+                setReason(item.getTitle().toString());
                 validateData();
                 return true;
             }
@@ -171,10 +179,8 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
             noChangeTextView.setSelected(!selected);
             if (selected) {
                 noChangeTextView.setTextColor(context.getResources().getColor(R.color.add_subtract));
-                saveStateListener.disableSave();
             } else {
                 noChangeTextView.setTextColor(context.getResources().getColor(R.color.white));
-                saveStateListener.enableSave();
             }
         }
         validateData();
@@ -185,21 +191,22 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         this.stockAdjustReasons = stockAdjustReasons;
     }
 
-    public void setSaveStateListener(SaveStateListener saveStateListener) {
-        this.saveStateListener = saveStateListener;
+    public void setStockTakeListener(StockTakeListener stockTakeListener) {
+        this.stockTakeListener = stockTakeListener;
     }
 
     private void validateData() {
         if (noChangeTextView.isSelected()) {
-            saveStateListener.enableSave();
+            lotDto.setValid(true);
         } else if (physicalCount < 0 || StringUtils.isBlank(differenceTextView.getText()) ||
                 StringUtils.isBlank(reasonTextView.getText()) ||
                 StringUtils.isBlank(statusTextView.getText())) {
-            saveStateListener.disableSave();
+            lotDto.setValid(false);
         } else {
-            saveStateListener.enableSave();
+            lotDto.setValid(true);
 
         }
+        stockTakeListener.registerLotDetails(lotDto);
     }
 
     private class PhysicalCountTextWatcher implements TextWatcher {

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
-import org.smartregister.stock.openlmis.listener.SaveStateListener;
+import org.smartregister.stock.openlmis.listener.StockTakeListener;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 import org.smartregister.stock.openlmis.view.viewholder.StockTakeLotViewHolder;
 
@@ -21,15 +21,15 @@ import java.util.List;
  */
 public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHolder> {
 
-    private SaveStateListener saveStateListener;
+    private StockTakeListener stockTakeListener;
 
     private List<Lot> lots;
 
     private List<Reason> adjustReasons;
 
 
-    public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId, String tradeItemId, SaveStateListener saveStateListener) {
-        this.saveStateListener = saveStateListener;
+    public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId, String tradeItemId, StockTakeListener stockTakeListener) {
+        this.stockTakeListener = stockTakeListener;
         lots = stockTakePresenter.findLotsByTradeItem(tradeItemId);
         adjustReasons = stockTakePresenter.findAdjustReasons(programId);
     }
@@ -46,10 +46,10 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
     @Override
     public void onBindViewHolder(@NonNull StockTakeLotViewHolder stockTakeLotViewHolder, int position) {
         stockTakeLotViewHolder.setStockAdjustReasons(adjustReasons);
-        stockTakeLotViewHolder.setSaveStateListener(saveStateListener);
+        stockTakeLotViewHolder.setStockTakeListener(stockTakeListener);
 
         Lot lot = lots.get(position);
-        stockTakeLotViewHolder.setLotCodeAndExpiry(lot.getLotCode(), lot.getExpirationDate());
+        stockTakeLotViewHolder.setLot(lot);
         stockTakeLotViewHolder.setStockOnHand(10);
         stockTakeLotViewHolder.setPhysicalCount(10);
         stockTakeLotViewHolder.setStatus(lot.getLotStatus());

@@ -15,6 +15,8 @@ public class LotDto {
 
     private String reason;
 
+    private boolean valid;
+
     public LotDto(String lotId) {
         this.lotId = lotId;
     }
@@ -67,6 +69,14 @@ public class LotDto {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
     }
 
     @Override
