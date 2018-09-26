@@ -42,9 +42,9 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
 
     private Set<StockTake> stockTakeSet = new HashSet<>();
 
-    private int stockOnhand = 0;
+    private int stockOnhand;
 
-    private String dispensingUnit = "Vials";
+    private String dispensingUnit;
 
     public StockTakeTradeItemViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -121,5 +121,13 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         } else
             adjustment.setText(adjustment.getContext().getString(R.string.stock_take_no_adjustment,
                     stockOnhand + totalAdjustment, dispensingUnit));
+    }
+
+    public void setStockOnhand(int stockOnhand) {
+        this.stockOnhand = stockOnhand;
+    }
+
+    public void setDispensingUnit(String dispensingUnit) {
+        this.dispensingUnit = dispensingUnit;
     }
 }

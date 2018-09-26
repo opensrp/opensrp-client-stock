@@ -7,6 +7,7 @@ import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
+import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.StockTakeRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
@@ -15,6 +16,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepo
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,22 +29,27 @@ public class StockTakeInteractor extends StockListBaseInteractor {
 
     private StockTakeRepository stockTakeRepository;
 
+    private StockRepository stockRepository;
+
     public StockTakeInteractor() {
         this(OpenLMISLibrary.getInstance().getCommodityTypeRepository(),
                 OpenLMISLibrary.getInstance().getProgramOrderableRepository(),
                 OpenLMISLibrary.getInstance().getTradeItemRegisterRepository(),
                 OpenLMISLibrary.getInstance().getLotRepository(),
-                OpenLMISLibrary.getInstance().getStockTakeRepository());
+                OpenLMISLibrary.getInstance().getStockTakeRepository(),
+                OpenLMISLibrary.getInstance().getStockRepository());
     }
 
     private StockTakeInteractor(CommodityTypeRepository commodityTypeRepository,
                                 ProgramOrderableRepository programOrderableRepository,
                                 TradeItemRepository tradeItemRepository,
                                 LotRepository lotRepository,
-                                StockTakeRepository stockTakeRepository) {
+                                StockTakeRepository stockTakeRepository,
+                                StockRepository stockRepository) {
         super(commodityTypeRepository, programOrderableRepository, tradeItemRepository);
         this.lotRepository = lotRepository;
         this.stockTakeRepository = stockTakeRepository;
+        this.stockRepository = stockRepository;
     }
 
     public List<Lot> findLotsByTradeItem(String tradeItemId) {
@@ -73,5 +80,13 @@ public class StockTakeInteractor extends StockListBaseInteractor {
         for (StockTake stockTake : stockTakeSet)
             stockTakeRepository.addOrUpdate(stockTake);
         return true;
+    }
+
+    public Map<String, Integer> findStockBalanceByTradeItemIds(String programId, List<String> tradeItemIds) {
+        return stockRepository.findStockByTradeItemIds(programId, tradeItemIds);
+    }
+
+    public Map<String, Integer> findStockBalanceByLotsIds(String programId, List<String> lotIds) {
+        return stockRepository.findStockByLotIds(programId, lotIds);
     }
 }

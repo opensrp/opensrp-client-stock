@@ -16,6 +16,7 @@ import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 import org.smartregister.stock.openlmis.view.viewholder.StockTakeLotViewHolder;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by samuelgithengi on 9/21/18.
@@ -34,6 +35,8 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
     private String tradeItemId;
 
+    private Map<String, Integer> stockBalances;
+
 
     public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId,
                                String tradeItemId, StockTakeListener stockTakeListener) {
@@ -43,7 +46,9 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
         lots = stockTakePresenter.findLotsByTradeItem(tradeItemId);
         adjustReasons = stockTakePresenter.findAdjustReasons(programId);
         stockTakeList = stockTakePresenter.findStockTakeList(programId, tradeItemId);
+        stockBalances = stockTakePresenter.findStockBalanceByLots(programId, lots);
     }
+
 
     @NonNull
     @Override
@@ -69,8 +74,11 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
             stockTakeLotViewHolder.setStockTake(new StockTake(programId, tradeItemId, lot.getId()));
         }
         stockTakeLotViewHolder.setLot(lot);
-        stockTakeLotViewHolder.setStockOnHand(10);
-        stockTakeLotViewHolder.setPhysicalCount(10);
+        int stockOnHand = 0;
+        if (stockBalances.containsKey(lot.getId()))
+            stockOnHand = stockBalances.get(lot.getId());
+        stockTakeLotViewHolder.setStockOnHand(stockOnHand);
+        stockTakeLotViewHolder.setPhysicalCount(stockOnHand);
         stockTakeLotViewHolder.setStatus(lot.getLotStatus());
     }
 
