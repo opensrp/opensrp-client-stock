@@ -46,6 +46,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
         stockTakeTradeItemViewHolder.setTradeItemName(tradeItem.getName());
         StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, programId, tradeItem.getId(),stockTakeTradeItemViewHolder);
         stockTakeTradeItemViewHolder.getLotsRecyclerView().setAdapter(adapter);
+        stockTakeTradeItemViewHolder.setStockTakePresenter(stockTakePresenter);
 
     }
 

@@ -19,7 +19,6 @@ import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRA
 import static org.smartregister.stock.openlmis.repository.StockRepository.REASON;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
-import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
 
 /**
  * Created by samuelgithengi on 9/26/18.
@@ -35,12 +34,12 @@ public class StockTakeRepository extends BaseRepository {
     private static final String LAST_UPDATED = "last_updated";
 
     private static final String CREATE_STOCK_TAKE_TABLE = "CREATE TABLE " + STOCK_TAKE_TABLE +
-            " (" + PROGRAM_ID + " VARCHAR  NOT NULL," +
-            TRADE_ITEM_ID + " VARCHAR NOT NULL," +
-            LOT_ID + " VARCHAR  NOT NULL," +
+            " (" + PROGRAM_ID + " VARCHAR  NOT NULL, " +
+            TRADE_ITEM_ID + " VARCHAR NOT NULL, " +
+            LOT_ID + " VARCHAR  NOT NULL, " +
             REASON + " VARCHAR, " +
             STATUS + " VARCHAR, " +
-            VALUE + " INTEGER NOT NULL," +
+            VALUE + " INTEGER NOT NULL, " +
             LAST_UPDATED + " INTEGER NOT NULL)";
 
     private static final String CREATE_PROGRAM_TRADE_ITEM_INDEX = "CREATE INDEX "
@@ -75,7 +74,7 @@ public class StockTakeRepository extends BaseRepository {
                         new String[]{stockTake.getProgramId(), stockTake.getTradeItemId(), stockTake.getLotId()});
 
         } else {
-            getWritableDatabase().insert(stock_TABLE_NAME, null, contentValues);
+            getWritableDatabase().insert(STOCK_TAKE_TABLE, null, contentValues);
         }
     }
 
@@ -107,10 +106,10 @@ public class StockTakeRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             if (hasLots) {
-                query = String.format("SELECT 1 FROM %s WHERE %s=? AND %s=?", STOCK_TAKE_TABLE, PROGRAM_ID, TRADE_ITEM_ID);
+                query = String.format("SELECT 1 FROM %s WHERE %s=? AND %s=? AND %s=?", STOCK_TAKE_TABLE, PROGRAM_ID, TRADE_ITEM_ID, LOT_ID);
                 cursor = getReadableDatabase().rawQuery(query, new String[]{stockTake.getProgramId(), stockTake.getTradeItemId()});
             } else {
-                query = String.format("SELECT 1 FROM %s WHERE %s=? AND %s=? AND %s=?", STOCK_TAKE_TABLE, PROGRAM_ID, TRADE_ITEM_ID, LOT_ID);
+                query = String.format("SELECT 1 FROM %s WHERE %s=? AND %s=?", STOCK_TAKE_TABLE, PROGRAM_ID, TRADE_ITEM_ID);
                 cursor = getReadableDatabase().rawQuery(query, new String[]{stockTake.getProgramId(), stockTake.getTradeItemId()});
             }
             return cursor.moveToFirst();
@@ -125,10 +124,10 @@ public class StockTakeRepository extends BaseRepository {
     }
 
     private StockTake createStockTake(Cursor cursor) {
-        StockTake stockTake = new StockTake();
-        stockTake.setProgramId(cursor.getString(cursor.getColumnIndex(PROGRAM_ID)));
-        stockTake.setTradeItemId(cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)));
-        stockTake.setLotId(cursor.getString(cursor.getColumnIndex(LOT_ID)));
+        StockTake stockTake = new StockTake(
+                cursor.getString(cursor.getColumnIndex(PROGRAM_ID)),
+                cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
+                cursor.getString(cursor.getColumnIndex(LOT_ID)));
         stockTake.setStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
         stockTake.setReasonId(cursor.getString(cursor.getColumnIndex(REASON)));
         stockTake.setQuantity(cursor.getInt(cursor.getColumnIndex(VALUE)));

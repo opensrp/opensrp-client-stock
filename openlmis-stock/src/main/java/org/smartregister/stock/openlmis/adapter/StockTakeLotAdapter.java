@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.listener.StockTakeListener;
@@ -27,11 +28,21 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
     private List<Reason> adjustReasons;
 
+    private List<StockTake> stockTakeList;
 
-    public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId, String tradeItemId, StockTakeListener stockTakeListener) {
+    private String programId;
+
+    private String tradeItemId;
+
+
+    public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId,
+                               String tradeItemId, StockTakeListener stockTakeListener) {
         this.stockTakeListener = stockTakeListener;
+        this.programId = programId;
+        this.tradeItemId = tradeItemId;
         lots = stockTakePresenter.findLotsByTradeItem(tradeItemId);
         adjustReasons = stockTakePresenter.findAdjustReasons(programId);
+        stockTakeList = stockTakePresenter.findStockTakeList(programId, tradeItemId);
     }
 
     @NonNull
@@ -47,8 +58,16 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
     public void onBindViewHolder(@NonNull StockTakeLotViewHolder stockTakeLotViewHolder, int position) {
         stockTakeLotViewHolder.setStockAdjustReasons(adjustReasons);
         stockTakeLotViewHolder.setStockTakeListener(stockTakeListener);
-
         Lot lot = lots.get(position);
+        for (StockTake stockTake : stockTakeList) {
+            if (lot.getId().equals(stockTake.getLotId())) {
+                stockTakeLotViewHolder.setStockTake(stockTake);
+                break;
+            }
+        }
+        if (stockTakeLotViewHolder.getStockTake() == null) {
+            stockTakeLotViewHolder.setStockTake(new StockTake(programId, tradeItemId, lot.getId()));
+        }
         stockTakeLotViewHolder.setLot(lot);
         stockTakeLotViewHolder.setStockOnHand(10);
         stockTakeLotViewHolder.setPhysicalCount(10);

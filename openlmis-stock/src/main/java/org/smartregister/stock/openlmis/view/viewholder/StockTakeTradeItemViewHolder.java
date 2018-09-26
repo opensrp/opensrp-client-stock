@@ -2,13 +2,15 @@ package org.smartregister.stock.openlmis.view.viewholder;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.listener.StockTakeListener;
-import org.smartregister.stock.openlmis.widget.helper.LotDto;
+import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,20 +20,35 @@ import java.util.Set;
  */
 public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implements StockTakeListener {
 
+
+    private static final String TAG = "StockTakeTradeItemView";
+    private StockTakePresenter stockTakePresenter;
+
     private TextView tradeItemTextView;
 
     private RecyclerView lotsRecyclerView;
 
     private Button saveButton;
 
-    private Set<LotDto> lotDtos = new HashSet<>();
+    private Set<StockTake> stockTakeSet = new HashSet<>();
 
     public StockTakeTradeItemViewHolder(@NonNull View itemView) {
         super(itemView);
         tradeItemTextView = itemView.findViewById(R.id.trade_item);
         lotsRecyclerView = itemView.findViewById(R.id.lotsRecyclerView);
         saveButton = itemView.findViewById(R.id.save);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (stockTakePresenter.saveStockTake(stockTakeSet))
+                    stockTakeSaved();
+            }
+        });
 
+    }
+
+    public void setStockTakePresenter(StockTakePresenter stockTakePresenter) {
+        this.stockTakePresenter = stockTakePresenter;
     }
 
     public void setTradeItemName(String name) {
@@ -54,11 +71,11 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
     }
 
     @Override
-    public void registerLotDetails(LotDto lotDto) {
-        lotDtos.add(lotDto);
+    public void registerStockTake(StockTake stockTake) {
+        stockTakeSet.add(stockTake);
         boolean isValid = true;
-        for (LotDto lot : lotDtos) {
-            if (!lot.isValid()) {
+        for (StockTake stockTake1 : stockTakeSet) {
+            if (!stockTake1.isValid()) {
                 disableSave();
                 isValid = false;
                 break;
@@ -67,5 +84,9 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         if (isValid)
             enableSave();
 
+    }
+
+    private void stockTakeSaved() {
+        Log.d(TAG, "Stock take saved");
     }
 }

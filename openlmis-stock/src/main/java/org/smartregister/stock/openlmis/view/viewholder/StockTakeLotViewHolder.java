@@ -15,10 +15,10 @@ import android.widget.TextView;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.listener.StockTakeListener;
-import org.smartregister.stock.openlmis.widget.helper.LotDto;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     private StockTakeListener stockTakeListener;
 
-    private LotDto lotDto = new LotDto();
+    private StockTake stockTake;
 
     public StockTakeLotViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -86,7 +86,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
     public void setLot(Lot lot) {
         lotCodeAndExpiryTextView.setText(context.getString(R.string.stock_take_lot,
                 lot.getLotCode(), new DateTime(lot.getExpirationDate()).toString(DATE_FORMAT)));
-        lotDto.setLotId(lot.getId());
+        stockTake.setLotId(lot.getId());
     }
 
     public void setStockOnHand(int stockOnHand) {
@@ -106,11 +106,11 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     public void setStatus(String status) {
         statusTextView.setText(status);
-        lotDto.setLotStatus(status);
+        stockTake.setStatus(status);
     }
 
     public void setDifference(int difference) {
-        lotDto.setQuantity(difference);
+        stockTake.setQuantity(difference);
         if (difference != 0)
             displayDifferenceAndReason();
         if (difference > 0)
@@ -121,7 +121,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     public void setReason(String reason) {
         reasonTextView.setText(reason);
-        lotDto.setReason(reason);
+        stockTake.setReasonId(reason);
     }
 
     private void displayDifferenceAndReason() {
@@ -187,6 +187,20 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     }
 
+    private void validateData() {
+        if (noChangeTextView.isSelected()) {
+            stockTake.setValid(true);
+        } else if (physicalCount < 0 || StringUtils.isBlank(differenceTextView.getText()) ||
+                StringUtils.isBlank(reasonTextView.getText()) ||
+                StringUtils.isBlank(statusTextView.getText())) {
+            stockTake.setValid(false);
+        } else {
+            stockTake.setValid(true);
+
+        }
+        stockTakeListener.registerStockTake(stockTake);
+    }
+
     public void setStockAdjustReasons(List<Reason> stockAdjustReasons) {
         this.stockAdjustReasons = stockAdjustReasons;
     }
@@ -195,18 +209,12 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         this.stockTakeListener = stockTakeListener;
     }
 
-    private void validateData() {
-        if (noChangeTextView.isSelected()) {
-            lotDto.setValid(true);
-        } else if (physicalCount < 0 || StringUtils.isBlank(differenceTextView.getText()) ||
-                StringUtils.isBlank(reasonTextView.getText()) ||
-                StringUtils.isBlank(statusTextView.getText())) {
-            lotDto.setValid(false);
-        } else {
-            lotDto.setValid(true);
+    public StockTake getStockTake() {
+        return stockTake;
+    }
 
-        }
-        stockTakeListener.registerLotDetails(lotDto);
+    public void setStockTake(StockTake stockTake) {
+        this.stockTake = stockTake;
     }
 
     private class PhysicalCountTextWatcher implements TextWatcher {

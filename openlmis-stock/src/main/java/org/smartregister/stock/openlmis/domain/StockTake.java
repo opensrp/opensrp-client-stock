@@ -19,6 +19,18 @@ public class StockTake {
 
     private long lastUpdated;
 
+    private boolean valid;
+
+    public StockTake(String programId, String tradeItemId) {
+        this.programId = programId;
+        this.tradeItemId = tradeItemId;
+    }
+
+    public StockTake(String programId, String tradeItemId, String lotId) {
+        this(programId, tradeItemId);
+        this.lotId = lotId;
+    }
+
     public String getProgramId() {
         return programId;
     }
@@ -74,4 +86,14 @@ public class StockTake {
     public void setLastUpdated(long lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+
 }

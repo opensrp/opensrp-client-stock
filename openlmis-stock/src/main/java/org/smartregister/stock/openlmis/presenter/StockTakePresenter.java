@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.presenter;
 
+import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -41,5 +42,13 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     public List<Reason> findAdjustReasons(String programId) {
         return stockTakeInteractor.findAdjustReasons(programId);
+    }
+
+    public List<StockTake> findStockTakeList(String programId, String tradeItemId) {
+        return stockTakeInteractor.findStockTakeList(programId, tradeItemId);
+    }
+
+    public boolean saveStockTake(Set<StockTake> stockTakeSet) {
+        return stockTakeInteractor.saveStockTake(stockTakeSet);
     }
 }
