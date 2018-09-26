@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -163,7 +162,7 @@ public class StockDetailsPresenter {
         if (steps == 1) {
             String status = JsonFormUtils.getFieldValue(stepFields, "Status");
             int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Received"));
-            return processStockWithoutLots(jsonString, provider, date, facility, reason, received, status, quantity);
+            return processStockWithoutLots(jsonString, provider, date, facility, reason, received, quantity);
         }
         return processStockWithLots(STEP2, jsonString, provider, date, facility, reason, received);
     }
@@ -175,7 +174,7 @@ public class StockDetailsPresenter {
 
     }
 
-    private String extractValue(JSONArray stepFields, String key) throws JSONException {
+    private String extractValue(JSONArray stepFields) throws JSONException {
         for (int i = 0; i < stepFields.length(); i++) {
             JSONObject jsonObject = getJSONObject(stepFields, i);
             String keyValue = jsonObject.getString(KEY);
@@ -197,8 +196,8 @@ public class StockDetailsPresenter {
 
         List<LotDto> selectedLotDTos = LotFactory.gson.fromJson(lotsJSON, listType);
 
-        String tradeItem = extractValue(stepFields, TRADE_ITEM_ID);
-        String programId = extractValue(stepFields, PROGRAM_ID);
+        String tradeItem = extractValue(stepFields);
+        String programId = extractValue(stepFields);
 
         Date encounterDate;
         try {
@@ -223,7 +222,7 @@ public class StockDetailsPresenter {
     }
 
     private boolean processStockWithoutLots(JSONObject jsonString, String provider, String date,
-                                            String facility, String reason, String transactionType, String status, int quantity) throws JSONException {
+                                            String facility, String reason, String transactionType, int quantity) throws JSONException {
 
         JSONArray stepFields = jsonString.getJSONObject(STEP1).getJSONArray(FIELDS);
 

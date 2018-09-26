@@ -28,6 +28,7 @@ import com.vijay.jsonwizard.validators.edittext.RequiredValidator;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
 
@@ -76,9 +77,6 @@ public class EditTextFactory implements FormWidgetFactory {
         String relevance = jsonObject.optString("relevance");
         String constraints = jsonObject.optString("constraints");
 
-        int minLength = MIN_LENGTH;
-        int maxLength = MAX_LENGTH;
-
         textInputLayout.setHint(jsonObject.getString(JsonFormConstants.HINT));
         editText.setId(ViewUtil.generateViewId());
         editText.setTag(R.id.key, jsonObject.getString(JsonFormConstants.KEY));
@@ -99,6 +97,36 @@ public class EditTextFactory implements FormWidgetFactory {
         }
 
         //add validators
+        addValidators(jsonObject, editText);
+
+        // edit type check
+        String editType = jsonObject.optString("edit_type");
+        if (!TextUtils.isEmpty(editType)) {
+            if ("number".equals(editType)) {
+                editText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            } else if ("name".equals(editType)) {
+                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+            }
+        }
+
+        editText.addTextChangedListener(new GenericTextWatcher(stepName, formFragment, editText));
+        if (relevance != null && context instanceof JsonApi) {
+            editText.setTag(R.id.relevance, relevance);
+            ((JsonApi) context).addSkipLogicView(editText);
+        }
+
+        if (constraints != null && context instanceof JsonApi) {
+            editText.setTag(R.id.constraints, constraints);
+            ((JsonApi) context).addConstrainedView(editText);
+        }
+
+    }
+
+    private void addValidators(JSONObject jsonObject, CustomTextInputEditText editText) throws JSONException {
+
+        int minLength = MIN_LENGTH;
+        int maxLength = MAX_LENGTH;
+
         JSONObject requiredObject = jsonObject.optJSONObject(JsonFormConstants.V_REQUIRED);
         if (requiredObject != null) {
             String requiredValue = requiredObject.getString(JsonFormConstants.VALUE);
@@ -195,28 +223,6 @@ public class EditTextFactory implements FormWidgetFactory {
                 }
             }
         }
-
-        // edit type check
-        String editType = jsonObject.optString("edit_type");
-        if (!TextUtils.isEmpty(editType)) {
-            if ("number".equals(editType)) {
-                editText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            } else if ("name".equals(editType)) {
-                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-            }
-        }
-
-        editText.addTextChangedListener(new GenericTextWatcher(stepName, formFragment, editText));
-        if (relevance != null && context instanceof JsonApi) {
-            editText.setTag(R.id.relevance, relevance);
-            ((JsonApi) context).addSkipLogicView(editText);
-        }
-
-        if (constraints != null && context instanceof JsonApi) {
-            editText.setTag(R.id.constraints, constraints);
-            ((JsonApi) context).addConstrainedView(editText);
-        }
-
     }
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
