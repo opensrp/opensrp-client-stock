@@ -52,6 +52,7 @@ public class StockManagementRepository extends Repository {
         org.smartregister.stock.openlmis.repository.TradeItemRepository.createTable(database);
         StockRepository.createTable(database);
         SearchRepository.createTable(database);
+        StockTakeRepository.createTable(database);
     }
 
     @Override
