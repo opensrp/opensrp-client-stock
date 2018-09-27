@@ -78,7 +78,7 @@ public class StockTakeRepository extends BaseRepository {
         }
     }
 
-    public List<StockTake> getStockTakeList(String tradeItemId, String programId) {
+    public List<StockTake> getStockTakeList(String programId, String tradeItemId) {
         List<StockTake> stockTakeList = new ArrayList<>();
         if (tradeItemId == null) {
             return stockTakeList;
@@ -87,7 +87,7 @@ public class StockTakeRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             cursor = getReadableDatabase().rawQuery(query, new String[]{programId, tradeItemId});
-            if (cursor.moveToFirst()) {
+            while (cursor.moveToNext()) {
                 stockTakeList.add(createStockTake(cursor));
             }
         } catch (Exception e) {

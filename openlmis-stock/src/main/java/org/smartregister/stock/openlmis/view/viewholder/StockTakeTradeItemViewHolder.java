@@ -57,7 +57,7 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
             @Override
             public void onClick(View v) {
                 if (stockTakePresenter.saveStockTake(stockTakeSet))
-                    stockTakeSaved();
+                    stockTakeCompleted();
             }
         });
 
@@ -106,7 +106,7 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
 
     }
 
-    private void stockTakeSaved() {
+    public void stockTakeCompleted() {
         Log.d(TAG, "Stock take saved");
         pendingStockTake.setVisibility(View.GONE);
         completedStockTake.setVisibility(View.VISIBLE);
@@ -129,5 +129,9 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
 
     public void setDispensingUnit(String dispensingUnit) {
         this.dispensingUnit = dispensingUnit;
+    }
+
+    public void setStockTakeSet(Set<StockTake> stockTakeSet) {
+        this.stockTakeSet = stockTakeSet;
     }
 }

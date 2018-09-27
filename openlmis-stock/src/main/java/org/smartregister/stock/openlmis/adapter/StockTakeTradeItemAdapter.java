@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 import org.smartregister.stock.openlmis.view.viewholder.StockTakeTradeItemViewHolder;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
         this.stockTakePresenter = stockTakePresenter;
         this.programId = programId;
         tradeItems = stockTakePresenter.findTradeItemsWithActiveLots(commodityTypeId);
-        stockBalances = stockTakePresenter.findStockBalanceByTradeItemIds(programId,tradeItems);
+        stockBalances = stockTakePresenter.findStockBalanceByTradeItemIds(programId, tradeItems);
     }
 
     @NonNull
@@ -47,15 +49,22 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
     @Override
     public void onBindViewHolder(@NonNull StockTakeTradeItemViewHolder stockTakeTradeItemViewHolder, int position) {
         TradeItem tradeItem = tradeItems.get(position);
+        List<StockTake> stockTakeList = stockTakePresenter.findStockTakeList(programId, tradeItem.getId());
         stockTakeTradeItemViewHolder.setTradeItemName(tradeItem.getName());
-        StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, programId, tradeItem.getId(), stockTakeTradeItemViewHolder);
-        stockTakeTradeItemViewHolder.getLotsRecyclerView().setAdapter(adapter);
         stockTakeTradeItemViewHolder.setStockTakePresenter(stockTakePresenter);
         stockTakeTradeItemViewHolder.setDispensingUnit(tradeItem.getDispensable().getKeyDispensingUnit());
         if (stockBalances.containsKey(tradeItem.getId()))
             stockTakeTradeItemViewHolder.setStockOnhand(stockBalances.get(tradeItem.getId()));
         else
             stockTakeTradeItemViewHolder.setStockOnhand(0);
+        if (stockTakeList.isEmpty()) {
+            StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, programId,
+                    tradeItem.getId(), stockTakeList, stockTakeTradeItemViewHolder);
+            stockTakeTradeItemViewHolder.getLotsRecyclerView().setAdapter(adapter);
+        } else {
+            stockTakeTradeItemViewHolder.setStockTakeSet(new HashSet<>(stockTakeList));
+            stockTakeTradeItemViewHolder.stockTakeCompleted();
+        }
     }
 
     @Override

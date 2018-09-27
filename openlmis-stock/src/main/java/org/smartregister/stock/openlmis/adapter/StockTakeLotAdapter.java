@@ -39,13 +39,14 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
 
     public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId,
-                               String tradeItemId, StockTakeListener stockTakeListener) {
+                               String tradeItemId, List<StockTake> stockTakeList,
+                               StockTakeListener stockTakeListener) {
+        this.stockTakeList = stockTakeList;
         this.stockTakeListener = stockTakeListener;
         this.programId = programId;
         this.tradeItemId = tradeItemId;
         lots = stockTakePresenter.findLotsByTradeItem(tradeItemId);
         adjustReasons = stockTakePresenter.findAdjustReasons(programId);
-        stockTakeList = stockTakePresenter.findStockTakeList(programId, tradeItemId);
         stockBalances = stockTakePresenter.findStockBalanceByLots(programId, lots);
     }
 
