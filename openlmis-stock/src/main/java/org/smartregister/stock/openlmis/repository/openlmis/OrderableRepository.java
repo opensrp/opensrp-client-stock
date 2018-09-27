@@ -23,7 +23,7 @@ import static org.smartregister.stock.openlmis.util.Utils.createQuery;
 
 public class OrderableRepository extends BaseRepository {
 
-    public static final String TAG = BaseRepository.class.getName();
+    public static final String TAG = OrderableRepository.class.getName();
     public static final String ORDERABLE_TABLE = "orderables";
     public static final String ID = "id";
     public static final String FULL_PRODUCT_CODE = "full_product_code";
