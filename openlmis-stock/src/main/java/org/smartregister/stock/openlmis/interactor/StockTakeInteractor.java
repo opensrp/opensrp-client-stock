@@ -93,4 +93,8 @@ public class StockTakeInteractor extends StockListBaseInteractor {
     public int findNumberOfTradeItems(Set<String> commodityTypeIds) {
         return tradeItemRepository.findNumberOfTradeItems(commodityTypeIds);
     }
+
+    public Set<String> findTradeItemsIdsAdjusted(String programId, Set<String> commodityTypeIds) {
+        return stockTakeRepository.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
+    }
 }

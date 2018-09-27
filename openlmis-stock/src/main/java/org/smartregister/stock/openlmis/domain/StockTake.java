@@ -7,6 +7,8 @@ public class StockTake {
 
     private String programId;
 
+    private String commodityTypeId;
+
     private String tradeItemId;
 
     private String lotId;
@@ -21,13 +23,11 @@ public class StockTake {
 
     private boolean valid;
 
-    public StockTake(String programId, String tradeItemId) {
-        this.programId = programId;
-        this.tradeItemId = tradeItemId;
-    }
 
-    public StockTake(String programId, String tradeItemId, String lotId) {
-        this(programId, tradeItemId);
+    public StockTake(String programId, String commodityTypeId, String tradeItemId, String lotId) {
+        this.programId = programId;
+        this.commodityTypeId = commodityTypeId;
+        this.tradeItemId = tradeItemId;
         this.lotId = lotId;
     }
 
@@ -37,6 +37,14 @@ public class StockTake {
 
     public void setProgramId(String programId) {
         this.programId = programId;
+    }
+
+    public String getCommodityTypeId() {
+        return commodityTypeId;
+    }
+
+    public void setCommodityTypeId(String commodityTypeId) {
+        this.commodityTypeId = commodityTypeId;
     }
 
     public String getTradeItemId() {

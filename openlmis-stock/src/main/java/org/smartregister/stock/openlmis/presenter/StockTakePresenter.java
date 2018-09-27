@@ -27,6 +27,8 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     private Set<StockTake> stockTakeSet = new HashSet<>();
 
+    private Set<String> adjustedTradeItems;
+
     public StockTakePresenter(StockTakeView stockTakeView) {
         this.stockTakeView = stockTakeView;
         stockTakeInteractor = new StockTakeInteractor();
@@ -35,6 +37,14 @@ public class StockTakePresenter extends StockListBasePresenter {
     @Override
     protected StockListBaseInteractor getStockListInteractor() {
         return stockTakeInteractor;
+    }
+
+
+    public void iniatializeBottomPanel(String programId, Set<String> commodityTypeIds) {
+        int totalTradeItems = stockTakeInteractor.findNumberOfTradeItems(commodityTypeIds);
+        adjustedTradeItems = stockTakeInteractor.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
+        stockTakeView.updateTotalTradeItems(totalTradeItems);
+        stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(), new Date());
     }
 
     public List<Lot> findLotsByTradeItem(String tradeItemId) {
@@ -76,19 +86,11 @@ public class StockTakePresenter extends StockListBasePresenter {
         return stockTakeInteractor.findStockBalanceByLotsIds(programId, lotIds);
     }
 
-    public void updateTotalTradeItems(int totalTradeItems) {
-        stockTakeView.updateTotalTradeItems(totalTradeItems);
-    }
-
     public void updateAdjustedTradeItems(Set<StockTake> stockTakes) {
         this.stockTakeSet.addAll(stockTakes);
-        Set<String> ids = new HashSet<>();
-        for (StockTake stockTake : stockTakeSet)
-            ids.add(stockTake.getTradeItemId());
-        stockTakeView.updateTradeItemsAdjusted(ids.size(), new Date());
+        for (StockTake stockTake : stockTakes)
+            adjustedTradeItems.add(stockTake.getTradeItemId());
+        stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(), new Date());
     }
 
-    public int findNumberOfTradeItems(Set<String> commodityTypeIds) {
-        return stockTakeInteractor.findNumberOfTradeItems(commodityTypeIds);
-    }
 }

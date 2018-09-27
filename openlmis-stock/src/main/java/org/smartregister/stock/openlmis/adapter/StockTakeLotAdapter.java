@@ -30,6 +30,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
     private List<Reason> adjustReasons;
 
+    private String commodityTypeId;
     private Set<StockTake> stockTakeList;
 
     private String programId;
@@ -40,8 +41,9 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
 
     public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId,
-                               String tradeItemId, Set<StockTake> stockTakeList,
+                               String commodityTypeId, String tradeItemId, Set<StockTake> stockTakeList,
                                StockTakeListener stockTakeListener) {
+        this.commodityTypeId = commodityTypeId;
         this.stockTakeList = stockTakeList;
         this.stockTakeListener = stockTakeListener;
         this.programId = programId;
@@ -73,7 +75,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
             }
         }
         if (stockTakeLotViewHolder.getStockTake() == null) {
-            stockTakeLotViewHolder.setStockTake(new StockTake(programId, tradeItemId, lot.getId()));
+            stockTakeLotViewHolder.setStockTake(new StockTake(programId, commodityTypeId, tradeItemId, lot.getId()));
         }
         stockTakeLotViewHolder.setLot(lot);
         int stockOnHand = 0;

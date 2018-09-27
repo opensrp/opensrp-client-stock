@@ -28,11 +28,14 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
 
     private String programId;
 
+    private String commodityTypeId;
+
     private Map<String, Integer> stockBalances;
 
     public StockTakeTradeItemAdapter(StockTakePresenter stockTakePresenter, String programId, String commodityTypeId) {
         this.stockTakePresenter = stockTakePresenter;
         this.programId = programId;
+        this.commodityTypeId = commodityTypeId;
         tradeItems = stockTakePresenter.findTradeItemsWithActiveLots(commodityTypeId);
         stockBalances = stockTakePresenter.findStockBalanceByTradeItemIds(programId, tradeItems);
     }
@@ -58,7 +61,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
         else
             stockTakeTradeItemViewHolder.setStockOnhand(0);
         if (stockTakeSet.isEmpty()) {
-            StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, programId,
+            StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, programId, commodityTypeId,
                     tradeItem.getId(), stockTakeSet, stockTakeTradeItemViewHolder);
             stockTakeTradeItemViewHolder.getLotsRecyclerView().setAdapter(adapter);
         } else {

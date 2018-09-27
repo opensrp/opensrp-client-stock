@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.repository;
 
 import android.content.ContentValues;
+import android.text.TextUtils;
 import android.util.Log;
 
 import net.sqlcipher.Cursor;
@@ -11,12 +12,14 @@ import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.StockTake;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
 import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
 import static org.smartregister.stock.openlmis.repository.StockRepository.REASON;
+import static org.smartregister.stock.openlmis.repository.TradeItemRepository.COMMODITY_TYPE_ID;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
 
@@ -35,6 +38,7 @@ public class StockTakeRepository extends BaseRepository {
 
     private static final String CREATE_STOCK_TAKE_TABLE = "CREATE TABLE " + STOCK_TAKE_TABLE +
             " (" + PROGRAM_ID + " VARCHAR  NOT NULL, " +
+            COMMODITY_TYPE_ID + " VARCHAR NOT NULL, " +
             TRADE_ITEM_ID + " VARCHAR NOT NULL, " +
             LOT_ID + " VARCHAR  NOT NULL, " +
             REASON + " VARCHAR, " +
@@ -43,8 +47,12 @@ public class StockTakeRepository extends BaseRepository {
             LAST_UPDATED + " INTEGER NOT NULL)";
 
     private static final String CREATE_PROGRAM_TRADE_ITEM_INDEX = "CREATE INDEX "
-            + STOCK_TAKE_TABLE + "_INDEX ON "
+            + STOCK_TAKE_TABLE + "_TM_INDEX ON "
             + STOCK_TAKE_TABLE + "(" + PROGRAM_ID + "," + TRADE_ITEM_ID + ")";
+
+    private static final String CREATE_PROGRAM_COMMODITY_TYPE_INDEX = "CREATE INDEX "
+            + STOCK_TAKE_TABLE + "_CT_INDEX ON "
+            + STOCK_TAKE_TABLE + "(" + PROGRAM_ID + "," + COMMODITY_TYPE_ID + ")";
 
     public StockTakeRepository(Repository repository) {
         super(repository);
@@ -53,11 +61,13 @@ public class StockTakeRepository extends BaseRepository {
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_STOCK_TAKE_TABLE);
         database.execSQL(CREATE_PROGRAM_TRADE_ITEM_INDEX);
+        database.execSQL(CREATE_PROGRAM_COMMODITY_TYPE_INDEX);
     }
 
     public void addOrUpdate(StockTake stockTake) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(PROGRAM_ID, stockTake.getProgramId());
+        contentValues.put(COMMODITY_TYPE_ID, stockTake.getCommodityTypeId());
         contentValues.put(TRADE_ITEM_ID, stockTake.getTradeItemId());
         contentValues.put(LOT_ID, stockTake.getLotId());
         contentValues.put(REASON, stockTake.getReasonId());
@@ -123,9 +133,38 @@ public class StockTakeRepository extends BaseRepository {
         return false;
     }
 
+    public Set<String> findTradeItemsIdsAdjusted(String programId, Set<String> commodityTypeIds) {
+        Set<String> ids = new HashSet<>();
+        if (commodityTypeIds == null || commodityTypeIds.isEmpty()) {
+            return ids;
+        }
+        int len = commodityTypeIds.size();
+        String query = String.format("SELECT DISTINCT %s FROM %s " +
+                        " WHERE %s  IN (%s) AND %s =?",
+                TRADE_ITEM_ID, STOCK_TAKE_TABLE, COMMODITY_TYPE_ID,
+                TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID);
+        Cursor cursor = null;
+        try {
+            String[] params = commodityTypeIds.toArray(new String[len + 1]);
+            params[len] = programId;
+            cursor = getReadableDatabase().rawQuery(query, params);
+            while (cursor.moveToNext()) {
+                ids.add(cursor.getString(0));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return ids;
+    }
+
     private StockTake createStockTake(Cursor cursor) {
         StockTake stockTake = new StockTake(
                 cursor.getString(cursor.getColumnIndex(PROGRAM_ID)),
+                cursor.getString(cursor.getColumnIndex(COMMODITY_TYPE_ID)),
                 cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
                 cursor.getString(cursor.getColumnIndex(LOT_ID)));
         stockTake.setStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
@@ -134,5 +173,6 @@ public class StockTakeRepository extends BaseRepository {
         stockTake.setLastUpdated(cursor.getInt(cursor.getColumnIndex(LAST_UPDATED)));
         return stockTake;
     }
+
 
 }
