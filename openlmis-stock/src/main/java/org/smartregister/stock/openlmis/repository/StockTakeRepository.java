@@ -11,8 +11,8 @@ import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.StockTake;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
 import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
@@ -78,8 +78,8 @@ public class StockTakeRepository extends BaseRepository {
         }
     }
 
-    public List<StockTake> getStockTakeList(String programId, String tradeItemId) {
-        List<StockTake> stockTakeList = new ArrayList<>();
+    public Set<StockTake> getStockTakeList(String programId, String tradeItemId) {
+        Set<StockTake> stockTakeList = new HashSet<>();
         if (tradeItemId == null) {
             return stockTakeList;
         }

@@ -78,8 +78,8 @@ public class LotRepository extends BaseRepository {
         contentValues.put(TRADE_ITEM_ID, lot.getTradeItemId());
         contentValues.put(ACTIVE, lot.isActive());
         contentValues.put(DATE_UPDATED, (lot.getDateUpdated() == null ? getCurrentTime() : lot.getDateUpdated()));
-        if (lotExists(lot.getId().toString())) {
-            getWritableDatabase().update(LOT_TABLE, contentValues, ID + "=?", new String[]{lot.getId().toString()});
+        if (lotExists(lot.getId())) {
+            getWritableDatabase().update(LOT_TABLE, contentValues, ID + "=?", new String[]{lot.getId()});
         } else {
             contentValues.put(ID, lot.getId());
             getWritableDatabase().insert(LOT_TABLE, null, contentValues);

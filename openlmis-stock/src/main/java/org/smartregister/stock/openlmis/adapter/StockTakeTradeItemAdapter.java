@@ -13,9 +13,9 @@ import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 import org.smartregister.stock.openlmis.view.viewholder.StockTakeTradeItemViewHolder;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 9/20/18.
@@ -49,7 +49,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
     @Override
     public void onBindViewHolder(@NonNull StockTakeTradeItemViewHolder stockTakeTradeItemViewHolder, int position) {
         TradeItem tradeItem = tradeItems.get(position);
-        List<StockTake> stockTakeList = stockTakePresenter.findStockTakeList(programId, tradeItem.getId());
+        Set<StockTake> stockTakeSet = stockTakePresenter.findStockTakeList(programId, tradeItem.getId());
         stockTakeTradeItemViewHolder.setTradeItemName(tradeItem.getName());
         stockTakeTradeItemViewHolder.setStockTakePresenter(stockTakePresenter);
         stockTakeTradeItemViewHolder.setDispensingUnit(tradeItem.getDispensable().getKeyDispensingUnit());
@@ -57,13 +57,14 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
             stockTakeTradeItemViewHolder.setStockOnhand(stockBalances.get(tradeItem.getId()));
         else
             stockTakeTradeItemViewHolder.setStockOnhand(0);
-        if (stockTakeList.isEmpty()) {
+        if (stockTakeSet.isEmpty()) {
             StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, programId,
-                    tradeItem.getId(), stockTakeList, stockTakeTradeItemViewHolder);
+                    tradeItem.getId(), stockTakeSet, stockTakeTradeItemViewHolder);
             stockTakeTradeItemViewHolder.getLotsRecyclerView().setAdapter(adapter);
         } else {
-            stockTakeTradeItemViewHolder.setStockTakeSet(new HashSet<>(stockTakeList));
+            stockTakeTradeItemViewHolder.setStockTakeSet(stockTakeSet);
             stockTakeTradeItemViewHolder.stockTakeCompleted();
+            stockTakePresenter.updateAdjustedTradeItems(stockTakeSet);
         }
     }
 

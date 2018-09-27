@@ -7,8 +7,11 @@ import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.interactor.StockListBaseInteractor;
 import org.smartregister.stock.openlmis.interactor.StockTakeInteractor;
+import org.smartregister.stock.openlmis.view.contract.StockTakeView;
 
+import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +23,12 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     private StockTakeInteractor stockTakeInteractor;
 
-    public StockTakePresenter() {
+    private StockTakeView stockTakeView;
+
+    private Set<StockTake> stockTakeSet = new HashSet<>();
+
+    public StockTakePresenter(StockTakeView stockTakeView) {
+        this.stockTakeView = stockTakeView;
         stockTakeInteractor = new StockTakeInteractor();
     }
 
@@ -46,7 +54,7 @@ public class StockTakePresenter extends StockListBasePresenter {
         return stockTakeInteractor.findAdjustReasons(programId);
     }
 
-    public List<StockTake> findStockTakeList(String programId, String tradeItemId) {
+    public Set<StockTake> findStockTakeList(String programId, String tradeItemId) {
         return stockTakeInteractor.findStockTakeList(programId, tradeItemId);
     }
 
@@ -54,17 +62,33 @@ public class StockTakePresenter extends StockListBasePresenter {
         return stockTakeInteractor.saveStockTake(stockTakeSet);
     }
 
-    public Map<String,Integer> findStockBalanceByTradeItemIds(String programId, List<TradeItem> tradeItems) {
+    public Map<String, Integer> findStockBalanceByTradeItemIds(String programId, List<TradeItem> tradeItems) {
         List<String> tradeItemIds = new ArrayList<>();
         for (TradeItem tradeItem : tradeItems)
             tradeItemIds.add(tradeItem.getId());
-        return stockTakeInteractor.findStockBalanceByTradeItemIds(programId,tradeItemIds);
+        return stockTakeInteractor.findStockBalanceByTradeItemIds(programId, tradeItemIds);
     }
 
-    public Map<String,Integer> findStockBalanceByLots(String programId, List<Lot> lots) {
+    public Map<String, Integer> findStockBalanceByLots(String programId, List<Lot> lots) {
         List<String> lotIds = new ArrayList<>();
         for (Lot lot : lots)
             lotIds.add(lot.getId());
-        return stockTakeInteractor.findStockBalanceByLotsIds(programId,lotIds);
+        return stockTakeInteractor.findStockBalanceByLotsIds(programId, lotIds);
+    }
+
+    public void updateTotalTradeItems(int totalTradeItems) {
+        stockTakeView.updateTotalTradeItems(totalTradeItems);
+    }
+
+    public void updateAdjustedTradeItems(Set<StockTake> stockTakes) {
+        this.stockTakeSet.addAll(stockTakes);
+        Set<String> ids = new HashSet<>();
+        for (StockTake stockTake : stockTakeSet)
+            ids.add(stockTake.getTradeItemId());
+        stockTakeView.updateTradeItemsAdjusted(ids.size(), new Date());
+    }
+
+    public int findNumberOfTradeItems(Set<String> commodityTypeIds) {
+        return stockTakeInteractor.findNumberOfTradeItems(commodityTypeIds);
     }
 }

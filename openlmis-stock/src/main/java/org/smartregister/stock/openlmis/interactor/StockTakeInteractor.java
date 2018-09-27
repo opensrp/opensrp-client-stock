@@ -72,7 +72,7 @@ public class StockTakeInteractor extends StockListBaseInteractor {
         return reasons;
     }
 
-    public List<StockTake> findStockTakeList(String programId, String tradeItemId) {
+    public Set<StockTake> findStockTakeList(String programId, String tradeItemId) {
         return stockTakeRepository.getStockTakeList(programId, tradeItemId);
     }
 
@@ -88,5 +88,9 @@ public class StockTakeInteractor extends StockListBaseInteractor {
 
     public Map<String, Integer> findStockBalanceByLotsIds(String programId, List<String> lotIds) {
         return stockRepository.findStockByLotIds(programId, lotIds);
+    }
+
+    public int findNumberOfTradeItems(Set<String> commodityTypeIds) {
+        return tradeItemRepository.findNumberOfTradeItems(commodityTypeIds);
     }
 }

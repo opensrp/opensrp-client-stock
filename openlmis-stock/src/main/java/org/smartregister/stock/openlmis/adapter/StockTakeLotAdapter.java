@@ -17,6 +17,7 @@ import org.smartregister.stock.openlmis.view.viewholder.StockTakeLotViewHolder;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 9/21/18.
@@ -29,7 +30,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
     private List<Reason> adjustReasons;
 
-    private List<StockTake> stockTakeList;
+    private Set<StockTake> stockTakeList;
 
     private String programId;
 
@@ -39,7 +40,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
 
     public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId,
-                               String tradeItemId, List<StockTake> stockTakeList,
+                               String tradeItemId, Set<StockTake> stockTakeList,
                                StockTakeListener stockTakeListener) {
         this.stockTakeList = stockTakeList;
         this.stockTakeListener = stockTakeListener;

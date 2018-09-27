@@ -61,5 +61,7 @@
     <string name="save_as_draft">Save as draft</string>
     <string name="stock_take_adjustment">Total: %1d %2s. Difference: %3$s</string>
     <string name="stock_take_no_adjustment">Total: %1d %2s. No adjustment</string>
+    <string name="adjustment_summary">%1d/%2d items adjusted</string>
+    <string name="last_adjustment">Last update of draft: %1s</string>
 
 </resources>

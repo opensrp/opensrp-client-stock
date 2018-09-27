@@ -8,6 +8,7 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDate;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
@@ -160,7 +161,7 @@ public class CommodityTypeRepository extends BaseRepository {
                     LOT_TABLE, LotRepository.TRADE_ITEM_ID, TradeItemRepository.ID, ID,
                     TextUtils.join(",", Collections.nCopies(len, "?")), EXPIRATION_DATE);
             String[] params = commodityTypeIds.toArray(new String[len + 1]);
-            params[len] = String.valueOf(System.currentTimeMillis());
+            params[len] = String.valueOf(new LocalDate().toDate().getTime());
             cursor = getReadableDatabase().rawQuery(query, params);
             commodityTypes = readCommodityTypes(cursor);
         } catch (Exception e) {

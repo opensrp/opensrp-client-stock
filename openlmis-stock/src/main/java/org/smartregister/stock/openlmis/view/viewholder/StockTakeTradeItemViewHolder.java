@@ -56,8 +56,10 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (stockTakePresenter.saveStockTake(stockTakeSet))
+                if (stockTakePresenter.saveStockTake(stockTakeSet)) {
                     stockTakeCompleted();
+                    stockTakePresenter.updateAdjustedTradeItems(stockTakeSet);
+                }
             }
         });
 
@@ -103,7 +105,6 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         }
         if (isValid)
             enableSave();
-
     }
 
     public void stockTakeCompleted() {
