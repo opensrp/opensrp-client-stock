@@ -67,7 +67,6 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
         } else {
             stockTakeTradeItemViewHolder.setStockTakeSet(stockTakeSet);
             stockTakeTradeItemViewHolder.stockTakeCompleted();
-            stockTakePresenter.updateAdjustedTradeItems(stockTakeSet);
         }
     }
 

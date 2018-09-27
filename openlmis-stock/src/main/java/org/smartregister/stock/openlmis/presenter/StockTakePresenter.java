@@ -1,5 +1,7 @@
 package org.smartregister.stock.openlmis.presenter;
 
+import android.util.Pair;
+
 import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
@@ -42,9 +44,11 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     public void iniatializeBottomPanel(String programId, Set<String> commodityTypeIds) {
         int totalTradeItems = stockTakeInteractor.findNumberOfTradeItems(commodityTypeIds);
-        adjustedTradeItems = stockTakeInteractor.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
+        Pair<Set<String>, Long> tradeItemsAdjusted = stockTakeInteractor.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
+        adjustedTradeItems = tradeItemsAdjusted.first;
         stockTakeView.updateTotalTradeItems(totalTradeItems);
-        stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(), new Date());
+        stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(),
+                tradeItemsAdjusted.second == null ? null : new Date(tradeItemsAdjusted.second));
     }
 
     public List<Lot> findLotsByTradeItem(String tradeItemId) {
@@ -90,7 +94,7 @@ public class StockTakePresenter extends StockListBasePresenter {
         this.stockTakeSet.addAll(stockTakes);
         for (StockTake stockTake : stockTakes)
             adjustedTradeItems.add(stockTake.getTradeItemId());
-        stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(), new Date());
+        stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(), new Date(stockTakes.iterator().next().getLastUpdated()));
     }
 
 }

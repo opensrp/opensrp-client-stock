@@ -75,7 +75,9 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
             }
         }
         if (stockTakeLotViewHolder.getStockTake() == null) {
-            stockTakeLotViewHolder.setStockTake(new StockTake(programId, commodityTypeId, tradeItemId, lot.getId()));
+            StockTake stockTake = new StockTake(programId, commodityTypeId, tradeItemId, lot.getId());
+            stockTake.setLastUpdated(System.currentTimeMillis());
+            stockTakeLotViewHolder.setStockTake(stockTake);
         }
         stockTakeLotViewHolder.setLot(lot);
         int stockOnHand = 0;

@@ -1,5 +1,7 @@
 package org.smartregister.stock.openlmis.interactor;
 
+import android.util.Pair;
+
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.TradeItem;
@@ -94,7 +96,7 @@ public class StockTakeInteractor extends StockListBaseInteractor {
         return tradeItemRepository.findNumberOfTradeItems(commodityTypeIds);
     }
 
-    public Set<String> findTradeItemsIdsAdjusted(String programId, Set<String> commodityTypeIds) {
+    public Pair<Set<String>, Long> findTradeItemsIdsAdjusted(String programId, Set<String> commodityTypeIds) {
         return stockTakeRepository.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
     }
 }

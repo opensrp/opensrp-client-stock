@@ -65,9 +65,11 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView {
     public void updateTradeItemsAdjusted(int itemsAdjusted, Date lastChanged) {
         this.tradeItemsAdjusted = itemsAdjusted;
         tradeItemsChangedTextView.setText(getString(R.string.adjustment_summary, tradeItemsAdjusted, totalTradeItems));
-        String formattedDate = simpleDateFormat.format(lastChanged);
-        formattedDate = formattedDate.replace("AM", "am").replace("PM.", "pm");
-        lastChangedTextView.setText(getString(R.string.last_adjustment, formattedDate));
+        if (lastChanged != null) {
+            String formattedDate = simpleDateFormat.format(lastChanged);
+            formattedDate = formattedDate.replace("AM", "am").replace("PM.", "pm");
+            lastChangedTextView.setText(getString(R.string.last_adjustment, formattedDate));
+        }
     }
 
 }

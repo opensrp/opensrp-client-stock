@@ -1,9 +1,11 @@
 package org.smartregister.stock.openlmis.domain;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by samuelgithengi on 9/26/18.
  */
-public class StockTake {
+public class StockTake implements Comparable<StockTake> {
 
     private String programId;
 
@@ -103,5 +105,8 @@ public class StockTake {
         this.valid = valid;
     }
 
-
+    @Override
+    public int compareTo(@NonNull StockTake other) {
+        return Long.valueOf(other.getLastUpdated()).compareTo(getLastUpdated());
+    }
 }

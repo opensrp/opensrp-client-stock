@@ -3,6 +3,7 @@ package org.smartregister.stock.openlmis.repository;
 import android.content.ContentValues;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -65,6 +66,7 @@ public class StockTakeRepository extends BaseRepository {
     }
 
     public void addOrUpdate(StockTake stockTake) {
+        stockTake.setLastUpdated(System.currentTimeMillis());
         ContentValues contentValues = new ContentValues();
         contentValues.put(PROGRAM_ID, stockTake.getProgramId());
         contentValues.put(COMMODITY_TYPE_ID, stockTake.getCommodityTypeId());
@@ -73,7 +75,7 @@ public class StockTakeRepository extends BaseRepository {
         contentValues.put(REASON, stockTake.getReasonId());
         contentValues.put(STATUS, stockTake.getStatus());
         contentValues.put(VALUE, stockTake.getQuantity());
-        contentValues.put(LAST_UPDATED, System.currentTimeMillis());
+        contentValues.put(LAST_UPDATED, stockTake.getLastUpdated());
         if (exists(stockTake)) {
             if (StringUtils.isBlank(stockTake.getLotId()))
                 getWritableDatabase().update(STOCK_TAKE_TABLE, contentValues, String.format("%s=? AND %s=?",
@@ -133,14 +135,14 @@ public class StockTakeRepository extends BaseRepository {
         return false;
     }
 
-    public Set<String> findTradeItemsIdsAdjusted(String programId, Set<String> commodityTypeIds) {
+    public Pair<Set<String>, Long> findTradeItemsIdsAdjusted(String programId, Set<String> commodityTypeIds) {
         Set<String> ids = new HashSet<>();
         if (commodityTypeIds == null || commodityTypeIds.isEmpty()) {
-            return ids;
+            return new Pair<>(ids, null);
         }
         int len = commodityTypeIds.size();
-        String query = String.format("SELECT DISTINCT %s FROM %s " +
-                        " WHERE %s  IN (%s) AND %s =?",
+        String query = String.format("SELECT %s FROM %s " +
+                        " WHERE %s  IN (%s) AND %s =? ",
                 TRADE_ITEM_ID, STOCK_TAKE_TABLE, COMMODITY_TYPE_ID,
                 TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID);
         Cursor cursor = null;
@@ -151,6 +153,7 @@ public class StockTakeRepository extends BaseRepository {
             while (cursor.moveToNext()) {
                 ids.add(cursor.getString(0));
             }
+            return new Pair<>(ids, findLastUpdated(params));
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         } finally {
@@ -158,7 +161,28 @@ public class StockTakeRepository extends BaseRepository {
                 cursor.close();
             }
         }
-        return ids;
+        return new Pair<>(ids, null);
+    }
+
+    private Long findLastUpdated(String[] params) {
+        String query = String.format("SELECT MAX(%s) FROM %s " +
+                        " WHERE %s  IN (%s) AND %s =? ",
+                LAST_UPDATED, STOCK_TAKE_TABLE, COMMODITY_TYPE_ID,
+                TextUtils.join(",", Collections.nCopies(params.length - 1, "?")), PROGRAM_ID);
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().rawQuery(query, params);
+            if (cursor.moveToFirst()) {
+                return cursor.getLong(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
     }
 
     private StockTake createStockTake(Cursor cursor) {
@@ -170,7 +194,7 @@ public class StockTakeRepository extends BaseRepository {
         stockTake.setStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
         stockTake.setReasonId(cursor.getString(cursor.getColumnIndex(REASON)));
         stockTake.setQuantity(cursor.getInt(cursor.getColumnIndex(VALUE)));
-        stockTake.setLastUpdated(cursor.getInt(cursor.getColumnIndex(LAST_UPDATED)));
+        stockTake.setLastUpdated(cursor.getLong(cursor.getColumnIndex(LAST_UPDATED)));
         return stockTake;
     }
 
