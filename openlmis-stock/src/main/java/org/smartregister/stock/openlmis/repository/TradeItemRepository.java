@@ -147,12 +147,14 @@ public class TradeItemRepository extends BaseRepository {
 
     public List<TradeItem> getTradeItemByIds(Set<String> tradeItemIds) {
         List<TradeItem> tradeItems = new ArrayList<>();
+        if (tradeItemIds == null)
+            return tradeItems;
         tradeItemIds.remove(null);
         if (tradeItemIds.isEmpty())
             return tradeItems;
         int len = tradeItemIds.size();
-        String query = String.format("SELECT * FROM %s WHERE %s IN (%s)", TRADE_ITEM_TABLE, ID,
-                TextUtils.join(",", Collections.nCopies(len, "?")));
+        String query = String.format("SELECT * FROM %s WHERE %s IS NOT NULL AND %s IN (%s)",
+                TRADE_ITEM_TABLE, NAME, ID, TextUtils.join(",", Collections.nCopies(len, "?")));
         Cursor cursor = null;
         try {
             cursor = getReadableDatabase().rawQuery(query, tradeItemIds.toArray(new String[len]));
