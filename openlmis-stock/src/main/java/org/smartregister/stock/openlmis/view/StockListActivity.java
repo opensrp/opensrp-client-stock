@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -36,6 +37,8 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
     private ListCommodityTypeAdapter adapter;
 
     private ArrayAdapter<Program> programsAdapter;
+
+    public final static int STOCK_TAKE = 2340;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,9 +134,14 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
     private void startBulkActivity(Class<? extends AppCompatActivity> activity) {
         Intent intent = new Intent(getApplicationContext(), activity);
         intent.putExtra(PROGRAM_ID, adapter.getProgramId());
-        startActivity(intent);
+        startActivityForResult(intent, STOCK_TAKE);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == STOCK_TAKE && resultCode == RESULT_OK)
+            adapter.refresh();
+    }
 
     @Override
     public void onClick(View view) {

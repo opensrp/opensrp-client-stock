@@ -11,9 +11,8 @@ import org.smartregister.stock.openlmis.interactor.StockListBaseInteractor;
 import org.smartregister.stock.openlmis.interactor.StockTakeInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockTakeView;
 
-import java.util.Date;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,11 +26,12 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     private StockTakeView stockTakeView;
 
-    private Set<StockTake> stockTakeSet = new HashSet<>();
 
     private Set<String> adjustedTradeItems;
 
     private int totalTradeItems;
+
+    private String programId;
 
     public StockTakePresenter(StockTakeView stockTakeView) {
         this.stockTakeView = stockTakeView;
@@ -45,6 +45,7 @@ public class StockTakePresenter extends StockListBasePresenter {
 
 
     public void iniatializeBottomPanel(String programId, Set<String> commodityTypeIds) {
+        this.programId = programId;
         totalTradeItems = stockTakeInteractor.findNumberOfTradeItems(commodityTypeIds);
         Pair<Set<String>, Long> tradeItemsAdjusted = stockTakeInteractor.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
         adjustedTradeItems = tradeItemsAdjusted.first;
@@ -94,7 +95,6 @@ public class StockTakePresenter extends StockListBasePresenter {
     }
 
     public void updateAdjustedTradeItems(Set<StockTake> stockTakes) {
-        this.stockTakeSet.addAll(stockTakes);
         for (StockTake stockTake : stockTakes)
             adjustedTradeItems.add(stockTake.getTradeItemId());
         stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(), new Date(stockTakes.iterator().next().getLastUpdated()));
@@ -106,4 +106,8 @@ public class StockTakePresenter extends StockListBasePresenter {
             stockTakeView.activateSubmit();
     }
 
+    public void completeStockTake(String provider) {
+        if (stockTakeInteractor.completeStockTake(programId, adjustedTradeItems, provider))
+            stockTakeView.onStockTakeCompleted();
+    }
 }

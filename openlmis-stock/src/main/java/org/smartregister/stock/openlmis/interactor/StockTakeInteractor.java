@@ -1,8 +1,11 @@
 package org.smartregister.stock.openlmis.interactor;
 
+import android.util.Log;
 import android.util.Pair;
 
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
@@ -22,10 +25,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.smartregister.stock.domain.Stock.loss_adjustment;
+
 /**
  * Created by samuelgithengi on 9/20/18.
  */
 public class StockTakeInteractor extends StockListBaseInteractor {
+
+    private static final String TAG = "StockTakeInteractor";
 
     private LotRepository lotRepository;
 
@@ -98,5 +105,27 @@ public class StockTakeInteractor extends StockListBaseInteractor {
 
     public Pair<Set<String>, Long> findTradeItemsIdsAdjusted(String programId, Set<String> commodityTypeIds) {
         return stockTakeRepository.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
+    }
+
+    public boolean completeStockTake(String programId, Set<String> adjustedTradeItems, String provider) {
+        try {
+            Set<StockTake> stockTakeSet = stockTakeRepository.getStockTakeListByTradeItemIds(programId, adjustedTradeItems);
+            for (StockTake stockTake : stockTakeSet) {
+                if (stockTake.getQuantity() != 0) {
+                    Stock stock = new Stock(null, loss_adjustment,
+                            provider, stockTake.getQuantity(),
+                            stockTake.getLastUpdated(), stockTake.getReasonId(), BaseRepository.TYPE_Unsynced,
+                            System.currentTimeMillis(), stockTake.getTradeItemId());
+                    stock.setProgramId(stockTake.getProgramId());
+                    stock.setLotId(stockTake.getLotId());
+                    stockRepository.addOrUpdate(stock);
+                }
+            }
+
+            return stockTakeRepository.deleteStockTake(programId, adjustedTradeItems) == stockTakeSet.size();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            return false;
+        }
     }
 }

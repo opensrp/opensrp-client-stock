@@ -13,5 +13,5 @@ public interface StockTakeView {
 
     void activateSubmit();
 
-
+    void onStockTakeCompleted();
 }

@@ -112,6 +112,32 @@ public class StockTakeRepository extends BaseRepository {
         return stockTakeList;
     }
 
+    public Set<StockTake> getStockTakeListByTradeItemIds(String programId, Set<String> tradeItemIds) {
+        Set<StockTake> stockTakeSet = new HashSet<>();
+        if (tradeItemIds == null) {
+            return stockTakeSet;
+        }
+        int len = tradeItemIds.size();
+        String query = String.format("SELECT * FROM %s WHERE %s IN (%s) AND %s=?", STOCK_TAKE_TABLE,
+                TRADE_ITEM_ID, TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID);
+        Cursor cursor = null;
+        try {
+            String[] params = tradeItemIds.toArray(new String[len + 1]);
+            params[len] = programId;
+            cursor = getReadableDatabase().rawQuery(query, params);
+            while (cursor.moveToNext()) {
+                stockTakeSet.add(createStockTake(cursor));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return stockTakeSet;
+    }
+
     private boolean exists(StockTake stockTake) {
         boolean hasLots = StringUtils.isNotBlank(stockTake.getLotId());
         String query;
@@ -183,6 +209,15 @@ public class StockTakeRepository extends BaseRepository {
             }
         }
         return null;
+    }
+
+    public int deleteStockTake(String programId, Set<String> adjustedTradeItems) {
+        int len = adjustedTradeItems.size();
+        String[] params = adjustedTradeItems.toArray(new String[len + 1]);
+        params[len] = programId;
+        String whereClause = String.format("%s IN (%s) AND %s =?", TRADE_ITEM_ID,
+                TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID);
+        return getWritableDatabase().delete(STOCK_TAKE_TABLE, whereClause, params);
     }
 
     private StockTake createStockTake(Cursor cursor) {

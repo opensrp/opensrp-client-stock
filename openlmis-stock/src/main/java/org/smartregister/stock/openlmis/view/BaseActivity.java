@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.view;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import org.smartregister.stock.openlmis.R;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

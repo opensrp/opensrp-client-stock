@@ -1,17 +1,21 @@
 package org.smartregister.stock.openlmis.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.StockTakeCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 import org.smartregister.stock.openlmis.view.contract.StockTakeView;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
@@ -20,7 +24,7 @@ import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRA
 /**
  * Created by samuelgithengi on 9/18/18.
  */
-public class StockTakeActivity extends BaseActivity implements StockTakeView {
+public class StockTakeActivity extends BaseActivity implements StockTakeView, View.OnClickListener {
 
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mma MMM d, yyyy", Locale.getDefault());
 
@@ -29,7 +33,6 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView {
     private TextView tradeItemsChangedTextView;
 
     private TextView lastChangedTextView;
-
 
     private Button submit;
 
@@ -53,6 +56,8 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView {
         StockTakeCommodityTypeAdapter commodityTypeAdapter = new StockTakeCommodityTypeAdapter(stockTakePresenter, programID);
         RecyclerView recyclerView = findViewById(R.id.commodityTypeRecyclerView);
         recyclerView.setAdapter(commodityTypeAdapter);
+
+        submit.setOnClickListener(this);
     }
 
     @Override
@@ -81,5 +86,20 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView {
     public void activateSubmit() {
         submit.setEnabled(true);
         submit.setTextColor(getResources().getColor(R.color.white));
+    }
+
+    @Override
+    public void onStockTakeCompleted() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.submit_button) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            stockTakePresenter.completeStockTake(allSharedPreferences.fetchRegisteredANM());
+        }
     }
 }
