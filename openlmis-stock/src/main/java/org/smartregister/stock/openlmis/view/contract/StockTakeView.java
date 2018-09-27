@@ -11,5 +11,7 @@ public interface StockTakeView {
 
     void updateTradeItemsAdjusted(int tradeItemsAdjusted, Date lastChanged);
 
+    void activateSubmit();
+
 
 }

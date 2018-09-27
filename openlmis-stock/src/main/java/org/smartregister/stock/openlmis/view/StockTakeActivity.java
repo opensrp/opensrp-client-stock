@@ -2,6 +2,7 @@ package org.smartregister.stock.openlmis.view;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
@@ -29,6 +30,9 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView {
 
     private TextView lastChangedTextView;
 
+
+    private Button submit;
+
     private int totalTradeItems = 0;
 
     private int tradeItemsAdjusted = 0;
@@ -42,6 +46,7 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView {
         }
         tradeItemsChangedTextView = findViewById(R.id.items_changed);
         lastChangedTextView = findViewById(R.id.last_changed);
+        submit = findViewById(R.id.submit_button);
 
         String programID = getIntent().getStringExtra(PROGRAM_ID);
         stockTakePresenter = new StockTakePresenter(this);
@@ -72,4 +77,9 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView {
         }
     }
 
+    @Override
+    public void activateSubmit() {
+        submit.setEnabled(true);
+        submit.setTextColor(getResources().getColor(R.color.white));
+    }
 }

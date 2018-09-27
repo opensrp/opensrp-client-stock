@@ -31,6 +31,8 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     private Set<String> adjustedTradeItems;
 
+    private int totalTradeItems;
+
     public StockTakePresenter(StockTakeView stockTakeView) {
         this.stockTakeView = stockTakeView;
         stockTakeInteractor = new StockTakeInteractor();
@@ -43,12 +45,13 @@ public class StockTakePresenter extends StockListBasePresenter {
 
 
     public void iniatializeBottomPanel(String programId, Set<String> commodityTypeIds) {
-        int totalTradeItems = stockTakeInteractor.findNumberOfTradeItems(commodityTypeIds);
+        totalTradeItems = stockTakeInteractor.findNumberOfTradeItems(commodityTypeIds);
         Pair<Set<String>, Long> tradeItemsAdjusted = stockTakeInteractor.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
         adjustedTradeItems = tradeItemsAdjusted.first;
         stockTakeView.updateTotalTradeItems(totalTradeItems);
         stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(),
                 tradeItemsAdjusted.second == null ? null : new Date(tradeItemsAdjusted.second));
+        enableSubmit();
     }
 
     public List<Lot> findLotsByTradeItem(String tradeItemId) {
@@ -95,6 +98,12 @@ public class StockTakePresenter extends StockListBasePresenter {
         for (StockTake stockTake : stockTakes)
             adjustedTradeItems.add(stockTake.getTradeItemId());
         stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(), new Date(stockTakes.iterator().next().getLastUpdated()));
+        enableSubmit();
+    }
+
+    private void enableSubmit() {
+        if (adjustedTradeItems.size() == totalTradeItems)
+            stockTakeView.activateSubmit();
     }
 
 }
