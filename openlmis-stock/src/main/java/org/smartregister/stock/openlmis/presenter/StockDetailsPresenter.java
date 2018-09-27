@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -150,7 +151,7 @@ public class StockDetailsPresenter {
         if (steps == 1) {
             String status = JsonFormUtils.getFieldValue(stepFields, "Status");
             int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Issued"));
-            return processStockWithoutLots(jsonString, provider, date, facility, reason, issued, status, quantity);
+            return processStockWithoutLots(jsonString, provider, date, facility, reason, issued, quantity, status);
         }
         return processStockWithLots(STEP2, jsonString, provider, date, facility, reason, issued);
     }
