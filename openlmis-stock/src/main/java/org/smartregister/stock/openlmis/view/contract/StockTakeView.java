@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by samuelgithengi on 9/27/18.
  */
-public interface StockTakeView {
+public interface StockTakeView extends BaseView {
 
     void updateTotalTradeItems(int totalTradeItems);
 

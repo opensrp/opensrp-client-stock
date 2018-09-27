@@ -63,5 +63,6 @@
     <string name="stock_take_no_adjustment">Total: %1d %2s. No adjustment</string>
     <string name="adjustment_summary">%1d/%2d items adjusted</string>
     <string name="last_adjustment">Last update of draft: %1s</string>
+    <string name="save_in_progress">Saving stock take</string>
 
 </resources>

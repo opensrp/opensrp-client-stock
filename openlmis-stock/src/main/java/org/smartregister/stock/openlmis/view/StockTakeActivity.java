@@ -1,14 +1,11 @@
 package org.smartregister.stock.openlmis.view;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.StockTakeCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
@@ -39,6 +36,7 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
     private int totalTradeItems = 0;
 
     private int tradeItemsAdjusted = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +95,6 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.submit_button) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
             stockTakePresenter.completeStockTake(allSharedPreferences.fetchRegisteredANM());
         }
     }

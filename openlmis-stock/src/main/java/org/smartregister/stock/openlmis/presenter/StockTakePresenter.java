@@ -2,6 +2,7 @@ package org.smartregister.stock.openlmis.presenter;
 
 import android.util.Pair;
 
+import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
@@ -25,7 +26,6 @@ public class StockTakePresenter extends StockListBasePresenter {
     private StockTakeInteractor stockTakeInteractor;
 
     private StockTakeView stockTakeView;
-
 
     private Set<String> adjustedTradeItems;
 
@@ -107,7 +107,12 @@ public class StockTakePresenter extends StockListBasePresenter {
     }
 
     public void completeStockTake(String provider) {
-        if (stockTakeInteractor.completeStockTake(programId, adjustedTradeItems, provider))
+        stockTakeView.showProgressDialog(stockTakeView.getContext().getString(R.string.stock_take),
+                stockTakeView.getContext().getString(R.string.save_in_progress));
+        boolean processed = stockTakeInteractor.completeStockTake(programId, adjustedTradeItems, provider);
+        stockTakeView.hideProgressDialog();
+        if (processed) {
             stockTakeView.onStockTakeCompleted();
+        }
     }
 }
