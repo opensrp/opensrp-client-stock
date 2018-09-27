@@ -10,10 +10,17 @@ import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.intent.helper.ReasonSyncHelper;
 import org.smartregister.stock.util.NetworkUtils;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.FACILITY_TYPE_UUID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PROGRAM_ID;
+
 public class ReasonSyncIntentService extends IntentService implements SyncIntentService {
+
+    private static final String REASON_SYNC_URL = "rest/reasons/sync";
 
     private Context context;
     private ReasonSyncHelper syncHelper;
+    private String facilityTypeUuid;
+    private String programId;
 
     public ReasonSyncIntentService() {
         super("ReasonSyncIntentService");
@@ -31,13 +38,18 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
+        facilityTypeUuid = workIntent.getStringExtra(FACILITY_TYPE_UUID);
+        programId = workIntent.getStringExtra(PROGRAM_ID);
         if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer();
+            if (facilityTypeUuid != null && programId != null) {
+                pullFromServer(REASON_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + PROGRAM_ID +  "=" + programId);
+            }
+            pullFromServer(REASON_SYNC_URL);
         }
     }
 
     @Override
-    public void pullFromServer() {
-        syncHelper.processIntent();
+    public void pullFromServer(String url) {
+        syncHelper.processIntent(url);
     }
 }

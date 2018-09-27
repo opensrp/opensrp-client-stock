@@ -25,7 +25,6 @@ import static org.smartregister.util.Log.logInfo;
 
 public class TradeItemClassificationSyncHelper extends BaseSyncHelper {
 
-    private static final String TRADE_ITEM_CLASSIFICATION_SYNC_URL = "rest/trade-item-classifications/sync";
     private ActionService actionService;
     private HTTPAgent httpAgent;
     private TradeItemClassificationRepository repository;
@@ -37,7 +36,7 @@ public class TradeItemClassificationSyncHelper extends BaseSyncHelper {
         this.httpAgent = httpAgent;
     }
 
-    protected String pullFromServer() {
+    protected String pullFromServer(String url) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -48,7 +47,7 @@ public class TradeItemClassificationSyncHelper extends BaseSyncHelper {
         String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
-                TRADE_ITEM_CLASSIFICATION_SYNC_URL,
+                url,
                 timestampStr
         );
         // TODO: make baseUrl configurable

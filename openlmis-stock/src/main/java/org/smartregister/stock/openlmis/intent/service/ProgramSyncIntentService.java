@@ -12,6 +12,8 @@ import org.smartregister.stock.util.NetworkUtils;
 
 public class ProgramSyncIntentService extends IntentService implements SyncIntentService {
 
+    private static final String LOT_SYNC_URL = "rest/programs/sync";
+
     private Context context;
     private ProgramSyncHelper syncHelper;
 
@@ -31,13 +33,13 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
     @Override
     protected void onHandleIntent(Intent workIntent) {
         if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer();
+            pullFromServer(LOT_SYNC_URL);
         }
     }
 
     @Override
-    public void pullFromServer() {
-        syncHelper.processIntent();
+    public void pullFromServer(String url) {
+        syncHelper.processIntent(url);
     }
 }
 
