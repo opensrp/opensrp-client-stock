@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.smartregister.stock.management.util.ServiceUtils.startService;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.FACILITY_TYPE_UUID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.OPENLMIS_UUID;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PROGRAM_ID;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_OPENLMIS_METADATA;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_STOCK;
@@ -54,10 +55,16 @@ public class OpenLMISAlarmReceiver extends BroadcastReceiver {
                 startService(context, TradeItemSyncIntentService.class, new HashMap<String, String>());
 
                 // add reasons filter params
-                Map<String, String> filterParams = new HashMap<>();
-                filterParams.put(FACILITY_TYPE_UUID, OpenLMISLibrary.getInstance().getCurrentFacilityTypeUuid());
-                filterParams.put(PROGRAM_ID, OpenLMISLibrary.getInstance().getCurrentProgramId());
-                startService(context, ReasonSyncIntentService.class, filterParams);
+                Map<String, String> reasonsFilterParams = new HashMap<>();
+                reasonsFilterParams.put(FACILITY_TYPE_UUID, OpenLMISLibrary.getInstance().getFacilityTypeUuid());
+                reasonsFilterParams.put(PROGRAM_ID, OpenLMISLibrary.getInstance().getProgramId());
+                startService(context, ReasonSyncIntentService.class, reasonsFilterParams);
+
+                //add programs filter params
+                Map<String, String> programsFilterParams = new HashMap<>();
+                programsFilterParams.put(FACILITY_TYPE_UUID, OpenLMISLibrary.getInstance().getFacilityTypeUuid());
+                programsFilterParams.put(OPENLMIS_UUID, OpenLMISLibrary.getInstance().getOpenlmisUuid());
+                startService(context, ProgramSyncIntentService.class, programsFilterParams);
 
                 Log.i(TAG, "Started OpenLMIS metadata sync service at: " + DATE_FORMATTER.format(new Date()));
                 break;

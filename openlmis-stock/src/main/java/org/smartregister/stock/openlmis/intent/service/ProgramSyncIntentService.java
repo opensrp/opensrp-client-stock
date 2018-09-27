@@ -10,12 +10,17 @@ import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.intent.helper.ProgramSyncHelper;
 import org.smartregister.stock.util.NetworkUtils;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.FACILITY_TYPE_UUID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.OPENLMIS_UUID;
+
 public class ProgramSyncIntentService extends IntentService implements SyncIntentService {
 
-    private static final String LOT_SYNC_URL = "rest/programs/sync";
+    private static final String PROGRAM_SYNC_URL = "rest/facility-programs/sync";
 
     private Context context;
     private ProgramSyncHelper syncHelper;
+    private String facilityTypeUuid;
+    private String openlmisUuid;
 
     public ProgramSyncIntentService() {
         super("ProgramSyncIntentService");
@@ -32,8 +37,13 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
+        facilityTypeUuid = workIntent.getStringExtra(FACILITY_TYPE_UUID);
+        openlmisUuid = workIntent.getStringExtra(OPENLMIS_UUID);
         if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer(LOT_SYNC_URL);
+            if (facilityTypeUuid != null && openlmisUuid != null) {
+                pullFromServer( PROGRAM_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID +  "=" + openlmisUuid);
+            }
+            pullFromServer(PROGRAM_SYNC_URL);
         }
     }
 

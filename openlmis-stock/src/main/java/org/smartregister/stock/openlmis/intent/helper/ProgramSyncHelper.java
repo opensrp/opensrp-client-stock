@@ -11,6 +11,7 @@ import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.domain.openlmis.FacilityProgram;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 
@@ -71,13 +72,15 @@ public class ProgramSyncHelper extends BaseSyncHelper {
     public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
 
         Long highestTimeStamp = 0L;
-        List<Program> programs = new Gson().fromJson(jsonPayload, new TypeToken<List<Program>>(){}.getType());
+        List<FacilityProgram> facilityPrograms = new Gson().fromJson(jsonPayload, new TypeToken<List<FacilityProgram>>(){}.getType());
         boolean isEmptyResponse = true;
-        for (Program program : programs) {
-            isEmptyResponse = false;
-            repository.addOrUpdate(program);
-            if (program.getServerVersion() > highestTimeStamp) {
-                highestTimeStamp = program.getServerVersion();
+        for (FacilityProgram facilityProgram : facilityPrograms) {
+            for (Program program : facilityProgram.getSupportedPrograms()) {
+                isEmptyResponse = false;
+                repository.addOrUpdate(program);
+                if (program.getServerVersion() > highestTimeStamp) {
+                    highestTimeStamp = program.getServerVersion();
+                }
             }
         }
         // save highest server version

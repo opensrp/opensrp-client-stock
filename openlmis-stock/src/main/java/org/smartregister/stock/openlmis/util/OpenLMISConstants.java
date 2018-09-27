@@ -38,6 +38,8 @@ public interface OpenLMISConstants {
 
     String PROGRAM_ID = "program_id";
 
+    String OPENLMIS_UUID = "openlmis_uuid";
+
     interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";

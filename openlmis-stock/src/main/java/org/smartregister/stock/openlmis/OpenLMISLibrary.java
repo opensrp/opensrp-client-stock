@@ -40,6 +40,7 @@ public class OpenLMISLibrary {
     private SearchRepository searchRepository;
     private String facilityTypeUuid;
     private String programId;
+    private String openlmisUuid;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -164,21 +165,30 @@ public class OpenLMISLibrary {
         return searchRepository;
     }
 
-    public String getCurrentFacilityTypeUuid() {
+    public String getFacilityTypeUuid() {
         // return facilityTypeUuid;
         return "ac1d268b-ce10-455f-bf87-9c667da8f060";
     }
 
-    public String getCurrentProgramId() {
+    public String getProgramId() {
         // return programId;
         return "10845cb9-d365-4aaa-badd-b4fa39c6a26a";
     }
 
-    public void setCurrentFacilityTypeUuid(String facilityTypeUuid) {
+    public String getOpenlmisUuid() {
+        // return openlmisUuid;
+        return "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce";
+    }
+
+    public void setFacilityTypeUuid(String facilityTypeUuid) {
         this.facilityTypeUuid = facilityTypeUuid;
     }
 
-    public void setCurrentProgramId(String programId) {
+    public void setProgramId(String programId) {
         this.programId = programId;
+    }
+
+    public void setOpenlmisUuid(String openlmisUuid) {
+        this.openlmisUuid = openlmisUuid;
     }
 }
