@@ -195,7 +195,7 @@ public class EditTextFactory implements FormWidgetFactory {
                 }
 
                 if (jsonObject.has("v_max")) {
-                    JSONObject minValidation = jsonObject.getJSONObject("v_min");
+                    JSONObject minValidation = jsonObject.getJSONObject("v_max");
                     editText.addValidator(new MaxNumericValidator(minValidation.getString(JsonFormConstants.ERR),
                             Double.parseDouble(minValidation.getString(JsonFormConstants.VALUE))));
                 }
@@ -217,7 +217,7 @@ public class EditTextFactory implements FormWidgetFactory {
                 }
 
                 if (jsonObject.has("v_max")) {
-                    JSONObject minValidation = jsonObject.getJSONObject("v_min");
+                    JSONObject minValidation = jsonObject.getJSONObject("v_max");
                     editText.addValidator(new MaxNumericValidator(minValidation.getString(JsonFormConstants.ERR),
                             Double.parseDouble(minValidation.getString(JsonFormConstants.VALUE))));
                 }
