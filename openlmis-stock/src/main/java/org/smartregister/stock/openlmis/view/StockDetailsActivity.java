@@ -37,6 +37,7 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDI
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PROGRAM_ID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.STOCK_ON_HAND;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM_ID;
 
@@ -175,8 +176,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
             formMetadata = formMetadata.replace(TRADE_ITEM_ID, tradeItemDto.getId());
             formMetadata = formMetadata.replace(NET_CONTENT, tradeItemDto.getNetContent().toString());
             formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
-            // formMetadata = formMetadata.replace(PROGRAM_ID, tradeItemDto.getProgramId()); // TODO: UNCOMMENT THIS
-            formMetadata = formMetadata.replace(PROGRAM_ID, "fake_program_id");
+            formMetadata = formMetadata.replace(STOCK_ON_HAND, tradeItemDto.getTotalStock().toString());
+            formMetadata = formMetadata.replace(PROGRAM_ID, tradeItemDto.getProgramId());
             intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
