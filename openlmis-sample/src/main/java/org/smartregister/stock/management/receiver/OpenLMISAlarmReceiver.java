@@ -18,6 +18,7 @@ import org.smartregister.stock.openlmis.intent.service.ProgramSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.ReasonSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.TradeItemClassificationSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.TradeItemSyncIntentService;
+import org.smartregister.stock.openlmis.intent.service.ValidSourceDestinationSyncIntentService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -65,6 +66,12 @@ public class OpenLMISAlarmReceiver extends BroadcastReceiver {
                 programsFilterParams.put(FACILITY_TYPE_UUID, OpenLMISLibrary.getInstance().getFacilityTypeUuid());
                 programsFilterParams.put(OPENLMIS_UUID, OpenLMISLibrary.getInstance().getOpenlmisUuid());
                 startService(context, ProgramSyncIntentService.class, programsFilterParams);
+
+                // add valid destinations and valid sources filter params
+                Map<String, String> validSourceAndDestinationFilterParams = new HashMap<>();
+                validSourceAndDestinationFilterParams.put(FACILITY_TYPE_UUID, OpenLMISLibrary.getInstance().getFacilityTypeUuid());
+                validSourceAndDestinationFilterParams.put(OPENLMIS_UUID, OpenLMISLibrary.getInstance().getOpenlmisUuid());
+                startService(context, ValidSourceDestinationSyncIntentService.class, validSourceAndDestinationFilterParams);
 
                 Log.i(TAG, "Started OpenLMIS metadata sync service at: " + DATE_FORMATTER.format(new Date()));
                 break;

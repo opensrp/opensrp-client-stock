@@ -15,6 +15,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ValidSourceDestinationRepository;
 
 
 /**
@@ -38,6 +39,7 @@ public class OpenLMISLibrary {
     private StockRepository stockRepository;
     private SettingsRepository settingsRepository;
     private SearchRepository searchRepository;
+    private ValidSourceDestinationRepository validSourceDestinationRepository;
     private String facilityTypeUuid;
     private String programId;
     private String openlmisUuid;
@@ -145,6 +147,13 @@ public class OpenLMISLibrary {
         return stockRepository;
     }
 
+    public ValidSourceDestinationRepository getValidSourceDestinationRepository() {
+        if (validSourceDestinationRepository == null) {
+            validSourceDestinationRepository = new ValidSourceDestinationRepository(getRepository());
+        }
+        return validSourceDestinationRepository;
+    }
+
     public SettingsRepository getSettingsRepository() {
         if (settingsRepository == null) {
             for (DrishtiRepository repository : getContext().sharedRepositories()) {
@@ -157,7 +166,6 @@ public class OpenLMISLibrary {
         return settingsRepository;
     }
 
-
     public SearchRepository getSearchRepository() {
         if (searchRepository == null) {
             searchRepository = new SearchRepository(getRepository());
@@ -166,18 +174,15 @@ public class OpenLMISLibrary {
     }
 
     public String getFacilityTypeUuid() {
-        // return facilityTypeUuid;
-        return "ac1d268b-ce10-455f-bf87-9c667da8f060";
+        return facilityTypeUuid;
     }
 
     public String getProgramId() {
-        // return programId;
-        return "10845cb9-d365-4aaa-badd-b4fa39c6a26a";
+        return programId;
     }
 
     public String getOpenlmisUuid() {
-        // return openlmisUuid;
-        return "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce";
+        return openlmisUuid;
     }
 
     public void setFacilityTypeUuid(String facilityTypeUuid) {
