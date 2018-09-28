@@ -34,6 +34,7 @@ import java.util.Date;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ADJUST_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_RECEIPT_FORM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_RECEIVED_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PROGRAM_ID;
@@ -89,9 +90,14 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         lotsHeader = findViewById(R.id.lot_header);
         collapseExpandButton = findViewById(R.id.collapseExpandButton);
 
-        lotsRecyclerView = findViewById(R.id.lotsRecyclerView);
-        lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
 
+        if (tradeItemDto.isHasLots()) {
+            lotsRecyclerView = findViewById(R.id.lotsRecyclerView);
+            lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
+        } else {
+            findViewById(R.id.list_lots_card_view).setVisibility(View.GONE);
+            findViewById(R.id.transactions_lot_code).setVisibility(View.GONE);
+        }
 
         transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
@@ -120,8 +126,10 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         } else if (view.getId() == R.id.issued) {
             startJsonForm(INDIVIDUAL_ISSUED_FORM);
         } else if (view.getId() == R.id.received) {
-            startJsonForm(INDIVIDUAL_NON_LOT_RECEIPT_FORM);
-            // startJsonForm(INDIVIDUAL_RECEIVED_FORM);
+            if (tradeItemDto.isHasLots())
+                startJsonForm(INDIVIDUAL_RECEIVED_FORM);
+            else
+                startJsonForm(INDIVIDUAL_NON_LOT_RECEIPT_FORM);
         } else if (view.getId() == R.id.loss_adj) {
             startJsonForm(INDIVIDUAL_ADJUST_FORM);
         }

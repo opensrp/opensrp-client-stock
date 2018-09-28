@@ -16,6 +16,7 @@ import org.smartregister.stock.openlmis.wrapper.StockWrapper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.smartregister.stock.domain.Stock.issued;
 import static org.smartregister.stock.domain.Stock.loss_adjustment;
@@ -26,12 +27,14 @@ import static org.smartregister.stock.domain.Stock.received;
  */
 public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransactionsViewHolder> {
 
-    protected static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+    protected static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
     private List<StockWrapper> stockTransactions;
 
+    private boolean hasLots;
 
     public StockTransactionAdapter(TradeItemDto tradeItem, StockDetailsPresenter stockDetailsPresenter) {
+        this.hasLots = tradeItem.isHasLots();
         stockTransactions = stockDetailsPresenter.populateLotNamesAndBalance(tradeItem,
                 stockDetailsPresenter.findStockByTradeItem(tradeItem.getId()));
     }
@@ -64,6 +67,9 @@ public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransacti
             holder.getReceivedTextView().setText("");
             holder.getIssuedTextView().setText("");
         }
+
+        if (!hasLots)
+            holder.getLotCodeTextView().setVisibility(View.GONE);
     }
 
     @Override

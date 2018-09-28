@@ -17,12 +17,14 @@ public class TradeItemDto extends BaseDto implements Parcelable {
     private String dispensingUnit;
 
     private Long netContent;
+
     private String programId;
 
+    private Boolean hasLots;
 
     public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
                         @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
-                        @NonNull Long netContent, String programId) {
+                        @NonNull Long netContent, String programId, boolean hasLots) {
         this.id = id;
         this.name = name;
         this.totalStock = totalStock;
@@ -31,10 +33,11 @@ public class TradeItemDto extends BaseDto implements Parcelable {
         this.dispensingUnit = dispensingUnit;
         this.netContent = netContent;
         this.programId = programId;
+        this.hasLots = hasLots;
     }
 
     public TradeItemDto(Parcel in) {
-        String[] data = new String[8];
+        String[] data = new String[9];
 
         in.readStringArray(data);
         id = data[0];
@@ -45,12 +48,13 @@ public class TradeItemDto extends BaseDto implements Parcelable {
         dispensingUnit = data[5];
         netContent = Long.valueOf(data[6]);
         programId = data[7];
+        hasLots = Boolean.valueOf(data[8]);
     }
 
     public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
                         @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
                         @NonNull Long netContent) {
-        this(id, name, totalStock, lastUpdated, numberOfLots, dispensingUnit, netContent, null);
+        this(id, name, totalStock, lastUpdated, numberOfLots, dispensingUnit, netContent, null, false);
 
     }
 
@@ -63,7 +67,7 @@ public class TradeItemDto extends BaseDto implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{id, name,
                 totalStock.toString(), lastUpdated.toString(), numberOfLots.toString(),
-                dispensingUnit, netContent.toString(), programId});
+                dispensingUnit, netContent.toString(), programId, hasLots.toString()});
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -110,5 +114,13 @@ public class TradeItemDto extends BaseDto implements Parcelable {
 
     public String getProgramId() {
         return programId;
+    }
+
+    public boolean isHasLots() {
+        return hasLots;
+    }
+
+    public void setHasLots(boolean hasLots) {
+        this.hasLots = hasLots;
     }
 }
