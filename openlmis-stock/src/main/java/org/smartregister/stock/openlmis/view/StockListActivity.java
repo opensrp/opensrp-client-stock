@@ -46,7 +46,7 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
         super.onCreate(savedInstanceState);
         stockListPresenter = new StockListPresenter(this);
 
-        populateTestData();
+        //populateTestData();
 
         FloatingActionButton mfFloatingActionButton = findViewById(R.id.stockAction);
         mfFloatingActionButton.setOnClickListener(this);
