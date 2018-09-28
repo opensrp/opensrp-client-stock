@@ -161,5 +161,4 @@ public class StockTakePresenter extends StockListBasePresenter {
         });
 
     }
-
 }

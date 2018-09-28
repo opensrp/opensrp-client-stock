@@ -2,7 +2,6 @@ package org.smartregister.stock.openlmis.view.viewholder;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -10,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.adapter.StockTakeLotAdapter;
 import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.listener.StockTakeListener;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
@@ -21,8 +21,6 @@ import java.util.Set;
  * Created by samuelgithengi on 9/20/18.
  */
 public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implements StockTakeListener {
-
-    private static final String TAG = "StockTakeTradeItemView";
 
     private StockTakePresenter stockTakePresenter;
 
@@ -65,8 +63,12 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
 
         completedTradeItem = itemView.findViewById(R.id.completed_trade_item);
         adjustment = itemView.findViewById(R.id.adjustment);
-
-
+        itemView.findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayLots();
+            }
+        });
     }
 
     public void setStockTakePresenter(StockTakePresenter stockTakePresenter) {
@@ -109,8 +111,8 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
             enableSave();
     }
 
+
     public void stockTakeCompleted() {
-        Log.d(TAG, "Stock take saved");
         pendingStockTake.setVisibility(View.GONE);
         completedStockTake.setVisibility(View.VISIBLE);
         completedTradeItem.setText(tradeItemTextView.getText());
@@ -126,6 +128,15 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
                     stockOnhand + totalAdjustment, dispensingUnit));
     }
 
+    private void displayLots() {
+        pendingStockTake.setVisibility(View.VISIBLE);
+        completedStockTake.setVisibility(View.GONE);
+        StockTake stockTake = stockTakeSet.iterator().next();
+        StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, stockTake.getProgramId(), stockTake.getCommodityTypeId(),
+                stockTake.getTradeItemId(), stockTakeSet, this);
+        getLotsRecyclerView().setAdapter(adapter);
+    }
+
     public void setStockOnhand(int stockOnhand) {
         this.stockOnhand = stockOnhand;
     }
@@ -137,4 +148,5 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
     public void setStockTakeSet(Set<StockTake> stockTakeSet) {
         this.stockTakeSet = stockTakeSet;
     }
+
 }

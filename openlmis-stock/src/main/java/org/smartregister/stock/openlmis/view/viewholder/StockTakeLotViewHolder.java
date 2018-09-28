@@ -166,6 +166,15 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         popupMenu.show();
     }
 
+    public void activateNoChange(boolean activate) {
+        noChangeTextView.setSelected(activate);
+        if (activate) {
+            noChangeTextView.setTextColor(context.getResources().getColor(R.color.white));
+        } else {
+            noChangeTextView.setTextColor(context.getResources().getColor(R.color.add_subtract));
+        }
+    }
+
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.subtract_stock || view.getId() == R.id.add_stock) {
@@ -175,13 +184,8 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         } else if (view.getId() == R.id.status_textview) {
             showStatusDropdown();
         } else if (view.getId() == R.id.no_change) {
-            boolean selected = noChangeTextView.isSelected();
-            noChangeTextView.setSelected(!selected);
-            if (selected) {
-                noChangeTextView.setTextColor(context.getResources().getColor(R.color.add_subtract));
-            } else {
-                noChangeTextView.setTextColor(context.getResources().getColor(R.color.white));
-            }
+            activateNoChange(!noChangeTextView.isSelected());
+
         }
         validateData();
 

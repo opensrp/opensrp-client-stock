@@ -31,6 +31,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
     private List<Reason> adjustReasons;
 
     private String commodityTypeId;
+
     private Set<StockTake> stockTakeList;
 
     private String programId;
@@ -68,9 +69,20 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
         stockTakeLotViewHolder.setStockAdjustReasons(adjustReasons);
         stockTakeLotViewHolder.setStockTakeListener(stockTakeListener);
         Lot lot = lots.get(position);
+        int stockOnHand = 0;
+        if (stockBalances.containsKey(lot.getId()))
+            stockOnHand = stockBalances.get(lot.getId());
         for (StockTake stockTake : stockTakeList) {
             if (lot.getId().equals(stockTake.getLotId())) {
                 stockTakeLotViewHolder.setStockTake(stockTake);
+                stockTakeLotViewHolder.setPhysicalCount(stockOnHand + stockTake.getQuantity());
+                stockTakeLotViewHolder.setDifference(stockTake.getQuantity());
+                stockTakeLotViewHolder.setStatus(stockTake.getStatus());
+                stockTakeLotViewHolder.setReason(stockTake.getReasonId());
+                if (stockTake.getQuantity() == 0)
+                    stockTakeLotViewHolder.activateNoChange(true);
+                stockTake.setValid(true);
+                stockTakeListener.registerStockTake(stockTake);
                 break;
             }
         }
@@ -78,14 +90,11 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
             StockTake stockTake = new StockTake(programId, commodityTypeId, tradeItemId, lot.getId());
             stockTake.setLastUpdated(System.currentTimeMillis());
             stockTakeLotViewHolder.setStockTake(stockTake);
+            stockTakeLotViewHolder.setPhysicalCount(stockOnHand);
+            stockTakeLotViewHolder.setStatus(lot.getLotStatus());
         }
         stockTakeLotViewHolder.setLot(lot);
-        int stockOnHand = 0;
-        if (stockBalances.containsKey(lot.getId()))
-            stockOnHand = stockBalances.get(lot.getId());
         stockTakeLotViewHolder.setStockOnHand(stockOnHand);
-        stockTakeLotViewHolder.setPhysicalCount(stockOnHand);
-        stockTakeLotViewHolder.setStatus(lot.getLotStatus());
     }
 
     @Override

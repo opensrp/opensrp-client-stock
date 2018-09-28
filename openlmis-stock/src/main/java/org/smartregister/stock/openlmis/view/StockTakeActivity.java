@@ -35,8 +35,6 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
 
     private Button submitButton;
 
-    private Button saveDraft;
-
     private int totalTradeItems = 0;
 
     private int tradeItemsAdjusted = 0;
@@ -52,7 +50,6 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
         tradeItemsChangedTextView = findViewById(R.id.items_changed);
         lastChangedTextView = findViewById(R.id.last_changed);
         submitButton = findViewById(R.id.submit_button);
-        saveDraft = findViewById(R.id.save_draft);
 
         String programID = getIntent().getStringExtra(PROGRAM_ID);
         stockTakePresenter = new StockTakePresenter(this);
@@ -61,7 +58,7 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
         recyclerView.setAdapter(commodityTypeAdapter);
 
         submitButton.setOnClickListener(this);
-        saveDraft.setOnClickListener(this);
+        findViewById(R.id.save_draft).setOnClickListener(this);
     }
 
     @Override
