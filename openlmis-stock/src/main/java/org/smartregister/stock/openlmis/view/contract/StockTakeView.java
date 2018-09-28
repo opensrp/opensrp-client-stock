@@ -11,7 +11,7 @@ public interface StockTakeView extends BaseView {
 
     void updateTradeItemsAdjusted(int tradeItemsAdjusted, Date lastChanged);
 
-    void activateSubmit();
+    void onActivateSubmit();
 
-    void onStockTakeCompleted();
+    void onExitStockTake(boolean refresh);
 }

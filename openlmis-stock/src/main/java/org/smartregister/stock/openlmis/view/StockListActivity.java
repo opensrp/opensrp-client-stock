@@ -27,6 +27,7 @@ import org.smartregister.stock.openlmis.view.contract.StockListView;
 import java.util.List;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.REFRESH_STOCK_ON_HAND;
 
 
 public class StockListActivity extends BaseActivity implements StockListView, View.OnClickListener
@@ -139,7 +140,8 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == STOCK_TAKE && resultCode == RESULT_OK)
+        if (requestCode == STOCK_TAKE && resultCode == RESULT_OK &&
+                data != null && data.getBooleanExtra(REFRESH_STOCK_ON_HAND, false))
             adapter.refresh();
     }
 

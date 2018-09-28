@@ -12,6 +12,8 @@ public interface OpenLMISConstants {
 
     String REVIEW_WIDGET = "review";
 
+    String REFRESH_STOCK_ON_HAND = "refresh_stock";
+
     String SYNC_COMPLETE_INTENT_ACTION = "org.smartregister.stock.openlmis.SYNC_COMPLETE_NOTIFICATION";
 
     String PREV_SYNC_SERVER_VERSION_LOT = "prev_sync_server_version_lot";

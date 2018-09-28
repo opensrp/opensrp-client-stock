@@ -1,5 +1,6 @@
 package org.smartregister.stock.openlmis.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.REFRESH_STOCK_ON_HAND;
 
 
 /**
@@ -31,7 +33,9 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
 
     private TextView lastChangedTextView;
 
-    private Button submit;
+    private Button submitButton;
+
+    private Button saveDraft;
 
     private int totalTradeItems = 0;
 
@@ -47,7 +51,8 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
         }
         tradeItemsChangedTextView = findViewById(R.id.items_changed);
         lastChangedTextView = findViewById(R.id.last_changed);
-        submit = findViewById(R.id.submit_button);
+        submitButton = findViewById(R.id.submit_button);
+        saveDraft = findViewById(R.id.save_draft);
 
         String programID = getIntent().getStringExtra(PROGRAM_ID);
         stockTakePresenter = new StockTakePresenter(this);
@@ -55,7 +60,8 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
         RecyclerView recyclerView = findViewById(R.id.commodityTypeRecyclerView);
         recyclerView.setAdapter(commodityTypeAdapter);
 
-        submit.setOnClickListener(this);
+        submitButton.setOnClickListener(this);
+        saveDraft.setOnClickListener(this);
     }
 
     @Override
@@ -81,14 +87,14 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
     }
 
     @Override
-    public void activateSubmit() {
-        submit.setEnabled(true);
-        submit.setTextColor(getResources().getColor(R.color.white));
+    public void onActivateSubmit() {
+        submitButton.setEnabled(true);
+        submitButton.setTextColor(getResources().getColor(R.color.white));
     }
 
     @Override
-    public void onStockTakeCompleted() {
-        setResult(RESULT_OK);
+    public void onExitStockTake(boolean refresh) {
+        setResult(RESULT_OK, new Intent().putExtra(REFRESH_STOCK_ON_HAND, refresh));
         finish();
     }
 
@@ -96,6 +102,8 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
     public void onClick(View view) {
         if (view.getId() == R.id.submit_button) {
             stockTakePresenter.completeStockTake(allSharedPreferences.fetchRegisteredANM());
+        } else if (view.getId() == R.id.save_draft) {
+            stockTakePresenter.saveStockTakeDraft();
         }
     }
 }

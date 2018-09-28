@@ -15,6 +15,7 @@ import org.smartregister.stock.openlmis.view.contract.StockTakeView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,8 @@ public class StockTakePresenter extends StockListBasePresenter {
     private int totalTradeItems;
 
     private String programId;
+
+    private Set<StockTake> stockTakeSet = new HashSet<>();
 
     private AppExecutors appExecutors;
 
@@ -55,7 +58,7 @@ public class StockTakePresenter extends StockListBasePresenter {
         adjustedTradeItems = tradeItemsAdjusted.first;
         stockTakeView.updateTotalTradeItems(totalTradeItems);
         stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(),
-                tradeItemsAdjusted.second == null ? null : new Date(tradeItemsAdjusted.second));
+                tradeItemsAdjusted.second == null || tradeItemsAdjusted.second == 0 ? null : new Date(tradeItemsAdjusted.second));
         enableSubmit();
     }
 
@@ -107,7 +110,7 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     private void enableSubmit() {
         if (adjustedTradeItems.size() == totalTradeItems)
-            stockTakeView.activateSubmit();
+            stockTakeView.onActivateSubmit();
     }
 
     public void completeStockTake(final String provider) {
@@ -122,11 +125,41 @@ public class StockTakePresenter extends StockListBasePresenter {
                     public void run() {
                         stockTakeView.hideProgressDialog();
                         if (processed) {
-                            stockTakeView.onStockTakeCompleted();
+                            stockTakeView.onExitStockTake(true);
                         }
                     }
                 });
             }
         });
     }
+
+    public void registerStockTake(Set<StockTake> stockTakeSet) {
+        this.stockTakeSet.addAll(stockTakeSet);
+    }
+
+    public void unregisterStockTake(Set<StockTake> stockTakeSet) {
+        this.stockTakeSet.removeAll(stockTakeSet);
+    }
+
+    public void saveStockTakeDraft() {
+        stockTakeView.showProgressDialog(stockTakeView.getContext().getString(R.string.stock_take),
+                stockTakeView.getContext().getString(R.string.save_in_progress));
+        appExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                final boolean processed = stockTakeInteractor.saveStockTake(stockTakeSet);
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        stockTakeView.hideProgressDialog();
+                        if (processed) {
+                            stockTakeView.onExitStockTake(false);
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
 }

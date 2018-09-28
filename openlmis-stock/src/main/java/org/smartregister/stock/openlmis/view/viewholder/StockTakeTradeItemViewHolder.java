@@ -85,11 +85,13 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
     private void enableSave() {
         saveButton.setEnabled(true);
         saveButton.setTextColor(saveButton.getResources().getColor(R.color.light_blue));
+        stockTakePresenter.registerStockTake(this.stockTakeSet);
     }
 
     private void disableSave() {
         saveButton.setEnabled(false);
         saveButton.setTextColor(saveButton.getResources().getColor(R.color.save_disabled));
+        stockTakePresenter.unregisterStockTake(this.stockTakeSet);
     }
 
     @Override
