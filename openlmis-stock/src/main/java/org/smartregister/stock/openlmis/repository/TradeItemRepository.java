@@ -187,7 +187,35 @@ public class TradeItemRepository extends BaseRepository {
         List<TradeItem> tradeItems = new ArrayList<>();
         try {
             cursor = getReadableDatabase().rawQuery(query, new String[]{commodityTypeId
-                    , String.valueOf(System.currentTimeMillis())});
+                    , String.valueOf(new LocalDate().toDate().getTime())});
+            while (cursor.moveToNext()) {
+                tradeItems.add(createTradeItem(cursor));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return tradeItems;
+    }
+
+    public List<TradeItem> findTradeItemsWithActiveLotsByTradeItemIds(Set<String> tradeItemIds) {
+        List<TradeItem> tradeItems = new ArrayList<>();
+        if (tradeItemIds == null || tradeItemIds.isEmpty()) {
+            return tradeItems;
+        }
+        int len = tradeItemIds.size();
+        String query = String.format("SELECT DISTINCT t.* FROM %s t JOIN %s l on t.%s=l.%s" +
+                        " WHERE t.%s IN (%s) AND l.%s >=?",
+                TRADE_ITEM_TABLE, LOT_TABLE, ID, TRADE_ITEM_ID, ID,
+                TextUtils.join(",", Collections.nCopies(len, "?")), EXPIRATION_DATE);
+        Cursor cursor = null;
+        try {
+            String[] params = tradeItemIds.toArray(new String[len + 1]);
+            params[len] = String.valueOf(new LocalDate().toDate().getTime());
+            cursor = getReadableDatabase().rawQuery(query, params);
             while (cursor.moveToNext()) {
                 tradeItems.add(createTradeItem(cursor));
             }
@@ -240,6 +268,5 @@ public class TradeItemRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(DISPENSING_ADMINISTRATION))));
         return tradeItem;
     }
-
 
 }

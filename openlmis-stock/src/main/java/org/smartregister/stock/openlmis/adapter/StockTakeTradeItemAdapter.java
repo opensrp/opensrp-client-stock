@@ -29,14 +29,19 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
     private String programId;
 
     private String commodityTypeId;
+    private Set<String> tradeItemIds;
 
     private Map<String, Integer> stockBalances;
 
-    public StockTakeTradeItemAdapter(StockTakePresenter stockTakePresenter, String programId, String commodityTypeId) {
+    public StockTakeTradeItemAdapter(StockTakePresenter stockTakePresenter, String programId, String commodityTypeId, Set<String> tradeItemIds) {
         this.stockTakePresenter = stockTakePresenter;
         this.programId = programId;
         this.commodityTypeId = commodityTypeId;
-        tradeItems = stockTakePresenter.findTradeItemsWithActiveLots(commodityTypeId);
+        this.tradeItemIds = tradeItemIds;
+        if (tradeItemIds == null)
+            tradeItems = stockTakePresenter.findTradeItemsWithActiveLots(commodityTypeId);
+        else
+            tradeItems = stockTakePresenter.findTradeItemsWithActiveLotsByTradeItemIds(tradeItemIds);
         stockBalances = stockTakePresenter.findStockBalanceByTradeItemIds(programId, tradeItems);
     }
 

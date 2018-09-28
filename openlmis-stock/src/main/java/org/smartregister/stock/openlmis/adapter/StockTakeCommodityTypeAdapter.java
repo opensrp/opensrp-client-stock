@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
@@ -27,12 +28,31 @@ public class StockTakeCommodityTypeAdapter extends RecyclerView.Adapter<StockTak
 
     private String programId;
 
+    private Map<String, Set<String>> programIds;
+
+    private Map<String, Set<String>> searchedIds;
+
     public StockTakeCommodityTypeAdapter(StockTakePresenter stockTakePresenter, String programId) {
         this.stockTakePresenter = stockTakePresenter;
         this.programId = programId;
-        Map<String, Set<String>> ids = stockTakePresenter.searchIdsByPrograms(programId);
-        this.commodityTypeList = stockTakePresenter.findCommodityTypesWithActiveLots(ids.keySet());
-        stockTakePresenter.iniatializeBottomPanel(programId, ids.keySet());
+        programIds = stockTakePresenter.searchIdsByPrograms(programId);
+        this.commodityTypeList = stockTakePresenter.findCommodityTypesWithActiveLots(programIds.keySet());
+        stockTakePresenter.iniatializeBottomPanel(programId, programIds.keySet());
+    }
+
+    public void filterCommodityTypes(String searchPhrase) {
+        if (StringUtils.isBlank(searchPhrase)) {
+            if (programIds != null) {
+                commodityTypeList = stockTakePresenter.findCommodityTypesByIds(programIds.keySet());
+            }
+            searchedIds = null;
+            notifyDataSetChanged();
+        } else {
+            searchedIds = stockTakePresenter.filterValidPrograms(programIds,
+                    stockTakePresenter.searchIds(searchPhrase));
+            commodityTypeList = stockTakePresenter.findCommodityTypesWithActiveLots(searchedIds.keySet());
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -48,7 +68,8 @@ public class StockTakeCommodityTypeAdapter extends RecyclerView.Adapter<StockTak
     public void onBindViewHolder(@NonNull StockTakeCommodityTypeViewHolder stockTakeCommodityTypeViewHolder, int position) {
         CommodityType commodityType = commodityTypeList.get(position);
         stockTakeCommodityTypeViewHolder.setCommodityTypeName(commodityType.getName());
-        StockTakeTradeItemAdapter adapter = new StockTakeTradeItemAdapter(stockTakePresenter, programId, commodityType.getId());
+        StockTakeTradeItemAdapter adapter = new StockTakeTradeItemAdapter(stockTakePresenter, programId,
+                commodityType.getId(), searchedIds == null ? null : searchedIds.get(commodityType.getId()));
         stockTakeCommodityTypeViewHolder.getTradeItemRecyclerView().setAdapter(adapter);
     }
 

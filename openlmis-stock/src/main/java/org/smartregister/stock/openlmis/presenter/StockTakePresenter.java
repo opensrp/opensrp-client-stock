@@ -161,4 +161,8 @@ public class StockTakePresenter extends StockListBasePresenter {
         });
 
     }
+
+    public List<TradeItem> findTradeItemsWithActiveLotsByTradeItemIds(Set<String> tradeItemIds) {
+        return stockTakeInteractor.findTradeItemsWithActiveLotsByTradeItemIds(tradeItemIds);
+    }
 }

@@ -3,6 +3,7 @@ package org.smartregister.stock.openlmis.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -53,12 +54,26 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
 
         String programID = getIntent().getStringExtra(PROGRAM_ID);
         stockTakePresenter = new StockTakePresenter(this);
-        StockTakeCommodityTypeAdapter commodityTypeAdapter = new StockTakeCommodityTypeAdapter(stockTakePresenter, programID);
+        final StockTakeCommodityTypeAdapter commodityTypeAdapter = new StockTakeCommodityTypeAdapter(stockTakePresenter, programID);
         RecyclerView recyclerView = findViewById(R.id.commodityTypeRecyclerView);
         recyclerView.setAdapter(commodityTypeAdapter);
 
         submitButton.setOnClickListener(this);
         findViewById(R.id.save_draft).setOnClickListener(this);
+
+        SearchView searchView = findViewById(R.id.searchStock);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                commodityTypeAdapter.filterCommodityTypes(s);
+                return false;
+            }
+        });
     }
 
     @Override

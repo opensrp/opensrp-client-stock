@@ -2,6 +2,7 @@ package org.smartregister.stock.openlmis.interactor;
 
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
+import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
@@ -21,12 +22,16 @@ public abstract class StockListBaseInteractor {
 
     protected TradeItemRepository tradeItemRepository;
 
+    protected SearchRepository searchRepository;
+
     protected StockListBaseInteractor(CommodityTypeRepository commodityTypeRepository,
                                       ProgramOrderableRepository programOrderableRepository,
-                                      TradeItemRepository tradeItemRepository) {
+                                      TradeItemRepository tradeItemRepository,
+                                      SearchRepository searchRepository) {
         this.commodityTypeRepository = commodityTypeRepository;
         this.programOrderableRepository = programOrderableRepository;
         this.tradeItemRepository = tradeItemRepository;
+        this.searchRepository = searchRepository;
     }
 
     public List<CommodityType> findCommodityTypesByIds(Set<String> ids) {
@@ -39,5 +44,10 @@ public abstract class StockListBaseInteractor {
 
     public List<TradeItem> getTradeItemsByCommodityType(String commodityTypeId) {
         return tradeItemRepository.getTradeItemByCommodityType(commodityTypeId);
+    }
+
+
+    public Map<String, Set<String>> searchIds(String searchPhrase) {
+        return searchRepository.searchIds(searchPhrase);
     }
 }

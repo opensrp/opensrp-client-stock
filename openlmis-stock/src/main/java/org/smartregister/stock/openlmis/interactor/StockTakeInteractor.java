@@ -12,6 +12,7 @@ import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
+import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.StockTakeRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
@@ -46,7 +47,8 @@ public class StockTakeInteractor extends StockListBaseInteractor {
                 OpenLMISLibrary.getInstance().getTradeItemRegisterRepository(),
                 OpenLMISLibrary.getInstance().getLotRepository(),
                 OpenLMISLibrary.getInstance().getStockTakeRepository(),
-                OpenLMISLibrary.getInstance().getStockRepository());
+                OpenLMISLibrary.getInstance().getStockRepository(),
+                OpenLMISLibrary.getInstance().getSearchRepository());
     }
 
     private StockTakeInteractor(CommodityTypeRepository commodityTypeRepository,
@@ -54,8 +56,9 @@ public class StockTakeInteractor extends StockListBaseInteractor {
                                 TradeItemRepository tradeItemRepository,
                                 LotRepository lotRepository,
                                 StockTakeRepository stockTakeRepository,
-                                StockRepository stockRepository) {
-        super(commodityTypeRepository, programOrderableRepository, tradeItemRepository);
+                                StockRepository stockRepository,
+                                SearchRepository searchRepository) {
+        super(commodityTypeRepository, programOrderableRepository, tradeItemRepository, searchRepository);
         this.lotRepository = lotRepository;
         this.stockTakeRepository = stockTakeRepository;
         this.stockRepository = stockRepository;
@@ -127,5 +130,9 @@ public class StockTakeInteractor extends StockListBaseInteractor {
             Log.e(TAG, e.getMessage(), e);
             return false;
         }
+    }
+
+    public List<TradeItem> findTradeItemsWithActiveLotsByTradeItemIds(Set<String> tradeItemIds) {
+        return tradeItemRepository.findTradeItemsWithActiveLotsByTradeItemIds(tradeItemIds);
     }
 }
