@@ -10,6 +10,7 @@ import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.interactor.StockListBaseInteractor;
 import org.smartregister.stock.openlmis.interactor.StockTakeInteractor;
+import org.smartregister.stock.openlmis.util.AppExecutors;
 import org.smartregister.stock.openlmis.view.contract.StockTakeView;
 
 import java.util.ArrayList;
@@ -33,9 +34,12 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     private String programId;
 
+    private AppExecutors appExecutors;
+
     public StockTakePresenter(StockTakeView stockTakeView) {
         this.stockTakeView = stockTakeView;
         stockTakeInteractor = new StockTakeInteractor();
+        appExecutors = new AppExecutors();
     }
 
     @Override
@@ -106,13 +110,23 @@ public class StockTakePresenter extends StockListBasePresenter {
             stockTakeView.activateSubmit();
     }
 
-    public void completeStockTake(String provider) {
+    public void completeStockTake(final String provider) {
         stockTakeView.showProgressDialog(stockTakeView.getContext().getString(R.string.stock_take),
                 stockTakeView.getContext().getString(R.string.save_in_progress));
-        boolean processed = stockTakeInteractor.completeStockTake(programId, adjustedTradeItems, provider);
-        stockTakeView.hideProgressDialog();
-        if (processed) {
-            stockTakeView.onStockTakeCompleted();
-        }
+        appExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                final boolean processed = stockTakeInteractor.completeStockTake(programId, adjustedTradeItems, provider);
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        stockTakeView.hideProgressDialog();
+                        if (processed) {
+                            stockTakeView.onStockTakeCompleted();
+                        }
+                    }
+                });
+            }
+        });
     }
 }
