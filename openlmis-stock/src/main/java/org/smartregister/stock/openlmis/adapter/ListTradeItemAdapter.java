@@ -2,6 +2,7 @@ package org.smartregister.stock.openlmis.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,16 @@ public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHold
         holder.getNameTextView().setText(tradeItem.getName());
         holder.getNameTextView().setTag(R.id.trade_item_updated_key, tradeItem.getDateUpdated());
         holder.getNameTextView().setTag(R.id.trade_item_id_key, tradeItem.getId());
-        holder.getLotsTextView().setText(context.getString(R.string.lot_formatter, tradeItemWrapper.getNumberOfLots()));
+        if (tradeItemWrapper.isHasLots())
+            holder.getLotsTextView().setText(context.getString(R.string.lot_formatter, tradeItemWrapper.getNumberOfLots()));
+        else {
+            holder.getLotsTextView().measure(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+            int lotsHeight = holder.getLotsTextView().getMeasuredHeight() / 2;
+            holder.getLotsTextView().setVisibility(View.GONE);
+            int tradeItemPadding = Math.round(context.getResources().getDimension(R.dimen.list_stock_padding));
+            holder.getNameTextView().setPadding(tradeItemPadding, 3 * tradeItemPadding / 2 + lotsHeight / 2,
+                    tradeItemPadding, lotsHeight / 2 + 3 * tradeItemPadding / 2);
+        }
         holder.getDispensableTextView().setText(context.getString(R.string.dispensable_formatter,
                 tradeItemWrapper.getTotalStock(),
                 tradeItem.getDispensable() == null ? null : tradeItem.getDispensable().getKeyDispensingUnit()));

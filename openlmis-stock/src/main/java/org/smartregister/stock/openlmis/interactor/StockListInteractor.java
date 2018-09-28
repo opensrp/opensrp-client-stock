@@ -108,6 +108,7 @@ public class StockListInteractor {
                 tradeItemWrapper.setHasLotExpiring(new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING).isAfter(maxExpiringDate));
             }
             tradeItemWrapper.setTotalStock(totalStock);
+            tradeItemWrapper.setHasLots(tradeItem.getHasLots());
             tradeItemWrappers.add(tradeItemWrapper);
         }
         return tradeItemWrappers;
