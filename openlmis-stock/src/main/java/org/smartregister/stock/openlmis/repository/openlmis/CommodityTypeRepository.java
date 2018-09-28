@@ -123,8 +123,10 @@ public class CommodityTypeRepository extends BaseRepository {
 
     public List<CommodityType> findCommodityTypesByIds(Set<String> commodityTypeIds) {
         List<CommodityType> commodityTypes = new ArrayList<>();
+
         if (commodityTypeIds == null)
             return commodityTypes;
+
         commodityTypeIds.remove(null);
         if (commodityTypeIds.isEmpty())
             return commodityTypes;

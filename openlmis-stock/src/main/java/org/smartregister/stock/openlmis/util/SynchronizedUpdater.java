@@ -58,6 +58,8 @@ public class SynchronizedUpdater {
                         registerTradeItem.setDispensable(dispensable);
                     }
                     registerTradeItem.setName(orderable.getFullProductName());
+                    registerTradeItem.setUseVvm(orderable.getUseVvm());
+                    registerTradeItem.setHasLots(orderable.getHasLots());
                     tradeItemRegisterRepository.addOrUpdate(registerTradeItem);
                 }
             }
@@ -68,6 +70,8 @@ public class SynchronizedUpdater {
         registerTradeItem = registerTradeItem == null ? new org.smartregister.stock.openlmis.domain.TradeItem(orderable.getTradeItemId()) : registerTradeItem;
         registerTradeItem.setNetContent(orderable.getNetContent());
         registerTradeItem.setName(orderable.getFullProductName());
+        registerTradeItem.setUseVvm(orderable.getUseVvm());
+        registerTradeItem.setHasLots(orderable.getHasLots());
         Dispensable dispensable = dispensableRepository.findDispensable(orderable.getDispensableId());
         if (dispensable != null) {
             registerTradeItem.setDispensable(dispensable);

@@ -54,6 +54,8 @@ public class StockRepository extends BaseRepository {
 
     public static final String REASON = "reason";
 
+    public static final String VVM_STATUS = "vvm_status";
+
     private static final String CREATE_STOCK_TABLE = "CREATE TABLE " + stock_TABLE_NAME +
             " (" + ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             STOCK_TYPE_ID + " VARCHAR NOT NULL," +
@@ -70,9 +72,10 @@ public class StockRepository extends BaseRepository {
             LOCATION_ID + " VARCHAR," +
             CHILD_LOCATION_ID + " VARCHAR," +
             TEAM_ID + " VARCHAR," +
-            TEAM_NAME + " VARCHAR)";
+            TEAM_NAME + " VARCHAR," +
+            VVM_STATUS + " VARCHAR)";
 
-    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME};
+    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME, VVM_STATUS};
 
 
     public StockRepository(Repository repository) {
@@ -100,6 +103,7 @@ public class StockRepository extends BaseRepository {
         contentValues.put(CHILD_LOCATION_ID, stock.getChildLocationId());
         contentValues.put(TEAM_NAME, stock.getTeam());
         contentValues.put(TEAM_ID, stock.getTeamId());
+        contentValues.put(VVM_STATUS, stock.getvvmStatus());
         if (stock.getId() != null) {
             getWritableDatabase().update(stock_TABLE_NAME, contentValues, ID_COLUMN + "=?", new String[]{stock.getId().toString()});
         } else {
@@ -275,6 +279,7 @@ public class StockRepository extends BaseRepository {
         stock.setChildLocationId(cursor.getString(cursor.getColumnIndex(CHILD_LOCATION_ID)));
         stock.setTeam(cursor.getString(cursor.getColumnIndex(TEAM_NAME)));
         stock.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
+        stock.setvvmStatus(cursor.getString(cursor.getColumnIndex(VVM_STATUS)));
         return stock;
     }
 

@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:minWidth="100dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp">
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        app:boxBackgroundColor="@color/edit_text_background"
+        android:id="@+id/openlmis_edit_text_parent" >
+
+        <org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText
+            android:id="@+id/openlmis_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:drawablePadding="15dp" />
+    </android.support.design.widget.TextInputLayout>
+</RelativeLayout>

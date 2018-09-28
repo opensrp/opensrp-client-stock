@@ -18,12 +18,12 @@ public class Orderable extends BaseEntity {
     private String tradeItemId;
     private String dispensableId;
     private String fullProductName;
-    private Map<String, String> extraData;
+    private boolean useVvm;
+    private boolean hasLots;
     private Long dateUpdated;
 
     public Orderable(String id) {
         this.id = id;
-        this.extraData = new HashMap<>();
     }
 
     public Orderable(String id, String fullProductCode, String fullProductName, long netContent, long packRoundingThreshold,
@@ -38,7 +38,6 @@ public class Orderable extends BaseEntity {
         this.dispensableId = dispensableId;
         this.tradeItemId = tradeItemId;
         this.commodityTypeId = commodityTypeId;
-        this.extraData = new HashMap<>();
     }
 
     /**
@@ -167,11 +166,19 @@ public class Orderable extends BaseEntity {
         this.fullProductName = fullProductName;
     }
 
-    public Map<String, String> getExtraData() {
-        return extraData;
+    public boolean getUseVvm() {
+        return useVvm;
     }
 
-    public void setExtraData(Map<String, String> extraData) {
-        this.extraData = extraData;
+    public void setUseVvm(boolean useVvm) {
+        this.useVvm = useVvm;
+    }
+
+    public boolean getHasLots() {
+        return hasLots;
+    }
+
+    public void setHasLots(boolean hasLots) {
+        this.hasLots = hasLots;
     }
 }

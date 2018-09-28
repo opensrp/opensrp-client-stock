@@ -22,6 +22,8 @@ import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.LOT_TABLE;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.TRADE_ITEM_ID;
 
+import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
+
 /**
  * Created by samuelgithengi on 26/7/18.
  */
@@ -47,6 +49,10 @@ public class TradeItemRepository extends BaseRepository {
 
     private static final String DISPENSING_ADMINISTRATION = "dispensing_administration";
 
+    private static final String USE_VVM = "use_vvm";
+
+    private static final String HAS_LOTS = "has_lots";
+
     private static final String CREATE_TRADE_ITEM_TABLE = "CREATE TABLE " + TRADE_ITEM_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," +
             COMMODITY_TYPE_ID + " VARCHAR ," +
@@ -55,7 +61,9 @@ public class TradeItemRepository extends BaseRepository {
             NET_CONTENT + " INTEGER, " +
             DISPENSING_UNIT + " VARCHAR, " +
             DISPENSING_SIZE + " VARCHAR, " +
-            DISPENSING_ADMINISTRATION + " VARCHAR)";
+            DISPENSING_ADMINISTRATION + " VARCHAR," +
+            USE_VVM + " INTEGER," +
+            HAS_LOTS + " INTEGER)";
 
     private static final String CREATE_TRADE_ITEM_INDEX = "CREATE INDEX "
             + TRADE_ITEM_TABLE + "_INDEX ON "
@@ -76,6 +84,8 @@ public class TradeItemRepository extends BaseRepository {
         contentValues.put(NAME, tradeItem.getName());
         contentValues.put(DATE_UPDATED, tradeItem.getDateUpdated());
         contentValues.put(NET_CONTENT, tradeItem.getNetContent());
+        contentValues.put(HAS_LOTS, tradeItem.getHasLots());
+        contentValues.put(USE_VVM, tradeItem.getUseVvm());
         if (tradeItem.getDispensable() != null) {
             contentValues.put(DISPENSING_UNIT, tradeItem.getDispensable().getKeyDispensingUnit());
             contentValues.put(DISPENSING_SIZE, tradeItem.getDispensable().getKeySizeCode());
@@ -266,6 +276,8 @@ public class TradeItemRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(DISPENSING_UNIT)),
                 cursor.getString(cursor.getColumnIndex(DISPENSING_SIZE)),
                 cursor.getString(cursor.getColumnIndex(DISPENSING_ADMINISTRATION))));
+        tradeItem.setHasLots(convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(HAS_LOTS))));
+        tradeItem.setUseVvm(convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(USE_VVM))));
         return tradeItem;
     }
 
