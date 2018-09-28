@@ -155,8 +155,16 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "v_max":{
+          "value":"[stock_on_hand]",
+          "err":"Cannot Issue more than [stock_on_hand]"
+        },
         "hint": "Vials issued",
         "edit_type": "number",
+        "v_numeric_integer": {
+          "value":"true",
+          "err":"Enter a valid stock quantity"
+        },
         "v_required": {
           "value": true,
           "err": "Please specify the number of vials issued"
@@ -193,6 +201,10 @@
         "type": "edit_text",
         "hint": "Wasted vials",
         "edit_type": "number",
+        "v_numeric_integer": {
+          "value":"true",
+          "err":"Enter a valid stock quantity"
+        },
         "v_required": {
           "value": true,
           "err": "Please specify the number of wasted vials"
