@@ -159,7 +159,7 @@
           "value":"[stock_on_hand]",
           "err":"Cannot Issue more than [stock_on_hand]"
         },
-        "hint": "Vials issued",
+        "hint": "[dispensing_unit] issued",
         "edit_type": "number",
         "v_numeric_integer": {
           "value":"true",

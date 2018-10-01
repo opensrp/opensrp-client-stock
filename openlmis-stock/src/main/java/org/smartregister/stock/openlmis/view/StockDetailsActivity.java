@@ -178,6 +178,7 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
             formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
             formMetadata = formMetadata.replace(STOCK_ON_HAND, tradeItemDto.getTotalStock().toString());
             formMetadata = formMetadata.replace(PROGRAM_ID, tradeItemDto.getProgramId());
+            formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
             intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {

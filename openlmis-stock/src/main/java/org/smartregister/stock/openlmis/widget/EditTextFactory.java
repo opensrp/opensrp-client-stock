@@ -195,9 +195,9 @@ public class EditTextFactory implements FormWidgetFactory {
                 }
 
                 if (jsonObject.has("v_max")) {
-                    JSONObject minValidation = jsonObject.getJSONObject("v_max");
-                    editText.addValidator(new MaxNumericValidator(minValidation.getString(JsonFormConstants.ERR),
-                            Double.parseDouble(minValidation.getString(JsonFormConstants.VALUE))));
+                    JSONObject maxValidation = jsonObject.getJSONObject("v_max");
+                    editText.addValidator(new MaxNumericValidator(maxValidation.getString(JsonFormConstants.ERR),
+                            Double.parseDouble(maxValidation.getString(JsonFormConstants.VALUE))));
                 }
             }
         }
@@ -217,16 +217,16 @@ public class EditTextFactory implements FormWidgetFactory {
                 }
 
                 if (jsonObject.has("v_max")) {
-                    JSONObject minValidation = jsonObject.getJSONObject("v_max");
-                    editText.addValidator(new MaxNumericValidator(minValidation.getString(JsonFormConstants.ERR),
-                            Double.parseDouble(minValidation.getString(JsonFormConstants.VALUE))));
+                    JSONObject maxValidation = jsonObject.getJSONObject("v_max");
+                    editText.addValidator(new MaxNumericValidator(maxValidation.getString(JsonFormConstants.ERR),
+                            Double.parseDouble(maxValidation.getString(JsonFormConstants.VALUE))));
                 }
             }
         }
     }
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
-                                            MaterialEditText editText) {
+                                            CustomTextInputEditText editText) {
         if (editText.isEnabled()) {
             boolean validate = editText.validate();
             if (!validate) {
