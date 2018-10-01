@@ -21,8 +21,6 @@ public class ValidSourceDestinationSyncIntentService extends IntentService {
     private Context context;
     private ValidSourceDestinationSyncHelper validSourceSyncHelper;
     private ValidSourceDestinationSyncHelper validDestinationSyncHelper;
-    private String facilityTypeUuid;
-    private String openlmisUuid;
 
     public ValidSourceDestinationSyncIntentService() {
         super("ValidSourceDestinationSyncIntentService");
@@ -41,8 +39,8 @@ public class ValidSourceDestinationSyncIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        facilityTypeUuid = workIntent.getStringExtra(FACILITY_TYPE_UUID);
-        openlmisUuid = workIntent.getStringExtra(OPENLMIS_UUID);
+        String facilityTypeUuid = workIntent.getStringExtra(FACILITY_TYPE_UUID);
+        String openlmisUuid = workIntent.getStringExtra(OPENLMIS_UUID);
         if (NetworkUtils.isNetworkAvailable(context)) {
             if (facilityTypeUuid != null && openlmisUuid != null) {
                 pullValidDestinationsFromServer(VALID_DESTINATION_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID +  "=" + openlmisUuid);

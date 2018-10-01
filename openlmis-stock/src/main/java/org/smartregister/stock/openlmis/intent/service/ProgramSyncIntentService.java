@@ -19,8 +19,6 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
 
     private Context context;
     private ProgramSyncHelper syncHelper;
-    private String facilityTypeUuid;
-    private String openlmisUuid;
 
     public ProgramSyncIntentService() {
         super("ProgramSyncIntentService");
@@ -37,8 +35,9 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        facilityTypeUuid = workIntent.getStringExtra(FACILITY_TYPE_UUID);
-        openlmisUuid = workIntent.getStringExtra(OPENLMIS_UUID);
+
+        String facilityTypeUuid = workIntent.getStringExtra(FACILITY_TYPE_UUID);
+        String openlmisUuid = workIntent.getStringExtra(OPENLMIS_UUID);
         if (NetworkUtils.isNetworkAvailable(context)) {
             if (facilityTypeUuid != null && openlmisUuid != null) {
                 pullFromServer( PROGRAM_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID +  "=" + openlmisUuid);

@@ -19,8 +19,6 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
 
     private Context context;
     private ReasonSyncHelper syncHelper;
-    private String facilityTypeUuid;
-    private String programId;
 
     public ReasonSyncIntentService() {
         super("ReasonSyncIntentService");
@@ -38,8 +36,8 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        facilityTypeUuid = workIntent.getStringExtra(FACILITY_TYPE_UUID);
-        programId = workIntent.getStringExtra(PROGRAM_ID);
+        String facilityTypeUuid = workIntent.getStringExtra(FACILITY_TYPE_UUID);
+        String programId = workIntent.getStringExtra(PROGRAM_ID);
         if (NetworkUtils.isNetworkAvailable(context)) {
             if (facilityTypeUuid != null && programId != null) {
                 pullFromServer(REASON_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + PROGRAM_ID +  "=" + programId);
