@@ -176,4 +176,12 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
     private OpenLMISJsonFormFragmentPresenter getPresenter() {
         return (OpenLMISJsonFormFragmentPresenter) presenter;
     }
+
+    public MenuItem getSubmitButton() {
+        return submitButton;
+    }
+
+    public void setSubmitButton(MenuItem submitButton) {
+        this.submitButton = submitButton;
+    }
 }
