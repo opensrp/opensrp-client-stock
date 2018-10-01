@@ -15,6 +15,7 @@ import org.smartregister.stock.openlmis.view.contract.StockTakeView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     private String programId;
 
-    private Set<StockTake> stockTakeSet = new HashSet<>();
+    private Map<String, Set<StockTake>> stockTakeMap = new HashMap<>();
 
     private AppExecutors appExecutors;
 
@@ -80,7 +81,16 @@ public class StockTakePresenter extends StockListBasePresenter {
     }
 
     public Set<StockTake> findStockTakeList(String programId, String tradeItemId) {
-        return stockTakeInteractor.findStockTakeList(programId, tradeItemId);
+        stockTakeMap.put(tradeItemId, getStockTakeList(programId, tradeItemId));
+        return stockTakeMap.get(tradeItemId);
+    }
+
+    public Set<StockTake> getStockTakeList(String programId, String tradeItemId) {
+        if (stockTakeMap.containsKey(tradeItemId))
+            stockTakeMap.get(tradeItemId).addAll(stockTakeInteractor.findStockTakeList(programId, tradeItemId));
+        else
+            stockTakeMap.put(tradeItemId, stockTakeInteractor.findStockTakeList(programId, tradeItemId));
+        return stockTakeMap.get(tradeItemId);
     }
 
     public boolean saveStockTake(Set<StockTake> stockTakeSet) {
@@ -134,12 +144,12 @@ public class StockTakePresenter extends StockListBasePresenter {
         });
     }
 
-    public void registerStockTake(Set<StockTake> stockTakeSet) {
-        this.stockTakeSet.addAll(stockTakeSet);
+    public void registerStockTake(String tradeItemId, Set<StockTake> stockTakeSet) {
+        stockTakeMap.put(tradeItemId, stockTakeSet);
     }
 
-    public void unregisterStockTake(Set<StockTake> stockTakeSet) {
-        this.stockTakeSet.removeAll(stockTakeSet);
+    public void unregisterStockTake(String tradeItemId) {
+        stockTakeMap.remove(tradeItemId);
     }
 
     public void saveStockTakeDraft() {
@@ -148,6 +158,9 @@ public class StockTakePresenter extends StockListBasePresenter {
         appExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
+                Set<StockTake> stockTakeSet = new HashSet<>();
+                for (String tradeItemId : stockTakeMap.keySet())
+                    stockTakeSet.addAll(stockTakeMap.get(tradeItemId));
                 final boolean processed = stockTakeInteractor.saveStockTake(stockTakeSet);
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override

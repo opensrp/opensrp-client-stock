@@ -29,7 +29,6 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
     private String programId;
 
     private String commodityTypeId;
-    private Set<String> tradeItemIds;
 
     private Map<String, Integer> stockBalances;
 
@@ -37,7 +36,6 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
         this.stockTakePresenter = stockTakePresenter;
         this.programId = programId;
         this.commodityTypeId = commodityTypeId;
-        this.tradeItemIds = tradeItemIds;
         if (tradeItemIds == null)
             tradeItems = stockTakePresenter.findTradeItemsWithActiveLots(commodityTypeId);
         else
@@ -59,6 +57,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
         TradeItem tradeItem = tradeItems.get(position);
         Set<StockTake> stockTakeSet = stockTakePresenter.findStockTakeList(programId, tradeItem.getId());
         stockTakeTradeItemViewHolder.setTradeItemName(tradeItem.getName());
+        stockTakeTradeItemViewHolder.setTradeItemId(tradeItem.getId());
         stockTakeTradeItemViewHolder.setStockTakePresenter(stockTakePresenter);
         stockTakeTradeItemViewHolder.setDispensingUnit(tradeItem.getDispensable().getKeyDispensingUnit());
         if (stockBalances.containsKey(tradeItem.getId()))
@@ -72,7 +71,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
         } else {
             stockTakeTradeItemViewHolder.setStockTakeSet(stockTakeSet);
             stockTakeTradeItemViewHolder.stockTakeCompleted();
-            stockTakePresenter.registerStockTake(stockTakeSet);
+            stockTakePresenter.registerStockTake(tradeItem.getId(), stockTakeSet);
         }
     }
 

@@ -44,6 +44,8 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
 
     private String dispensingUnit;
 
+    private String tradeItemId;
+
     public StockTakeTradeItemViewHolder(@NonNull View itemView) {
         super(itemView);
         pendingStockTake = itemView.findViewById(R.id.pending_stock_take);
@@ -87,13 +89,13 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
     private void enableSave() {
         saveButton.setEnabled(true);
         saveButton.setTextColor(saveButton.getResources().getColor(R.color.light_blue));
-        stockTakePresenter.registerStockTake(this.stockTakeSet);
+        stockTakePresenter.registerStockTake(tradeItemId, this.stockTakeSet);
     }
 
     private void disableSave() {
         saveButton.setEnabled(false);
         saveButton.setTextColor(saveButton.getResources().getColor(R.color.save_disabled));
-        stockTakePresenter.unregisterStockTake(this.stockTakeSet);
+        stockTakePresenter.unregisterStockTake(tradeItemId);
     }
 
     @Override
@@ -109,6 +111,7 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         }
         if (isValid)
             enableSave();
+        stockTakePresenter.registerStockTake(tradeItemId, stockTakeSet);
     }
 
 
@@ -149,4 +152,7 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         this.stockTakeSet = stockTakeSet;
     }
 
+    public void setTradeItemId(String tradeItemId) {
+        this.tradeItemId = tradeItemId;
+    }
 }

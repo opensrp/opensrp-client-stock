@@ -119,4 +119,29 @@ public class StockTake implements Comparable<StockTake> {
     public int compareTo(@NonNull StockTake other) {
         return Long.valueOf(other.getLastUpdated()).compareTo(getLastUpdated());
     }
+
+    @Override
+    public int hashCode() {
+        if (lotId == null)
+            return (programId + commodityTypeId + tradeItemId).hashCode();
+        else
+            return (programId + commodityTypeId + tradeItemId + lotId).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof StockTake))
+            return false;
+        StockTake other = (StockTake) obj;
+        if (lotId != null) {
+            return other.getProgramId().equals(programId) &&
+                    other.getCommodityTypeId().equals(commodityTypeId) &&
+                    other.getTradeItemId().equals(tradeItemId) &&
+                    other.getLotId().equals(lotId);
+        } else {
+            return other.getProgramId().equals(programId) &&
+                    other.getTradeItemId().equals(tradeItemId) &&
+                    other.getTradeItemId().equals(tradeItemId);
+        }
+    }
 }
