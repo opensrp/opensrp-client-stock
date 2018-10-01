@@ -72,6 +72,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
         int stockOnHand = 0;
         if (stockBalances.containsKey(lot.getId()))
             stockOnHand = stockBalances.get(lot.getId());
+        stockTakeLotViewHolder.setStockOnHand(stockOnHand);
         for (StockTake stockTake : stockTakeList) {
             if (lot.getId().equals(stockTake.getLotId())) {
                 stockTakeLotViewHolder.setStockTake(stockTake);
@@ -94,7 +95,6 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
             stockTakeLotViewHolder.setStatus(lot.getLotStatus());
         }
         stockTakeLotViewHolder.setLot(lot);
-        stockTakeLotViewHolder.setStockOnHand(stockOnHand);
     }
 
     @Override
