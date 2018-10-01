@@ -67,5 +67,6 @@
     <string name="save_in_progress">Saving stock take</string>
 
     <string name="physical_inventory">Physical Inventory</string>
+    <string name="physical_count_invalid">PhysicalCount is not a number</string>
 
 </resources>

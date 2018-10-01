@@ -7,6 +7,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -30,6 +31,8 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.StockStatu
  * Created by samuelgithengi on 9/21/18.
  */
 public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+    private static final String TAG = "StockTakeLotViewHolder";
 
     private Context context;
 
@@ -238,7 +241,14 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
             if (StringUtils.isBlank(editable.toString())) {
                 physicalCount = 0;
             } else {
-                physicalCount = Integer.valueOf(editable.toString());
+                try {
+                    physicalCount = Integer.valueOf(editable.toString());
+                    physicalCountTextView.setError(null);
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, context.getString(R.string.physical_count_invalid), e);
+                    physicalCountTextView.setError(context.getString(R.string.physical_count_invalid));
+                    return;
+                }
             }
             setDifference(physicalCount - stockOnHand);
             validateData();
