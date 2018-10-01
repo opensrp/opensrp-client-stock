@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.R;
