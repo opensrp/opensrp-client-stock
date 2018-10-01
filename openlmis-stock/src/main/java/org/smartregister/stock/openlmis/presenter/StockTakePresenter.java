@@ -119,7 +119,8 @@ public class StockTakePresenter extends StockListBasePresenter {
         appExecutors.diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                final boolean processed = stockTakeInteractor.completeStockTake(programId, adjustedTradeItems, provider);
+                final boolean processed = stockTakeInteractor.completeStockTake(programId,
+                        adjustedTradeItems, provider, stockTakeView.getContext());
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {

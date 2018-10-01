@@ -170,8 +170,10 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         noChangeTextView.setSelected(activate);
         if (activate) {
             noChangeTextView.setTextColor(context.getResources().getColor(R.color.white));
+            stockTake.setNoChange(true);
         } else {
             noChangeTextView.setTextColor(context.getResources().getColor(R.color.add_subtract));
+            stockTake.setNoChange(false);
         }
     }
 
@@ -192,7 +194,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
     }
 
     private void validateData() {
-        if (noChangeTextView.isSelected()) {
+        if (stockTake.isNoChange()) {
             stockTake.setValid(true);
         } else if (physicalCount < 0 || StringUtils.isBlank(differenceTextView.getText()) ||
                 StringUtils.isBlank(reasonTextView.getText()) ||

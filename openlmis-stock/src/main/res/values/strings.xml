@@ -66,4 +66,6 @@
     <string name="last_adjustment">Last update of draft: %1s</string>
     <string name="save_in_progress">Saving stock take</string>
 
+    <string name="physical_inventory">Physical Inventory</string>
+
 </resources>

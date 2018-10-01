@@ -1,10 +1,12 @@
 package org.smartregister.stock.openlmis.interactor;
 
+import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.TradeItem;
@@ -110,19 +112,20 @@ public class StockTakeInteractor extends StockListBaseInteractor {
         return stockTakeRepository.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
     }
 
-    public boolean completeStockTake(String programId, Set<String> adjustedTradeItems, String provider) {
+    public boolean completeStockTake(String programId, Set<String> adjustedTradeItems, String provider, Context context) {
         try {
             Set<StockTake> stockTakeSet = stockTakeRepository.getStockTakeListByTradeItemIds(programId, adjustedTradeItems);
             for (StockTake stockTake : stockTakeSet) {
-                if (stockTake.getQuantity() != 0) {
-                    Stock stock = new Stock(null, loss_adjustment,
-                            provider, stockTake.getQuantity(),
-                            stockTake.getLastUpdated(), stockTake.getReasonId(), BaseRepository.TYPE_Unsynced,
-                            System.currentTimeMillis(), stockTake.getTradeItemId());
-                    stock.setProgramId(stockTake.getProgramId());
-                    stock.setLotId(stockTake.getLotId());
-                    stockRepository.addOrUpdate(stock);
-                }
+                Stock stock = new Stock(null, loss_adjustment,
+                        provider, stockTake.isNoChange() ? 0 : stockTake.getQuantity(),
+                        stockTake.getLastUpdated(),
+                        stockTake.isNoChange() ? context.getString(R.string.physical_inventory) : stockTake.getReasonId(),
+                        BaseRepository.TYPE_Unsynced,
+                        System.currentTimeMillis(), stockTake.getTradeItemId());
+                stock.setProgramId(stockTake.getProgramId());
+                stock.setLotId(stockTake.getLotId());
+                stock.setvvmStatus(stockTake.getStatus());
+                stockRepository.addOrUpdate(stock);
             }
 
             return stockTakeRepository.deleteStockTake(programId, adjustedTradeItems) == stockTakeSet.size();

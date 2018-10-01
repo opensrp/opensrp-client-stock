@@ -23,6 +23,8 @@ public class StockTake implements Comparable<StockTake> {
 
     private long lastUpdated;
 
+    private boolean noChange;
+
     private boolean valid;
 
 
@@ -95,6 +97,14 @@ public class StockTake implements Comparable<StockTake> {
 
     public void setLastUpdated(long lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public boolean isNoChange() {
+        return noChange;
+    }
+
+    public void setNoChange(boolean noChange) {
+        this.noChange = noChange;
     }
 
     public boolean isValid() {
