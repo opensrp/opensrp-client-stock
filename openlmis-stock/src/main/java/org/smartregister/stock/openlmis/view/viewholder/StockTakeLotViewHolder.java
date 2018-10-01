@@ -52,7 +52,11 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     private TextInputLayout reason;
 
-    private TextView noChangeTextView;
+    private TextView noChangeButton;
+
+    private TextView addStockButton;
+
+    private TextView subtractStockButton;
 
     private int stockOnHand;
 
@@ -75,10 +79,13 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         difference = itemView.findViewById(R.id.adjustment);
         reasonTextView = itemView.findViewById(R.id.reason_textview);
         reason = itemView.findViewById(R.id.reason);
-        noChangeTextView = itemView.findViewById(R.id.no_change);
-        itemView.findViewById(R.id.add_stock).setOnClickListener(this);
-        itemView.findViewById(R.id.subtract_stock).setOnClickListener(this);
-        itemView.findViewById(R.id.no_change).setOnClickListener(this);
+        noChangeButton = itemView.findViewById(R.id.no_change);
+        addStockButton = itemView.findViewById(R.id.add_stock);
+        subtractStockButton = itemView.findViewById(R.id.subtract_stock);
+
+        addStockButton.setOnClickListener(this);
+        subtractStockButton.setOnClickListener(this);
+        noChangeButton.setOnClickListener(this);
         statusTextView.setOnClickListener(this);
         reasonTextView.setOnClickListener(this);
 
@@ -170,14 +177,32 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
     }
 
     public void activateNoChange(boolean activate) {
-        noChangeTextView.setSelected(activate);
+        noChangeButton.setSelected(activate);
+        toggleInputs(!activate);
         if (activate) {
-            noChangeTextView.setTextColor(context.getResources().getColor(R.color.white));
+            noChangeButton.setTextColor(context.getResources().getColor(R.color.white));
             stockTake.setNoChange(true);
+            setPhysicalCount(stockOnHand);
+            setReason("");
+            setStatus("");
+            hideDifferenceAndReason();
         } else {
-            noChangeTextView.setTextColor(context.getResources().getColor(R.color.add_subtract));
+            noChangeButton.setTextColor(context.getResources().getColor(R.color.add_subtract));
             stockTake.setNoChange(false);
         }
+    }
+
+    private void toggleInputs(boolean isEnabled) {
+        physicalCountTextView.setEnabled(isEnabled);
+        statusTextView.setEnabled(isEnabled);
+        reasonTextView.setEnabled(isEnabled);
+        addStockButton.setEnabled(isEnabled);
+        subtractStockButton.setEnabled(isEnabled);
+    }
+
+    private void hideDifferenceAndReason() {
+        difference.setVisibility(View.GONE);
+        reason.setVisibility(View.GONE);
     }
 
     @Override
@@ -189,8 +214,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
         } else if (view.getId() == R.id.status_textview) {
             showStatusDropdown();
         } else if (view.getId() == R.id.no_change) {
-            activateNoChange(!noChangeTextView.isSelected());
-
+            activateNoChange(!noChangeButton.isSelected());
         }
         validateData();
 
