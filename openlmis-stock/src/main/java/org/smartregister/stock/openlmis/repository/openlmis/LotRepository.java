@@ -194,6 +194,12 @@ public class LotRepository extends BaseRepository {
         return lots;
     }
 
+    public void updateLotStatus(String lotId, String lotStatus) {
+        String query = String.format("UPDATE %s SET %s = ? WHERE %s = ?",
+                LOT_TABLE, LOT_STATUS, ID);
+        getWritableDatabase().execSQL(query, new String[]{lotStatus, lotId});
+    }
+
 
     private Lot createLot(Cursor cursor) {
         Lot lot = new Lot(cursor.getString(cursor.getColumnIndex(ID)),

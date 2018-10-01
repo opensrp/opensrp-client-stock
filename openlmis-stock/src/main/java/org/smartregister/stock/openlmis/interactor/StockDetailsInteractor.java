@@ -56,4 +56,8 @@ public class StockDetailsInteractor {
     public void addStock(Stock stock) {
         stockRepository.addOrUpdate(stock);
     }
+
+    public void updateLotStatus(String lotId, String lotStatus) {
+        lotRepository.updateLotStatus(lotId, lotStatus);
+    }
 }
