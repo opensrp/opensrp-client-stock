@@ -132,9 +132,10 @@ public class StockListInteractorTest extends BaseUnitTest {
         TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Intervax BCG 20");
         tradeItem.setNetContent(16l);
-        tradeItem.setCommodityTypeId(commodityType.getId().toString());
+        tradeItem.setCommodityTypeId(commodityType.getId());
+        tradeItem.setHasLots(true);
         expectedTradeItems.add(tradeItem);
-        when(tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString())).thenReturn(expectedTradeItems);
+        when(tradeItemRepository.getTradeItemByCommodityType(commodityType.getId())).thenReturn(expectedTradeItems);
         List<LotDetailsDto> lots = new ArrayList<>();
         lots.add(new LotDetailsDto("lot1", 1l, 20));
         lots.add(new LotDetailsDto("lot2", 30l, 30));
@@ -183,6 +184,7 @@ public class StockListInteractorTest extends BaseUnitTest {
         tradeItem.setName("Intervax BCG 20");
         tradeItem.setNetContent(16l);
         tradeItem.setCommodityTypeId(UUID.randomUUID().toString());
+        tradeItem.setHasLots(true);
         expectedTradeItems.add(tradeItem);
 
         when(tradeItemRepository.getTradeItemByIds(tradeItems)).thenReturn(expectedTradeItems);
