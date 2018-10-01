@@ -127,7 +127,6 @@ public class StockTakeInteractor extends StockListBaseInteractor {
                 stock.setvvmStatus(stockTake.getStatus());
                 stockRepository.addOrUpdate(stock);
             }
-
             return stockTakeRepository.deleteStockTake(programId, adjustedTradeItems) == stockTakeSet.size();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);

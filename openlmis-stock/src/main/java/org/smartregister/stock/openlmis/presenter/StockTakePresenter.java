@@ -159,8 +159,18 @@ public class StockTakePresenter extends StockListBasePresenter {
             @Override
             public void run() {
                 Set<StockTake> stockTakeSet = new HashSet<>();
-                for (String tradeItemId : stockTakeMap.keySet())
-                    stockTakeSet.addAll(stockTakeMap.get(tradeItemId));
+                for (String tradeItemId : stockTakeMap.keySet()) {
+                    boolean isValid = true;
+                    for (StockTake stocktake : stockTakeMap.get(tradeItemId)) {
+                        if (!stocktake.isValid()) {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                    if (isValid) {
+                        stockTakeSet.addAll(stockTakeMap.get(tradeItemId));
+                    }
+                }
                 final boolean processed = stockTakeInteractor.saveStockTake(stockTakeSet);
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
@@ -179,4 +189,9 @@ public class StockTakePresenter extends StockListBasePresenter {
     public List<TradeItem> findTradeItemsWithActiveLotsByTradeItemIds(Set<String> tradeItemIds) {
         return stockTakeInteractor.findTradeItemsWithActiveLotsByTradeItemIds(tradeItemIds);
     }
+
+    public Set<String> getAdjustedTradeItems() {
+        return adjustedTradeItems;
+    }
+
 }

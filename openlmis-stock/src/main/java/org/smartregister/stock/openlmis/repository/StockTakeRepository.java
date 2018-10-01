@@ -148,11 +148,15 @@ public class StockTakeRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             if (hasLots) {
-                query = String.format("SELECT 1 FROM %s WHERE %s=? AND %s=? AND %s=?", STOCK_TAKE_TABLE, PROGRAM_ID, TRADE_ITEM_ID, LOT_ID);
-                cursor = getReadableDatabase().rawQuery(query, new String[]{stockTake.getProgramId(), stockTake.getTradeItemId()});
+                query = String.format("SELECT 1 FROM %s WHERE %s=? AND %s=? AND %s=?",
+                        STOCK_TAKE_TABLE, PROGRAM_ID, TRADE_ITEM_ID, LOT_ID);
+                cursor = getReadableDatabase().rawQuery(query, new String[]{stockTake.getProgramId(),
+                        stockTake.getTradeItemId(), stockTake.getLotId()});
             } else {
-                query = String.format("SELECT 1 FROM %s WHERE %s=? AND %s=?", STOCK_TAKE_TABLE, PROGRAM_ID, TRADE_ITEM_ID);
-                cursor = getReadableDatabase().rawQuery(query, new String[]{stockTake.getProgramId(), stockTake.getTradeItemId()});
+                query = String.format("SELECT 1 FROM %s WHERE %s=? AND %s=?", STOCK_TAKE_TABLE,
+                        PROGRAM_ID, TRADE_ITEM_ID);
+                cursor = getReadableDatabase().rawQuery(query, new String[]{stockTake.getProgramId(),
+                        stockTake.getTradeItemId()});
             }
             return cursor.moveToFirst();
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -76,13 +77,12 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
         for (StockTake stockTake : stockTakeList) {
             if (lot.getId().equals(stockTake.getLotId())) {
                 stockTakeLotViewHolder.setStockTake(stockTake);
-                stockTakeLotViewHolder.setPhysicalCount(stockOnHand + stockTake.getQuantity());
                 stockTakeLotViewHolder.setDifference(stockTake.getQuantity());
                 stockTakeLotViewHolder.setStatus(stockTake.getStatus());
                 stockTakeLotViewHolder.setReason(stockTake.getReasonId());
-                if (stockTake.getQuantity() == 0)
-                    stockTakeLotViewHolder.activateNoChange(true);
-                stockTake.setValid(true);
+                stockTakeLotViewHolder.setPhysicalCount(stockOnHand + stockTake.getQuantity());
+                stockTakeLotViewHolder.activateNoChange(stockTake.isNoChange());
+                validateStockTake(stockOnHand, stockTake);
                 stockTakeListener.registerStockTake(stockTake);
                 break;
             }
@@ -100,5 +100,17 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
     @Override
     public int getItemCount() {
         return lots.size();
+    }
+
+    private void validateStockTake(int stockOnHand, StockTake stockTake) {
+        if (stockTake.isNoChange()) {
+            stockTake.setValid(true);
+        } else if (stockTake.getQuantity() - stockOnHand < 0 || stockTake.getQuantity() == 0 ||
+                StringUtils.isBlank(stockTake.getReasonId()) ||
+                StringUtils.isBlank(stockTake.getStatus())) {
+            stockTake.setValid(false);
+        } else {
+            stockTake.setValid(true);
+        }
     }
 }
