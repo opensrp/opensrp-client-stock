@@ -190,5 +190,12 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         }
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        setResult(RESULT_OK);
+        finish();
+        return true;
+    }
+
 
 }
