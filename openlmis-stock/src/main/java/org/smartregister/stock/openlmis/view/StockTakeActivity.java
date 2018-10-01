@@ -40,6 +40,8 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
 
     private int tradeItemsAdjusted = 0;
 
+    private SearchView searchView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
         submitButton.setOnClickListener(this);
         findViewById(R.id.save_draft).setOnClickListener(this);
 
-        SearchView searchView = findViewById(R.id.searchStock);
+        searchView = findViewById(R.id.searchStock);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -79,6 +81,14 @@ public class StockTakeActivity extends BaseActivity implements StockTakeView, Vi
     @Override
     public int getLayoutView() {
         return R.layout.activity_stock_take;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (searchView != null) {
+            searchView.clearFocus();
+        }
     }
 
     @Override

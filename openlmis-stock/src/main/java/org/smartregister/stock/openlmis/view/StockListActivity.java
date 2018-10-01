@@ -41,6 +41,8 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
 
     public final static int STOCK_TAKE = 2340;
 
+    private SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +91,7 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
 
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
 
-        SearchView searchView = findViewById(R.id.searchStock);
+        searchView = findViewById(R.id.searchStock);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -107,6 +109,14 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
     @Override
     public int getLayoutView() {
         return R.layout.activity_stock_list;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (searchView != null) {
+            searchView.clearFocus();
+        }
     }
 
     public void populateTestData() {
