@@ -65,7 +65,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Program program = programsAdapter.getItem(position);
-                adapter.setProgramId(program.getId().toString());
+                adapter.setProgramId(program.getId());
                 adapter.notifyDataSetChanged();
             }
 
@@ -76,7 +76,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         });
 
         if (programsAdapter.getCount() > 0)
-            adapter.setProgramId(programsAdapter.getItem(0).getId().toString());
+            adapter.setProgramId(programsAdapter.getItem(0).getId());
 
         findViewById(R.id.expandAll).setOnClickListener(this);
 
