@@ -162,6 +162,7 @@ public class StockDetailsPresenter {
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Received");
         String facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From");
         String reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason");
+
         if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason_Other");
         }
@@ -217,12 +218,13 @@ public class StockDetailsPresenter {
 
         for (LotDto lot : selectedLotDTos) {
             Stock stock = new Stock(null, transactionType,
-            provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
-            encounterDate.getTime(), facility == null ? lot.getReason() : facility, TYPE_Unsynced,
-            System.currentTimeMillis(), tradeItem);
+                    provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
+                    encounterDate.getTime(), facility == null ? lot.getReason() : facility, TYPE_Unsynced,
+                    System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
             stock.setProgramId(programId);
+            stock.setvvmStatus(lot.getLotStatus());
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
         }

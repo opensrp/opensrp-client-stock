@@ -6,6 +6,7 @@ import org.smartregister.repository.Repository;
 import org.smartregister.repository.SettingsRepository;
 import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
+import org.smartregister.stock.openlmis.repository.StockTakeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
@@ -38,6 +39,7 @@ public class OpenLMISLibrary {
     private StockRepository stockRepository;
     private SettingsRepository settingsRepository;
     private SearchRepository searchRepository;
+    private StockTakeRepository stockTakeRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -160,5 +162,12 @@ public class OpenLMISLibrary {
             searchRepository = new SearchRepository(getRepository());
         }
         return searchRepository;
+    }
+
+    public StockTakeRepository getStockTakeRepository() {
+        if (stockTakeRepository == null) {
+            stockTakeRepository = new StockTakeRepository(getRepository());
+        }
+        return stockTakeRepository;
     }
 }

@@ -93,4 +93,17 @@ public class TradeItem {
     public void setHasLots(boolean hasLots) {
         this.hasLots = hasLots;
     }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof TradeItem))
+            return false;
+        TradeItem other = (TradeItem) obj;
+        return other.getId().equals(getId());
+    }
 }
