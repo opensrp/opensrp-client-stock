@@ -34,6 +34,16 @@ public interface OpenLMISConstants {
 
     String PREV_SYNC_SERVER_VERSION_ORDERABLE = "prev_sync_server_version_orderable";
 
+    String IS_REMOTE_LOGIN = "is_remote_login";
+
+    String ENGLISH_LANGUAGE = "English";
+
+    String URDU_LANGUAGE = "Urdu";
+
+    String ENGLISH_LOCALE = "en";
+
+    String URDU_LOCALE = "ur";
+
     interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";

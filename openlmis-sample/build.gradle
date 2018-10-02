@@ -31,6 +31,10 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
+        buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
+        buildConfigField "boolean", "TIME_CHECK", "false"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,7 +43,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "int", "OPENLMIS_METADATA_SYNC_INTERVAL_MIN", "5"
-            buildConfigField "int", "STOCK_SYNC_INTERVAL_MIN", "5"
+            buildConfigField "int", "STOCK_SYNC_INTERVAL_MIN", "1"
         }
 
         debug {

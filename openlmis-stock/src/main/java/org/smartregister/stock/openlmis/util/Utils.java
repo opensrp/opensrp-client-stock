@@ -1,8 +1,10 @@
 package org.smartregister.stock.openlmis.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Pair;
+import android.view.inputmethod.InputMethodManager;
 
 import org.smartregister.domain.Response;
 import org.smartregister.repository.AllSettings;
@@ -12,8 +14,11 @@ import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.SYNC_COMPLETE_INTENT_ACTION;
 import static org.smartregister.util.Log.logError;
 
@@ -130,5 +135,22 @@ public class Utils {
         intent.setAction(SYNC_COMPLETE_INTENT_ACTION);
         intent.putExtra("data","A sync intent service recently completed syncing.");
         context.sendBroadcast(intent);
+    }
+
+    public static void hideKeyboard(Activity activityContext) {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) activityContext.getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(activityContext.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e) {
+            logError("Error encountered while hiding keyboard " + e);
+        }
+    }
+
+    public static boolean isEmptyCollection(Collection collection) {
+        return collection == null || collection.isEmpty();
+    }
+
+    public static boolean isEmptyMap(Map map) {
+        return map == null || map.isEmpty();
     }
 }

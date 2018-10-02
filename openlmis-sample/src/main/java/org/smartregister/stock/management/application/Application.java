@@ -34,6 +34,10 @@ public class Application extends DrishtiApplication {
         return (Application) mInstance;
     }
 
+    public Context getContext() {
+        return context;
+    }
+
     @Override
     public Repository getRepository() {
         try {
