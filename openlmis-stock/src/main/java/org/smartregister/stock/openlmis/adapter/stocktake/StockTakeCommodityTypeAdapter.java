@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.adapter;
+package org.smartregister.stock.openlmis.adapter.stocktake;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
-import org.smartregister.stock.openlmis.view.viewholder.StockTakeCommodityTypeViewHolder;
+import org.smartregister.stock.openlmis.view.viewholder.stocktake.StockTakeCommodityTypeViewHolder;
 
 import java.util.List;
 import java.util.Map;

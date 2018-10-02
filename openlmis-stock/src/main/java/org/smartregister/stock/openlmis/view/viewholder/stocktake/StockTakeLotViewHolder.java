@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.view.viewholder;
+package org.smartregister.stock.openlmis.view.viewholder.stocktake;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

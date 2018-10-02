@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.view.viewholder;
+package org.smartregister.stock.openlmis.view.viewholder.stocktake;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

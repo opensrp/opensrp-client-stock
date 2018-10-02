@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.adapter;
+package org.smartregister.stock.openlmis.adapter.stocktake;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -11,7 +11,8 @@ import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
-import org.smartregister.stock.openlmis.view.viewholder.StockTakeTradeItemViewHolder;
+import org.smartregister.stock.openlmis.view.viewholder.stocktake.NonLotTradeItemViewHolder;
+import org.smartregister.stock.openlmis.view.viewholder.stocktake.StockTakeTradeItemViewHolder;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ import java.util.Set;
 /**
  * Created by samuelgithengi on 9/20/18.
  */
-public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTradeItemViewHolder> {
+public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private StockTakePresenter stockTakePresenter;
 
@@ -43,18 +44,42 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
         stockBalances = stockTakePresenter.findStockBalanceByTradeItemIds(programId, tradeItems);
     }
 
+
+    @Override
+    public int getItemViewType(int position) {
+        if (tradeItems.get(position).getHasLots()) {
+            return ViewType.LOT_MANAGED.value;
+        } else {
+            return ViewType.NON_LOT_MANGED.value;
+        }
+    }
+
     @NonNull
     @Override
-    public StockTakeTradeItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
-        View view = LayoutInflater.from(context).inflate(
-                R.layout.stock_take_trade_item_row, viewGroup, false);
-        return new StockTakeTradeItemViewHolder(view);
+        if (ViewType.LOT_MANAGED.value == viewType) {
+            View view = LayoutInflater.from(context).inflate(
+                    R.layout.stock_take_trade_item_row, viewGroup, false);
+            return new StockTakeTradeItemViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(
+                    R.layout.stock_take_trade_item_none_lot_row, viewGroup, false);
+            return new NonLotTradeItemViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StockTakeTradeItemViewHolder stockTakeTradeItemViewHolder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder stockTakeTradeItemViewHolder, int position) {
         TradeItem tradeItem = tradeItems.get(position);
+        if (tradeItem.getHasLots())
+            bindLotManaged((StockTakeTradeItemViewHolder) stockTakeTradeItemViewHolder, tradeItem);
+        else
+            bindNotLotManaged((NonLotTradeItemViewHolder) stockTakeTradeItemViewHolder, tradeItem);
+    }
+
+
+    private void bindLotManaged(StockTakeTradeItemViewHolder stockTakeTradeItemViewHolder, TradeItem tradeItem) {
         Set<StockTake> stockTakeSet = stockTakePresenter.findStockTakeList(programId, tradeItem.getId());
         stockTakeTradeItemViewHolder.setTradeItemName(tradeItem.getName());
         stockTakeTradeItemViewHolder.setTradeItemId(tradeItem.getId());
@@ -75,6 +100,11 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
         }
     }
 
+    private void bindNotLotManaged(NonLotTradeItemViewHolder stockTakeTradeItemViewHolder, TradeItem tradeItem) {
+        stockTakeTradeItemViewHolder.setStockTakePresenter(stockTakePresenter);
+        stockTakeTradeItemViewHolder.setTradeItemName(tradeItem.getName());
+    }
+
     @Override
     public int getItemCount() {
         return tradeItems.size();
@@ -82,5 +112,15 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<StockTakeTra
 
     public void setProgramId(String programId) {
         this.programId = programId;
+    }
+
+    enum ViewType {
+        LOT_MANAGED(1), NON_LOT_MANGED(2);
+
+        private int value;
+
+        ViewType(int value) {
+            this.value = value;
+        }
     }
 }

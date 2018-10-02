@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
-import org.smartregister.stock.openlmis.adapter.StockTakeCommodityTypeAdapter;
+import org.smartregister.stock.openlmis.adapter.stocktake.StockTakeCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 import org.smartregister.stock.openlmis.view.contract.StockTakeView;
 

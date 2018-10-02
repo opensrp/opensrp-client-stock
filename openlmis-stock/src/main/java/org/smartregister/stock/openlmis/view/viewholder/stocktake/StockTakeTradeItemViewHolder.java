@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.view.viewholder;
+package org.smartregister.stock.openlmis.view.viewholder.stocktake;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.smartregister.stock.openlmis.R;
-import org.smartregister.stock.openlmis.adapter.StockTakeLotAdapter;
+import org.smartregister.stock.openlmis.adapter.stocktake.StockTakeLotAdapter;
 import org.smartregister.stock.openlmis.domain.StockTake;
 import org.smartregister.stock.openlmis.listener.StockTakeListener;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
