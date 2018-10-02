@@ -116,7 +116,7 @@ public class StockRepository extends BaseRepository {
         List<Stock> stocks = new ArrayList<>();
         Cursor cursor = null;
         try {
-            cursor = getReadableDatabase().query(stock_TABLE_NAME, STOCK_TABLE_COLUMNS, SYNC_STATUS + " = ?", new String[]{TYPE_Unsynced}, null, null, null, "" + limit);
+            cursor = getReadableDatabase().rawQuery("SELECT * "  + " FROM " + stock_TABLE_NAME + " WHERE "  + SYNC_STATUS + "=?" + " LIMIT ?", new String[]{TYPE_Unsynced, String.valueOf(limit)});
             stocks = readAllstocks(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
