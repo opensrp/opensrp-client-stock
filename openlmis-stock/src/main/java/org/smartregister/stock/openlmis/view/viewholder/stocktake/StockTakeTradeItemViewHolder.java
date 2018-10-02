@@ -40,7 +40,7 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
 
     private Set<StockTake> stockTakeSet = new HashSet<>();
 
-    private int stockOnhand;
+    private int stockOnHand;
 
     private String dispensingUnit;
 
@@ -64,7 +64,7 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         });
 
         completedTradeItem = itemView.findViewById(R.id.completed_trade_item);
-        adjustment = itemView.findViewById(R.id.adjustment);
+        adjustment = itemView.findViewById(R.id.completed_adjustment);
         itemView.findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,10 +125,10 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         if (totalAdjustment != 0) {
             String totalAdjustmentFormatted = totalAdjustment > 0 ? "+" + totalAdjustment : "" + totalAdjustment;
             adjustment.setText(adjustment.getContext().getString(R.string.stock_take_adjustment,
-                    stockOnhand + totalAdjustment, dispensingUnit, totalAdjustmentFormatted));
+                    stockOnHand + totalAdjustment, dispensingUnit, totalAdjustmentFormatted));
         } else
             adjustment.setText(adjustment.getContext().getString(R.string.stock_take_no_adjustment,
-                    stockOnhand + totalAdjustment, dispensingUnit));
+                    stockOnHand + totalAdjustment, dispensingUnit));
     }
 
     private void displayLots() {
@@ -140,8 +140,8 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         getLotsRecyclerView().setAdapter(adapter);
     }
 
-    public void setStockOnhand(int stockOnhand) {
-        this.stockOnhand = stockOnhand;
+    public void setStockOnHand(int stockOnHand) {
+        this.stockOnHand = stockOnHand;
     }
 
     public void setDispensingUnit(String dispensingUnit) {

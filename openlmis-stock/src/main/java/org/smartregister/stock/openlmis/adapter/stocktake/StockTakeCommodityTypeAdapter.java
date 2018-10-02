@@ -37,7 +37,7 @@ public class StockTakeCommodityTypeAdapter extends RecyclerView.Adapter<StockTak
         this.programId = programId;
         programIds = stockTakePresenter.searchIdsByPrograms(programId);
         this.commodityTypeList = stockTakePresenter.findCommodityTypesWithActiveLots(programIds.keySet());
-        stockTakePresenter.iniatializeBottomPanel(programId, programIds.keySet());
+        stockTakePresenter.iniatializePresenter(programId, programIds.keySet());
     }
 
     public void filterCommodityTypes(String searchPhrase) {

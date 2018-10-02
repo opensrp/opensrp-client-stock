@@ -3,6 +3,7 @@ package org.smartregister.stock.openlmis.adapter.stocktake;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import java.util.Set;
  * Created by samuelgithengi on 9/20/18.
  */
 public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final String TAG = "StockTakeTradeItemAdapt";
 
     private StockTakePresenter stockTakePresenter;
 
@@ -86,9 +89,9 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
         stockTakeTradeItemViewHolder.setStockTakePresenter(stockTakePresenter);
         stockTakeTradeItemViewHolder.setDispensingUnit(tradeItem.getDispensable().getKeyDispensingUnit());
         if (stockBalances.containsKey(tradeItem.getId()))
-            stockTakeTradeItemViewHolder.setStockOnhand(stockBalances.get(tradeItem.getId()));
+            stockTakeTradeItemViewHolder.setStockOnHand(stockBalances.get(tradeItem.getId()));
         else
-            stockTakeTradeItemViewHolder.setStockOnhand(0);
+            stockTakeTradeItemViewHolder.setStockOnHand(0);
         if (!stockTakePresenter.getAdjustedTradeItems().contains(tradeItem.getId())) {
             StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, programId, commodityTypeId,
                     tradeItem.getId(), stockTakeSet, stockTakeTradeItemViewHolder);
@@ -101,8 +104,39 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     private void bindNotLotManaged(NonLotTradeItemViewHolder stockTakeTradeItemViewHolder, TradeItem tradeItem) {
-        stockTakeTradeItemViewHolder.setStockTakePresenter(stockTakePresenter);
+        stockTakeTradeItemViewHolder.setStockAdjustReasons(stockTakePresenter.findAdjustReasons());
+        stockTakeTradeItemViewHolder.setStockTakeListener(stockTakeTradeItemViewHolder);
         stockTakeTradeItemViewHolder.setTradeItemName(tradeItem.getName());
+        stockTakeTradeItemViewHolder.setTradeItemId(tradeItem.getId());
+        stockTakeTradeItemViewHolder.setStockTakePresenter(stockTakePresenter);
+        stockTakeTradeItemViewHolder.setDispensingUnit(tradeItem.getDispensable().getKeyDispensingUnit());
+
+        int stockOnHand = 0;
+        if (stockBalances.containsKey(tradeItem.getId()))
+            stockOnHand = stockBalances.get(tradeItem.getId());
+
+        stockTakeTradeItemViewHolder.setStockOnHand(stockOnHand);
+
+        Set<StockTake> stockTakeSet = stockTakePresenter.findStockTakeList(programId, tradeItem.getId());
+
+        if (!stockTakeSet.isEmpty() && !stockTakePresenter.getAdjustedTradeItems().contains(tradeItem.getId())) {
+            if (stockTakeSet.size() > 1)
+                Log.w(TAG, String.format("Multiple stock take for Non-Lot Managed Trade Item %s %s ",
+                        tradeItem.getId(), tradeItem.getName()));
+            StockTake stockTake = stockTakeSet.iterator().next();
+            stockTakeTradeItemViewHolder.setStockTake(stockTake);
+            stockTakeTradeItemViewHolder.setDifference(stockTake.getQuantity());
+            stockTakeTradeItemViewHolder.setStatus(stockTake.getStatus());
+            stockTakeTradeItemViewHolder.setReason(stockTake.getReasonId());
+            stockTakeTradeItemViewHolder.setPhysicalCount(stockOnHand + stockTake.getQuantity());
+            stockTakeTradeItemViewHolder.activateNoChange(stockTake.isNoChange());
+            stockTakeTradeItemViewHolder.registerStockTake(stockTake);
+        } else {
+            StockTake stockTake = new StockTake(programId, commodityTypeId, tradeItem.getId(), null);
+            stockTake.setLastUpdated(System.currentTimeMillis());
+            stockTakeTradeItemViewHolder.setStockTake(stockTake);
+            stockTakeTradeItemViewHolder.setPhysicalCount(stockOnHand);
+        }
     }
 
     @Override
