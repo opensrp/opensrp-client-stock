@@ -22,9 +22,11 @@ public class TradeItemDto extends BaseDto implements Parcelable {
 
     private Boolean hasLots;
 
+    private Boolean useVVM;
+
     public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
                         @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
-                        @NonNull Long netContent, String programId, boolean hasLots) {
+                        @NonNull Long netContent, String programId, boolean hasLots, boolean useVVM) {
         this.id = id;
         this.name = name;
         this.totalStock = totalStock;
@@ -34,10 +36,11 @@ public class TradeItemDto extends BaseDto implements Parcelable {
         this.netContent = netContent;
         this.programId = programId;
         this.hasLots = hasLots;
+        this.useVVM = useVVM;
     }
 
     public TradeItemDto(Parcel in) {
-        String[] data = new String[9];
+        String[] data = new String[10];
 
         in.readStringArray(data);
         id = data[0];
@@ -49,12 +52,13 @@ public class TradeItemDto extends BaseDto implements Parcelable {
         netContent = Long.valueOf(data[6]);
         programId = data[7];
         hasLots = Boolean.valueOf(data[8]);
+        useVVM = Boolean.valueOf(data[9]);
     }
 
     public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
                         @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
                         @NonNull Long netContent) {
-        this(id, name, totalStock, lastUpdated, numberOfLots, dispensingUnit, netContent, null, false);
+        this(id, name, totalStock, lastUpdated, numberOfLots, dispensingUnit, netContent, null, true, true);
 
     }
 
@@ -67,7 +71,7 @@ public class TradeItemDto extends BaseDto implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{id, name,
                 totalStock.toString(), lastUpdated.toString(), numberOfLots.toString(),
-                dispensingUnit, netContent.toString(), programId, hasLots.toString()});
+                dispensingUnit, netContent.toString(), programId, hasLots.toString(), useVVM.toString()});
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -120,7 +124,7 @@ public class TradeItemDto extends BaseDto implements Parcelable {
         return hasLots;
     }
 
-    public void setHasLots(boolean hasLots) {
-        this.hasLots = hasLots;
+    public Boolean isUseVVM() {
+        return useVVM;
     }
 }

@@ -47,7 +47,7 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
                 tradeItem.getName(), tradeItemWrapper.getTotalStock(),
                 tradeItem.getDateUpdated(), tradeItemWrapper.getNumberOfLots(),
                 tradeItem.getDispensable().getKeyDispensingUnit(), tradeItem.getNetContent(),
-                programId, tradeItem.isHasLots());
+                programId, tradeItem.isHasLots(), tradeItem.isUseVvm());
         intent.putExtra(OpenLMISConstants.TRADE_ITEM, tradeItemDto);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
