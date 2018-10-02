@@ -47,10 +47,10 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Receive [trade_item]",
+    "title": "Issue [trade_item]",
     "fields": [
       {
-        "key": "Date_Stock_Received",
+        "key": "Date_Stock_Issued",
         "type": "date_picker",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -63,17 +63,17 @@
         "underline_color": "#EAEAEA",
         "v_required": {
           "value": "true",
-          "err": "Enter the Stock Receive date"
+          "err": "Enter the Stock Issue date"
         }
       },
       {
-        "key": "labelReceivedFrom",
+        "key": "labelIssuedFrom",
         "type": "label",
-        "text": "Receive from *",
+        "text": "Issued to *",
         "top_margin":"10dp"
       },
       {
-        "key": "Receive_Stock_From",
+        "key": "Issued_Stock_To",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -92,7 +92,7 @@
         "value": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
         "v_required": {
           "value": true,
-          "err": "Please select where stock was received from"
+          "err": "Please select where stock was issued to"
         }
       },
       {
@@ -102,7 +102,7 @@
         "top_margin": "10dp"
       },
       {
-        "key": "Receive_Stock_Reason",
+        "key": "Issued_Stock_Reason",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -127,11 +127,11 @@
         "value": "b5c27da7-bdda-4790-925a-9484c5dfb594",
         "v_required": {
           "value": true,
-          "err": "Please select reason stock was received"
+          "err": "Please select reason stock was issued"
         }
       },
       {
-        "key": "Receive_Stock_Reason_Other",
+        "key": "Issued_Stock_Reason_Other",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -140,22 +140,26 @@
         "edit_type": "name",
         "v_required": {
           "value": true,
-          "err": "Please specify reason stock was received"
+          "err": "Please specify reason stock was issued"
         },
         "relevance": {
-          "step1:Receive_Stock_Reason": {
+          "step1:Issued_Stock_Reason": {
             "type": "string",
             "ex": "equalTo(., \"Other\")"
           }
         }
       },
       {
-        "key": "Vials_Received",
+        "key": "Vials_Issued",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Vials received",
+        "v_max":{
+          "value":"[stock_on_hand]",
+          "err":"Cannot Issue more than [stock_on_hand]"
+        },
+        "hint": "[dispensing_unit] issued",
         "edit_type": "number",
         "v_numeric_integer": {
           "value":"true",
@@ -163,8 +167,14 @@
         },
         "v_required": {
           "value": true,
-          "err": "Please specify the number of vials received"
+          "err": "Please specify the number of vials issued"
         }
+      },
+      {
+        "key": "labelIssuedDoses",
+        "type": "label",
+        "text": "2 child(ren) vaccinated today. Assuming 300 dose(s) used.",
+        "top_margin":"10dp"
       },
       {
         "key": "Status",
@@ -175,13 +185,43 @@
         "hint": "Status",
         "trade_item": "[trade_item]",
         "trade_item_id": "[trade_item_id]",
-        "program_id": "[program_id]",
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
         "is_spinnable": true,
         "list_options": [
           "VMM1",
           "VMM2"
+        ]
+      },
+      {
+        "key": "Wasted_Vials",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Wasted vials",
+        "edit_type": "number",
+        "v_numeric_integer": {
+          "value":"true",
+          "err":"Enter a valid stock quantity"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of wasted vials"
+        }
+      },
+      {
+        "key": "Wasted_Reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Wasted reason",
+        "is_spinnable": true,
+        "list_options": [
+          "Expiry",
+          "Breakage",
+          "Missing"
         ]
       }
     ]
