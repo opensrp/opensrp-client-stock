@@ -3,6 +3,7 @@ package org.smartregister.stock.openlmis.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -14,6 +15,7 @@ import com.vijay.jsonwizard.widgets.EditTextFactory;
 import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.Robolectric;
@@ -44,6 +46,9 @@ public class OpenLMISJsonFormFragmentTest extends BaseUnitTest {
     private Context context = RuntimeEnvironment.application;
 
     private OpenLMISJsonForm activity;
+
+    @Mock
+    private MenuItem submitButton;
 
 
     private void setUp(String stepName) {
@@ -113,6 +118,7 @@ public class OpenLMISJsonFormFragmentTest extends BaseUnitTest {
         activity.clearConstrainedViews();
         activity.clearFormDataViews();
         formFragment = spy(formFragment);
+        formFragment.setSubmitButton(submitButton);
         doReturn(true).when(formFragment).isVisible();
         RelativeLayout relativeLayout = (RelativeLayout) new EditTextFactory().getViewsFromJson("step1", activity, formFragment, new JSONObject(EDIT_TEXT_JSON), formFragment).get(0);
         assertFalse(view.findViewById(R.id.next_button).isEnabled());

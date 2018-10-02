@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.R;
@@ -195,9 +194,9 @@ public class EditTextFactory implements FormWidgetFactory {
                 }
 
                 if (jsonObject.has("v_max")) {
-                    JSONObject minValidation = jsonObject.getJSONObject("v_min");
-                    editText.addValidator(new MaxNumericValidator(minValidation.getString(JsonFormConstants.ERR),
-                            Double.parseDouble(minValidation.getString(JsonFormConstants.VALUE))));
+                    JSONObject maxValidation = jsonObject.getJSONObject("v_max");
+                    editText.addValidator(new MaxNumericValidator(maxValidation.getString(JsonFormConstants.ERR),
+                            Double.parseDouble(maxValidation.getString(JsonFormConstants.VALUE))));
                 }
             }
         }
@@ -217,16 +216,16 @@ public class EditTextFactory implements FormWidgetFactory {
                 }
 
                 if (jsonObject.has("v_max")) {
-                    JSONObject minValidation = jsonObject.getJSONObject("v_min");
-                    editText.addValidator(new MaxNumericValidator(minValidation.getString(JsonFormConstants.ERR),
-                            Double.parseDouble(minValidation.getString(JsonFormConstants.VALUE))));
+                    JSONObject maxValidation = jsonObject.getJSONObject("v_max");
+                    editText.addValidator(new MaxNumericValidator(maxValidation.getString(JsonFormConstants.ERR),
+                            Double.parseDouble(maxValidation.getString(JsonFormConstants.VALUE))));
                 }
             }
         }
     }
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
-                                            MaterialEditText editText) {
+                                            CustomTextInputEditText editText) {
         if (editText.isEnabled()) {
             boolean validate = editText.validate();
             if (!validate) {

@@ -32,11 +32,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ADJUST_FORM;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_ISSUE_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_RECEIPT_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PROGRAM_ID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.STOCK_ON_HAND;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM_ID;
 
@@ -118,7 +119,8 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         if (view.getId() == R.id.collapseExpandButton || view.getId() == R.id.number_of_lots) {
             stockDetailsPresenter.collapseExpandClicked(lotsRecyclerView.getVisibility());
         } else if (view.getId() == R.id.issued) {
-            startJsonForm(INDIVIDUAL_ISSUED_FORM);
+            // startJsonForm(INDIVIDUAL_ISSUED_FORM);
+            startJsonForm(INDIVIDUAL_NON_LOT_ISSUE_FORM);
         } else if (view.getId() == R.id.received) {
             startJsonForm(INDIVIDUAL_NON_LOT_RECEIPT_FORM);
             // startJsonForm(INDIVIDUAL_RECEIVED_FORM);
@@ -174,7 +176,9 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
             formMetadata = formMetadata.replace(TRADE_ITEM_ID, tradeItemDto.getId());
             formMetadata = formMetadata.replace(NET_CONTENT, tradeItemDto.getNetContent().toString());
             formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
+            formMetadata = formMetadata.replace(STOCK_ON_HAND, tradeItemDto.getTotalStock().toString());
             formMetadata = formMetadata.replace(PROGRAM_ID, tradeItemDto.getProgramId());
+            formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
             intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
