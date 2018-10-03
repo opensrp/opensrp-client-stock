@@ -75,11 +75,15 @@ public class ProgramSyncHelper extends BaseSyncHelper {
         List<FacilityProgram> facilityPrograms = new Gson().fromJson(jsonPayload, new TypeToken<List<FacilityProgram>>(){}.getType());
         boolean isEmptyResponse = true;
         for (FacilityProgram facilityProgram : facilityPrograms) {
-            for (Program program : facilityProgram.getSupportedPrograms()) {
-                isEmptyResponse = false;
-                repository.addOrUpdate(program);
-                if (program.getServerVersion() > highestTimeStamp) {
-                    highestTimeStamp = program.getServerVersion();
+            List<Program> supportedPrograms = facilityProgram.getSupportedPrograms();
+            if (supportedPrograms == null) { break; }
+            for (Program program : supportedPrograms) {
+                if (program != null) {
+                    isEmptyResponse = false;
+                    repository.addOrUpdate(program);
+                    if (program.getServerVersion() > highestTimeStamp) {
+                        highestTimeStamp = program.getServerVersion();
+                    }
                 }
             }
         }

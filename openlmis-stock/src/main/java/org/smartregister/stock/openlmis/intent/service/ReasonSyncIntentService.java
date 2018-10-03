@@ -7,6 +7,7 @@ import android.content.Intent;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.intent.helper.ReasonSyncHelper;
 import org.smartregister.stock.util.NetworkUtils;
 
@@ -36,11 +37,13 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        String facilityTypeUuid = workIntent.getStringExtra(FACILITY_TYPE_UUID);
-        String programId = workIntent.getStringExtra(PROGRAM_ID);
+        String facilityTypeUuid = OpenLMISLibrary.getInstance().getFacilityTypeUuid();;
         if (NetworkUtils.isNetworkAvailable(context)) {
-            if (facilityTypeUuid != null && programId != null) {
-                pullFromServer(REASON_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + PROGRAM_ID +  "=" + programId);
+            // assumes eventual consistency where all programs are synced and reasons for all programs can be fetched
+            for (Program program : OpenLMISLibrary.getInstance().getProgramRepository().findAllPrograms()) {
+                if (facilityTypeUuid != null) {
+                    pullFromServer(REASON_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + PROGRAM_ID + "=" + program.getId());
+                }
             }
             pullFromServer(REASON_SYNC_URL + "?");
         }

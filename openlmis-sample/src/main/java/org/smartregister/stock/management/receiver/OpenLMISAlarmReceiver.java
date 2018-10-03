@@ -46,37 +46,22 @@ public class OpenLMISAlarmReceiver extends BroadcastReceiver {
         Intent serviceIntent = null;
         switch (serviceType) {
             case SYNC_OPENLMIS_METADATA:
-                startService(context, CommodityTypeSyncIntentService.class, new HashMap<String, String>());
-                startService(context, DispensableSyncIntentService.class, new HashMap<String, String>());
-                startService(context, LotSyncIntentService.class, new HashMap<String, String>());
-                startService(context, OrderableSyncIntentService.class, new HashMap<String, String>());
-                startService(context, ProgramOrderableSyncIntentService.class, new HashMap<String, String>());
-                startService(context, ProgramSyncIntentService.class, new HashMap<String, String>());
-                startService(context, TradeItemClassificationSyncIntentService.class, new HashMap<String, String>());
-                startService(context, TradeItemSyncIntentService.class, new HashMap<String, String>());
-
-                // add reasons filter params
-                Map<String, String> reasonsFilterParams = new HashMap<>();
-                reasonsFilterParams.put(FACILITY_TYPE_UUID, OpenLMISLibrary.getInstance().getFacilityTypeUuid());
-                reasonsFilterParams.put(PROGRAM_ID, OpenLMISLibrary.getInstance().getProgramId());
-                startService(context, ReasonSyncIntentService.class, reasonsFilterParams);
-
-                //add programs filter params
-                Map<String, String> programsFilterParams = new HashMap<>();
-                programsFilterParams.put(FACILITY_TYPE_UUID, OpenLMISLibrary.getInstance().getFacilityTypeUuid());
-                programsFilterParams.put(OPENLMIS_UUID, OpenLMISLibrary.getInstance().getOpenlmisUuid());
-                startService(context, ProgramSyncIntentService.class, programsFilterParams);
-
-                // add valid destinations and valid sources filter params
-                Map<String, String> validSourceAndDestinationFilterParams = new HashMap<>();
-                validSourceAndDestinationFilterParams.put(FACILITY_TYPE_UUID, OpenLMISLibrary.getInstance().getFacilityTypeUuid());
-                validSourceAndDestinationFilterParams.put(OPENLMIS_UUID, OpenLMISLibrary.getInstance().getOpenlmisUuid());
-                startService(context, ValidSourceDestinationSyncIntentService.class, validSourceAndDestinationFilterParams);
+                startService(context, CommodityTypeSyncIntentService.class);
+                startService(context, DispensableSyncIntentService.class);
+                startService(context, LotSyncIntentService.class);
+                startService(context, OrderableSyncIntentService.class);
+                startService(context, ProgramOrderableSyncIntentService.class);
+                startService(context, ProgramSyncIntentService.class);
+                startService(context, TradeItemClassificationSyncIntentService.class);
+                startService(context, TradeItemSyncIntentService.class);
+                startService(context, ReasonSyncIntentService.class);
+                startService(context, ProgramSyncIntentService.class);
+                startService(context, ValidSourceDestinationSyncIntentService.class);
 
                 Log.i(TAG, "Started OpenLMIS metadata sync service at: " + DATE_FORMATTER.format(new Date()));
                 break;
             case SYNC_STOCK:
-                startService(context, OpenLMISStockSyncIntentService.class, new HashMap<String, String>());
+                startService(context, OpenLMISStockSyncIntentService.class);
                 Log.i(TAG, "Started Stock sync service at: " + DATE_FORMATTER.format(new Date()));
                 break;
             default:

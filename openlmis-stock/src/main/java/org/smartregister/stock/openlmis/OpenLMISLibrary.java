@@ -42,7 +42,6 @@ public class OpenLMISLibrary {
     private SearchRepository searchRepository;
     private ValidSourceDestinationRepository validSourceDestinationRepository;
     private String facilityTypeUuid;
-    private String programId;
     private String openlmisUuid;
     private StockTakeRepository stockTakeRepository;
 
@@ -179,20 +178,12 @@ public class OpenLMISLibrary {
         return facilityTypeUuid;
     }
 
-    public String getProgramId() {
-        return programId;
-    }
-
     public String getOpenlmisUuid() {
         return openlmisUuid;
     }
 
     public void setFacilityTypeUuid(String facilityTypeUuid) {
         this.facilityTypeUuid = facilityTypeUuid;
-    }
-
-    public void setProgramId(String programId) {
-        this.programId = programId;
     }
 
     public void setOpenlmisUuid(String openlmisUuid) {

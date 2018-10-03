@@ -23,15 +23,12 @@ public class ServiceUtils {
         return false;
     }
 
-    public static void startService(Context context, Class<?> serviceClass, Map<String, String> filterParams) {
+    public static void startService(Context context, Class<?> serviceClass) {
         if (context == null || serviceClass == null) {
             return;
         }
         if (!isServiceRunning(serviceClass)) {
             Intent intent = new Intent(context, serviceClass);
-            for (Map.Entry<String, String> filterParam : filterParams.entrySet()) {
-                intent.putExtra(filterParam.getKey(), filterParam.getValue());
-            }
             Application.getInstance().startService(intent);
         }
     }
