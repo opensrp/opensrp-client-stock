@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/botton_navigation_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_navigation_border"
+    android:paddingEnd="30dp"
+    android:paddingStart="30dp">
+
+    <TextView
+        android:id="@+id/items_changed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/bottom_navigation_margin"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/last_changed"
+        app:layout_constraintEnd_toStartOf="@id/save_draft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/last_changed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottom_navigation_margin"
+        android:textColor="@color/stock_list_light_text"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/save_draft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/items_changed" />
+
+    <Button
+        android:id="@+id/save_draft"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottom_navigation_margin"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="@dimen/bottom_navigation_margin"
+        android:layout_marginTop="@dimen/bottom_navigation_margin"
+        android:background="@drawable/save_draft_border"
+        android:drawableStart="@drawable/ic_save"
+        android:paddingEnd="10dp"
+        android:paddingStart="5dp"
+        android:text="@string/save_as_draft"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="@color/light_blue"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/submit_button"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/submit_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottom_navigation_margin"
+        android:layout_marginTop="@dimen/bottom_navigation_margin"
+        android:background="@drawable/rounded_button"
+        android:enabled="false"
+        android:paddingEnd="@dimen/bottom_navigation_padding"
+        android:paddingStart="@dimen/bottom_navigation_padding"
+        android:text="@string/submit"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="@color/stock_list_dark_text"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>

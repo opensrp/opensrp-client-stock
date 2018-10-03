@@ -152,6 +152,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
             ArrayList<Stock> stocks = (ArrayList<Stock>) stockRepository.findUnSyncedWithLimit(limit);
             JSONArray stocksarray = createJsonArrayFromStockArray(stocks);
             if (stocks.isEmpty()) {
+                Log.i(getClass().getName(), "Stock push found nothing to sync up to the server.");
                 return;
             }
             // create request body

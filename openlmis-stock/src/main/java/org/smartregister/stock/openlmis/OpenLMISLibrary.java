@@ -6,6 +6,7 @@ import org.smartregister.repository.Repository;
 import org.smartregister.repository.SettingsRepository;
 import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
+import org.smartregister.stock.openlmis.repository.StockTakeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.DispensableRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
@@ -43,6 +44,7 @@ public class OpenLMISLibrary {
     private String facilityTypeUuid;
     private String programId;
     private String openlmisUuid;
+    private StockTakeRepository stockTakeRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -195,5 +197,12 @@ public class OpenLMISLibrary {
 
     public void setOpenlmisUuid(String openlmisUuid) {
         this.openlmisUuid = openlmisUuid;
+    }
+
+    public StockTakeRepository getStockTakeRepository() {
+        if (stockTakeRepository == null) {
+            stockTakeRepository = new StockTakeRepository(getRepository());
+        }
+        return stockTakeRepository;
     }
 }

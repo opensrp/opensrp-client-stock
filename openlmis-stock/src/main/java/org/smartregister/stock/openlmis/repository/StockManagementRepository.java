@@ -54,6 +54,7 @@ public class StockManagementRepository extends Repository {
         StockRepository.createTable(database);
         SearchRepository.createTable(database);
         ValidSourceDestinationRepository.createTable(database);
+        StockTakeRepository.createTable(database);
     }
 
     @Override

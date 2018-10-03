@@ -157,6 +157,10 @@
         "type": "edit_text",
         "hint": "Vials received",
         "edit_type": "number",
+        "v_numeric_integer": {
+          "value":"true",
+          "err":"Enter a valid stock quantity"
+        },
         "v_required": {
           "value": true,
           "err": "Please specify the number of vials received"

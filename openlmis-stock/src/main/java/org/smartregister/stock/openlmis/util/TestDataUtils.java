@@ -60,10 +60,10 @@ public class TestDataUtils {
 
     private void populatePrograms() {
         ProgramRepository programRepository = new ProgramRepository(OpenLMISLibrary.getInstance().getRepository());
-        Program program = new Program(UUID.randomUUID().toString(), new Code("PRG002"), "Essential Drugs", null, true);
+        Program program = new Program(UUID.randomUUID().toString(), new Code("PRG002"), "Essential Drugs Local", null, true);
         programRepository.addOrUpdate(program);
 
-        program = new Program(UUID.randomUUID().toString(), new Code("PRG003"), "EPI", null, true);
+        program = new Program(UUID.randomUUID().toString(), new Code("PRG003"), "EPI Local", null, true);
 
         programRepository.addOrUpdate(program);
     }

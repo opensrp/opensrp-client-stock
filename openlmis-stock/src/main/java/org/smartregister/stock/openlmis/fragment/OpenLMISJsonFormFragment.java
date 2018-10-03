@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -38,6 +39,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
     private BottomNavigationListener navigationListener = new BottomNavigationListener();
     private Button previousButton;
     private Button nextButton;
+    private MenuItem submitButton;
     private TextView informationTextView;
     private String stepName;
 
@@ -71,7 +73,9 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.findItem(R.id.action_save).setTitle("SUBMIT");
+        submitButton = menu.findItem(R.id.action_save);
+        submitButton.setTitle("SUBMIT");
+        submitButton.setEnabled(false);
     }
 
     private void setupCustomToolbar() {
@@ -142,6 +146,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
         if (validationStatus != null && validationStatus.isValid()) {
             nextButton.setEnabled(true);
+            submitButton.setEnabled(true);
             nextButton.setTextColor(getContext().getResources().getColor(R.color.white));
         } else {
             nextButton.setEnabled(false);
@@ -170,5 +175,13 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
 
     private OpenLMISJsonFormFragmentPresenter getPresenter() {
         return (OpenLMISJsonFormFragmentPresenter) presenter;
+    }
+
+    public MenuItem getSubmitButton() {
+        return submitButton;
+    }
+
+    public void setSubmitButton(MenuItem submitButton) {
+        this.submitButton = submitButton;
     }
 }

@@ -7,6 +7,7 @@ import android.util.Log;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.joda.time.LocalDate;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.openlmis.domain.TradeItem;
@@ -16,6 +17,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.LOT_TABLE;
+import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.TRADE_ITEM_ID;
+
+import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
 
 /**
  * Created by samuelgithengi on 26/7/18.
@@ -42,6 +49,10 @@ public class TradeItemRepository extends BaseRepository {
 
     private static final String DISPENSING_ADMINISTRATION = "dispensing_administration";
 
+    private static final String USE_VVM = "use_vvm";
+
+    private static final String HAS_LOTS = "has_lots";
+
     private static final String CREATE_TRADE_ITEM_TABLE = "CREATE TABLE " + TRADE_ITEM_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," +
             COMMODITY_TYPE_ID + " VARCHAR ," +
@@ -50,7 +61,9 @@ public class TradeItemRepository extends BaseRepository {
             NET_CONTENT + " INTEGER, " +
             DISPENSING_UNIT + " VARCHAR, " +
             DISPENSING_SIZE + " VARCHAR, " +
-            DISPENSING_ADMINISTRATION + " VARCHAR)";
+            DISPENSING_ADMINISTRATION + " VARCHAR," +
+            USE_VVM + " INTEGER," +
+            HAS_LOTS + " INTEGER)";
 
     private static final String CREATE_TRADE_ITEM_INDEX = "CREATE INDEX "
             + TRADE_ITEM_TABLE + "_INDEX ON "
@@ -71,6 +84,8 @@ public class TradeItemRepository extends BaseRepository {
         contentValues.put(NAME, tradeItem.getName());
         contentValues.put(DATE_UPDATED, tradeItem.getDateUpdated());
         contentValues.put(NET_CONTENT, tradeItem.getNetContent());
+        contentValues.put(HAS_LOTS, tradeItem.getHasLots());
+        contentValues.put(USE_VVM, tradeItem.getUseVvm());
         if (tradeItem.getDispensable() != null) {
             contentValues.put(DISPENSING_UNIT, tradeItem.getDispensable().getKeyDispensingUnit());
             contentValues.put(DISPENSING_SIZE, tradeItem.getDispensable().getKeySizeCode());
@@ -171,6 +186,86 @@ public class TradeItemRepository extends BaseRepository {
         return tradeItems;
     }
 
+    public List<TradeItem> findTradeItemsWithActiveLotsByCommodityType(String commodityTypeId) {
+        if (commodityTypeId == null) {
+            return new ArrayList<>();
+        }
+        String query = String.format("SELECT DISTINCT t.* FROM %s t JOIN %s l on t.%s=l.%s" +
+                        " WHERE t.%s = ? AND l.%s >=?",
+                TRADE_ITEM_TABLE, LOT_TABLE, ID, TRADE_ITEM_ID, COMMODITY_TYPE_ID, EXPIRATION_DATE);
+        Cursor cursor = null;
+        List<TradeItem> tradeItems = new ArrayList<>();
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{commodityTypeId
+                    , String.valueOf(new LocalDate().toDate().getTime())});
+            while (cursor.moveToNext()) {
+                tradeItems.add(createTradeItem(cursor));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return tradeItems;
+    }
+
+    public List<TradeItem> findTradeItemsWithActiveLotsByTradeItemIds(Set<String> tradeItemIds) {
+        List<TradeItem> tradeItems = new ArrayList<>();
+        if (tradeItemIds == null || tradeItemIds.isEmpty()) {
+            return tradeItems;
+        }
+        int len = tradeItemIds.size();
+        String query = String.format("SELECT DISTINCT t.* FROM %s t JOIN %s l on t.%s=l.%s" +
+                        " WHERE t.%s IN (%s) AND l.%s >=?",
+                TRADE_ITEM_TABLE, LOT_TABLE, ID, TRADE_ITEM_ID, ID,
+                TextUtils.join(",", Collections.nCopies(len, "?")), EXPIRATION_DATE);
+        Cursor cursor = null;
+        try {
+            String[] params = tradeItemIds.toArray(new String[len + 1]);
+            params[len] = String.valueOf(new LocalDate().toDate().getTime());
+            cursor = getReadableDatabase().rawQuery(query, params);
+            while (cursor.moveToNext()) {
+                tradeItems.add(createTradeItem(cursor));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return tradeItems;
+    }
+
+    public int findNumberOfTradeItems(Set<String> commodityTypeIds) {
+        if (commodityTypeIds == null || commodityTypeIds.isEmpty()) {
+            return 0;
+        }
+        int len = commodityTypeIds.size();
+        String query = String.format("SELECT COUNT(DISTINCT t.%s) FROM %s t JOIN %s l on t.%s=l.%s" +
+                        " WHERE t.%s  IN (%s) AND l.%s >=?",
+                ID, TRADE_ITEM_TABLE, LOT_TABLE, ID, TRADE_ITEM_ID, COMMODITY_TYPE_ID,
+                TextUtils.join(",", Collections.nCopies(len, "?")), EXPIRATION_DATE);
+        Cursor cursor = null;
+        try {
+            String[] params = commodityTypeIds.toArray(new String[len + 1]);
+            params[len] = String.valueOf(new LocalDate().toDate().getTime());
+            cursor = getReadableDatabase().rawQuery(query, params);
+            if (cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return 0;
+    }
+
     private TradeItem createTradeItem(Cursor cursor) {
         TradeItem tradeItem = new TradeItem(cursor.getString(cursor.getColumnIndex(ID)));
         tradeItem.setCommodityTypeId(cursor.getString(cursor.getColumnIndex(COMMODITY_TYPE_ID)));
@@ -181,6 +276,8 @@ public class TradeItemRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(DISPENSING_UNIT)),
                 cursor.getString(cursor.getColumnIndex(DISPENSING_SIZE)),
                 cursor.getString(cursor.getColumnIndex(DISPENSING_ADMINISTRATION))));
+        tradeItem.setHasLots(convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(HAS_LOTS))));
+        tradeItem.setUseVvm(convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(USE_VVM))));
         return tradeItem;
     }
 

@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -145,6 +146,13 @@ public class StockDetailsPresenter {
         if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason_Other");
         }
+
+        int steps =  Integer.parseInt((String)jsonString.get("count"));
+        if (steps == 1) {
+            String status = JsonFormUtils.getFieldValue(stepFields, "Status");
+            int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Issued"));
+            return processStockWithoutLots(jsonString, provider, date, facility, reason, issued, quantity, status);
+        }
         return processStockWithLots(STEP2, jsonString, provider, date, facility, reason, issued);
     }
 
@@ -154,11 +162,12 @@ public class StockDetailsPresenter {
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Received");
         String facility = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_From");
         String reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason");
-        int steps =  Integer.parseInt((String)jsonString.get("count"));
+
         if (reason.equalsIgnoreCase(OTHER)) {
             reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason_Other");
         }
 
+        int steps =  Integer.parseInt((String)jsonString.get("count"));
         if (steps == 1) {
             String status = JsonFormUtils.getFieldValue(stepFields, "Status");
             int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Received"));
@@ -209,12 +218,13 @@ public class StockDetailsPresenter {
 
         for (LotDto lot : selectedLotDTos) {
             Stock stock = new Stock(null, transactionType,
-            provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
-            encounterDate.getTime(), facility == null ? lot.getReason() : facility, TYPE_Unsynced,
-            System.currentTimeMillis(), tradeItem);
+                    provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
+                    encounterDate.getTime(), facility == null ? lot.getReason() : facility, TYPE_Unsynced,
+                    System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
             stock.setProgramId(programId);
+            stock.setvvmStatus(lot.getLotStatus());
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
         }
@@ -238,8 +248,8 @@ public class StockDetailsPresenter {
         }
 
         Stock stock = new Stock(null, transactionType,
-                provider, quantity,
-                encounterDate.getTime(), facility, TYPE_Unsynced,
+                provider, transactionType.equals(issued) ? -quantity : quantity,
+                encounterDate.getTime(), facility, BaseRepository.TYPE_Unsynced,
                 System.currentTimeMillis(), tradeItem);
         stock.setReason(reason);
         stock.setProgramId(programId);
