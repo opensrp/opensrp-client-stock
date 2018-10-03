@@ -7,9 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,17 +29,17 @@ import org.smartregister.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ADJUST_FORM;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_RECEIVED_FORM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_ISSUE_FORM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_RECEIPT_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.NON_LOT_INDIVIDUAL_ADJUST_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PROGRAM_ID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.STOCK_ON_HAND;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM_ID;
 
-public class StockDetailsActivity extends AppCompatActivity implements StockDetailsView, View.OnClickListener {
+public class StockDetailsActivity extends BaseActivity implements StockDetailsView, View.OnClickListener {
 
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mma dd MMM, yyyy");
     private static final int REQUEST_CODE_GET_JSON = 3432;
@@ -63,11 +61,9 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock_details);
         stockDetailsPresenter = new StockDetailsPresenter(this);
 
         tradeItemDto = getIntent().getParcelableExtra(OpenLMISConstants.TRADE_ITEM);
-        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.stock_details_title, tradeItemDto.getName()));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -105,6 +101,11 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
     }
 
     @Override
+    public int getLayoutView() {
+        return R.layout.activity_stock_details;
+    }
+
+    @Override
     public void showLotsHeader() {
         lotsHeader.setVisibility(View.VISIBLE);
     }
@@ -119,9 +120,11 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         if (view.getId() == R.id.collapseExpandButton || view.getId() == R.id.number_of_lots) {
             stockDetailsPresenter.collapseExpandClicked(lotsRecyclerView.getVisibility());
         } else if (view.getId() == R.id.issued) {
-            startJsonForm(INDIVIDUAL_ISSUED_FORM);
+            // startJsonForm(INDIVIDUAL_ISSUED_FORM);
+            startJsonForm(INDIVIDUAL_NON_LOT_ISSUE_FORM);
         } else if (view.getId() == R.id.received) {
-            startJsonForm(INDIVIDUAL_RECEIVED_FORM);
+            startJsonForm(INDIVIDUAL_NON_LOT_RECEIPT_FORM);
+            // startJsonForm(INDIVIDUAL_RECEIVED_FORM);
         } else if (view.getId() == R.id.loss_adj) {
             // startJsonForm(INDIVIDUAL_ADJUST_FORM);
             startJsonForm(NON_LOT_INDIVIDUAL_ADJUST_FORM);
@@ -175,7 +178,9 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
             formMetadata = formMetadata.replace(TRADE_ITEM_ID, tradeItemDto.getId());
             formMetadata = formMetadata.replace(NET_CONTENT, tradeItemDto.getNetContent().toString());
             formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
+            formMetadata = formMetadata.replace(STOCK_ON_HAND, tradeItemDto.getTotalStock().toString());
             formMetadata = formMetadata.replace(PROGRAM_ID, tradeItemDto.getProgramId());
+            formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
             intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {

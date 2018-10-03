@@ -3,6 +3,7 @@ package org.smartregister.stock.openlmis.presenter;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
@@ -12,6 +13,7 @@ import com.vijay.jsonwizard.views.JsonFormFragmentView;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.widget.LotFactory;
 import org.smartregister.stock.openlmis.widget.OpenLMISDatePickerFactory;
+import org.smartregister.stock.openlmis.widget.OpenLMISEditTextFactory;
 import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.DATE_PICKER;
@@ -47,6 +49,9 @@ public class OpenLMISJsonFormFragmentPresenter extends JsonFormFragmentPresenter
         } else if (validationStatus.isValid() && childAt instanceof CustomTextInputEditText
                 && childAt.getTag(com.vijay.jsonwizard.R.id.type).equals(DATE_PICKER)) {
             validationStatus = OpenLMISDatePickerFactory.validate(formFragmentView, (CustomTextInputEditText) childAt);
+        } else if (validationStatus.isValid() && childAt instanceof CustomTextInputEditText
+                && childAt.getTag(com.vijay.jsonwizard.R.id.type).equals(JsonFormConstants.EDIT_TEXT)) {
+            validationStatus = OpenLMISEditTextFactory.validate(formFragmentView, (CustomTextInputEditText) childAt);
         }
         return validationStatus;
     }

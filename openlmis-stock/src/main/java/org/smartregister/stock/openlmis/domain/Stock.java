@@ -11,6 +11,8 @@ public class Stock extends org.smartregister.stock.domain.Stock {
 
     private String reason;
 
+    private String vvmStatus;
+
     public Stock() {
         super(null, null, null, 0, null, null,null, null, null);
     }
@@ -43,5 +45,13 @@ public class Stock extends org.smartregister.stock.domain.Stock {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getvvmStatus() {
+        return vvmStatus;
+    }
+
+    public void setvvmStatus(String status) {
+        this.vvmStatus = status;
     }
 }

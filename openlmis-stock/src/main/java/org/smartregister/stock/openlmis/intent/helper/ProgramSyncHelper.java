@@ -73,11 +73,13 @@ public class ProgramSyncHelper extends BaseSyncHelper {
         Long highestTimeStamp = 0L;
         List<Program> programs = new Gson().fromJson(jsonPayload, new TypeToken<List<Program>>(){}.getType());
         boolean isEmptyResponse = true;
-        for (Program program : programs) {
-            isEmptyResponse = false;
-            repository.addOrUpdate(program);
-            if (program.getServerVersion() > highestTimeStamp) {
-                highestTimeStamp = program.getServerVersion();
+        if (programs != null) {
+            for (Program program : programs) {
+                isEmptyResponse = false;
+                repository.addOrUpdate(program);
+                if (program.getServerVersion() > highestTimeStamp) {
+                    highestTimeStamp = program.getServerVersion();
+                }
             }
         }
         // save highest server version

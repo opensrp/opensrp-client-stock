@@ -54,6 +54,8 @@ public class StockRepository extends BaseRepository {
 
     public static final String REASON = "reason";
 
+    public static final String VVM_STATUS = "vvm_status";
+
     private static final String CREATE_STOCK_TABLE = "CREATE TABLE " + stock_TABLE_NAME +
             " (" + ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             STOCK_TYPE_ID + " VARCHAR NOT NULL," +
@@ -70,9 +72,10 @@ public class StockRepository extends BaseRepository {
             LOCATION_ID + " VARCHAR," +
             CHILD_LOCATION_ID + " VARCHAR," +
             TEAM_ID + " VARCHAR," +
-            TEAM_NAME + " VARCHAR)";
+            TEAM_NAME + " VARCHAR," +
+            VVM_STATUS + " VARCHAR)";
 
-    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME};
+    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME, VVM_STATUS};
 
 
     public StockRepository(Repository repository) {
@@ -100,6 +103,7 @@ public class StockRepository extends BaseRepository {
         contentValues.put(CHILD_LOCATION_ID, stock.getChildLocationId());
         contentValues.put(TEAM_NAME, stock.getTeam());
         contentValues.put(TEAM_ID, stock.getTeamId());
+        contentValues.put(VVM_STATUS, stock.getvvmStatus());
         if (stock.getId() != null) {
             getWritableDatabase().update(stock_TABLE_NAME, contentValues, ID_COLUMN + "=?", new String[]{stock.getId().toString()});
         } else {
@@ -275,7 +279,58 @@ public class StockRepository extends BaseRepository {
         stock.setChildLocationId(cursor.getString(cursor.getColumnIndex(CHILD_LOCATION_ID)));
         stock.setTeam(cursor.getString(cursor.getColumnIndex(TEAM_NAME)));
         stock.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
+        stock.setvvmStatus(cursor.getString(cursor.getColumnIndex(VVM_STATUS)));
         return stock;
+    }
+
+    public Map<String, Integer> findStockByTradeItemIds(String programId, List<String> tradeItemIds) {
+        int len = tradeItemIds.size();
+        String query = String.format("SELECT %s, SUM(%s) FROM %s WHERE %s IN (%s) AND %s=? GROUP BY %s",
+                STOCK_TYPE_ID, VALUE, stock_TABLE_NAME, STOCK_TYPE_ID,
+                TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID, STOCK_TYPE_ID);
+        Cursor cursor = null;
+        Map<String, Integer> stockBalances = new HashMap<>();
+        try {
+            String[] params = tradeItemIds.toArray(new String[len + 1]);
+            params[len] = programId;
+            cursor = getReadableDatabase().rawQuery(query, params);
+            while (cursor.moveToNext()) {
+                stockBalances.put(cursor.getString(0), cursor.getInt(1));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return stockBalances;
+
+    }
+
+    public Map<String, Integer> findStockByLotIds(String programId, List<String> lotIds) {
+        int len = lotIds.size();
+        String query = String.format("SELECT %s, SUM(%s) FROM %s WHERE %s IN (%s) AND %s=? GROUP BY %s",
+                LOT_ID, VALUE, stock_TABLE_NAME, LOT_ID,
+                TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID, LOT_ID);
+        Cursor cursor = null;
+        Map<String, Integer> stockBalances = new HashMap<>();
+        try {
+            String[] params = lotIds.toArray(new String[len + 1]);
+            params[len] = programId;
+            cursor = getReadableDatabase().rawQuery(query, params);
+            while (cursor.moveToNext()) {
+                stockBalances.put(cursor.getString(0), cursor.getInt(1));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return stockBalances;
+
     }
 }
 
