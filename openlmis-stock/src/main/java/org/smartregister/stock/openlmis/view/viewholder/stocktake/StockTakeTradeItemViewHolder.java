@@ -89,13 +89,11 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
     private void enableSave() {
         saveButton.setEnabled(true);
         saveButton.setTextColor(saveButton.getResources().getColor(R.color.light_blue));
-        stockTakePresenter.registerStockTake(tradeItemId, this.stockTakeSet);
     }
 
     private void disableSave() {
         saveButton.setEnabled(false);
         saveButton.setTextColor(saveButton.getResources().getColor(R.color.save_disabled));
-        stockTakePresenter.unregisterStockTake(tradeItemId);
     }
 
     @Override
@@ -111,6 +109,7 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         }
         if (isValid)
             enableSave();
+        stockTakePresenter.registerStockTake(tradeItemId, this.stockTakeSet);
     }
 
 

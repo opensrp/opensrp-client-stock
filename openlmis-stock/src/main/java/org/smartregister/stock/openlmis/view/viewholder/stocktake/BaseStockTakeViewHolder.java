@@ -27,7 +27,7 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.StockStatu
 /**
  * Created by samuelgithengi on 10/2/18.
  */
-public class BaseStockTakeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public abstract class BaseStockTakeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private static final String TAG = "StockTakeLotViewHolder";
 
@@ -63,7 +63,7 @@ public class BaseStockTakeViewHolder extends RecyclerView.ViewHolder implements 
 
     protected StockTake stockTake;
 
-    public BaseStockTakeViewHolder(@NonNull View itemView) {
+    protected BaseStockTakeViewHolder(@NonNull View itemView) {
         super(itemView);
         context = itemView.getContext();
         stockOnHandTextView = itemView.findViewById(R.id.stock_on_hand_textview);
