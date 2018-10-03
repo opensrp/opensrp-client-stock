@@ -12,6 +12,8 @@ public interface OpenLMISConstants {
 
     String REVIEW_WIDGET = "review";
 
+    String REFRESH_STOCK_ON_HAND = "refresh_stock";
+
     String SYNC_COMPLETE_INTENT_ACTION = "org.smartregister.stock.openlmis.SYNC_COMPLETE_NOTIFICATION";
 
     String PREV_SYNC_SERVER_VERSION_LOT = "prev_sync_server_version_lot";
@@ -60,6 +62,8 @@ public interface OpenLMISConstants {
 
         String PROGRAM_ID = "[program_id]";
 
+        String STOCK_ON_HAND = "[stock_on_hand]";
+
         String PREVIOUS = "previous";
 
         String PREVIOUS_LABEL = "previous_label";
@@ -84,10 +88,17 @@ public interface OpenLMISConstants {
         String INDIVIDUAL_ISSUED_FORM = "individual_issued_form";
 
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
-        
+
         String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
 
+        String INDIVIDUAL_NON_LOT_ISSUE_FORM = "non_lot_individual_issue_form";
+
         String INDIVIDUAL_NON_LOT_RECEIPT_FORM = "non_lot_individual_receipt_form";
+    }
+
+    interface StockStatus {
+        String VVM1 = "VVM1";
+        String VVM2 = "VVM2";
     }
 
     interface ServiceType {

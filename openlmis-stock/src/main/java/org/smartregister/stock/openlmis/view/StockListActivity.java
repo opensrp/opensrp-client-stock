@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,12 +29,14 @@ import org.smartregister.stock.openlmis.view.contract.StockListView;
 
 import java.util.List;
 
+import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.REFRESH_STOCK_ON_HAND;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.SERVICE_TYPE_NAME;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_OPENLMIS_METADATA;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_STOCK;
 import static org.smartregister.stock.openlmis.util.Utils.sendSyncCompleteBroadCast;
 
-public class StockListActivity extends AppCompatActivity implements StockListView, View.OnClickListener
+public class StockListActivity extends BaseActivity implements StockListView, View.OnClickListener
         , SyncStatusBroadcastReceiver.SyncStatusListener {
 
     private StockListPresenter stockListPresenter;
@@ -43,12 +45,13 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
     private ArrayAdapter<Program> programsAdapter;
 
+    public final static int STOCK_TAKE = 2340;
+
+    private SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock_list);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         stockListPresenter = new StockListPresenter(this);
 
         FloatingActionButton mfFloatingActionButton = findViewById(R.id.stockAction);
@@ -92,7 +95,7 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
 
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
 
-        SearchView searchView = findViewById(R.id.searchStock);
+        searchView = findViewById(R.id.searchStock);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -134,6 +137,18 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         return super.onOptionsItemSelected(item);
     }
 
+    public int getLayoutView() {
+        return R.layout.activity_stock_list;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (searchView != null) {
+            searchView.clearFocus();
+        }
+    }
+
     public void populateTestData() {
         SharedPreferences sharedPreferences = getSharedPreferences("TestDataUtils", Context.MODE_PRIVATE);
         if (!sharedPreferences.getBoolean("testDataPopulated", false)) {
@@ -146,9 +161,29 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
     public void showStockActionMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
         popupMenu.inflate(R.menu.floating_stock_menu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.stock_take)
+                    startBulkActivity(StockTakeActivity.class);
+                return true;
+            }
+        });
         popupMenu.show();
     }
 
+    private void startBulkActivity(Class<? extends AppCompatActivity> activity) {
+        Intent intent = new Intent(getApplicationContext(), activity);
+        intent.putExtra(PROGRAM_ID, adapter.getProgramId());
+        startActivityForResult(intent, STOCK_TAKE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == STOCK_TAKE && resultCode == RESULT_OK &&
+                data != null && data.getBooleanExtra(REFRESH_STOCK_ON_HAND, false))
+            adapter.refresh();
+    }
 
     @Override
     public void onClick(View view) {

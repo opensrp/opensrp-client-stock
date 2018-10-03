@@ -16,7 +16,6 @@
 
         <receiver android:name=".receiver.OpenLMISAlarmReceiver" />
 
-        <receiver android:name=".receiver.OnBootReceiver" />
+        <receiver android:name="org.smartregister.stock.openlmis.receiver.OnBootReceiver" />
     </application>
-
 </manifest>

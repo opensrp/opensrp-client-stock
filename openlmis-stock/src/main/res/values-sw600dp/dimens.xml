@@ -25,5 +25,9 @@
     <dimen name="login_show_password_dimen">13dp</dimen>
     <dimen name="checkbox_margin_top">15dp</dimen>
 
+    <dimen name="search_margin">15dp</dimen>
+    <dimen name="stock_take_top_margin">130dp</dimen>
+    <dimen name="add_subtract_padding_stock_take">18dp</dimen>
+
     <item name="checkbox_scale" format="float" type="dimen">1.5</item>
 </resources>

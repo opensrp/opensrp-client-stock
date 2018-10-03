@@ -59,12 +59,15 @@
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:theme="@style/AppTheme.Login">
+            android:theme="@style/AppTheme.Login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="org.smartregister.stock.openlmis.view.StockTakeActivity"
+            android:parentActivityName="org.smartregister.stock.openlmis.view.StockListActivity" />
     </application>
 </manifest>
