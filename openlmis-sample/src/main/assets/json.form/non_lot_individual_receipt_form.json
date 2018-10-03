@@ -173,6 +173,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Status",
+        "is_non_lot": true,
         "trade_item": "[trade_item]",
         "trade_item_id": "[trade_item_id]",
         "program_id": "[program_id]",

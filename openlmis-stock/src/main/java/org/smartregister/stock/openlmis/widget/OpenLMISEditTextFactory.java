@@ -19,16 +19,20 @@ import com.vijay.jsonwizard.interfaces.CommonListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
 
 import java.util.List;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.EDIT_TEXT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_SPINNABLE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.LIST_OPTIONS;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_NON_LOT;
 
 public class OpenLMISEditTextFactory extends EditTextFactory {
 
     private JSONArray listOptions;
+    private boolean isLotEnabled = true;
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
@@ -41,16 +45,16 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
         List<View> views = super.getViewsFromJson(stepName, context, formFragment, jsonObject, listener);
 
         RelativeLayout rootLayout =  (RelativeLayout) views.get(0);
-        if (jsonObject.has("is_spinnable")) {
-            boolean isSpinnable = (boolean) jsonObject.get("is_spinnable");
-            if (isSpinnable) {
-                CustomTextInputEditText dropDown = (CustomTextInputEditText) ((TextInputLayout) rootLayout.findViewById(R.id.openlmis_edit_text_parent)).getEditText();
-                Drawable spinner = context.getResources().getDrawable(R.drawable.abc_spinner_mtrl_am_alpha);
-                spinner.setColorFilter(Color.parseColor("#9A9A9A"), PorterDuff.Mode.SRC_ATOP);
-                dropDown.setCompoundDrawablesWithIntrinsicBounds(null, null, spinner, null);
-                dropDown.setFocusable(false);
-                populateStatusOptions(context, dropDown);
-            }
+        if (jsonObject.optBoolean(IS_SPINNABLE)) {
+            CustomTextInputEditText dropDown = (CustomTextInputEditText) ((TextInputLayout) rootLayout.findViewById(R.id.openlmis_edit_text_parent)).getEditText();
+            Drawable spinner = context.getResources().getDrawable(R.drawable.abc_spinner_mtrl_am_alpha);
+            spinner.setColorFilter(Color.parseColor("#9A9A9A"), PorterDuff.Mode.SRC_ATOP);
+            dropDown.setCompoundDrawablesWithIntrinsicBounds(null, null, spinner, null);
+            dropDown.setFocusable(false);
+            populateStatusOptions(context, dropDown);
+        }
+        if (jsonObject.optBoolean(IS_NON_LOT)) {
+            isLotEnabled = false;
         }
         return views;
     }
@@ -73,8 +77,8 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
                 String openMrsEntityParent = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent);
                 String openMrsEntity = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity);
                 String openMrsEntityId = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id);
-                formFragment.writeValue(stepName, key, s.toString(), openMrsEntityParent,
-                        openMrsEntity, openMrsEntityId);
+                ((OpenLMISJsonFormFragment) formFragment).writeValue(stepName, key, s.toString(), openMrsEntityParent,
+                        openMrsEntity, openMrsEntityId, isLotEnabled);
 
             }
 

@@ -51,6 +51,7 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_MONTHS_WARNING;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_NON_LOT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET;
 
 /**
@@ -60,7 +61,6 @@ public class LotFactory implements FormWidgetFactory {
 
     private final static String STATUS_FIELD_NAME = "lot_status";
 
-    public final static String NON_LOT_FIELD = "is_non_lot";
     public final static String TRADE_ITEM = "trade_item";
     public final static String TRADE_ITEM_ID = "trade_item_id";
     public final static String NET_CONTENT = "net_content";
@@ -146,7 +146,7 @@ public class LotFactory implements FormWidgetFactory {
         statusOptions = jsonObject.getJSONArray(STATUS_FIELD_NAME);
 
         TextInputEditText lotDropdown = root.findViewById(R.id.lot_dropdown);
-        if (jsonObject.optBoolean(NON_LOT_FIELD)) {
+        if (jsonObject.optBoolean(IS_NON_LOT)) {
             totalStock = stockRepository.getTotalStockByTradeItem(tradeItemId);
             stock = new Stock();
             stock.setStockTypeId(tradeItemId);

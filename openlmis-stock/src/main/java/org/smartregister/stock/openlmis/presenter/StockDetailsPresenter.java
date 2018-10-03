@@ -35,7 +35,7 @@ import static org.smartregister.stock.domain.Stock.loss_adjustment;
 import static org.smartregister.stock.domain.Stock.received;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
-import static org.smartregister.stock.openlmis.widget.LotFactory.NON_LOT_FIELD;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_NON_LOT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM_ID;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.OTHER;
 import static org.smartregister.stock.openlmis.widget.ReviewFactory.STEP2;
@@ -180,7 +180,7 @@ public class StockDetailsPresenter {
 
     private boolean processStockAdjusted(JSONObject jsonString, String provider) throws JSONException {
         JSONArray stepFields = JsonFormUtils.fields(jsonString);
-        boolean isNonLot = stepFields.getJSONObject(0).optBoolean(NON_LOT_FIELD);
+        boolean isNonLot = stepFields.getJSONObject(0).optBoolean(IS_NON_LOT);
         if (isNonLot) {
             return processStockNonLot(STEP1, jsonString, provider, simpleDateFormat.format(new Date()),
                     null, loss_adjustment, null, 0, null);
@@ -265,7 +265,7 @@ public class StockDetailsPresenter {
             stock.setSyncStatus(BaseRepository.TYPE_Unsynced);
             stock.setStockTypeId(tradeItem);
             stock.setDateUpdated(System.currentTimeMillis());
-            stock.setValue(transactionType.equals(issued) ? -quantity : quantity);
+            stock.setValue(quantity);
         } else {
             stock = new Stock(null, transactionType,
                     provider, transactionType.equals(issued) ? -quantity : quantity,

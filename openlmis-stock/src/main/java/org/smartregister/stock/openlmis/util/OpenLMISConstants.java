@@ -67,6 +67,10 @@ public interface OpenLMISConstants {
         String NO_PADDING = "no_padding";
 
         String LIST_OPTIONS = "list_options";
+
+        String IS_NON_LOT = "is_non_lot";
+
+        String IS_SPINNABLE = "is_spinnable";
     }
 
     interface Forms {

@@ -16,24 +16,21 @@ import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.interactor.OpenLMISJsonFormInteractor;
 import org.smartregister.stock.openlmis.presenter.OpenLMISJsonFormFragmentPresenter;
-import org.smartregister.stock.openlmis.widget.LotFactory;
 import org.smartregister.stock.util.Constants;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_ENABLED;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_LABEL;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_TYPE;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_NON_LOT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NO_PADDING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS_LABEL;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.SUBMIT;
-import static org.smartregister.stock.openlmis.widget.LotFactory.NON_LOT_FIELD;
 
 /**
  * Created by samuelgithengi on 8/16/18.
@@ -122,7 +119,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
             nextButton.setText(step.optString(NEXT_LABEL));
 
         try {
-            boolean isNonLot = step.getJSONArray("fields").getJSONObject(0).optBoolean(NON_LOT_FIELD);
+            boolean isNonLot = step.getJSONArray("fields").getJSONObject(0).optBoolean(IS_NON_LOT);
             if (isNonLot) {
                 informationTextView.setVisibility(View.INVISIBLE);
             }

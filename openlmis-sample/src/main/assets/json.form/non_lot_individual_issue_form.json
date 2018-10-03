@@ -181,6 +181,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
+        "is_non_lot": true,
         "type": "edit_text",
         "hint": "Status",
         "trade_item": "[trade_item]",
