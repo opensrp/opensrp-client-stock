@@ -11,6 +11,7 @@ import org.smartregister.stock.openlmis.listener.StockTakeListener;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
 
 import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * Created by samuelgithengi on 10/2/18.
@@ -45,9 +46,10 @@ public class NonLotTradeItemViewHolder extends BaseStockTakeViewHolder implement
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (stockTakePresenter.saveStockTake(Collections.singleton(stockTake))) {
+                HashSet<StockTake> stockTakeSet = new HashSet<>(Collections.singleton(stockTake));
+                if (stockTakePresenter.saveStockTake(stockTakeSet)) {
                     stockTakeCompleted();
-                    stockTakePresenter.updateAdjustedTradeItems(Collections.singleton(stockTake));
+                    stockTakePresenter.updateAdjustedTradeItems(stockTakeSet);
                 }
             }
         });
@@ -83,7 +85,8 @@ public class NonLotTradeItemViewHolder extends BaseStockTakeViewHolder implement
     private void enableSave() {
         saveButton.setEnabled(true);
         saveButton.setTextColor(saveButton.getResources().getColor(R.color.light_blue));
-        stockTakePresenter.registerStockTake(tradeItemId, Collections.singleton(stockTake));
+        new HashSet<>();
+        stockTakePresenter.registerStockTake(tradeItemId, new HashSet<>(Collections.singleton(stockTake)));
     }
 
     private void disableSave() {
@@ -98,10 +101,9 @@ public class NonLotTradeItemViewHolder extends BaseStockTakeViewHolder implement
             enableSave();
         else
             disableSave();
-        stockTakePresenter.registerStockTake(tradeItemId, Collections.singleton(stockTake));
     }
 
-    private void stockTakeCompleted() {
+    public void stockTakeCompleted() {
         pendingStockTake.setVisibility(View.GONE);
         completedStockTake.setVisibility(View.VISIBLE);
         completedTradeItem.setText(tradeItemTextView.getText());

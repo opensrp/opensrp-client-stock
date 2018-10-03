@@ -111,7 +111,6 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         }
         if (isValid)
             enableSave();
-        stockTakePresenter.registerStockTake(tradeItemId, stockTakeSet);
     }
 
 

@@ -119,7 +119,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
 
         Set<StockTake> stockTakeSet = stockTakePresenter.findStockTakeList(programId, tradeItem.getId());
 
-        if (!stockTakeSet.isEmpty() && !stockTakePresenter.getAdjustedTradeItems().contains(tradeItem.getId())) {
+        if (!stockTakeSet.isEmpty()) {
             if (stockTakeSet.size() > 1)
                 Log.w(TAG, String.format("Multiple stock take for Non-Lot Managed Trade Item %s %s ",
                         tradeItem.getId(), tradeItem.getName()));
@@ -131,6 +131,8 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
             stockTakeTradeItemViewHolder.setPhysicalCount(stockOnHand + stockTake.getQuantity());
             stockTakeTradeItemViewHolder.activateNoChange(stockTake.isNoChange());
             stockTakeTradeItemViewHolder.registerStockTake(stockTake);
+            if (stockTakePresenter.getAdjustedTradeItems().contains(tradeItem.getId()))
+                stockTakeTradeItemViewHolder.stockTakeCompleted();
         } else {
             StockTake stockTake = new StockTake(programId, commodityTypeId, tradeItem.getId(), null);
             stockTake.setLastUpdated(System.currentTimeMillis());
