@@ -26,5 +26,11 @@
     <dimen name="review_margin">8dp</dimen>
 
     <dimen name="add_subtract_padding">8dp</dimen>
-    <dimen name="add_subtract_margin" >8dp</dimen>
+    <dimen name="add_subtract_margin">8dp</dimen>
+    <dimen name="add_subtract_font">14dp</dimen>
+
+    <dimen name="search_margin">10dp</dimen>
+
+    <dimen name="stock_take_top_margin">120dp</dimen>
+    <dimen name="add_subtract_padding_stock_take">8dp</dimen>
 </resources>

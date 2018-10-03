@@ -7,9 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,7 +42,7 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.T
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM_ID;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.USE_VVM;
 
-public class StockDetailsActivity extends AppCompatActivity implements StockDetailsView, View.OnClickListener {
+public class StockDetailsActivity extends BaseActivity implements StockDetailsView, View.OnClickListener {
 
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mma dd MMM, yyyy");
     private static final int REQUEST_CODE_GET_JSON = 3432;
@@ -66,11 +64,9 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stock_details);
         stockDetailsPresenter = new StockDetailsPresenter(this);
 
         tradeItemDto = getIntent().getParcelableExtra(OpenLMISConstants.TRADE_ITEM);
-        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.stock_details_title, tradeItemDto.getName()));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -110,6 +106,11 @@ public class StockDetailsActivity extends AppCompatActivity implements StockDeta
         findViewById(R.id.issued).setOnClickListener(this);
         findViewById(R.id.received).setOnClickListener(this);
         findViewById(R.id.loss_adj).setOnClickListener(this);
+    }
+
+    @Override
+    public int getLayoutView() {
+        return R.layout.activity_stock_details;
     }
 
     @Override

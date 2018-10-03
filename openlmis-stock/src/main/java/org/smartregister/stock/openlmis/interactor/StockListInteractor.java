@@ -27,20 +27,14 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_M
 /**
  * Created by samuelgithengi on 7/13/18.
  */
-public class StockListInteractor {
+public class StockListInteractor extends StockListBaseInteractor {
 
     private ProgramRepository programRepository;
-
-    private CommodityTypeRepository commodityTypeRepository;
-
-
-    private TradeItemRepository tradeItemRepository;
 
     private StockRepository stockRepository;
 
     private SearchRepository searchRepository;
 
-    private ProgramOrderableRepository programOrderableRepository;
 
     public StockListInteractor() {
         this(new ProgramRepository(OpenLMISLibrary.getInstance().getRepository()),
@@ -57,12 +51,9 @@ public class StockListInteractor {
                                   TradeItemRepository tradeItemRepository,
                                   StockRepository stockRepository,
                                   SearchRepository searchRepository, ProgramOrderableRepository programOrderableRepository) {
+        super(commodityTypeRepository, programOrderableRepository, tradeItemRepository, searchRepository);
         this.programRepository = programRepository;
-        this.commodityTypeRepository = commodityTypeRepository;
-        this.tradeItemRepository = tradeItemRepository;
         this.stockRepository = stockRepository;
-        this.searchRepository = searchRepository;
-        this.programOrderableRepository = programOrderableRepository;
     }
 
     public List<Program> getPrograms() {
@@ -74,16 +65,7 @@ public class StockListInteractor {
     }
 
     public List<TradeItemWrapper> getTradeItems(CommodityType commodityType) {
-        return populateTradeItemWrapper(tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString()));
-    }
-
-
-    public List<CommodityType> findCommodityTypesByIds(Set<String> ids) {
-        return commodityTypeRepository.findCommodityTypesByIds(ids);
-    }
-
-    public Map<String, Set<String>> searchIds(String searchPhrase) {
-        return searchRepository.searchIds(searchPhrase);
+        return populateTradeItemWrapper(getTradeItemsByCommodityType(commodityType.getId()));
     }
 
     public List<TradeItemWrapper> findTradeItemsByIds(Set<String> tradeItemIds) {
@@ -127,7 +109,4 @@ public class StockListInteractor {
         return tradeItemWrappers;
     }
 
-    public Map<String, Set<String>> searchIdsByPrograms(String programId) {
-        return programOrderableRepository.searchIdsByPrograms(programId);
-    }
 }

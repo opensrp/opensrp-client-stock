@@ -63,6 +63,9 @@ public class SynchronizedUpdater {
                     tradeItemRegisterRepository.addOrUpdate(registerTradeItem);
                 }
             }
+            if (StringUtils.isNotBlank(orderable.getCommodityTypeId()))
+                searchRepository.addOrUpdate(commodityTypeRepository.findCommodityTypeById(
+                        orderable.getCommodityTypeId()), registerTradeItems);
             return;
         }
 
@@ -77,7 +80,9 @@ public class SynchronizedUpdater {
             registerTradeItem.setDispensable(dispensable);
         }
         tradeItemRegisterRepository.addOrUpdate(registerTradeItem);
-
+        if (StringUtils.isNotBlank(registerTradeItem.getCommodityTypeId()))
+            searchRepository.addOrUpdate(commodityTypeRepository.findCommodityTypeById(
+                    registerTradeItem.getCommodityTypeId()), Collections.singletonList(registerTradeItem));
 
     }
 
@@ -89,10 +94,7 @@ public class SynchronizedUpdater {
             if (tradeItem != null) {
                 tradeItem.setDispensable(dispensable);
                 tradeItemRegisterRepository.addOrUpdate(tradeItem);
-                if (StringUtils.isNotBlank(tradeItem.getCommodityTypeId())) {
-                    searchRepository.addOrUpdate(commodityTypeRepository.findCommodityTypeById(tradeItem.getCommodityTypeId()),
-                            Collections.singletonList(tradeItem));
-                }
+
             } else if (tradeItemsByCommodityType.size() > 0) {
                 String commodityTypeId = null;
                 for (org.smartregister.stock.openlmis.domain.TradeItem savedTradeItem : tradeItemsByCommodityType) {
@@ -101,8 +103,6 @@ public class SynchronizedUpdater {
                     if (commodityTypeId == null && StringUtils.isNotBlank(savedTradeItem.getCommodityTypeId()))
                         commodityTypeId = savedTradeItem.getCommodityTypeId();
                 }
-                searchRepository.addOrUpdate(commodityTypeRepository.findCommodityTypeById(commodityTypeId),
-                        tradeItemsByCommodityType);
             }
         }
     }
