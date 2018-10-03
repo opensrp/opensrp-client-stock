@@ -1,4 +1,4 @@
-package org.smartregister.stock.management.receiver;
+package org.smartregister.stock.openlmis.receiver;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -22,21 +22,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static org.smartregister.stock.management.util.ServiceUtils.startService;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.SERVICE_ACTION_NAME;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.SERVICE_TYPE_NAME;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_OPENLMIS_METADATA;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_STOCK;
+import static org.smartregister.stock.openlmis.util.ServiceUtils.startService;
 
 public class OpenLMISAlarmReceiver extends BroadcastReceiver {
 
     private static final String TAG = OpenLMISAlarmReceiver.class.getCanonicalName();
-    private static final String SERVICE_ACTION_NAME = "org.smartregister.path.action.START_SERVICE_ACTION";
-    private static final String SERVICE_TYPE_NAME = "serviceType";
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public void onReceive(Context context, Intent alarmIntent) {
         int serviceType = alarmIntent.getIntExtra(SERVICE_TYPE_NAME, 0);
-        Intent serviceIntent = null;
         switch (serviceType) {
             case SYNC_OPENLMIS_METADATA:
                 startService(context, CommodityTypeSyncIntentService.class);
@@ -56,9 +55,6 @@ public class OpenLMISAlarmReceiver extends BroadcastReceiver {
                 break;
             default:
                 break;
-        }
-        if (serviceIntent != null) {
-            context.startService(serviceIntent);
         }
     }
 

@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.black)));
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        preferences.edit().putString(DRISHTI_BASE_URL, "http://10.20.25.33:8080/opensrp").commit();
+        preferences.edit().putString(DRISHTI_BASE_URL, "https://vreach-dev.smartregister.org/opensrp/").commit();
 
         appContext = this;
         positionViews();

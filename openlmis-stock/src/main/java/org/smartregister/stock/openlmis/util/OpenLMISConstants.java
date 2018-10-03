@@ -44,6 +44,10 @@ public interface OpenLMISConstants {
 
     String URDU_LOCALE = "ur";
 
+    String SERVICE_TYPE_NAME = "serviceType";
+
+    String SERVICE_ACTION_NAME = "org.smartregister.path.action.START_SERVICE_ACTION";
+
     interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";

@@ -55,13 +55,6 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
-        <receiver android:name=".receiver.OnBootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".receiver.OpenLMISAlarmReceiver" />
-
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"

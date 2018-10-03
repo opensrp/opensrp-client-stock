@@ -1,11 +1,14 @@
 package org.smartregister.stock.management.application;
 
+import android.content.Intent;
+
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.BuildConfig;
-import org.smartregister.stock.management.receiver.OpenLMISAlarmReceiver;
+import org.smartregister.stock.management.activity.LoginActivity;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.receiver.OpenLMISAlarmReceiver;
 import org.smartregister.stock.openlmis.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.stock.openlmis.repository.StockManagementRepository;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -25,6 +28,7 @@ public class Application extends DrishtiApplication {
         context.updateApplicationContext(this);
         CoreLibrary.init(context);
         OpenLMISLibrary.init(context, getRepository());  // Initialize OpenLMISLibrary
+        OpenLMISLibrary.getInstance().setApplication(this);
         setAlarms(getApplicationContext());
         SyncStatusBroadcastReceiver.init(this);
     }
@@ -52,7 +56,12 @@ public class Application extends DrishtiApplication {
 
     @Override
     public void logoutCurrentUser() {
-
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        getApplicationContext().startActivity(intent);
+        context.userService().logoutSession();
     }
 
     @Override

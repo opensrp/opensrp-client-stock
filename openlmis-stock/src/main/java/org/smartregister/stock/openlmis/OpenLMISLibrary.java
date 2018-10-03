@@ -15,6 +15,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
+import org.smartregister.view.activity.DrishtiApplication;
 
 
 /**
@@ -38,6 +39,7 @@ public class OpenLMISLibrary {
     private StockRepository stockRepository;
     private SettingsRepository settingsRepository;
     private SearchRepository searchRepository;
+    private DrishtiApplication application;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -160,5 +162,13 @@ public class OpenLMISLibrary {
             searchRepository = new SearchRepository(getRepository());
         }
         return searchRepository;
+    }
+
+    public DrishtiApplication getApplication() {
+        return application;
+    }
+
+    public void setApplication(DrishtiApplication application) {
+        this.application = application;
     }
 }

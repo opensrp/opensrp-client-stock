@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,15 +17,22 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
+import org.smartregister.stock.openlmis.receiver.OpenLMISAlarmReceiver;
 import org.smartregister.stock.openlmis.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.stock.openlmis.util.TestDataUtils;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
 import java.util.List;
+
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.SERVICE_TYPE_NAME;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_OPENLMIS_METADATA;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_STOCK;
+import static org.smartregister.stock.openlmis.util.Utils.sendSyncCompleteBroadCast;
 
 public class StockListActivity extends AppCompatActivity implements StockListView, View.OnClickListener
         , SyncStatusBroadcastReceiver.SyncStatusListener {
@@ -42,8 +50,6 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         stockListPresenter = new StockListPresenter(this);
-
-        //populateTestData();
 
         FloatingActionButton mfFloatingActionButton = findViewById(R.id.stockAction);
         mfFloatingActionButton.setOnClickListener(this);
@@ -111,7 +117,19 @@ public class StockListActivity extends AppCompatActivity implements StockListVie
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getTitle().toString().equalsIgnoreCase("Sync")) {
+            // send openlmis metadata sync broadcast
+            Intent intent = new Intent(getApplicationContext(), OpenLMISAlarmReceiver.class);
+            intent.putExtra(SERVICE_TYPE_NAME, SYNC_OPENLMIS_METADATA);
+            sendBroadcast(intent);
+            // send stock sync broadcast
+            intent = new Intent(getApplicationContext(), OpenLMISAlarmReceiver.class);
+            intent.putExtra(SERVICE_TYPE_NAME, SYNC_STOCK);
+            sendBroadcast(intent);
+            // send sync completed broadcast
+            sendSyncCompleteBroadCast(getApplication());
             return true;
+        } else if (item.getTitle().toString().equalsIgnoreCase("Logout")) {
+            OpenLMISLibrary.getInstance().getApplication().getInstance().logoutCurrentUser();
         }
         return super.onOptionsItemSelected(item);
     }

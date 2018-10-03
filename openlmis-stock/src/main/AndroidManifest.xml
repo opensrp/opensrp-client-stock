@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.smartregister.stock.openlmis">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application>
         <activity
             android:name=".view.StockListActivity"
@@ -11,6 +13,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+
+        <receiver android:name=".receiver.OpenLMISAlarmReceiver" />
+
+        <receiver android:name=".receiver.OnBootReceiver" />
     </application>
 
 </manifest>
