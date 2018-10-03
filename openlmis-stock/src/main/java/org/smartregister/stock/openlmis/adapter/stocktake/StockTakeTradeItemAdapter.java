@@ -51,9 +51,9 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public int getItemViewType(int position) {
         if (tradeItems.get(position).getHasLots()) {
-            return ViewType.LOT_MANAGED.value;
+            return ViewType.LOT_MANAGED.getValue();
         } else {
-            return ViewType.NON_LOT_MANGED.value;
+            return ViewType.NON_LOT_MANGED.getValue();
         }
     }
 
@@ -61,7 +61,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
-        if (ViewType.LOT_MANAGED.value == viewType) {
+        if (ViewType.LOT_MANAGED.getValue() == viewType) {
             View view = LayoutInflater.from(context).inflate(
                     R.layout.stock_take_trade_item_row, viewGroup, false);
             return new StockTakeTradeItemViewHolder(view);
@@ -157,6 +157,10 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
 
         ViewType(int value) {
             this.value = value;
+        }
+
+        public int getValue() {
+            return value;
         }
     }
 }
