@@ -42,7 +42,7 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
             if (facilityTypeUuid != null && openlmisUuid != null) {
                 pullFromServer( PROGRAM_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID +  "=" + openlmisUuid);
             }
-            pullFromServer(PROGRAM_SYNC_URL);
+            pullFromServer(PROGRAM_SYNC_URL + "?");
         }
     }
 

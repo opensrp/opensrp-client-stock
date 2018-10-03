@@ -47,7 +47,7 @@ public class ProgramSyncHelper extends BaseSyncHelper {
         }
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION_PROGRAM, 0);
         String timestampStr = String.valueOf(timestamp);
-        String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
+        String uri = MessageFormat.format("{0}/{1}&sync_server_version={2}",
                 BASE_URL,
                 url,
                 timestampStr

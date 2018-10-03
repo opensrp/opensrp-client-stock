@@ -42,7 +42,7 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
             if (facilityTypeUuid != null && programId != null) {
                 pullFromServer(REASON_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + PROGRAM_ID +  "=" + programId);
             }
-            pullFromServer(REASON_SYNC_URL);
+            pullFromServer(REASON_SYNC_URL + "?");
         }
     }
 
