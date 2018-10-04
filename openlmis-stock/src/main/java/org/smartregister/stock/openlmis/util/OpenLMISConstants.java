@@ -58,6 +58,8 @@ public interface OpenLMISConstants {
 
         String PROGRAM_ID = "[program_id]";
 
+        String USE_VVM = "[use_vvm]";
+
         String STOCK_ON_HAND = "[stock_on_hand]";
 
         String PREVIOUS = "previous";

@@ -175,7 +175,8 @@
         "lot_status": [
           "VVM1",
           "VVM2"
-        ]
+        ],
+        "use_vvm": "[use_vvm]"
       }
     ]
   },

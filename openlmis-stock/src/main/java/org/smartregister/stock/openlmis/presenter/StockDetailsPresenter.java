@@ -227,6 +227,8 @@ public class StockDetailsPresenter {
             stock.setvvmStatus(lot.getLotStatus());
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
+            if( transactionType.equals(received))
+                stockDetailsInteractor.updateLotStatus(lot.getLotId(),lot.getLotStatus());
         }
         return true;
     }
