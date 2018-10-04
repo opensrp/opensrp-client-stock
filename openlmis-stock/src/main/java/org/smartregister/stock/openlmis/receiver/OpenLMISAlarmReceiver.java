@@ -17,6 +17,7 @@ import org.smartregister.stock.openlmis.intent.service.ProgramSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.ReasonSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.TradeItemClassificationSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.TradeItemSyncIntentService;
+import org.smartregister.stock.openlmis.intent.service.ValidSourceDestinationSyncIntentService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,15 +39,18 @@ public class OpenLMISAlarmReceiver extends BroadcastReceiver {
         int serviceType = alarmIntent.getIntExtra(SERVICE_TYPE_NAME, 0);
         switch (serviceType) {
             case SYNC_OPENLMIS_METADATA:
+                startService(context, ProgramSyncIntentService.class);
                 startService(context, CommodityTypeSyncIntentService.class);
                 startService(context, DispensableSyncIntentService.class);
                 startService(context, LotSyncIntentService.class);
                 startService(context, OrderableSyncIntentService.class);
                 startService(context, ProgramOrderableSyncIntentService.class);
                 startService(context, ProgramSyncIntentService.class);
-                startService(context, ReasonSyncIntentService.class);
                 startService(context, TradeItemClassificationSyncIntentService.class);
                 startService(context, TradeItemSyncIntentService.class);
+                startService(context, ValidSourceDestinationSyncIntentService.class);
+                startService(context, ReasonSyncIntentService.class);
+
                 Log.i(TAG, "Started OpenLMIS metadata sync service at: " + DATE_FORMATTER.format(new Date()));
                 break;
             case SYNC_STOCK:

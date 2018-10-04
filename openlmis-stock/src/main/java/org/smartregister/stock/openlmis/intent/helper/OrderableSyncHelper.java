@@ -26,7 +26,6 @@ import static org.smartregister.util.Log.logInfo;
 
 public class OrderableSyncHelper extends BaseSyncHelper {
 
-    private static final String TRADE_ITEM_SYNC_URL = "rest/orderables/sync";
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private OrderableRepository orderableRepository;
@@ -38,7 +37,7 @@ public class OrderableSyncHelper extends BaseSyncHelper {
         this.actionService = actionService;
     }
 
-    protected String pullFromServer() {
+    protected String pullFromServer(String url) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -49,7 +48,7 @@ public class OrderableSyncHelper extends BaseSyncHelper {
         String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
-                TRADE_ITEM_SYNC_URL,
+                url,
                 timestampStr
         );
         // TODO: make baseUrl configurable

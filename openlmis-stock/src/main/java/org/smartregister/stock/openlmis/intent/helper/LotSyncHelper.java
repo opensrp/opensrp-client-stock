@@ -28,7 +28,6 @@ public class LotSyncHelper extends BaseSyncHelper {
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private LotRepository repository;
-    private static final String LOT_SYNC_URL = "rest/lots/sync";
 
     public LotSyncHelper(Context context, ActionService actionService, HTTPAgent httpAgent) {
         this.repository = OpenLMISLibrary.getInstance().getLotRepository();
@@ -37,7 +36,7 @@ public class LotSyncHelper extends BaseSyncHelper {
         this.httpAgent = httpAgent;
     }
 
-    protected String pullFromServer() {
+    protected String pullFromServer(String url) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -48,7 +47,7 @@ public class LotSyncHelper extends BaseSyncHelper {
         String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
-                LOT_SYNC_URL,
+                url,
                 timestampStr
         );
         // TODO: make baseUrl configurable

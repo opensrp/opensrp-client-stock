@@ -26,7 +26,6 @@ import static org.smartregister.util.Log.logError;
 
 public class CommodityTypeSyncHelper extends BaseSyncHelper {
 
-    private static final String COMMODITY_TYPE_SYNC_URL = "rest/commodity-types/sync";
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private CommodityTypeRepository commodityTypeRepository;
@@ -41,14 +40,14 @@ public class CommodityTypeSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    protected String pullFromServer() {
+    protected String pullFromServer(String url) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION_COMMODITY_TYPE, 0);
         String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
-                COMMODITY_TYPE_SYNC_URL,
+                url,
                 timestampStr
         );
         // TODO: make baseUrl configurable

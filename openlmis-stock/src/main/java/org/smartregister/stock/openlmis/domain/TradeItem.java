@@ -78,7 +78,7 @@ public class TradeItem {
         this.dispensable = dispensable;
     }
 
-    public boolean getUseVvm() {
+    public boolean isUseVvm() {
         return useVvm;
     }
 
@@ -86,7 +86,7 @@ public class TradeItem {
         this.useVvm = useVvm;
     }
 
-    public boolean getHasLots() {
+    public boolean isHasLots() {
         return hasLots;
     }
 

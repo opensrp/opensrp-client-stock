@@ -26,7 +26,6 @@ import static org.smartregister.util.Log.logInfo;
 
 public class DispensableSyncHelper extends BaseSyncHelper {
 
-    private static final String DISPENSABLE_SYNC_URL = "rest/dispensables/sync";
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private DispensableRepository repository;
@@ -38,7 +37,7 @@ public class DispensableSyncHelper extends BaseSyncHelper {
         this.httpAgent = httpAgent;
     }
 
-    protected String pullFromServer() {
+    protected String pullFromServer(String url) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -49,7 +48,7 @@ public class DispensableSyncHelper extends BaseSyncHelper {
         String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
-                DISPENSABLE_SYNC_URL,
+                url,
                 timestampStr
         );
         // TODO: make baseUrl configurable

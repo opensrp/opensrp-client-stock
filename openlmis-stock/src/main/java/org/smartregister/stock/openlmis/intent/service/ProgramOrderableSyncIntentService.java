@@ -12,6 +12,8 @@ import org.smartregister.stock.util.NetworkUtils;
 
 public class ProgramOrderableSyncIntentService extends IntentService implements SyncIntentService {
 
+    private static final String PROGRAM_ORDERABLE_SYNC_URL = "rest/program-orderables/sync";
+
     private Context context;
     private ProgramOrderableSyncHelper syncHelper;
 
@@ -31,12 +33,12 @@ public class ProgramOrderableSyncIntentService extends IntentService implements 
     @Override
     protected void onHandleIntent(Intent workIntent) {
         if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer();
+            pullFromServer(PROGRAM_ORDERABLE_SYNC_URL);
         }
     }
 
     @Override
-    public void pullFromServer() {
-        syncHelper.processIntent();
+    public void pullFromServer(String url) {
+        syncHelper.processIntent(url);
     }
 }

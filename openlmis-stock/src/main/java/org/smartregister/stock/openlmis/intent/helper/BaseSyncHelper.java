@@ -10,12 +10,12 @@ public abstract class BaseSyncHelper {
 
     protected Context context;
 
-    protected abstract String pullFromServer();
+    protected abstract String pullFromServer(String url);
 
     protected abstract boolean saveResponse(String response, SharedPreferences preferences);
 
-    public void processIntent() {
-        String response = pullFromServer();
+    public void processIntent(String url) {
+        String response = pullFromServer(url);
         if (response == null) {
             return;
         }

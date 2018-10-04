@@ -12,6 +12,8 @@ import org.smartregister.stock.util.NetworkUtils;
 
 public class OrderableSyncIntentService extends IntentService implements SyncIntentService {
 
+    private static final String TRADE_ITEM_SYNC_URL = "rest/orderables/sync";
+
     private Context context;
     private OrderableSyncHelper syncHelper;
 
@@ -32,12 +34,12 @@ public class OrderableSyncIntentService extends IntentService implements SyncInt
     @Override
     protected void onHandleIntent(Intent workIntent) {
         if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer();
+            pullFromServer(TRADE_ITEM_SYNC_URL);
         }
     }
 
     @Override
-    public void pullFromServer() {
-        syncHelper.processIntent();
+    public void pullFromServer(String url) {
+        syncHelper.processIntent(url);
     }
 }

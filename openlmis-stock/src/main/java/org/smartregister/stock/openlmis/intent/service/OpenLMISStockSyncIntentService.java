@@ -10,7 +10,9 @@ import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.intent.helper.OpenLMISStockSyncHelper;
 import org.smartregister.stock.util.NetworkUtils;
 
-public class OpenLMISStockSyncIntentService extends IntentService {
+public class OpenLMISStockSyncIntentService extends IntentService implements SyncIntentService {
+
+    private static final String STOCK_SYNC_PATH = "rest/stockresource/sync/";
 
     private Context context;
     private OpenLMISStockSyncHelper syncHelper;
@@ -32,7 +34,12 @@ public class OpenLMISStockSyncIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent workIntent) {
         if (NetworkUtils.isNetworkAvailable(context)) {
-            syncHelper.processIntent();
+            pullFromServer(STOCK_SYNC_PATH);
         }
+    }
+
+    @Override
+    public void pullFromServer(String url) {
+        syncHelper.processIntent(url);
     }
 }

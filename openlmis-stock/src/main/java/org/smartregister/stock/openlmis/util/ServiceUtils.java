@@ -7,6 +7,7 @@ import android.content.Intent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 
 import java.util.List;
+import java.util.Map;
 
 public class ServiceUtils {
 

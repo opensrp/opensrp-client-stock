@@ -13,8 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="org.smartregister.stock.openlmis.view.StockListActivity" />
-
         <service
             android:name="org.smartregister.stock.openlmis.intent.service.LotSyncIntentService"
             android:exported="false" />
@@ -46,9 +44,15 @@
             android:name="org.smartregister.stock.openlmis.intent.service.OpenLMISStockSyncIntentService"
             android:exported="false" />
 
+        <service android:name="org.smartregister.stock.openlmis.intent.service.ValidSourceDestinationSyncIntentService"
+            android:exported="false"/>
+
+        <activity android:name="org.smartregister.stock.openlmis.view.StockListActivity" />
+
         <activity
             android:name="org.smartregister.stock.openlmis.view.StockDetailsActivity"
             android:parentActivityName="org.smartregister.stock.openlmis.view.StockListActivity" />
+
         <activity
             android:name="org.smartregister.stock.openlmis.activity.OpenLMISJsonForm"
             android:screenOrientation="portrait"

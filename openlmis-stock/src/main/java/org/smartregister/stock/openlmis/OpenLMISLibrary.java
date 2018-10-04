@@ -17,6 +17,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
 import org.smartregister.view.activity.DrishtiApplication;
+import org.smartregister.stock.openlmis.repository.openlmis.ValidSourceDestinationRepository;
 
 
 /**
@@ -41,6 +42,9 @@ public class OpenLMISLibrary {
     private SettingsRepository settingsRepository;
     private SearchRepository searchRepository;
     private DrishtiApplication application;
+    private ValidSourceDestinationRepository validSourceDestinationRepository;
+    private String facilityTypeUuid;
+    private String openlmisUuid;
     private StockTakeRepository stockTakeRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
@@ -146,6 +150,13 @@ public class OpenLMISLibrary {
         return stockRepository;
     }
 
+    public ValidSourceDestinationRepository getValidSourceDestinationRepository() {
+        if (validSourceDestinationRepository == null) {
+            validSourceDestinationRepository = new ValidSourceDestinationRepository(getRepository());
+        }
+        return validSourceDestinationRepository;
+    }
+
     public SettingsRepository getSettingsRepository() {
         if (settingsRepository == null) {
             for (DrishtiRepository repository : getContext().sharedRepositories()) {
@@ -158,7 +169,6 @@ public class OpenLMISLibrary {
         return settingsRepository;
     }
 
-
     public SearchRepository getSearchRepository() {
         if (searchRepository == null) {
             searchRepository = new SearchRepository(getRepository());
@@ -166,12 +176,29 @@ public class OpenLMISLibrary {
         return searchRepository;
     }
 
+
     public DrishtiApplication getApplication() {
         return application;
     }
 
     public void setApplication(DrishtiApplication application) {
         this.application = application;
+    }
+
+    public String getFacilityTypeUuid() {
+        return facilityTypeUuid;
+    }
+
+    public String getOpenlmisUuid() {
+        return openlmisUuid;
+    }
+
+    public void setFacilityTypeUuid(String facilityTypeUuid) {
+        this.facilityTypeUuid = facilityTypeUuid;
+    }
+
+    public void setOpenlmisUuid(String openlmisUuid) {
+        this.openlmisUuid = openlmisUuid;
     }
 
     public StockTakeRepository getStockTakeRepository() {

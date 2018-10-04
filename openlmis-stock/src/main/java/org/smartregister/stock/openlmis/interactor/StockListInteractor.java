@@ -74,22 +74,36 @@ public class StockListInteractor extends StockListBaseInteractor {
 
     private List<TradeItemWrapper> populateTradeItemWrapper(List<TradeItem> tradeItems) {
         List<TradeItemWrapper> tradeItemWrappers = new ArrayList<>();
-        List<String> ids = new ArrayList<>();
-        for (TradeItem tradeItem : tradeItems)
-            ids.add(tradeItem.getId());
-        Map<String, List<LotDetailsDto>> lotsListMap = stockRepository.getNumberOfLotsByTradeItem(ids);
+        List<String> tradeItemsWithLotsIds = new ArrayList<>();
+        List<String> tradeItemsWithoutLotsIds = new ArrayList<>();
+        for (TradeItem tradeItem : tradeItems) {
+            if (tradeItem.isHasLots())
+                tradeItemsWithLotsIds.add(tradeItem.getId());
+            else
+                tradeItemsWithoutLotsIds.add(tradeItem.getId());
+        }
+        Map<String, List<LotDetailsDto>> lotsListMap = stockRepository.getNumberOfLotsByTradeItem(tradeItemsWithLotsIds);
+        Map<String, Integer> nonLotManagedBalances = stockRepository.getTotalStockByTradeItems(tradeItemsWithoutLotsIds);
+
         for (TradeItem tradeItem : tradeItems) {
             TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
-            List<LotDetailsDto> lots = lotsListMap.get(tradeItem.getId());
-            int totalStock = 0;
-            if (lots != null) {
-                for (LotDetailsDto lotDetailsDto : lots)
-                    totalStock += lotDetailsDto.getTotalStock();
-                tradeItemWrapper.setNumberOfLots(lots.size());
-                LocalDate maxExpiringDate = new LocalDate(lots.iterator().next().getMinimumExpiryDate());
-                tradeItemWrapper.setHasLotExpiring(new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING).isAfter(maxExpiringDate));
+            if (tradeItem.isHasLots()) {
+                List<LotDetailsDto> lots = lotsListMap.get(tradeItem.getId());
+                int totalStock = 0;
+                if (lots != null) {
+                    for (LotDetailsDto lotDetailsDto : lots)
+                        totalStock += lotDetailsDto.getTotalStock();
+                    tradeItemWrapper.setNumberOfLots(lots.size());
+                    LocalDate maxExpiringDate = new LocalDate(lots.iterator().next().getMinimumExpiryDate());
+                    tradeItemWrapper.setHasLotExpiring(new LocalDate().plusMonths(EXPIRING_MONTHS_WARNING).isAfter(maxExpiringDate));
+                }
+                tradeItemWrapper.setTotalStock(totalStock);
+                tradeItemWrapper.setHasLots(tradeItem.isHasLots());
+
+            } else {
+                if (nonLotManagedBalances.containsKey(tradeItem.getId()))
+                    tradeItemWrapper.setTotalStock(nonLotManagedBalances.get(tradeItem.getId()));
             }
-            tradeItemWrapper.setTotalStock(totalStock);
             tradeItemWrappers.add(tradeItemWrapper);
         }
         return tradeItemWrappers;
