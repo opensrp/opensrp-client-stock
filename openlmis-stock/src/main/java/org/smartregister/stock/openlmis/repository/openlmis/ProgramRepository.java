@@ -44,7 +44,7 @@ public class ProgramRepository extends BaseRepository {
             "CREATE TABLE " + PROGRAM_TABLE
                     + "("
                     + ID + " VARCHAR NOT NULL PRIMARY KEY,"
-                    + CODE + " VARCHAR NOT NULL,"
+                    + CODE + " VARCHAR,"
                     + NAME + " VARCHAR NOT NULL,"
                     + DESCRIPTION + " VARCHAR,"
                     + ACTIVE + " TINYINT,"
@@ -152,7 +152,7 @@ public class ProgramRepository extends BaseRepository {
 
         return new Program(
                 cursor.getString(cursor.getColumnIndex(ID)),
-                new Code(cursor.getString(cursor.getColumnIndex(CODE))),
+                cursor.getString(cursor.getColumnIndex(CODE)) == null ? null : new Code(cursor.getString(cursor.getColumnIndex(CODE))),
                 cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(DESCRIPTION)),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE)))
@@ -163,7 +163,7 @@ public class ProgramRepository extends BaseRepository {
 
         Object[] values = new Object[]{
                 program.getId().toString(),
-                program.getCode().toString(),
+                program.getCode() == null ? null : program.getCode().toString(),
                 program.getName(),
                 program.getDescription(),
                 convertBooleanToInt(program.getActive()),

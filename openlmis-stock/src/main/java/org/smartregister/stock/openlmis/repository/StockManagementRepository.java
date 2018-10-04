@@ -18,6 +18,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ValidSourceDestinationRepository;
 
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class StockManagementRepository extends Repository {
         org.smartregister.stock.openlmis.repository.TradeItemRepository.createTable(database);
         StockRepository.createTable(database);
         SearchRepository.createTable(database);
+        ValidSourceDestinationRepository.createTable(database);
         StockTakeRepository.createTable(database);
     }
 

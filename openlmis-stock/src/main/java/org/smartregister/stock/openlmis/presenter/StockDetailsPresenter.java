@@ -239,6 +239,8 @@ public class StockDetailsPresenter {
 
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
+            if( transactionType.equals(received))
+                stockDetailsInteractor.updateLotStatus(lot.getLotId(),lot.getLotStatus());
         }
         return true;
     }

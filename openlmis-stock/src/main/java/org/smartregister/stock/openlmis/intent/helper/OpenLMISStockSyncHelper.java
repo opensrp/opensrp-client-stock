@@ -29,7 +29,6 @@ import static org.smartregister.util.Log.logInfo;
 public class OpenLMISStockSyncHelper extends BaseSyncHelper {
 
     private static final String STOCK_Add_PATH = "rest/stockresource/add/";
-    private static final String STOCK_SYNC_PATH = "rest/stockresource/sync/";
 
     private HTTPAgent httpAgent;
     private ActionService actionService;
@@ -43,12 +42,13 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
     }
 
     @Override
-    public void processIntent() {
+    public void processIntent(String url) {
         pushStockToServer();
-        super.processIntent();
+        super.processIntent(url);
     }
 
-    protected String pullFromServer() {
+    @Override
+    protected String pullFromServer(String url) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -56,7 +56,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
         String timeStampString = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?serverVersion={2}",
                 BASE_URL,
-                STOCK_SYNC_PATH,
+                url,
                 timeStampString
         );
         String jsonPayload = makeGetRequest(uri);

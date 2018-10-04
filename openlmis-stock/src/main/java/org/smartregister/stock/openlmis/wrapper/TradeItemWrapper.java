@@ -15,6 +15,8 @@ public class TradeItemWrapper {
 
     private boolean hasLotExpiring;
 
+    private boolean hasLots;
+
     public TradeItemWrapper(TradeItem tradeItem) {
         this.tradeItem = tradeItem;
     }
@@ -49,5 +51,13 @@ public class TradeItemWrapper {
 
     public void setHasLotExpiring(boolean hasLotExpiring) {
         this.hasLotExpiring = hasLotExpiring;
+    }
+
+    public boolean isHasLots() {
+        return hasLots;
+    }
+
+    public void setHasLots(boolean hasLots) {
+        this.hasLots = hasLots;
     }
 }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.intent.service.CommodityTypeSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.DispensableSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.LotSyncIntentService;
@@ -17,12 +18,18 @@ import org.smartregister.stock.openlmis.intent.service.ProgramSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.ReasonSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.TradeItemClassificationSyncIntentService;
 import org.smartregister.stock.openlmis.intent.service.TradeItemSyncIntentService;
+import org.smartregister.stock.openlmis.intent.service.ValidSourceDestinationSyncIntentService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.smartregister.stock.management.util.ServiceUtils.startService;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.FACILITY_TYPE_UUID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.OPENLMIS_UUID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PROGRAM_ID;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_OPENLMIS_METADATA;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_STOCK;
 
@@ -39,15 +46,18 @@ public class OpenLMISAlarmReceiver extends BroadcastReceiver {
         Intent serviceIntent = null;
         switch (serviceType) {
             case SYNC_OPENLMIS_METADATA:
+                startService(context, ProgramSyncIntentService.class);
                 startService(context, CommodityTypeSyncIntentService.class);
                 startService(context, DispensableSyncIntentService.class);
                 startService(context, LotSyncIntentService.class);
                 startService(context, OrderableSyncIntentService.class);
                 startService(context, ProgramOrderableSyncIntentService.class);
                 startService(context, ProgramSyncIntentService.class);
-                startService(context, ReasonSyncIntentService.class);
                 startService(context, TradeItemClassificationSyncIntentService.class);
                 startService(context, TradeItemSyncIntentService.class);
+                startService(context, ValidSourceDestinationSyncIntentService.class);
+                startService(context, ReasonSyncIntentService.class);
+
                 Log.i(TAG, "Started OpenLMIS metadata sync service at: " + DATE_FORMATTER.format(new Date()));
                 break;
             case SYNC_STOCK:

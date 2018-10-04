@@ -36,6 +36,16 @@ public interface OpenLMISConstants {
 
     String PREV_SYNC_SERVER_VERSION_ORDERABLE = "prev_sync_server_version_orderable";
 
+    String PREV_SYNC_SERVER_VERSION_VALID_SOURCE = "prev_sync_server_version_valid_source";
+
+    String PREV_SYNC_SERVER_VERSION_VALID_DESTINATION = "prev_sync_server_version_valid_destination";
+
+    String FACILITY_TYPE_UUID = "facility_type_uuid";
+
+    String PROGRAM_ID = "program_id";
+
+    String OPENLMIS_UUID = "openlmis_uuid";
+
     interface JsonForm {
 
         String TRADE_ITEM = "[trade_item]";
@@ -47,6 +57,8 @@ public interface OpenLMISConstants {
         String DISPENSING_UNIT = "[dispensing_unit]";
 
         String PROGRAM_ID = "[program_id]";
+
+        String USE_VVM = "[use_vvm]";
 
         String STOCK_ON_HAND = "[stock_on_hand]";
 

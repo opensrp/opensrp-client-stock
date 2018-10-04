@@ -10,7 +10,12 @@ import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.intent.helper.ProgramSyncHelper;
 import org.smartregister.stock.util.NetworkUtils;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.FACILITY_TYPE_UUID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.OPENLMIS_UUID;
+
 public class ProgramSyncIntentService extends IntentService implements SyncIntentService {
+
+    private static final String PROGRAM_SYNC_URL = "rest/facility-programs/sync";
 
     private Context context;
     private ProgramSyncHelper syncHelper;
@@ -30,14 +35,21 @@ public class ProgramSyncIntentService extends IntentService implements SyncInten
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
+
+        String facilityTypeUuid = OpenLMISLibrary.getInstance().getFacilityTypeUuid();
+        String openlmisUuid = OpenLMISLibrary.getInstance().getOpenlmisUuid();
         if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer();
+            if (facilityTypeUuid != null && openlmisUuid != null) {
+                pullFromServer( PROGRAM_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID +  "=" + openlmisUuid);
+            } else if (facilityTypeUuid == null && openlmisUuid == null) {
+                pullFromServer(PROGRAM_SYNC_URL + "?");
+            }
         }
     }
 
     @Override
-    public void pullFromServer() {
-        syncHelper.processIntent();
+    public void pullFromServer(String url) {
+        syncHelper.processIntent(url);
     }
 }
 

@@ -29,8 +29,10 @@ import org.smartregister.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_ISSUED_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_ISSUE_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_RECEIPT_FORM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_RECEIVED_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.NON_LOT_INDIVIDUAL_ADJUST_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
@@ -38,6 +40,7 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.P
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.STOCK_ON_HAND;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM_ID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.USE_VVM;
 
 public class StockDetailsActivity extends BaseActivity implements StockDetailsView, View.OnClickListener {
 
@@ -86,9 +89,14 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
         lotsHeader = findViewById(R.id.lot_header);
         collapseExpandButton = findViewById(R.id.collapseExpandButton);
 
-        lotsRecyclerView = findViewById(R.id.lotsRecyclerView);
-        lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
 
+        if (tradeItemDto.isHasLots()) {
+            lotsRecyclerView = findViewById(R.id.lotsRecyclerView);
+            lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
+        } else {
+            findViewById(R.id.list_lots_card_view).setVisibility(View.GONE);
+            findViewById(R.id.transactions_lot_code).setVisibility(View.GONE);
+        }
 
         transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView);
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
@@ -120,11 +128,15 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
         if (view.getId() == R.id.collapseExpandButton || view.getId() == R.id.number_of_lots) {
             stockDetailsPresenter.collapseExpandClicked(lotsRecyclerView.getVisibility());
         } else if (view.getId() == R.id.issued) {
-            // startJsonForm(INDIVIDUAL_ISSUED_FORM);
-            startJsonForm(INDIVIDUAL_NON_LOT_ISSUE_FORM);
+            if (tradeItemDto.isHasLots())
+                startJsonForm(INDIVIDUAL_ISSUED_FORM);
+            else
+                startJsonForm(INDIVIDUAL_NON_LOT_ISSUE_FORM);
         } else if (view.getId() == R.id.received) {
-            startJsonForm(INDIVIDUAL_NON_LOT_RECEIPT_FORM);
-            // startJsonForm(INDIVIDUAL_RECEIVED_FORM);
+            if (tradeItemDto.isHasLots())
+                startJsonForm(INDIVIDUAL_RECEIVED_FORM);
+            else
+                startJsonForm(INDIVIDUAL_NON_LOT_RECEIPT_FORM);
         } else if (view.getId() == R.id.loss_adj) {
             // startJsonForm(INDIVIDUAL_ADJUST_FORM);
             startJsonForm(NON_LOT_INDIVIDUAL_ADJUST_FORM);
@@ -153,7 +165,8 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
     @Override
     public void refreshStockDetails(int totalStockAdjustment) {
         tradeItemDto.setTotalStock(tradeItemDto.getTotalStock() + totalStockAdjustment);
-        lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
+        if (tradeItemDto.isHasLots())
+            lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
         dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
                 tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
@@ -180,12 +193,20 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
             formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
             formMetadata = formMetadata.replace(STOCK_ON_HAND, tradeItemDto.getTotalStock().toString());
             formMetadata = formMetadata.replace(PROGRAM_ID, tradeItemDto.getProgramId());
+            formMetadata = formMetadata.replace(USE_VVM, tradeItemDto.isUseVVM().toString());
             formMetadata = formMetadata.replace(DISPENSING_UNIT, tradeItemDto.getDispensingUnit());
             intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
             Log.logDebug(e.getMessage());
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        setResult(RESULT_OK);
+        finish();
+        return true;
     }
 
 

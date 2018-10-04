@@ -391,9 +391,9 @@ public class LotFactoryTest extends BaseUnitTest {
 
         verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
         assertEquals(1, lotFactory.getSelectedLotDTos().size());
-        assertEquals("LC8063 Exp. " + new LocalDate(89239490024l).toString(DATE_FORMAT), lotDropdown.getText().toString());
-        assertEquals("9da34cac-4753-4763-a749-10741cdcce33", lotFactory.getSelectedLotDTos().get(0).getLotId());
-        assertEquals("9da34cac-4753-4763-a749-10741cdcce33", lotDropdown.getTag(R.id.lot_id));
+        assertEquals("LC1265 Exp. " + new LocalDate(9889l).toString(DATE_FORMAT), lotDropdown.getText().toString());
+        assertEquals("7c6d239f-0bbc-4cab-b218-888d8be89d24", lotFactory.getSelectedLotDTos().get(0).getLotId());
+        assertEquals("7c6d239f-0bbc-4cab-b218-888d8be89d24", lotDropdown.getTag(R.id.lot_id));
 
     }
 
