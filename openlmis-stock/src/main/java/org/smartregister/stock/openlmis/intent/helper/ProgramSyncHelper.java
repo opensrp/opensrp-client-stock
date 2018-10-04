@@ -76,7 +76,7 @@ public class ProgramSyncHelper extends BaseSyncHelper {
         boolean isEmptyResponse = true;
         for (FacilityProgram facilityProgram : facilityPrograms) {
             List<Program> supportedPrograms = facilityProgram.getSupportedPrograms();
-            if (supportedPrograms == null) { break; }
+            if (supportedPrograms == null) { continue; }
             for (Program program : supportedPrograms) {
                 if (program != null) {
                     isEmptyResponse = false;

@@ -45,9 +45,10 @@ public class ValidSourceDestinationSyncIntentService extends IntentService {
             if (facilityTypeUuid != null && openlmisUuid != null) {
                 pullValidDestinationsFromServer(VALID_DESTINATION_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID +  "=" + openlmisUuid);
                 pullValidSourcesFromServer(VALID_SOURCE_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID +  "=" + openlmisUuid);
+            }  else if (facilityTypeUuid == null && openlmisUuid == null) {
+                pullValidDestinationsFromServer(VALID_DESTINATION_SYNC_URL + "?");
+                pullValidSourcesFromServer(VALID_SOURCE_SYNC_URL + "?");
             }
-            pullValidDestinationsFromServer(VALID_DESTINATION_SYNC_URL + "?");
-            pullValidSourcesFromServer(VALID_SOURCE_SYNC_URL + "?");
         }
     }
 

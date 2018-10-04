@@ -46,6 +46,7 @@ public class OpenLMISAlarmReceiver extends BroadcastReceiver {
         Intent serviceIntent = null;
         switch (serviceType) {
             case SYNC_OPENLMIS_METADATA:
+                startService(context, ProgramSyncIntentService.class);
                 startService(context, CommodityTypeSyncIntentService.class);
                 startService(context, DispensableSyncIntentService.class);
                 startService(context, LotSyncIntentService.class);
@@ -54,9 +55,8 @@ public class OpenLMISAlarmReceiver extends BroadcastReceiver {
                 startService(context, ProgramSyncIntentService.class);
                 startService(context, TradeItemClassificationSyncIntentService.class);
                 startService(context, TradeItemSyncIntentService.class);
-                startService(context, ReasonSyncIntentService.class);
-                startService(context, ProgramSyncIntentService.class);
                 startService(context, ValidSourceDestinationSyncIntentService.class);
+                startService(context, ReasonSyncIntentService.class);
 
                 Log.i(TAG, "Started OpenLMIS metadata sync service at: " + DATE_FORMATTER.format(new Date()));
                 break;
