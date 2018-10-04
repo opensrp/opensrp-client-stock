@@ -33,9 +33,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
+import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
-import org.smartregister.stock.openlmis.repository.openlmis.ReasonsRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.widget.helper.LotDto;
 
 import java.lang.reflect.Type;
@@ -47,8 +48,11 @@ import java.util.Map;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.CREDIT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.DEBIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_MONTHS_WARNING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PROGRAM_ID;
 
 /**
  * Created by samuelgithengi on 8/23/18.
@@ -101,9 +105,11 @@ public class LotFactory implements FormWidgetFactory {
 
     private LotRepository lotRepository;
 
-    private ReasonsRepository reasonsRepository;
+    private ReasonRepository reasonsRepository;
 
-    public LotFactory(LotRepository lotRepository, ReasonsRepository reasonRepository) {
+    private String programId;
+
+    public LotFactory(LotRepository lotRepository, ReasonRepository reasonRepository) {
         this.lotRepository = lotRepository;
         this.reasonsRepository = reasonRepository;
     }
@@ -148,6 +154,7 @@ public class LotFactory implements FormWidgetFactory {
         useVvm = jsonObject.optBoolean(USE_VMM);
         List<Lot> lots;
         String tradeItemId = jsonObject.getString(TRADE_ITEM_ID);
+        programId = jsonObject.optString(PROGRAM_ID);
         if (isStockIssue || isStockAdjustment) {
             lots = lotRepository.findLotsByTradeItem(tradeItemId, isStockIssue);
             lotStockBalances = lotRepository.getStockByLot(tradeItemId);
@@ -363,8 +370,8 @@ public class LotFactory implements FormWidgetFactory {
     @VisibleForTesting
     protected PopupMenu populateReasonsOptions(final Context context, final TextInputEditText editText) {
         final PopupMenu popupMenu = new PopupMenu(context, editText);
-        for (String reason : reasonsRepository.getAdjustmentReasons()) {
-            popupMenu.getMenu().add(reason);
+        for (Reason reason : reasonsRepository.findReasons(null, null, programId, isStockAdjustment ? null : isStockIssue ? CREDIT : DEBIT)) {
+            popupMenu.getMenu().add(reason.getStockCardLineItemReason().getName());
         }
         editText.setOnClickListener(new View.OnClickListener() {
             @Override

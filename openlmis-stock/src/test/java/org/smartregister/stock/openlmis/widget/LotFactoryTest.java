@@ -25,7 +25,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
-import org.smartregister.stock.openlmis.repository.openlmis.ReasonsRepository;
 import org.smartregister.stock.openlmis.shadow.ShadowPopupMenu;
 
 import java.util.ArrayList;
