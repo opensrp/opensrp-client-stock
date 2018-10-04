@@ -11,6 +11,7 @@ import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.domain.openlmis.FacilityProgram;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 
@@ -25,7 +26,6 @@ import static org.smartregister.util.Log.logInfo;
 
 public class ProgramSyncHelper extends BaseSyncHelper {
 
-    private static final String LOT_SYNC_URL = "rest/programs/sync";
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private ProgramRepository repository;
@@ -37,7 +37,8 @@ public class ProgramSyncHelper extends BaseSyncHelper {
         this.actionService = actionService;
     }
 
-    protected String pullFromServer() {
+    @Override
+    protected String pullFromServer(String url) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -46,9 +47,9 @@ public class ProgramSyncHelper extends BaseSyncHelper {
         }
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION_PROGRAM, 0);
         String timestampStr = String.valueOf(timestamp);
-        String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
+        String uri = MessageFormat.format("{0}/{1}&sync_server_version={2}",
                 BASE_URL,
-                LOT_SYNC_URL,
+                url,
                 timestampStr
         );
         // TODO: make baseUrl configurable
@@ -71,13 +72,19 @@ public class ProgramSyncHelper extends BaseSyncHelper {
     public boolean saveResponse(String jsonPayload, SharedPreferences preferences) {
 
         Long highestTimeStamp = 0L;
-        List<Program> programs = new Gson().fromJson(jsonPayload, new TypeToken<List<Program>>(){}.getType());
+        List<FacilityProgram> facilityPrograms = new Gson().fromJson(jsonPayload, new TypeToken<List<FacilityProgram>>(){}.getType());
         boolean isEmptyResponse = true;
-        for (Program program : programs) {
-            isEmptyResponse = false;
-            repository.addOrUpdate(program);
-            if (program.getServerVersion() > highestTimeStamp) {
-                highestTimeStamp = program.getServerVersion();
+        for (FacilityProgram facilityProgram : facilityPrograms) {
+            List<Program> supportedPrograms = facilityProgram.getSupportedPrograms();
+            if (supportedPrograms == null) { continue; }
+            for (Program program : supportedPrograms) {
+                if (program != null) {
+                    isEmptyResponse = false;
+                    repository.addOrUpdate(program);
+                    if (program.getServerVersion() > highestTimeStamp) {
+                        highestTimeStamp = program.getServerVersion();
+                    }
+                }
             }
         }
         // save highest server version

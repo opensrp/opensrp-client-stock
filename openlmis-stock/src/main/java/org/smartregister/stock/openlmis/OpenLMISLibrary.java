@@ -16,6 +16,7 @@ import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ValidSourceDestinationRepository;
 
 
 /**
@@ -39,6 +40,9 @@ public class OpenLMISLibrary {
     private StockRepository stockRepository;
     private SettingsRepository settingsRepository;
     private SearchRepository searchRepository;
+    private ValidSourceDestinationRepository validSourceDestinationRepository;
+    private String facilityTypeUuid;
+    private String openlmisUuid;
     private StockTakeRepository stockTakeRepository;
 
     public OpenLMISLibrary(Context context, Repository repository) {
@@ -144,6 +148,13 @@ public class OpenLMISLibrary {
         return stockRepository;
     }
 
+    public ValidSourceDestinationRepository getValidSourceDestinationRepository() {
+        if (validSourceDestinationRepository == null) {
+            validSourceDestinationRepository = new ValidSourceDestinationRepository(getRepository());
+        }
+        return validSourceDestinationRepository;
+    }
+
     public SettingsRepository getSettingsRepository() {
         if (settingsRepository == null) {
             for (DrishtiRepository repository : getContext().sharedRepositories()) {
@@ -156,12 +167,27 @@ public class OpenLMISLibrary {
         return settingsRepository;
     }
 
-
     public SearchRepository getSearchRepository() {
         if (searchRepository == null) {
             searchRepository = new SearchRepository(getRepository());
         }
         return searchRepository;
+    }
+
+    public String getFacilityTypeUuid() {
+        return facilityTypeUuid;
+    }
+
+    public String getOpenlmisUuid() {
+        return openlmisUuid;
+    }
+
+    public void setFacilityTypeUuid(String facilityTypeUuid) {
+        this.facilityTypeUuid = facilityTypeUuid;
+    }
+
+    public void setOpenlmisUuid(String openlmisUuid) {
+        this.openlmisUuid = openlmisUuid;
     }
 
     public StockTakeRepository getStockTakeRepository() {

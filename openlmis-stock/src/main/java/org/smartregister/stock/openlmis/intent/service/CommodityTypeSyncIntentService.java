@@ -12,6 +12,8 @@ import org.smartregister.stock.util.NetworkUtils;
 
 public class CommodityTypeSyncIntentService extends IntentService implements SyncIntentService {
 
+    private static final String COMMODITY_TYPE_SYNC_URL = "rest/commodity-types/sync";
+
     private CommodityTypeSyncHelper syncHelper;
     private Context context;
 
@@ -33,12 +35,12 @@ public class CommodityTypeSyncIntentService extends IntentService implements Syn
     @Override
     protected void onHandleIntent(Intent workIntent) {
         if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer();
+            pullFromServer(COMMODITY_TYPE_SYNC_URL);
         }
     }
 
     @Override
-    public void pullFromServer() {
-        syncHelper.processIntent();
+    public void pullFromServer(String url) {
+        syncHelper.processIntent(url);
     }
 }

@@ -44,7 +44,7 @@ public class ReasonRepository extends BaseRepository {
                     + ID + " VARCHAR NOT NULL PRIMARY KEY,"
                     + NAME + " VARCHAR NOT NULL,"
                     + PROGRAM_ID + " VARCHAR NOT NULL,"
-                    + DESCRIPTION + " VARCHAR NOT NULL,"
+                    + DESCRIPTION + " VARCHAR,"
                     + REASON_TYPE + " VARCHAR,"
                     + REASON_CATEGORY + " VARCHAR,"
                     + FACILITY_TYPE + " VARCHAR,"

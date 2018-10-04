@@ -12,6 +12,8 @@ import org.smartregister.stock.util.NetworkUtils;
 
 public class DispensableSyncIntentService extends IntentService implements SyncIntentService  {
 
+    private static final String DISPENSABLE_SYNC_URL = "rest/dispensables/sync";
+
     private Context context;
     private DispensableSyncHelper syncHelper;
 
@@ -32,12 +34,12 @@ public class DispensableSyncIntentService extends IntentService implements SyncI
     @Override
     protected void onHandleIntent(Intent workIntent) {
         if (NetworkUtils.isNetworkAvailable(context)) {
-            pullFromServer();
+            pullFromServer(DISPENSABLE_SYNC_URL);
         }
     }
 
     @Override
-    public void pullFromServer() {
-        syncHelper.processIntent();
+    public void pullFromServer(String url) {
+        syncHelper.processIntent(url);
     }
 }
