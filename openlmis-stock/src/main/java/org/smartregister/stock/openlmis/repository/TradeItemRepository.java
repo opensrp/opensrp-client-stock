@@ -84,8 +84,8 @@ public class TradeItemRepository extends BaseRepository {
         contentValues.put(NAME, tradeItem.getName());
         contentValues.put(DATE_UPDATED, tradeItem.getDateUpdated());
         contentValues.put(NET_CONTENT, tradeItem.getNetContent());
-        contentValues.put(HAS_LOTS, tradeItem.getHasLots());
-        contentValues.put(USE_VVM, tradeItem.getUseVvm());
+        contentValues.put(HAS_LOTS, tradeItem.isHasLots());
+        contentValues.put(USE_VVM, tradeItem.isUseVvm());
         if (tradeItem.getDispensable() != null) {
             contentValues.put(DISPENSING_UNIT, tradeItem.getDispensable().getKeyDispensingUnit());
             contentValues.put(DISPENSING_SIZE, tradeItem.getDispensable().getKeySizeCode());

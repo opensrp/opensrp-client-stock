@@ -281,6 +281,7 @@ public class TestData {
             "        \"trade_item_id\": \"0cf8b2f4-3e1b-4d35-b839-5a4268ef03d6\",\n" +
             "        \"dispensing_unit\": \"vials\",\n" +
             "        \"net_content\": \"4\",\n" +
+            "        \"use_vvm\": \"true\",\n"+
             "        \"lot_status\": [\n" +
             "          \"VVM1\",\n" +
             "          \"VVM2\"\n" +

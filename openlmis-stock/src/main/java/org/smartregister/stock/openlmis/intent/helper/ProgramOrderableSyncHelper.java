@@ -25,7 +25,6 @@ import static org.smartregister.util.Log.logInfo;
 
 public class ProgramOrderableSyncHelper extends BaseSyncHelper {
 
-    private static final String PROGRAM_ORDERABLE_SYNC_URL = "rest/program-orderables/sync";
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private ProgramOrderableRepository repository;
@@ -37,7 +36,7 @@ public class ProgramOrderableSyncHelper extends BaseSyncHelper {
         this.actionService = actionService;
     }
 
-    protected String pullFromServer() {
+    protected String pullFromServer(String url) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -50,7 +49,7 @@ public class ProgramOrderableSyncHelper extends BaseSyncHelper {
         String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
                 BASE_URL,
-                PROGRAM_ORDERABLE_SYNC_URL,
+                url,
                 timestampStr
         );
         // make request

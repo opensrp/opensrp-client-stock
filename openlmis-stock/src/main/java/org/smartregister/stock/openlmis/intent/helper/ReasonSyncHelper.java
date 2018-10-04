@@ -25,7 +25,6 @@ import static org.smartregister.util.Log.logInfo;
 
 public class ReasonSyncHelper extends BaseSyncHelper {
 
-    private static final String REASON_SYNC_URL = "rest/reasons/sync";
     private ActionService actionService;
     private HTTPAgent httpAgent;
     private ReasonRepository repository;
@@ -37,7 +36,7 @@ public class ReasonSyncHelper extends BaseSyncHelper {
         this.httpAgent = httpAgent;
     }
 
-    protected String pullFromServer() {
+    protected String pullFromServer(String url) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
@@ -46,9 +45,9 @@ public class ReasonSyncHelper extends BaseSyncHelper {
         }
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION_REASON, 0);
         String timestampStr = String.valueOf(timestamp);
-        String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
+        String uri = MessageFormat.format("{0}/{1}&sync_server_version={2}",
                 BASE_URL,
-                REASON_SYNC_URL,
+                url,
                 timestampStr
         );
         // TODO: make baseUrl configurable
