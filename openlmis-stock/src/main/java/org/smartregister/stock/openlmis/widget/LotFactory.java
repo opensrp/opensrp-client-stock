@@ -357,7 +357,9 @@ public class LotFactory implements FormWidgetFactory {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        editText.setText(menuItem.getTitle());
+                        CharSequence status = menuItem.getTitle();
+                        editText.setText(status);
+                        stock.setvvmStatus(status.toString());
                         writeValuesNonLot();
                         return true;
                     }

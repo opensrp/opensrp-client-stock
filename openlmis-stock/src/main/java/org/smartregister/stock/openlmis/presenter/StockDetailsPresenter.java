@@ -4,6 +4,7 @@ import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -182,8 +183,13 @@ public class StockDetailsPresenter {
         JSONArray stepFields = JsonFormUtils.fields(jsonString);
         boolean isNonLot = stepFields.getJSONObject(0).optBoolean(IS_NON_LOT);
         if (isNonLot) {
+            // extract form values
+            JSONObject values = new JSONObject(stepFields.getJSONObject(0).getString("value"));
+            int quantity = values.getInt("value");
+            String reason = values.getString("reason");
+            String status = values.optString("vvmStatus", "VVM1");
             return processStockNonLot(STEP1, jsonString, provider, simpleDateFormat.format(new Date()),
-                    null, loss_adjustment, null, 0, null);
+                    null, loss_adjustment, reason, quantity, status);
         }
         return processStockLot(STEP1, jsonString, provider, simpleDateFormat.format(new Date()),
                 null, null, loss_adjustment);
@@ -229,6 +235,8 @@ public class StockDetailsPresenter {
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
             stock.setProgramId(programId);
+            stock.setvvmStatus(lot.getLotStatus());
+
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
         }
