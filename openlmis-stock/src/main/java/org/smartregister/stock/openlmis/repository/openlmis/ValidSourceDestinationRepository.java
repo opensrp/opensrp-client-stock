@@ -37,16 +37,16 @@ public class ValidSourceDestinationRepository extends BaseRepository {
 
     public static final String CREATE_VALID_SOURCE_DESTINATION_TABLE =
 
-            "CREATE TABLE " +  VALID_SOURCE_DESTINATION_TABLE
-                + "("
-                    +  ID + " VARCHAR NOT NULL PRIMARY KEY,"
-                    +  PROGRAM_UUID + " VARCHAR NOT NULL,"
-                    +  FACILITY_TYPE_UUID + " VARCHAR NOT NULL,"
-                    +  FACILITY_NAME + " VARCHAR NOT NULL,"
-                    +  OPENLMIS_UUID + " VARCHAR NOT NULL,"
+            "CREATE TABLE " + VALID_SOURCE_DESTINATION_TABLE
+                    + "("
+                    + ID + " VARCHAR NOT NULL PRIMARY KEY,"
+                    + PROGRAM_UUID + " VARCHAR NOT NULL,"
+                    + FACILITY_TYPE_UUID + " VARCHAR NOT NULL,"
+                    + FACILITY_NAME + " VARCHAR NOT NULL,"
+                    + OPENLMIS_UUID + " VARCHAR NOT NULL,"
                     + IS_SOURCE + " INTEGER NOT NULL,"
-                    +  DATE_UPDATED + " INTEGER" +
-                ")";
+                    + DATE_UPDATED + " INTEGER" +
+                    ")";
 
     public ValidSourceDestinationRepository(Repository repository) {
         super(repository);
@@ -77,14 +77,14 @@ public class ValidSourceDestinationRepository extends BaseRepository {
         }
     }
 
-    public List<ValidSourceDestination> findValidSourceDestinations(String id, String programUuid, String facilityTypeUuid, String facilityName, String openlmisUuid, String isSource) {
+    public List<ValidSourceDestination> findValidSourceDestinations(String id, String programUuid, String facilityTypeUuid, String facilityName, String openlmisUuid, boolean isSource) {
 
         List<ValidSourceDestination> validSourceDestinations = new ArrayList<>();
         Cursor cursor = null;
         try {
 
-            String[] selectionArgs = new String[]{id, programUuid, facilityTypeUuid, facilityName, openlmisUuid, isSource};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            String[] selectionArgs = new String[]{id, programUuid, facilityTypeUuid, facilityName, openlmisUuid, Boolean.valueOf(isSource).toString()};
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
             String querySelectString = query.first;
             selectionArgs = query.second;
@@ -107,9 +107,9 @@ public class ValidSourceDestinationRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String[] selectionArgs = new String[]{id};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString =  query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(VALID_SOURCE_DESTINATION_TABLE, VALID_SOURCE_DESTINATION_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);

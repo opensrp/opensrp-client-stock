@@ -25,6 +25,8 @@ public class Application extends DrishtiApplication {
         context.updateApplicationContext(this);
         CoreLibrary.init(context);
         OpenLMISLibrary.init(context, getRepository());  // Initialize OpenLMISLibrary
+        OpenLMISLibrary.getInstance().setOpenlmisUuid("7fc9bda8-ad8a-468d-8244-38e1918527d5");
+        OpenLMISLibrary.getInstance().setFacilityTypeUuid("ac1d268b-ce10-455f-bf87-9c667da8f060");
         setAlarms(getApplicationContext());
         SyncStatusBroadcastReceiver.init(this);
     }

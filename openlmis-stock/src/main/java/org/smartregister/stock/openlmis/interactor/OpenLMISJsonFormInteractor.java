@@ -9,6 +9,7 @@ import org.smartregister.stock.openlmis.util.OpenLMISConstants;
 import org.smartregister.stock.openlmis.widget.LotFactory;
 import org.smartregister.stock.openlmis.widget.OpenLMISDatePickerFactory;
 import org.smartregister.stock.openlmis.widget.OpenLMISEditTextFactory;
+import org.smartregister.stock.openlmis.widget.OpenLMISNativeRadioButtonFactory;
 import org.smartregister.stock.openlmis.widget.ReviewFactory;
 
 /**
@@ -28,6 +29,7 @@ public class OpenLMISJsonFormInteractor extends JsonFormInteractor {
         map.put(OpenLMISConstants.LOT_WIDGET, new LotFactory(OpenLMISLibrary.getInstance().getLotRepository(), new ReasonsRepository()));
         map.put(OpenLMISConstants.REVIEW_WIDGET, new ReviewFactory());
         map.put(JsonFormConstants.EDIT_TEXT, new OpenLMISEditTextFactory());
+        map.put(JsonFormConstants.NATIVE_RADIO_BUTTON, new OpenLMISNativeRadioButtonFactory());
     }
 
     public static JsonFormInteractor getInstance() {
