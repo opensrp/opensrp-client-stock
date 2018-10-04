@@ -7,16 +7,16 @@ public class Reason extends BaseEntity {
     @JsonProperty
     private String programId;
     @JsonProperty
-    private String facilityType;
+    private String facilityTypeUuid;
     @JsonProperty
     private StockCardLineItemReason stockCardLineItemReason;
     @JsonProperty
     private Long dateUpdated;
 
-    public Reason(String id, String programId, String facilityType, StockCardLineItemReason stockCardLineItemReason) {
+    public Reason(String id, String programId, String facilityTypeUuid, StockCardLineItemReason stockCardLineItemReason) {
         this.id = id;
         this.programId = programId;
-        this.facilityType = facilityType;
+        this.facilityTypeUuid = facilityTypeUuid;
         this.stockCardLineItemReason = stockCardLineItemReason;
     }
 
@@ -28,12 +28,12 @@ public class Reason extends BaseEntity {
         this.programId = programId;
     }
 
-    public String getFacilityType() {
-        return facilityType;
+    public String getFacilityTypeUuid() {
+        return facilityTypeUuid;
     }
 
-    public void setFacilityType(String facilityType) {
-        this.facilityType = facilityType;
+    public void setFacilityTypeUuid(String facilityTypeUuid) {
+        this.facilityTypeUuid = facilityTypeUuid;
     }
 
     public StockCardLineItemReason getStockCardLineItemReason() {

@@ -152,7 +152,7 @@ public class ReasonRepository extends BaseRepository {
                 stockCardLineItemReason.getDescription(),
                 stockCardLineItemReason.getReasonType(),
                 stockCardLineItemReason.getReasonCategory(),
-                reason.getFacilityType(),
+                reason.getFacilityTypeUuid(),
                 stockCardLineItemReason.getFreeTextAllowed(),
                 reason.getDateUpdated()
         };
