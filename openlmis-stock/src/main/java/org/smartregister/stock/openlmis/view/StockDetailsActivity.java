@@ -164,7 +164,8 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
     @Override
     public void refreshStockDetails(int totalStockAdjustment) {
         tradeItemDto.setTotalStock(tradeItemDto.getTotalStock() + totalStockAdjustment);
-        lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
+        if (tradeItemDto.isHasLots())
+            lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
         dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
                 tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
