@@ -48,13 +48,9 @@ public class OpenLMISNativeRadioButtonFactory extends NativeRadioButtonFactory {
         String facilityType = OpenLMISLibrary.getInstance().getFacilityTypeUuid();
         String programId = jsonObject.optString(PROGRAM_ID);
         if (RECEIVE_SOURCES.equals(populateValues) || ISSUE_DESTINATIONS.equals(populateValues)) {
-            //TODO activate this once the mapping on server are corrected
-           /* List<ValidSourceDestination> validFacilities = OpenLMISLibrary.getInstance().
-                    getValidSourceDestinationRepository().findValidSourceDestinations(null,
-                    programId, facilityType, null, facilityId, RECEIVE_SOURCES.equals(populateValues));*/
-            //TODO delete this once the mapping on server are corrected
             List<ValidSourceDestination> validFacilities = OpenLMISLibrary.getInstance().
-                    getValidSourceDestinationRepository().findAllValidSourceDestinations();
+                    getValidSourceDestinationRepository().findValidSourceDestinations(null,
+                    programId, facilityType, null, facilityId, RECEIVE_SOURCES.equals(populateValues));
             jsonObject.put(JsonFormConstants.OPTIONS_FIELD_NAME, convertToJsonArray(validFacilities));
         } else if (RECEIVE_REASONS.equals(populateValues) || ISSUE_REASONS.equals(populateValues)) {
             List<Reason> validReasons = OpenLMISLibrary.getInstance().
