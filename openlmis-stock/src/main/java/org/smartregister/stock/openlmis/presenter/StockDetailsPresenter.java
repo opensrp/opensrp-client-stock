@@ -110,12 +110,8 @@ public class StockDetailsPresenter {
                     tradeItem.getTotalStock() - stockCounter);
             if (facilityNames.containsKey(stock.getToFrom()))
                 stockWrapper.setFacility(facilityNames.get(stock.getToFrom()));
-            else
-                stockWrapper.setFacility(stock.getToFrom());
             if (reasonNames.containsKey(stock.getReason()))
                 stockWrapper.setReason(reasonNames.get(stock.getReason()));
-            else
-                stockWrapper.setReason(stock.getReason());
             stockWrapperList.add(stockWrapper);
             stockCounter += stock.getValue();
 
@@ -235,7 +231,7 @@ public class StockDetailsPresenter {
         for (LotDto lot : selectedLotDTos) {
             Stock stock = new Stock(null, transactionType,
                     provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
-                    encounterDate.getTime(), facility == null ? lot.getReason() : facility, TYPE_Unsynced,
+                    encounterDate.getTime(), facility == null ? lot.getReasonId() : facility, TYPE_Unsynced,
                     System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);

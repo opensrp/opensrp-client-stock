@@ -371,7 +371,10 @@ public class LotFactory implements FormWidgetFactory {
     protected PopupMenu populateReasonsOptions(final Context context, final TextInputEditText editText) {
         final PopupMenu popupMenu = new PopupMenu(context, editText);
         for (Reason reason : reasonsRepository.findReasons(null, null, programId, isStockAdjustment ? null : isStockIssue ? CREDIT : DEBIT)) {
-            popupMenu.getMenu().add(reason.getStockCardLineItemReason().getName());
+            MenuItem menuItem = popupMenu.getMenu().add(reason.getStockCardLineItemReason().getName());
+            View actionView = new View(context);
+            actionView.setTag(R.id.reason_id, reason.getId());
+            menuItem.setActionView(actionView);
         }
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -384,6 +387,7 @@ public class LotFactory implements FormWidgetFactory {
                         String lotId = editText.getTag(R.id.lot_id).toString();
                         LotDto lotDto = selectedLotDTos.get(selectedLotDTos.indexOf(new LotDto(lotId)));
                         lotDto.setReason(menuItem.getTitle().toString());
+                        lotDto.setReasonId((String) menuItem.getActionView().getTag(R.id.reason_id));
                         writeValues();
                         return true;
                     }

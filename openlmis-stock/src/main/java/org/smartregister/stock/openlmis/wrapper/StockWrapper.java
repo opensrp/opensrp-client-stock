@@ -21,6 +21,8 @@ public class StockWrapper {
         this.stock = stock;
         this.lotCode = lotCode;
         this.stockBalance = stockBalance;
+        this.facility=stock.getToFrom();
+        this.reason=stock.getReason();
     }
 
     public Stock getStock() {
