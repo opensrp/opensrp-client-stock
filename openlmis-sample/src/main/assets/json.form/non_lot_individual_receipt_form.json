@@ -70,7 +70,7 @@
         "key": "labelReceivedFrom",
         "type": "label",
         "text": "Receive from *",
-        "top_margin":"10dp"
+        "top_margin": "10dp"
       },
       {
         "key": "Receive_Stock_From",
@@ -79,7 +79,7 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "populate_values":"receive_sources",
+        "populate_values": "receive_sources",
         "program_id": "[program_id]",
         "v_required": {
           "value": true,
@@ -99,7 +99,7 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "populate_values":"receive_reasons",
+        "populate_values": "receive_reasons",
         "program_id": "[program_id]",
         "v_required": {
           "value": true,
@@ -134,8 +134,8 @@
         "hint": "Vials received",
         "edit_type": "number",
         "v_numeric_integer": {
-          "value":"true",
-          "err":"Enter a valid stock quantity"
+          "value": "true",
+          "err": "Enter a valid stock quantity"
         },
         "v_required": {
           "value": true,
@@ -156,8 +156,14 @@
         "net_content": "[net_content]",
         "is_spinnable": true,
         "list_options": [
-          "VMM1",
-          "VMM2"
+          {
+            "key": "VMM1",
+            "text": "VMM1"
+          },
+          {
+            "key": "VMM2",
+            "text": "VMM2"
+          }
         ]
       }
     ]
