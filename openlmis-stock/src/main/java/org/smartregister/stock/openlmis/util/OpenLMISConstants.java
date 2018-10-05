@@ -36,6 +36,12 @@ public interface OpenLMISConstants {
 
     String PREV_SYNC_SERVER_VERSION_ORDERABLE = "prev_sync_server_version_orderable";
 
+    String IS_REMOTE_LOGIN = "is_remote_login";
+
+    String SERVICE_TYPE_NAME = "serviceType";
+
+    String SERVICE_ACTION_NAME = "org.smartregister.path.action.START_SERVICE_ACTION";
+
     String PREV_SYNC_SERVER_VERSION_VALID_SOURCE = "prev_sync_server_version_valid_source";
 
     String PREV_SYNC_SERVER_VERSION_VALID_DESTINATION = "prev_sync_server_version_valid_destination";
@@ -45,6 +51,7 @@ public interface OpenLMISConstants {
     String PROGRAM_ID = "program_id";
 
     String OPENLMIS_UUID = "openlmis_uuid";
+
 
     interface JsonForm {
 

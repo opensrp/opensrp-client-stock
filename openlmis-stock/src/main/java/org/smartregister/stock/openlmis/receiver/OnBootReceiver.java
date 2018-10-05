@@ -1,11 +1,11 @@
-package org.smartregister.stock.management.receiver;
+package org.smartregister.stock.openlmis.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import org.smartregister.stock.management.application.Application;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 
 public class OnBootReceiver extends BroadcastReceiver {
 
@@ -22,7 +22,7 @@ public class OnBootReceiver extends BroadcastReceiver {
     }
 
     private void restartAlarms(Context context) {
-        Application.setAlarms(context);
+        OpenLMISLibrary.getInstance().getApplication().onCreate();
         Log.d(TAG, "Alarms restarted in OpenLMIS");
     }
 }

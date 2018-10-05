@@ -1,5 +1,8 @@
 package org.smartregister.stock.openlmis;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import org.smartregister.Context;
 import org.smartregister.repository.DrishtiRepository;
 import org.smartregister.repository.Repository;
@@ -16,7 +19,11 @@ import org.smartregister.stock.openlmis.repository.openlmis.ProgramRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemClassificationRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.TradeItemRepository;
+import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.stock.openlmis.repository.openlmis.ValidSourceDestinationRepository;
+
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.FACILITY_TYPE_UUID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.OPENLMIS_UUID;
 
 
 /**
@@ -40,10 +47,10 @@ public class OpenLMISLibrary {
     private StockRepository stockRepository;
     private SettingsRepository settingsRepository;
     private SearchRepository searchRepository;
+    private DrishtiApplication application;
     private ValidSourceDestinationRepository validSourceDestinationRepository;
-    private String facilityTypeUuid;
-    private String openlmisUuid;
     private StockTakeRepository stockTakeRepository;
+    private static SharedPreferences preferences;
 
     public OpenLMISLibrary(Context context, Repository repository) {
         this.context = context;
@@ -174,20 +181,45 @@ public class OpenLMISLibrary {
         return searchRepository;
     }
 
+
+    public DrishtiApplication getApplication() {
+        return application;
+    }
+
+    public void setApplication(DrishtiApplication application) {
+        this.application = application;
+    }
+
     public String getFacilityTypeUuid() {
-        return facilityTypeUuid;
+        if (preferences == null) {
+            preferences = PreferenceManager.getDefaultSharedPreferences(getApplication().getApplicationContext());
+        }
+        return preferences.getString(FACILITY_TYPE_UUID, null);
     }
 
     public String getOpenlmisUuid() {
-        return openlmisUuid;
+        if (preferences == null) {
+            preferences = PreferenceManager.getDefaultSharedPreferences(getApplication().getApplicationContext());
+        }
+        return preferences.getString(OPENLMIS_UUID , null);
     }
 
     public void setFacilityTypeUuid(String facilityTypeUuid) {
-        this.facilityTypeUuid = facilityTypeUuid;
+        if (preferences == null) {
+            preferences = PreferenceManager.getDefaultSharedPreferences(getApplication().getApplicationContext());
+        }
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(FACILITY_TYPE_UUID, facilityTypeUuid);
+        editor.commit();
     }
 
     public void setOpenlmisUuid(String openlmisUuid) {
-        this.openlmisUuid = openlmisUuid;
+        if (preferences == null) {
+            preferences = PreferenceManager.getDefaultSharedPreferences(getApplication().getApplicationContext());
+        }
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(OPENLMIS_UUID, openlmisUuid);
+        editor.commit();
     }
 
     public StockTakeRepository getStockTakeRepository() {
