@@ -59,6 +59,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
     private Map<String, Set<String>> programIds;
 
+    private String programId = UUID.randomUUID().toString();
 
     @Before
     public void setUp() {
@@ -67,7 +68,6 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         commodityTypeList.add(bcGCommodityType);
         commodityTypeList.add(new CommodityType(UUID.randomUUID().toString(), "OPV", null, null, null, System.currentTimeMillis()));
 
-        String programId = UUID.randomUUID().toString();
         programIds = Collections.singletonMap(bcGCommodityType.getId(), Collections.singleton(tradeItemId));
         when(stockListPresenter.searchIdsByPrograms(programId)).thenReturn(programIds);
         when(stockListPresenter.findCommodityTypesByIds(programIds.keySet())).thenReturn(commodityTypeList);
