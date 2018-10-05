@@ -770,8 +770,8 @@ public class LotFactory implements FormWidgetFactory {
             boolean useVVM = status.getTag(R.id.use_vvm) != null
                     && Boolean.valueOf(status.getTag(R.id.use_vvm).toString());
 
-            if (StringUtils.isBlank(lot.getText()) || StringUtils.isBlank(quantity.getText()) ||
-                    (StringUtils.isBlank(status.getText()) && !useVVM) && isLotEnabled)
+            if ((StringUtils.isBlank(lot.getText()) || StringUtils.isBlank(quantity.getText()) ||
+                    (StringUtils.isBlank(status.getText()) && !useVVM)) && isLotEnabled)
                 isValid = false;
             else if (StringUtils.isNotBlank(quantity.getText()) && !isStockAdjustment && "0".equals(quantity.getText().toString()))
                 isValid = false;
