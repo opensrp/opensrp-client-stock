@@ -13,18 +13,26 @@ import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
+import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
 
 import java.util.List;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.EDIT_TEXT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.DEBIT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.ISSUE_REASONS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.LIST_OPTIONS;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.POPULATE_VALUES;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PROGRAM_ID;
 
 public class OpenLMISEditTextFactory extends EditTextFactory {
 
@@ -32,7 +40,16 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
-        if (jsonObject.has("list_options")) {
+        String populateValues = jsonObject.optString(POPULATE_VALUES);
+
+        if (ISSUE_REASONS.equals(populateValues)) {
+            String programId = jsonObject.optString(PROGRAM_ID);
+
+            List<Reason> validReasons = OpenLMISLibrary.getInstance().
+                    getReasonRepository().findReasons(null, null, programId,
+                    DEBIT);
+            listOptions = convertReasonsToJsonArray(validReasons);
+        } else if (jsonObject.has("list_options")) {
             listOptions = jsonObject.getJSONArray(LIST_OPTIONS);
         }
         super.setMainLayout(getLayout());
@@ -40,7 +57,7 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
 
         List<View> views = super.getViewsFromJson(stepName, context, formFragment, jsonObject, listener);
 
-        RelativeLayout rootLayout =  (RelativeLayout) views.get(0);
+        RelativeLayout rootLayout = (RelativeLayout) views.get(0);
         if (jsonObject.has("is_spinnable")) {
             boolean isSpinnable = (boolean) jsonObject.get("is_spinnable");
             if (isSpinnable) {
@@ -49,7 +66,7 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
                 spinner.setColorFilter(Color.parseColor("#9A9A9A"), PorterDuff.Mode.SRC_ATOP);
                 dropDown.setCompoundDrawablesWithIntrinsicBounds(null, null, spinner, null);
                 dropDown.setFocusable(false);
-                populateStatusOptions(context, dropDown);
+                populateDropdownOptions(context, dropDown);
             }
         }
         return views;
@@ -73,7 +90,10 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
                 String openMrsEntityParent = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent);
                 String openMrsEntity = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity);
                 String openMrsEntityId = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id);
-                formFragment.writeValue(stepName, key, s.toString(), openMrsEntityParent,
+
+                String nodeValue = (String) editText.getTag(com.vijay.jsonwizard.R.id.node_value);
+
+                formFragment.writeValue(stepName, key, nodeValue == null ? s.toString() : nodeValue, openMrsEntityParent,
                         openMrsEntity, openMrsEntityId);
 
             }
@@ -85,11 +105,18 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
     }
 
     @VisibleForTesting
-    protected PopupMenu populateStatusOptions(final Context context, final CustomTextInputEditText editText) {
-        // TODO: Make this dynamic and react to onclick correctly
+    protected void populateDropdownOptions(final Context context, final CustomTextInputEditText editText) {
         final PopupMenu popupMenu = new PopupMenu(context, editText);
         for (int i = 0; i < listOptions.length(); i++) {
-            popupMenu.getMenu().add(listOptions.optString(i));
+            try {
+                JSONObject jsonObject = listOptions.getJSONObject(i);
+                MenuItem menuItem = popupMenu.getMenu().add(jsonObject.getString(JsonFormConstants.TEXT));
+                View actionView = new View(context);
+                actionView.setTag(com.vijay.jsonwizard.R.id.node_value, jsonObject.getString(JsonFormConstants.KEY));
+                menuItem.setActionView(actionView);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +125,7 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
+                        editText.setTag(com.vijay.jsonwizard.R.id.node_value, menuItem.getActionView().getTag(com.vijay.jsonwizard.R.id.node_value));
                         editText.setText(menuItem.getTitle());
                         return true;
                     }
@@ -105,10 +133,20 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
             }
 
         });
-        return popupMenu;
     }
 
     protected int getLayout() {
         return R.layout.openlmis_native_form_edit_text;
+    }
+
+    private JSONArray convertReasonsToJsonArray(List<Reason> validReasons) throws JSONException {
+        JSONArray options = new JSONArray();
+        for (Reason reason : validReasons) {
+            JSONObject option = new JSONObject();
+            option.put(JsonFormConstants.KEY, reason.getId());
+            option.put(JsonFormConstants.TEXT, reason.getStockCardLineItemReason().getName());
+            options.put(option);
+        }
+        return options;
     }
 }

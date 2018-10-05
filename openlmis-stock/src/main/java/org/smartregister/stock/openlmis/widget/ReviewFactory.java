@@ -15,7 +15,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.ReviewAdapter;
+import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
+import org.smartregister.stock.openlmis.domain.openlmis.ValidSourceDestination;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
+import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ValidSourceDestinationRepository;
 import org.smartregister.stock.openlmis.widget.helper.LotDto;
 import org.smartregister.util.JsonFormUtils;
 
@@ -44,6 +48,14 @@ public class ReviewFactory implements FormWidgetFactory {
     public final static String STOCK_LOTS = "stockLots";
     public final static String STOCK_STATUS = "Status";
 
+    private ReasonRepository reasonRepository;
+
+    private ValidSourceDestinationRepository validSourceDestinationRepository;
+
+    public ReviewFactory(ReasonRepository reasonRepository, ValidSourceDestinationRepository validSourceDestinationRepository) {
+        this.reasonRepository = reasonRepository;
+        this.validSourceDestinationRepository = validSourceDestinationRepository;
+    }
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, final JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
@@ -60,12 +72,13 @@ public class ReviewFactory implements FormWidgetFactory {
         JSONArray step1Fields = JsonFormUtils.fields(formJSon);
 
         ((TextView) root.findViewById(R.id.date)).setText(JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(DATE)));
-        String facility = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(FACILITY));
-        String reason = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(REASON));
-        if (reason.equalsIgnoreCase(OTHER))
-            reason = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(REASON) + "_" + OTHER);
-        ((TextView) root.findViewById(R.id.facility)).setText(facility);
-        ((TextView) root.findViewById(R.id.reason)).setText(reason);
+        String facilityId = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(FACILITY));
+        String reasonId = JsonFormUtils.getFieldValue(step1Fields, jsonObject.getString(REASON));
+        StockCardLineItemReason reason = reasonRepository.findReasonById(reasonId).getStockCardLineItemReason();
+
+        ValidSourceDestination facility = validSourceDestinationRepository.findValidSourceDestination(facilityId);
+        ((TextView) root.findViewById(R.id.facility)).setText(facility == null ? facilityId : facility.getFacilityName());
+        ((TextView) root.findViewById(R.id.reason)).setText(reason == null ? reasonId : reason.getName());
         views.add(root);
 
         root.findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {

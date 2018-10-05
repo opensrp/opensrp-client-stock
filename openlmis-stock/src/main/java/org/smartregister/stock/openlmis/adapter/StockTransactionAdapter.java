@@ -51,7 +51,7 @@ public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransacti
         StockWrapper stockWrapper = stockTransactions.get(position);
         Stock stock = stockWrapper.getStock();
         holder.getDateTextView().setText(dateFormatter.format(new Date(stock.getDateCreated())));
-        holder.getToFromTextView().setText(stock.getToFrom());
+        holder.getToFromTextView().setText(stockWrapper.getFacility());
         holder.getLotCodeTextView().setText(stockWrapper.getLotCode());
         holder.getBalanceTextView().setText(String.valueOf(stockWrapper.getStockBalance()));
         if (stock.getTransactionType().equals(received)) {

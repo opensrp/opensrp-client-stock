@@ -64,9 +64,11 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        stockDetailsPresenter = new StockDetailsPresenter(this);
 
         tradeItemDto = getIntent().getParcelableExtra(OpenLMISConstants.TRADE_ITEM);
+
+        stockDetailsPresenter = new StockDetailsPresenter(this,tradeItemDto.getProgramId());
+
         toolbar.setTitle(getString(R.string.stock_details_title, tradeItemDto.getName()));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

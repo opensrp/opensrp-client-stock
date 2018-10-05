@@ -81,17 +81,8 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "options": [
-          {
-            "key": "Comfort Health Clinic",
-            "text": "Comfort Health Clinic"
-          },
-          {
-            "key": "Balaka District Warehouse",
-            "text": "Balaka District Warehouse"
-          }
-        ],
-        "value": "Comfort Health Clinic",
+        "populate_values":"issue_destinations",
+        "program_id": "[program_id]",
         "v_required": {
           "value": true,
           "err": "Please select where stock was issued"
@@ -110,25 +101,8 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "options": [
-          {
-            "key": "Consumed",
-            "text": "Consumed"
-          },
-          {
-            "key": "Transfer Out",
-            "text": "Transfer Out"
-          },
-          {
-            "key": "Damage",
-            "text": "Damage"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
-          }
-        ],
-        "value": "Consumed",
+        "populate_values":"issue_reasons",
+        "program_id": "[program_id]",
         "v_required": {
           "value": true,
           "err": "Please select reason stock was issued"

@@ -85,12 +85,12 @@ public class ValidSourceDestinationRepositoryTest extends BaseRepositoryTest {
 
         // make sure old values are removed
         List<ValidSourceDestination> validSourceDestinations = database.findValidSourceDestinations("1", "program_uuid",
-                "facility_type_uuid", "facility_name", "openlmis_uuid", "1");
+                "facility_type_uuid", "facility_name", "openlmis_uuid", true);
         assertEquals(validSourceDestinations.size(), 0);
 
         // make sure new values exist
         validSourceDestinations = database.findValidSourceDestinations("1", "program_uuid_1",
-                "facility_type_uuid_1", "facility_name_1", "openlmis_uuid_1", "0");
+                "facility_type_uuid_1", "facility_name_1", "openlmis_uuid_1", false);
         assertEquals(validSourceDestinations.size(), 1);
     }
 

@@ -81,17 +81,8 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "options": [
-          {
-            "key": "Comfort Health Clinic",
-            "text": "Comfort Health Clinic"
-          },
-          {
-            "key": "Balaka District Warehouse",
-            "text": "Balaka District Warehouse"
-          }
-        ],
-        "value": "Balaka District Warehouse",
+        "populate_values":"receive_sources",
+        "program_id": "[program_id]",
         "v_required": {
           "value": true,
           "err": "Please select where stock was received from"
@@ -110,25 +101,8 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "options": [
-          {
-            "key": "Receipts",
-            "text": "Receipts"
-          },
-          {
-            "key": "Transfer In",
-            "text": "Transfer In"
-          },
-          {
-            "key": "Beginning Balance Excess",
-            "text": "Beginning Balance Excess"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
-          }
-        ],
-        "value": "Receipts",
+        "populate_values":"receive_reasons",
+        "program_id": "[program_id]",
         "v_required": {
           "value": true,
           "err": "Please select reason stock was received"

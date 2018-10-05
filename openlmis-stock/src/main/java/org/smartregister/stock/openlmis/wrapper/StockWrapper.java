@@ -13,10 +13,16 @@ public class StockWrapper {
 
     private int stockBalance;
 
+    private String facility;
+
+    private String reason;
+
     public StockWrapper(Stock stock, String lotCode, int stockBalance) {
         this.stock = stock;
         this.lotCode = lotCode;
         this.stockBalance = stockBalance;
+        this.facility=stock.getToFrom();
+        this.reason=stock.getReason();
     }
 
     public Stock getStock() {
@@ -41,5 +47,21 @@ public class StockWrapper {
 
     public void setStockBalance(int stockBalance) {
         this.stockBalance = stockBalance;
+    }
+
+    public String getFacility() {
+        return facility;
+    }
+
+    public void setFacility(String facility) {
+        this.facility = facility;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

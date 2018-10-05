@@ -13,7 +13,6 @@ import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
-import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
 import org.smartregister.stock.openlmis.repository.SearchRepository;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.StockTakeRepository;
@@ -22,11 +21,9 @@ import org.smartregister.stock.openlmis.repository.openlmis.CommodityTypeReposit
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.smartregister.stock.domain.Stock.loss_adjustment;
 
@@ -79,11 +76,7 @@ public class StockTakeInteractor extends StockListBaseInteractor {
     }
 
     public List<Reason> findAdjustReasons(String programId) {
-        List<Reason> reasons = new ArrayList<>();
-        reasons.add(new Reason(UUID.randomUUID().toString(), programId, "", new StockCardLineItemReason("Transfer In", "Trasfer", "CREDIT", "Adjust", true)));
-        reasons.add(new Reason(UUID.randomUUID().toString(), programId, "", new StockCardLineItemReason("Damaged", "Damaged", "DEBIT", "Adjust", true)));
-        reasons.add(new Reason(UUID.randomUUID().toString(), programId, "", new StockCardLineItemReason("Expired", "Expired", "DEBIT", "Adjust", true)));
-        return reasons;
+        return OpenLMISLibrary.getInstance().getReasonRepository().findReasons(null, null, programId, null);
     }
 
     public Set<StockTake> findStockTakeList(String programId, String tradeItemId) {

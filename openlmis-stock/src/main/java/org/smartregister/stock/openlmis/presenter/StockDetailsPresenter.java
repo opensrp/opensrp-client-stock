@@ -58,9 +58,11 @@ public class StockDetailsPresenter {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 
+    private String programId;
 
-    public StockDetailsPresenter(StockDetailsView stockDetailsView) {
+    public StockDetailsPresenter(StockDetailsView stockDetailsView, String programId) {
         this.stockDetailsView = stockDetailsView;
+        this.programId = programId;
         stockDetailsInteractor = new StockDetailsInteractor();
 
     }
@@ -99,10 +101,20 @@ public class StockDetailsPresenter {
         List<StockWrapper> stockWrapperList = new ArrayList<>();
         Map<String, String> lotName = stockDetailsInteractor.findLotNames(tradeItem.getId());
         int stockCounter = 0;
+
+        Map<String, String> reasonNames = stockDetailsInteractor.findReasonNames(programId);
+        Map<String, String> facilityNames = stockDetailsInteractor.findFacilityNames(programId);
+
         for (Stock stock : stockTransactions) {
-            stockWrapperList.add(new StockWrapper(stock, lotName.get(stock.getLotId()),
-                    tradeItem.getTotalStock() - stockCounter));
+            StockWrapper stockWrapper = new StockWrapper(stock, lotName.get(stock.getLotId()),
+                    tradeItem.getTotalStock() - stockCounter);
+            if (facilityNames.containsKey(stock.getToFrom()))
+                stockWrapper.setFacility(facilityNames.get(stock.getToFrom()));
+            if (reasonNames.containsKey(stock.getReason()))
+                stockWrapper.setReason(reasonNames.get(stock.getReason()));
+            stockWrapperList.add(stockWrapper);
             stockCounter += stock.getValue();
+
         }
         return stockWrapperList;
     }
@@ -147,7 +159,7 @@ public class StockDetailsPresenter {
             reason = JsonFormUtils.getFieldValue(stepFields, "Issued_Stock_Reason_Other");
         }
 
-        int steps =  Integer.parseInt((String)jsonString.get("count"));
+        int steps = Integer.parseInt((String) jsonString.get("count"));
         if (steps == 1) {
             String status = JsonFormUtils.getFieldValue(stepFields, "Status");
             int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Issued"));
@@ -167,7 +179,7 @@ public class StockDetailsPresenter {
             reason = JsonFormUtils.getFieldValue(stepFields, "Receive_Stock_Reason_Other");
         }
 
-        int steps =  Integer.parseInt((String)jsonString.get("count"));
+        int steps = Integer.parseInt((String) jsonString.get("count"));
         if (steps == 1) {
             String status = JsonFormUtils.getFieldValue(stepFields, "Status");
             int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Received"));
@@ -219,7 +231,7 @@ public class StockDetailsPresenter {
         for (LotDto lot : selectedLotDTos) {
             Stock stock = new Stock(null, transactionType,
                     provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
-                    encounterDate.getTime(), facility == null ? lot.getReason() : facility, TYPE_Unsynced,
+                    encounterDate.getTime(), facility == null ? lot.getReasonId() : facility, TYPE_Unsynced,
                     System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
@@ -227,8 +239,8 @@ public class StockDetailsPresenter {
             stock.setvvmStatus(lot.getLotStatus());
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
-            if( transactionType.equals(received))
-                stockDetailsInteractor.updateLotStatus(lot.getLotId(),lot.getLotStatus());
+            if (transactionType.equals(received))
+                stockDetailsInteractor.updateLotStatus(lot.getLotId(), lot.getLotStatus());
         }
         return true;
     }
@@ -262,4 +274,6 @@ public class StockDetailsPresenter {
 
         return true;
     }
+
+
 }

@@ -7,10 +7,13 @@ import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
+import org.smartregister.stock.openlmis.domain.openlmis.Reason;
+import org.smartregister.stock.openlmis.domain.openlmis.ValidSourceDestination;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.TradeItemRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,5 +62,21 @@ public class StockDetailsInteractor {
 
     public void updateLotStatus(String lotId, String lotStatus) {
         lotRepository.updateLotStatus(lotId, lotStatus);
+    }
+
+    public Map<String, String> findReasonNames(String programId) {
+        Map<String, String> reasonNames = new HashMap<>();
+        List<Reason> reasons = OpenLMISLibrary.getInstance().getReasonRepository().findReasons(null, null, programId, null);
+        for (Reason reason : reasons)
+            reasonNames.put(reason.getId(), reason.getStockCardLineItemReason().getName());
+        return reasonNames;
+    }
+
+    public Map<String, String> findFacilityNames(String programId) {
+        Map<String, String> facilityNames = new HashMap<>();
+        List<ValidSourceDestination> facilities = OpenLMISLibrary.getInstance().getValidSourceDestinationRepository().findValidSourceDestinations(null, programId, OpenLMISLibrary.getInstance().getFacilityTypeUuid(), null, OpenLMISLibrary.getInstance().getOpenlmisUuid(), null);
+        for (ValidSourceDestination facility : facilities)
+            facilityNames.put(facility.getOpenlmisUuid(), facility.getFacilityName());
+        return facilityNames;
     }
 }

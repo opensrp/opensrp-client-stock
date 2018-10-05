@@ -70,7 +70,7 @@
         "key": "labelReceivedFrom",
         "type": "label",
         "text": "Receive from *",
-        "top_margin":"10dp"
+        "top_margin": "10dp"
       },
       {
         "key": "Receive_Stock_From",
@@ -79,17 +79,8 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "options": [
-          {
-            "key": "Comfort Health Clinic",
-            "text": "Comfort Health Clinic"
-          },
-          {
-            "key": "Balaka District Warehouse",
-            "text": "Balaka District Warehouse"
-          }
-        ],
-        "value": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
+        "populate_values": "receive_sources",
+        "program_id": "[program_id]",
         "v_required": {
           "value": true,
           "err": "Please select where stock was received from"
@@ -108,23 +99,8 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "options": [
-          {
-            "key": "b5c27da7-bdda-4790-925a-9484c5dfb594",
-            "text": "Consumed"
-          }, {
-            "key": "c1fc3cf3-da18-44b0-a220-77c985202e06",
-            "text": "Transfer Out"
-          }, {
-            "key": "5b09202e-b8a7-4f77-9e0e-8156f8efc613",
-            "text": "Damage"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
-          }
-        ],
-        "value": "b5c27da7-bdda-4790-925a-9484c5dfb594",
+        "populate_values": "receive_reasons",
+        "program_id": "[program_id]",
         "v_required": {
           "value": true,
           "err": "Please select reason stock was received"
@@ -158,8 +134,8 @@
         "hint": "Vials received",
         "edit_type": "number",
         "v_numeric_integer": {
-          "value":"true",
-          "err":"Enter a valid stock quantity"
+          "value": "true",
+          "err": "Enter a valid stock quantity"
         },
         "v_required": {
           "value": true,
@@ -180,8 +156,14 @@
         "net_content": "[net_content]",
         "is_spinnable": true,
         "list_options": [
-          "VMM1",
-          "VMM2"
+          {
+            "key": "VMM1",
+            "text": "VMM1"
+          },
+          {
+            "key": "VMM2",
+            "text": "VMM2"
+          }
         ]
       }
     ]
