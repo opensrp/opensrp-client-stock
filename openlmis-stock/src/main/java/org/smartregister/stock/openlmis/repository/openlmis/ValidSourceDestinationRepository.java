@@ -106,13 +106,8 @@ public class ValidSourceDestinationRepository extends BaseRepository {
         ValidSourceDestination validSourceDestination = null;
         Cursor cursor = null;
         try {
-            String[] selectionArgs = new String[]{id};
-            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString = query.first;
-            selectionArgs = query.second;
-
-            cursor = getReadableDatabase().query(VALID_SOURCE_DESTINATION_TABLE, VALID_SOURCE_DESTINATION_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
+            cursor = getReadableDatabase().query(VALID_SOURCE_DESTINATION_TABLE, VALID_SOURCE_DESTINATION_TABLE_COLUMNS, OPENLMIS_UUID + "=?", new String[]{id}, null, null, null);
             List<ValidSourceDestination> validSourceDestinations = readValidSourceDestinations(cursor);
             if (validSourceDestinations.size() > 0) {
                 validSourceDestination = validSourceDestinations.get(0);

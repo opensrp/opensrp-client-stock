@@ -104,6 +104,23 @@ public class ReasonRepository extends BaseRepository {
         return reasons;
     }
 
+    public Reason findReasonById(String id) {
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(REASON_TABLE, REASON_TABLE_COLUMNS, ID + "=?",
+                    new String[]{id}, null, null, null);
+            if (cursor.moveToFirst())
+                return createReason(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
     private List<Reason> readReasons(Cursor cursor) {
 
         List<Reason> reasons = new ArrayList<>();
