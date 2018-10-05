@@ -38,14 +38,6 @@ public interface OpenLMISConstants {
 
     String IS_REMOTE_LOGIN = "is_remote_login";
 
-    String ENGLISH_LANGUAGE = "English";
-
-    String URDU_LANGUAGE = "Urdu";
-
-    String ENGLISH_LOCALE = "en";
-
-    String URDU_LOCALE = "ur";
-
     String SERVICE_TYPE_NAME = "serviceType";
 
     String SERVICE_ACTION_NAME = "org.smartregister.path.action.START_SERVICE_ACTION";

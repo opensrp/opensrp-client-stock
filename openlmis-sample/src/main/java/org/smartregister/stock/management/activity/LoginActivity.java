@@ -292,7 +292,7 @@ public class LoginActivity extends AppCompatActivity {
         return packageInfo.versionName;
     }
 
-    private String getBuildDate() throws PackageManager.NameNotFoundException, IOException {
+    private String getBuildDate() {
         return new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date(BuildConfig.BUILD_TIMESTAMP));
     }
 
