@@ -10,6 +10,7 @@ import org.smartregister.domain.jsonmapping.util.TreeNode;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.management.application.Application;
 import org.smartregister.stock.management.domain.FormLocation;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.util.AssetHandler;
 
 import java.util.ArrayList;
@@ -302,7 +303,6 @@ public class LocationHelper {
                         if (!fetchLocationIds && DEFAULT_LOCATION_LEVEL.equals(level) && defaultLocation != null && !defaultLocation.equals(value)) {
                             return locationList;
                         }
-
                         locationList.add(value);
                     }
                 }
@@ -342,7 +342,17 @@ public class LocationHelper {
             LinkedHashMap<String, TreeNode<String, Location>> childMap = childMap(openMrsLocations);
             if (!isEmptyMap(childMap)) {
                 for (Map.Entry<String, TreeNode<String, Location>> childEntry : childMap.entrySet()) {
-                    String curResult = getOpenMrsLocationId(locationName, childEntry.getValue());
+                    TreeNode<String, Location> treeNode = childEntry.getValue();
+                    if (treeNode.getNode().getAttributes() != null) {
+                        Map<String, Object> attributes = treeNode.getNode().getAttributes();
+                        if (attributes.containsKey("olmisFacilityTypeUuid")) {
+                            OpenLMISLibrary.getInstance().setFacilityTypeUuid(attributes.get("olmisFacilityTypeUuid").toString());
+                        }
+                        if (attributes.containsKey("olmisFacilityUuid")) {
+                            OpenLMISLibrary.getInstance().setOpenlmisUuid(attributes.get("olmisFacilityUuid").toString());
+                        }
+                    }
+                    String curResult = getOpenMrsLocationId(locationName, treeNode);
                     if (StringUtils.isNotBlank(curResult)) {
                         return curResult;
                     }

@@ -307,31 +307,6 @@ public class LoginActivity extends AppCompatActivity {
         resources.updateConfiguration(configuration, displayMetrics);
     }
 
-    public static String switchLanguagePreference() {
-        AllSharedPreferences allSharedPreferences = new AllSharedPreferences(getDefaultSharedPreferences(getOpenSRPContext().applicationContext()));
-
-        String preferredLocal = allSharedPreferences.fetchLanguagePreference();
-        if (URDU_LOCALE.equals(preferredLocal)) {
-            allSharedPreferences.saveLanguagePreference(URDU_LOCALE);
-            Resources resources = getOpenSRPContext().applicationContext().getResources();
-            // Change locale settings in app
-            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-            Configuration configuration = resources.getConfiguration();
-            configuration.locale = new Locale(URDU_LOCALE);
-            resources.updateConfiguration(configuration, displayMetrics);
-            return URDU_LANGUAGE;
-        } else {
-            allSharedPreferences.saveLanguagePreference(ENGLISH_LANGUAGE);
-            Resources resources = getOpenSRPContext().applicationContext().getResources();
-            // change locale settings in the app
-            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-            Configuration configuration = resources.getConfiguration();
-            configuration.locale = new Locale(ENGLISH_LOCALE);
-            resources.updateConfiguration(configuration, displayMetrics);
-            return ENGLISH_LANGUAGE;
-        }
-    }
-
     public static Context getOpenSRPContext() {
         return Application.getInstance().getContext();
     }
