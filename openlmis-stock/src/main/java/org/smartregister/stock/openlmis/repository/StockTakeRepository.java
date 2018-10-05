@@ -43,7 +43,7 @@ public class StockTakeRepository extends BaseRepository {
             " (" + PROGRAM_ID + " VARCHAR  NOT NULL, " +
             COMMODITY_TYPE_ID + " VARCHAR NOT NULL, " +
             TRADE_ITEM_ID + " VARCHAR NOT NULL, " +
-            LOT_ID + " VARCHAR  NOT NULL, " +
+            LOT_ID + " VARCHAR  NULL, " +
             REASON + " VARCHAR, " +
             STATUS + " VARCHAR, " +
             VALUE + " INTEGER NOT NULL, " +

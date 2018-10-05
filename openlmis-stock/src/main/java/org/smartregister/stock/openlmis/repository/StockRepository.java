@@ -116,7 +116,7 @@ public class StockRepository extends BaseRepository {
         List<Stock> stocks = new ArrayList<>();
         Cursor cursor = null;
         try {
-            cursor = getReadableDatabase().rawQuery("SELECT * "  + " FROM " + stock_TABLE_NAME + " WHERE "  + SYNC_STATUS + "=?" + " LIMIT ?", new String[]{TYPE_Unsynced, String.valueOf(limit)});
+            cursor = getReadableDatabase().rawQuery("SELECT * " + " FROM " + stock_TABLE_NAME + " WHERE " + SYNC_STATUS + "=?" + " LIMIT ?", new String[]{TYPE_Unsynced, String.valueOf(limit)});
             stocks = readAllstocks(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -182,17 +182,19 @@ public class StockRepository extends BaseRepository {
         return stockList;
     }
 
-    public Map<String, Integer> getTotalStockByTradeItems(List<String> tradeItemIds) {
+    public Map<String, Integer> getTotalStockByTradeItems(String programId, List<String> tradeItemIds) {
         Map<String, Integer> stockBalances = new HashMap<>();
         if (tradeItemIds == null || tradeItemIds.isEmpty())
             return stockBalances;
         int len = tradeItemIds.size();
-        String query = String.format("SELECT %s, SUM(%s) FROM %s WHERE %s IN (%s) GROUP BY %s ",
+        String query = String.format("SELECT %s, SUM(%s) FROM %s WHERE %s IN (%s) AND %s=? GROUP BY %s ",
                 STOCK_TYPE_ID, VALUE, stock_TABLE_NAME, STOCK_TYPE_ID,
-                TextUtils.join(",", Collections.nCopies(len, "?")), STOCK_TYPE_ID);
+                TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID, STOCK_TYPE_ID);
         Cursor cursor = null;
         try {
-            cursor = getReadableDatabase().rawQuery(query, tradeItemIds.toArray(new String[len]));
+            String[] params = tradeItemIds.toArray(new String[len + 1]);
+            params[len] = programId;
+            cursor = getReadableDatabase().rawQuery(query, params);
             while (cursor.moveToNext()) {
                 stockBalances.put(cursor.getString(0), cursor.getInt(1));
             }
@@ -207,21 +209,22 @@ public class StockRepository extends BaseRepository {
     }
 
 
-    public Map<String, List<LotDetailsDto>> getNumberOfLotsByTradeItem(List<String> tradeItemIds) {
+    public Map<String, List<LotDetailsDto>> getNumberOfLotsByTradeItem(String programId, List<String> tradeItemIds) {
         Map<String, List<LotDetailsDto>> lots = new HashMap<>();
         if (tradeItemIds == null || tradeItemIds.isEmpty())
             return lots;
 
         int len = tradeItemIds.size();
         String query = String.format("SELECT l.%s ,l.%s, min(%s), sum(%s) FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
-                        " WHERE %s IN (%s) AND %s >= ? GROUP BY l.%s ORDER BY 3 ",
+                        " WHERE %s IN (%s) AND %s >= ? AND %s = ? GROUP BY l.%s ORDER BY 3 ",
                 TRADE_ITEM_ID, ID, EXPIRATION_DATE, VALUE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID,
                 TRADE_ITEM_ID, TextUtils.join(",", Collections.nCopies(len, "?")),
-                EXPIRATION_DATE, ID);
+                EXPIRATION_DATE, PROGRAM_ID, ID);
         Cursor cursor = null;
         try {
-            String[] params = tradeItemIds.toArray(new String[len + 1]);
+            String[] params = tradeItemIds.toArray(new String[len + 2]);
             params[len] = String.valueOf(new LocalDate().toDate().getTime());
+            params[len + 1] = programId;
             cursor = getReadableDatabase().rawQuery(query, params);
 
             while (cursor.moveToNext()) {

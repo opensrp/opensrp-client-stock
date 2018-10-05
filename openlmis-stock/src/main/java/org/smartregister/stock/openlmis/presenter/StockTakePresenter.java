@@ -32,6 +32,8 @@ public class StockTakePresenter extends StockListBasePresenter {
 
     private Set<String> adjustedTradeItems;
 
+    private List<Reason> adjustReasons;
+
     private int totalTradeItems;
 
     private String programId;
@@ -52,11 +54,12 @@ public class StockTakePresenter extends StockListBasePresenter {
     }
 
 
-    public void iniatializeBottomPanel(String programId, Set<String> commodityTypeIds) {
+    public void iniatializePresenter(String programId, Set<String> commodityTypeIds) {
         this.programId = programId;
         totalTradeItems = stockTakeInteractor.findNumberOfTradeItems(commodityTypeIds);
         Pair<Set<String>, Long> tradeItemsAdjusted = stockTakeInteractor.findTradeItemsIdsAdjusted(programId, commodityTypeIds);
         adjustedTradeItems = tradeItemsAdjusted.first;
+        adjustReasons = stockTakeInteractor.findAdjustReasons(programId);
         stockTakeView.updateTotalTradeItems(totalTradeItems);
         stockTakeView.updateTradeItemsAdjusted(adjustedTradeItems.size(),
                 tradeItemsAdjusted.second == null || tradeItemsAdjusted.second == 0 ? null : new Date(tradeItemsAdjusted.second));
@@ -76,8 +79,8 @@ public class StockTakePresenter extends StockListBasePresenter {
         return stockTakeInteractor.findTradeItemsActiveLots(commodityTypeId);
     }
 
-    public List<Reason> findAdjustReasons(String programId) {
-        return stockTakeInteractor.findAdjustReasons(programId);
+    public List<Reason> findAdjustReasons() {
+        return adjustReasons;
     }
 
     public Set<StockTake> findStockTakeList(String programId, String tradeItemId) {

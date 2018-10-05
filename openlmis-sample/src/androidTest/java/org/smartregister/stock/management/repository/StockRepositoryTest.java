@@ -156,6 +156,7 @@ public class StockRepositoryTest extends BaseRepositoryTest {
 
         String tradeItemId = UUID.randomUUID().toString();
         String tradeItemId2 = UUID.randomUUID().toString();
+        String programId=UUID.randomUUID().toString();
 
         long lot1Expiry = 389293828778878l;
         Lot lot1 = new Lot(UUID.randomUUID().toString(), "LC2018G", lot1Expiry,
@@ -171,30 +172,33 @@ public class StockRepositoryTest extends BaseRepositoryTest {
         Stock stock = new Stock(null, Stock.received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
         stock.setLotId(lot1.getId());
+        stock.setProgramId(programId);
         stockRepository.addOrUpdate(stock);
 
         stock = new Stock(null, Stock.issued, "tester11", -10, now,
                 "HO", "unsynched", now, tradeItemId);
         stock.setLotId(lot1.getId());
+        stock.setProgramId(programId);
         stockRepository.addOrUpdate(stock);
 
         stock = new Stock(null, Stock.received, "tester11", 32, now,
                 "HO", "unsynched", now, tradeItemId2);
         stock.setLotId(lot2.getId());
+        stock.setProgramId(programId);
         stockRepository.addOrUpdate(stock);
 
         List<String> ids = new ArrayList<>();
-        ids.add(tradeItemId.toString());
-        ids.add(tradeItemId2.toString());
+        ids.add(tradeItemId);
+        ids.add(tradeItemId2);
 
-        List<LotDetailsDto> lots = stockRepository.getNumberOfLotsByTradeItem(ids).get(tradeItemId.toString());
+        List<LotDetailsDto> lots = stockRepository.getNumberOfLotsByTradeItem(programId, ids).get(tradeItemId);
 
         assertEquals(1, lots.size());
         assertEquals(lot1Expiry, lots.get(0).getMinimumExpiryDate());
         assertEquals(40, lots.get(0).getTotalStock());
         assertEquals(lot1.getId(), lots.get(0).getLotId());
 
-        lots = stockRepository.getNumberOfLotsByTradeItem(ids).get(tradeItemId2.toString());
+        lots = stockRepository.getNumberOfLotsByTradeItem(programId, ids).get(tradeItemId2);
         assertEquals(1, lots.size());
 
         assertEquals(lot2Expiry, lots.get(0).getMinimumExpiryDate());
@@ -202,7 +206,7 @@ public class StockRepositoryTest extends BaseRepositoryTest {
         assertEquals(lot2.getId(), lots.get(0).getLotId());
 
         ids.clear();
-        assertEquals(0, stockRepository.getNumberOfLotsByTradeItem(ids).size());
+        assertEquals(0, stockRepository.getNumberOfLotsByTradeItem(programId, ids).size());
     }
 
     @Test

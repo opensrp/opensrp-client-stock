@@ -64,15 +64,15 @@ public class StockListInteractor extends StockListBaseInteractor {
         return commodityTypeRepository.findAllCommodityTypes();
     }
 
-    public List<TradeItemWrapper> getTradeItems(CommodityType commodityType) {
-        return populateTradeItemWrapper(getTradeItemsByCommodityType(commodityType.getId()));
+    public List<TradeItemWrapper> getTradeItems(String programId, CommodityType commodityType) {
+        return populateTradeItemWrapper(programId,getTradeItemsByCommodityType(commodityType.getId()));
     }
 
-    public List<TradeItemWrapper> findTradeItemsByIds(Set<String> tradeItemIds) {
-        return populateTradeItemWrapper(tradeItemRepository.getTradeItemByIds(tradeItemIds));
+    public List<TradeItemWrapper> findTradeItemsByIds(String programId, Set<String> tradeItemIds) {
+        return populateTradeItemWrapper(programId, tradeItemRepository.getTradeItemByIds(tradeItemIds));
     }
 
-    private List<TradeItemWrapper> populateTradeItemWrapper(List<TradeItem> tradeItems) {
+    private List<TradeItemWrapper> populateTradeItemWrapper(String programId, List<TradeItem> tradeItems) {
         List<TradeItemWrapper> tradeItemWrappers = new ArrayList<>();
         List<String> tradeItemsWithLotsIds = new ArrayList<>();
         List<String> tradeItemsWithoutLotsIds = new ArrayList<>();
@@ -82,8 +82,8 @@ public class StockListInteractor extends StockListBaseInteractor {
             else
                 tradeItemsWithoutLotsIds.add(tradeItem.getId());
         }
-        Map<String, List<LotDetailsDto>> lotsListMap = stockRepository.getNumberOfLotsByTradeItem(tradeItemsWithLotsIds);
-        Map<String, Integer> nonLotManagedBalances = stockRepository.getTotalStockByTradeItems(tradeItemsWithoutLotsIds);
+        Map<String, List<LotDetailsDto>> lotsListMap = stockRepository.getNumberOfLotsByTradeItem(programId,tradeItemsWithLotsIds);
+        Map<String, Integer> nonLotManagedBalances = stockRepository.getTotalStockByTradeItems(programId,tradeItemsWithoutLotsIds);
 
         for (TradeItem tradeItem : tradeItems) {
             TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
