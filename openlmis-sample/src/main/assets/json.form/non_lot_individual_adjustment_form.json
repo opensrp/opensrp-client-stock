@@ -59,6 +59,7 @@
         "type": "lot",
         "trade_item": "[trade_item]",
         "trade_item_id": "[trade_item_id]",
+        "program_id": "[program_id]",
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
         "is_stock_adjustment": "true",
