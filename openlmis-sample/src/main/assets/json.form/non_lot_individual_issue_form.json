@@ -72,7 +72,7 @@
         "key": "labelIssuedFrom",
         "type": "label",
         "text": "Issued to *",
-        "top_margin":"10dp"
+        "top_margin": "10dp"
       },
       {
         "key": "Issued_Stock_To",
@@ -81,17 +81,8 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "options": [
-          {
-            "key": "Comfort Health Clinic",
-            "text": "Comfort Health Clinic"
-          },
-          {
-            "key": "Balaka District Warehouse",
-            "text": "Balaka District Warehouse"
-          }
-        ],
-        "value": "e6799d64-d10d-4011-b8c2-0e4d4a3f65ce",
+        "populate_values": "issue_destinations",
+        "program_id": "[program_id]",
         "v_required": {
           "value": true,
           "err": "Please select where stock was issued to"
@@ -110,23 +101,8 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "native_radio",
-        "options": [
-          {
-            "key": "b5c27da7-bdda-4790-925a-9484c5dfb594",
-            "text": "Consumed"
-          }, {
-            "key": "c1fc3cf3-da18-44b0-a220-77c985202e06",
-            "text": "Transfer Out"
-          }, {
-            "key": "5b09202e-b8a7-4f77-9e0e-8156f8efc613",
-            "text": "Damage"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
-          }
-        ],
-        "value": "b5c27da7-bdda-4790-925a-9484c5dfb594",
+        "populate_values": "issue_reasons",
+        "program_id": "[program_id]",
         "v_required": {
           "value": true,
           "err": "Please select reason stock was issued"
@@ -157,15 +133,15 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "v_max":{
-          "value":"[stock_on_hand]",
-          "err":"Cannot Issue more than [stock_on_hand]"
+        "v_max": {
+          "value": "[stock_on_hand]",
+          "err": "Cannot Issue more than [stock_on_hand]"
         },
         "hint": "[dispensing_unit] issued",
         "edit_type": "number",
         "v_numeric_integer": {
-          "value":"true",
-          "err":"Enter a valid stock quantity"
+          "value": "true",
+          "err": "Enter a valid stock quantity"
         },
         "v_required": {
           "value": true,
@@ -187,8 +163,14 @@
         "is_spinnable": true,
         "use_vvm": "[use_vvm]",
         "list_options": [
-          "VMM1",
-          "VMM2"
+          {
+            "key": "VMM1",
+            "text": "VMM1"
+          },
+          {
+            "key": "VMM2",
+            "text": "VMM2"
+          }
         ]
       },
       {
@@ -200,8 +182,8 @@
         "hint": "Quantity wasted",
         "edit_type": "number",
         "v_numeric_integer": {
-          "value":"true",
-          "err":"Enter a valid stock quantity"
+          "value": "true",
+          "err": "Enter a valid stock quantity"
         },
         "v_required": {
           "value": true,
@@ -216,11 +198,8 @@
         "type": "edit_text",
         "hint": "Wasted reason",
         "is_spinnable": true,
-        "list_options": [
-          "Expiry",
-          "Breakage",
-          "Missing"
-        ]
+        "populate_values": "issue_reasons",
+        "program_id": "[program_id]"
       }
     ]
   }

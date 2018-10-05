@@ -35,7 +35,7 @@ public class ReasonRepository extends BaseRepository {
     public static final String DATE_UPDATED = "date_updated";
 
     public static final String[] REASON_TABLE_COLUMNS = {ID, NAME, PROGRAM_ID, DESCRIPTION, REASON_TYPE, REASON_CATEGORY, FACILITY_TYPE, IS_FREE_TEXT_ALLOWED, DATE_UPDATED};
-    public static final String[] SELECT_TABLE_COLUMNS = {ID, NAME, PROGRAM_ID};
+    public static final String[] SELECT_TABLE_COLUMNS = {ID, NAME, PROGRAM_ID, REASON_TYPE};
 
     public static final String CREATE_ORDERABLE_TABLE =
 
@@ -52,7 +52,9 @@ public class ReasonRepository extends BaseRepository {
                     + DATE_UPDATED + " INTEGER"
                     + ")";
 
-    public ReasonRepository(Repository repository) { super(repository); }
+    public ReasonRepository(Repository repository) {
+        super(repository);
+    }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_ORDERABLE_TABLE);
@@ -79,15 +81,15 @@ public class ReasonRepository extends BaseRepository {
         }
     }
 
-    public List<Reason> findReasons(String id, String name, String programId) {
+    public List<Reason> findReasons(String id, String name, String programId, String reasonType) {
 
         List<Reason> reasons = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String[] selectionArgs = new String[]{id, name, programId};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            String[] selectionArgs = new String[]{id, name, programId, reasonType};
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString =  query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(REASON_TABLE, REASON_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
@@ -100,6 +102,23 @@ public class ReasonRepository extends BaseRepository {
             }
         }
         return reasons;
+    }
+
+    public Reason findReasonById(String id) {
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().query(REASON_TABLE, REASON_TABLE_COLUMNS, ID + "=?",
+                    new String[]{id}, null, null, null);
+            if (cursor.moveToFirst())
+                return createReason(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
     }
 
     private List<Reason> readReasons(Cursor cursor) {
@@ -125,26 +144,26 @@ public class ReasonRepository extends BaseRepository {
     private Reason createReason(Cursor cursor) {
 
         StockCardLineItemReason stockCardLineItemReason = new StockCardLineItemReason(
+                cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(DESCRIPTION)),
                 cursor.getString(cursor.getColumnIndex(REASON_TYPE)),
                 cursor.getString(cursor.getColumnIndex(REASON_CATEGORY)),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(IS_FREE_TEXT_ALLOWED)))
         );
-        Reason reason = new Reason(
+        return new Reason(
                 cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(PROGRAM_ID)),
                 cursor.getString(cursor.getColumnIndex(FACILITY_TYPE)),
                 stockCardLineItemReason
         );
-        return reason;
     }
 
     private Object[] createQueryValues(Reason reason) {
 
         StockCardLineItemReason stockCardLineItemReason = reason.getStockCardLineItemReason();
-        Object[] values = new Object[]{
-                reason.getId(),
+        return new Object[]{
+                stockCardLineItemReason.getId(),
                 stockCardLineItemReason.getName(),
                 reason.getProgramId(),
                 stockCardLineItemReason.getDescription(),
@@ -154,6 +173,5 @@ public class ReasonRepository extends BaseRepository {
                 stockCardLineItemReason.getFreeTextAllowed(),
                 reason.getDateUpdated()
         };
-        return values;
     }
 }

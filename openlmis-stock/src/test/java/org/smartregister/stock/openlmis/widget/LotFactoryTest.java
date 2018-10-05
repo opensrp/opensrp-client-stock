@@ -23,11 +23,13 @@ import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
+import org.smartregister.stock.openlmis.domain.openlmis.Reason;
+import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
-import org.smartregister.stock.openlmis.repository.openlmis.ReasonsRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.shadow.ShadowPopupMenu;
 
 import java.util.ArrayList;
@@ -68,6 +70,9 @@ public class LotFactoryTest extends BaseUnitTest {
     @Mock
     private StockRepository stockRepository;
 
+    @Mock
+    private ReasonRepository reasonRepository;
+
     private OpenLMISJsonForm activity;
 
     private LotFactory lotFactory;
@@ -77,7 +82,8 @@ public class LotFactoryTest extends BaseUnitTest {
     @Before
     public void setUp() {
         lots = new ArrayList<>();
-        lotFactory = new LotFactory(lotRepository, new ReasonsRepository(), stockRepository);
+        lotFactory = new LotFactory(lotRepository, reasonRepository, stockRepository);
+
         Intent intent = new Intent();
         intent.putExtra("json", ISSUE_FORM_JSON);
         activity = Robolectric.buildActivity(OpenLMISJsonForm.class, intent).create().get();
@@ -303,7 +309,13 @@ public class LotFactoryTest extends BaseUnitTest {
         reason.setTag(R.id.lot_id, "7c6d239f-0bbc-4cab-b218-888d8be89d24");
 
 
+        List<Reason> reasons = new ArrayList<>();
+        reasons.add(new Reason("id_1", "program_1", "type_1",
+                new StockCardLineItemReason("id_1", "Damage", null, "DEBIT",
+                        "ADJUSTMENT", null)));
+        when(reasonRepository.findReasons(null, null,"", null)).thenReturn(reasons);
         PopupMenu popup = lotFactory.populateReasonsOptionsLot(activity, reason);
+
         reason.performClick();
 
 

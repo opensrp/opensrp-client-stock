@@ -51,6 +51,10 @@ public interface OpenLMISConstants {
     String PROGRAM_ID = "program_id";
 
     String OPENLMIS_UUID = "openlmis_uuid";
+    
+    String DEBIT = "DEBIT";
+
+    String CREDIT = "CREDIT";
 
 
     interface JsonForm {
@@ -90,6 +94,16 @@ public interface OpenLMISConstants {
         String IS_NON_LOT = "is_non_lot";
 
         String IS_SPINNABLE = "is_spinnable";
+
+        String POPULATE_VALUES = "populate_values";
+
+        String ISSUE_DESTINATIONS = "issue_destinations";
+
+        String RECEIVE_SOURCES = "receive_sources";
+
+        String ISSUE_REASONS = "issue_reasons";
+
+        String RECEIVE_REASONS = "receive_reasons";
     }
 
     interface Forms {

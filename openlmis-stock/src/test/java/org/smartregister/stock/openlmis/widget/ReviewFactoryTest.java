@@ -16,11 +16,16 @@ import org.robolectric.Robolectric;
 import org.smartregister.stock.openlmis.BaseUnitTest;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
+import org.smartregister.stock.openlmis.domain.openlmis.Reason;
+import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
+import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
+import org.smartregister.stock.openlmis.repository.openlmis.ValidSourceDestinationRepository;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.smartregister.stock.openlmis.TestData.ISSUE_FORM_JSON;
 import static org.smartregister.stock.openlmis.TestData.RECEIVE_JSON_FORM_DATA;
@@ -36,19 +41,27 @@ public class ReviewFactoryTest extends BaseUnitTest {
     @Mock
     private OpenLMISJsonFormFragment formFragment;
 
+    @Mock
+    private ReasonRepository reasonRepository;
+
+    @Mock
+    private ValidSourceDestinationRepository validSourceDestinationRepository;
+
     private OpenLMISJsonForm activity;
 
     private ReviewFactory reviewFactory;
 
     @Before
     public void setUp() {
-        reviewFactory = new ReviewFactory();
+        reviewFactory = new ReviewFactory(reasonRepository, validSourceDestinationRepository);
         Intent intent = new Intent();
         intent.putExtra("json", ISSUE_FORM_JSON);
         activity = Robolectric.buildActivity(OpenLMISJsonForm.class, intent).create().get();
         activity.clearFormDataViews();
         activity.clearConstrainedViews();
         when(formFragment.getCurrentJsonState()).thenReturn(RECEIVE_JSON_FORM_DATA);
+        when(reasonRepository.findReasonById(anyString())).thenReturn(new Reason("id_1", "program1", "type_1",
+                new StockCardLineItemReason("id_1", "Receipts", "", "", "", true)));
 
     }
 
