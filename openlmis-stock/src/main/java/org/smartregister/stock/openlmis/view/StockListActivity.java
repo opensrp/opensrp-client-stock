@@ -10,16 +10,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
+import org.smartregister.stock.openlmis.receiver.OpenLMISAlarmReceiver;
 import org.smartregister.stock.openlmis.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.stock.openlmis.util.TestDataUtils;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
@@ -28,7 +31,10 @@ import java.util.List;
 
 import static org.smartregister.stock.openlmis.repository.StockRepository.PROGRAM_ID;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.REFRESH_STOCK_ON_HAND;
-
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.SERVICE_TYPE_NAME;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_OPENLMIS_METADATA;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ServiceType.SYNC_STOCK;
+import static org.smartregister.stock.openlmis.util.Utils.sendSyncCompleteBroadCast;
 
 public class StockListActivity extends BaseActivity implements StockListView, View.OnClickListener
         , SyncStatusBroadcastReceiver.SyncStatusListener {
@@ -47,8 +53,6 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         stockListPresenter = new StockListPresenter(this);
-
-        //populateTestData();
 
         FloatingActionButton mfFloatingActionButton = findViewById(R.id.stockAction);
         mfFloatingActionButton.setOnClickListener(this);
@@ -107,6 +111,32 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("Sync");
+        menu.add("Logout");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getTitle().toString().equalsIgnoreCase("Sync")) {
+            // send openlmis metadata sync broadcast
+            Intent intent = new Intent(getApplicationContext(), OpenLMISAlarmReceiver.class);
+            intent.putExtra(SERVICE_TYPE_NAME, SYNC_OPENLMIS_METADATA);
+            sendBroadcast(intent);
+            // send stock sync broadcast
+            intent = new Intent(getApplicationContext(), OpenLMISAlarmReceiver.class);
+            intent.putExtra(SERVICE_TYPE_NAME, SYNC_STOCK);
+            sendBroadcast(intent);
+            // send sync completed broadcast
+            sendSyncCompleteBroadCast(getApplication());
+            return true;
+        } else if (item.getTitle().toString().equalsIgnoreCase("Logout")) {
+            OpenLMISLibrary.getInstance().getApplication().getInstance().logoutCurrentUser();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public int getLayoutView() {
         return R.layout.activity_stock_list;
     }

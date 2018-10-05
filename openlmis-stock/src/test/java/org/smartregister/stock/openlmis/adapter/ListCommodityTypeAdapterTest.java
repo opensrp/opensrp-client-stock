@@ -59,6 +59,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
     private Map<String, Set<String>> programIds;
 
+    private String programId = UUID.randomUUID().toString();
 
     @Before
     public void setUp() {
@@ -67,7 +68,6 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         commodityTypeList.add(bcGCommodityType);
         commodityTypeList.add(new CommodityType(UUID.randomUUID().toString(), "OPV", null, null, null, System.currentTimeMillis()));
 
-        String programId = UUID.randomUUID().toString();
         programIds = Collections.singletonMap(bcGCommodityType.getId(), Collections.singleton(tradeItemId));
         when(stockListPresenter.searchIdsByPrograms(programId)).thenReturn(programIds);
         when(stockListPresenter.findCommodityTypesByIds(programIds.keySet())).thenReturn(commodityTypeList);
@@ -103,7 +103,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
         Set<String> ids = new HashSet<>();
         ids.add(tradeItemId);
-        when(stockListPresenter.findTradeItemsByIds(ids)).thenReturn(expectedTradeItems);
+        when(stockListPresenter.findTradeItemsByIds(programId, ids)).thenReturn(expectedTradeItems);
 
         LinearLayout vg = new LinearLayout(context);
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
@@ -199,7 +199,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         tradeItemWrappers.add(new TradeItemWrapper(new TradeItem(UUID.randomUUID().toString())));
         tradeItemWrappers.get(0).setTotalStock(12);
         tradeItemWrappers.get(0).getTradeItem().setNetContent(10l);
-        when(stockListPresenter.findTradeItemsByIds(tradeItemIds)).thenReturn(tradeItemWrappers);
+        when(stockListPresenter.findTradeItemsByIds(programId, tradeItemIds)).thenReturn(tradeItemWrappers);
 
         LinearLayout vg = new LinearLayout(context);
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);

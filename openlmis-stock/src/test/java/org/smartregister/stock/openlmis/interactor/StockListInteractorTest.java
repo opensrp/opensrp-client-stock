@@ -35,6 +35,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -117,10 +118,10 @@ public class StockListInteractorTest extends BaseUnitTest {
         CommodityType commodityType = new CommodityType(UUID.randomUUID().toString(), "BCG", null, null,
                 null, System.currentTimeMillis());
         List<TradeItem> expectedTradeItems = new ArrayList<>();
-        when(tradeItemRepository.getTradeItemByCommodityType(commodityType.getId().toString())).thenReturn(expectedTradeItems);
-        List<TradeItemWrapper> tradeItems = stockListInteractor.getTradeItems(commodityType);
+        when(tradeItemRepository.getTradeItemByCommodityType(commodityType.getId())).thenReturn(expectedTradeItems);
+        List<TradeItemWrapper> tradeItems = stockListInteractor.getTradeItems(null, commodityType);
         assertTrue(tradeItems.isEmpty());
-        verify(tradeItemRepository).getTradeItemByCommodityType(commodityType.getId().toString());
+        verify(tradeItemRepository).getTradeItemByCommodityType(commodityType.getId());
     }
 
     @Test
@@ -144,8 +145,8 @@ public class StockListInteractorTest extends BaseUnitTest {
 
         List<String> ids = new ArrayList<>();
         ids.add(tradeItem.getId());
-        when(stockRepository.getNumberOfLotsByTradeItem(ids)).thenReturn(lotsMap);
-        List<TradeItemWrapper> tradeItems = stockListInteractor.getTradeItems(commodityType);
+        when(stockRepository.getNumberOfLotsByTradeItem(null, ids)).thenReturn(lotsMap);
+        List<TradeItemWrapper> tradeItems = stockListInteractor.getTradeItems(null, commodityType);
         assertEquals(1, tradeItems.size());
         assertEquals(tradeItem.getId(), tradeItems.get(0).getTradeItem().getId());
         assertEquals("Intervax BCG 20", tradeItems.get(0).getTradeItem().getName());
@@ -194,10 +195,10 @@ public class StockListInteractorTest extends BaseUnitTest {
         lots.add(new LotDetailsDto(UUID.randomUUID().toString(), 120l, 20));
         Map<String, List<LotDetailsDto>> lotMap = new HashMap<>();
         lotMap.put(tradeItemId, lots);
-        when(stockRepository.getNumberOfLotsByTradeItem(any(List.class))).thenReturn(lotMap);
+        when(stockRepository.getNumberOfLotsByTradeItem(anyString(), any(List.class))).thenReturn(lotMap);
 
 
-        List<TradeItemWrapper> actual = stockListInteractor.findTradeItemsByIds(tradeItems);
+        List<TradeItemWrapper> actual = stockListInteractor.findTradeItemsByIds("", tradeItems);
         verify(tradeItemRepository).getTradeItemByIds(tradeItems);
         assertEquals(1, actual.size());
         assertEquals(tradeItem.getId(), actual.get(0).getTradeItem().getId());

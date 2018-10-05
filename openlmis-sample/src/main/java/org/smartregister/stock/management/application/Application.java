@@ -1,11 +1,14 @@
 package org.smartregister.stock.management.application;
 
+import android.content.Intent;
+
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.repository.Repository;
 import org.smartregister.stock.management.BuildConfig;
-import org.smartregister.stock.management.receiver.OpenLMISAlarmReceiver;
+import org.smartregister.stock.management.activity.LoginActivity;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.receiver.OpenLMISAlarmReceiver;
 import org.smartregister.stock.openlmis.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.stock.openlmis.repository.StockManagementRepository;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -25,8 +28,7 @@ public class Application extends DrishtiApplication {
         context.updateApplicationContext(this);
         CoreLibrary.init(context);
         OpenLMISLibrary.init(context, getRepository());  // Initialize OpenLMISLibrary
-        OpenLMISLibrary.getInstance().setOpenlmisUuid("7fc9bda8-ad8a-468d-8244-38e1918527d5");
-        OpenLMISLibrary.getInstance().setFacilityTypeUuid("ac1d268b-ce10-455f-bf87-9c667da8f060");
+        OpenLMISLibrary.getInstance().setApplication(this); // Must do this immediately after init
         setAlarms(getApplicationContext());
         SyncStatusBroadcastReceiver.init(this);
     }
@@ -34,6 +36,10 @@ public class Application extends DrishtiApplication {
 
     public static synchronized Application getInstance() {
         return (Application) mInstance;
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     @Override
@@ -50,7 +56,12 @@ public class Application extends DrishtiApplication {
 
     @Override
     public void logoutCurrentUser() {
-
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        getApplicationContext().startActivity(intent);
+        context.userService().logoutSession();
     }
 
     @Override

@@ -1,10 +1,10 @@
-package org.smartregister.stock.management.util;
+package org.smartregister.stock.openlmis.util;
 
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 
-import org.smartregister.stock.management.application.Application;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class ServiceUtils {
 
     public static boolean isServiceRunning(Class<?> serviceClass) {
-        final ActivityManager activityManager = (ActivityManager) Application.getInstance().getSystemService(Context.ACTIVITY_SERVICE);
+        final ActivityManager activityManager = (ActivityManager) OpenLMISLibrary.getInstance().getApplication().getInstance().getSystemService(Context.ACTIVITY_SERVICE);
         final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
 
         for (ActivityManager.RunningServiceInfo service : services) {
@@ -29,7 +29,7 @@ public class ServiceUtils {
         }
         if (!isServiceRunning(serviceClass)) {
             Intent intent = new Intent(context, serviceClass);
-            Application.getInstance().startService(intent);
+            OpenLMISLibrary.getInstance().getApplication().getInstance().startService(intent);
         }
     }
 
@@ -40,7 +40,7 @@ public class ServiceUtils {
         }
         if (isServiceRunning(serviceClass)) {
             Intent intent = new Intent(context, serviceClass);
-            Application.getInstance().stopService(intent);
+            OpenLMISLibrary.getInstance().getApplication().stopService(intent);
         }
     }
 }

@@ -100,11 +100,11 @@ public class StockListPresenterTest extends BaseUnitTest {
 
         CommodityType commodityType = new CommodityType(uuid.toString(), "BCG", null,
                 null, null, System.currentTimeMillis());
-        when(stockListInteractor.getTradeItems(commodityType)).thenReturn(expected);
+        when(stockListInteractor.getTradeItems(null, commodityType)).thenReturn(expected);
 
-        List<TradeItemWrapper> tradeItems = stockListPresenter.getTradeItems(commodityType);
+        List<TradeItemWrapper> tradeItems = stockListPresenter.getTradeItems(null, commodityType);
 
-        verify(stockListInteractor).getTradeItems(commodityType);
+        verify(stockListInteractor).getTradeItems(null, commodityType);
 
         assertEquals(1, tradeItems.size());
         assertEquals(uuid.toString(), tradeItems.get(0).getTradeItem().getId());
@@ -184,11 +184,11 @@ public class StockListPresenterTest extends BaseUnitTest {
         expectedTradeItems.add(tradeItemWrapper);
 
 
-        when(stockListInteractor.findTradeItemsByIds(tradeItems)).thenReturn(expectedTradeItems);
+        when(stockListInteractor.findTradeItemsByIds(null, tradeItems)).thenReturn(expectedTradeItems);
 
 
-        List<TradeItemWrapper> actual = stockListPresenter.findTradeItemsByIds(tradeItems);
-        verify(stockListInteractor).findTradeItemsByIds(tradeItems);
+        List<TradeItemWrapper> actual = stockListPresenter.findTradeItemsByIds(null, tradeItems);
+        verify(stockListInteractor).findTradeItemsByIds(null, tradeItems);
         assertEquals(1, actual.size());
         assertEquals(tradeItem.getId(), actual.get(0).getTradeItem().getId());
         assertEquals(tradeItem.getNetContent(), actual.get(0).getTradeItem().getNetContent());

@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.view.viewholder;
+package org.smartregister.stock.openlmis.view.viewholder.stocktake;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -14,29 +14,24 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.StockTake;
-import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.listener.StockTakeListener;
 
 import java.util.List;
 
-import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.StockStatus.VVM1;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.StockStatus.VVM2;
 
 /**
- * Created by samuelgithengi on 9/21/18.
+ * Created by samuelgithengi on 10/2/18.
  */
-public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public abstract class BaseStockTakeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private static final String TAG = "StockTakeLotViewHolder";
 
-    private Context context;
-
-    private TextView lotCodeAndExpiryTextView;
+    protected Context context;
 
     private TextInputEditText stockOnHandTextView;
 
@@ -58,7 +53,7 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     private TextView subtractStockButton;
 
-    private int stockOnHand;
+    protected int stockOnHand;
 
     private int physicalCount;
 
@@ -66,12 +61,11 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
     private StockTakeListener stockTakeListener;
 
-    private StockTake stockTake;
+    protected StockTake stockTake;
 
-    public StockTakeLotViewHolder(@NonNull View itemView) {
+    protected BaseStockTakeViewHolder(@NonNull View itemView) {
         super(itemView);
         context = itemView.getContext();
-        lotCodeAndExpiryTextView = itemView.findViewById(R.id.lot_code);
         stockOnHandTextView = itemView.findViewById(R.id.stock_on_hand_textview);
         physicalCountTextView = itemView.findViewById(R.id.quantity_textview);
         statusTextView = itemView.findViewById(R.id.status_textview);
@@ -91,12 +85,6 @@ public class StockTakeLotViewHolder extends RecyclerView.ViewHolder implements V
 
         physicalCountTextView.addTextChangedListener(new PhysicalCountTextWatcher());
 
-    }
-
-    public void setLot(Lot lot) {
-        lotCodeAndExpiryTextView.setText(context.getString(R.string.stock_take_lot,
-                lot.getLotCode(), new DateTime(lot.getExpirationDate()).toString(DATE_FORMAT)));
-        stockTake.setLotId(lot.getId());
     }
 
     public void setStockOnHand(int stockOnHand) {

@@ -1,4 +1,4 @@
-package org.smartregister.stock.openlmis.adapter;
+package org.smartregister.stock.openlmis.adapter.stocktake;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -14,7 +14,7 @@ import org.smartregister.stock.openlmis.domain.openlmis.Lot;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.listener.StockTakeListener;
 import org.smartregister.stock.openlmis.presenter.StockTakePresenter;
-import org.smartregister.stock.openlmis.view.viewholder.StockTakeLotViewHolder;
+import org.smartregister.stock.openlmis.view.viewholder.stocktake.StockTakeLotViewHolder;
 
 import java.util.List;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
         this.programId = programId;
         this.tradeItemId = tradeItemId;
         lots = stockTakePresenter.findLotsByTradeItem(tradeItemId);
-        adjustReasons = stockTakePresenter.findAdjustReasons(programId);
+        adjustReasons = stockTakePresenter.findAdjustReasons();
         stockBalances = stockTakePresenter.findStockBalanceByLots(programId, lots);
     }
 
