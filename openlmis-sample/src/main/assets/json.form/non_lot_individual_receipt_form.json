@@ -155,7 +155,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Vials received",
+        "hint": "Quantity received",
         "edit_type": "number",
         "v_numeric_integer": {
           "value":"true",
@@ -163,7 +163,7 @@
         },
         "v_required": {
           "value": true,
-          "err": "Please specify the number of vials received"
+          "err": "Please specify the quantity received"
         }
       },
       {
@@ -178,6 +178,7 @@
         "program_id": "[program_id]",
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
+        "use_vvm": "[use_vvm]",
         "is_spinnable": true,
         "list_options": [
           "VMM1",

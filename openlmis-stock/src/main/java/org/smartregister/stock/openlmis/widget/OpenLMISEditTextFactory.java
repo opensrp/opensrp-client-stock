@@ -41,16 +41,16 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
         List<View> views = super.getViewsFromJson(stepName, context, formFragment, jsonObject, listener);
 
         RelativeLayout rootLayout =  (RelativeLayout) views.get(0);
-        if (jsonObject.has("is_spinnable")) {
-            boolean isSpinnable = (boolean) jsonObject.get("is_spinnable");
-            if (isSpinnable) {
-                CustomTextInputEditText dropDown = (CustomTextInputEditText) ((TextInputLayout) rootLayout.findViewById(R.id.openlmis_edit_text_parent)).getEditText();
-                Drawable spinner = context.getResources().getDrawable(R.drawable.abc_spinner_mtrl_am_alpha);
-                spinner.setColorFilter(Color.parseColor("#9A9A9A"), PorterDuff.Mode.SRC_ATOP);
-                dropDown.setCompoundDrawablesWithIntrinsicBounds(null, null, spinner, null);
-                dropDown.setFocusable(false);
-                populateStatusOptions(context, dropDown);
-            }
+        if (jsonObject.optBoolean("is_spinnable")) {
+            CustomTextInputEditText dropDown = (CustomTextInputEditText) ((TextInputLayout) rootLayout.findViewById(R.id.openlmis_edit_text_parent)).getEditText();
+            Drawable spinner = context.getResources().getDrawable(R.drawable.abc_spinner_mtrl_am_alpha);
+            spinner.setColorFilter(Color.parseColor("#9A9A9A"), PorterDuff.Mode.SRC_ATOP);
+            dropDown.setCompoundDrawablesWithIntrinsicBounds(null, null, spinner, null);
+            dropDown.setFocusable(false);
+            populateStatusOptions(context, dropDown);
+        }
+        if (!jsonObject.optBoolean("use_vvm", true)) {
+            rootLayout.findViewById(R.id.openlmis_edit_text_parent).setVisibility(View.GONE);
         }
         return views;
     }
