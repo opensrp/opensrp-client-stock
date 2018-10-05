@@ -50,7 +50,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
 
     public void addOrUpdate(TradeItemClassification tradeItemClassification) {
 
-        if (tradeItemClassification == null) {
+        if (tradeItemClassification == null || tradeItemClassification.getId() == null) {
             return;
         }
 

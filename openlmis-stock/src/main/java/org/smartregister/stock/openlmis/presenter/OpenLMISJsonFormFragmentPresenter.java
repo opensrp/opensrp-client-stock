@@ -41,11 +41,11 @@ public class OpenLMISJsonFormFragmentPresenter extends JsonFormFragmentPresenter
         }
     }
 
-    public static ValidationStatus validate(JsonFormFragmentView formFragmentView, View childAt, boolean requestFocus) {
+    public static ValidationStatus validate(JsonFormFragmentView formFragmentView, View childAt, boolean requestFocus, boolean isLotEnabled) {
         ValidationStatus validationStatus = JsonFormFragmentPresenter.validate(formFragmentView, childAt, requestFocus);
         if (validationStatus.isValid() && childAt instanceof LinearLayout
                 && childAt.getTag(com.vijay.jsonwizard.R.id.type).equals(LOT_WIDGET)) {
-            validationStatus = LotFactory.validate(formFragmentView, (LinearLayout) childAt);
+            validationStatus = LotFactory.validate(formFragmentView, (LinearLayout) childAt, isLotEnabled);
         } else if (validationStatus.isValid() && childAt instanceof CustomTextInputEditText
                 && childAt.getTag(com.vijay.jsonwizard.R.id.type).equals(DATE_PICKER)) {
             validationStatus = OpenLMISDatePickerFactory.validate(formFragmentView, (CustomTextInputEditText) childAt);

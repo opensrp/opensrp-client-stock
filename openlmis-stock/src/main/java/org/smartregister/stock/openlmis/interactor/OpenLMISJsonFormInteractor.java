@@ -25,7 +25,7 @@ public class OpenLMISJsonFormInteractor extends JsonFormInteractor {
     protected void registerWidgets() {
         super.registerWidgets();
         map.put(JsonFormConstants.DATE_PICKER, new OpenLMISDatePickerFactory());
-        map.put(OpenLMISConstants.LOT_WIDGET, new LotFactory(OpenLMISLibrary.getInstance().getLotRepository(), new ReasonsRepository()));
+        map.put(OpenLMISConstants.LOT_WIDGET, new LotFactory(OpenLMISLibrary.getInstance().getLotRepository(), new ReasonsRepository(), OpenLMISLibrary.getInstance().getStockRepository()));
         map.put(OpenLMISConstants.REVIEW_WIDGET, new ReviewFactory());
         map.put(JsonFormConstants.EDIT_TEXT, new OpenLMISEditTextFactory());
     }

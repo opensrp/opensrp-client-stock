@@ -86,6 +86,10 @@ public interface OpenLMISConstants {
         String NO_PADDING = "no_padding";
 
         String LIST_OPTIONS = "list_options";
+
+        String IS_NON_LOT = "is_non_lot";
+
+        String IS_SPINNABLE = "is_spinnable";
     }
 
     interface Forms {
@@ -95,6 +99,8 @@ public interface OpenLMISConstants {
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
 
         String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
+
+        String NON_LOT_INDIVIDUAL_ADJUST_FORM = "non_lot_individual_adjustment_form";
 
         String INDIVIDUAL_NON_LOT_ISSUE_FORM = "non_lot_individual_issue_form";
 
