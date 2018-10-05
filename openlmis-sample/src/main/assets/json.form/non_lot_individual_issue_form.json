@@ -51,6 +51,7 @@
     "fields": [
       {
         "key": "Date_Stock_Issued",
+        "trade_item_id": "[trade_item_id]",
         "type": "date_picker",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

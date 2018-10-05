@@ -52,6 +52,7 @@
       {
         "key": "Date_Stock_Received",
         "type": "date_picker",
+        "trade_item": "[trade_item]",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",

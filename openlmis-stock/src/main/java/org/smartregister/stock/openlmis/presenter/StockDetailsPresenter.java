@@ -199,7 +199,7 @@ public class StockDetailsPresenter {
         for (int i = 0; i < stepFields.length(); i++) {
             JSONObject jsonObject = getJSONObject(stepFields, i);
             String keyValue = jsonObject.getString(KEY);
-            if (STOCK_LOTS.equals(keyValue) || STOCK.equals(keyValue)) {
+            if (STOCK_LOTS.equals(keyValue) || STOCK.equals(keyValue) || "Status".equals(keyValue)) {
                 return jsonObject.optString(key);
             }
         }
