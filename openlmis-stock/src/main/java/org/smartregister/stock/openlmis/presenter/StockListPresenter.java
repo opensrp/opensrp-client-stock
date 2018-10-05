@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Created by samuelgithengi on 7/13/18.
  */
-public class StockListPresenter extends StockListBasePresenter{
+public class StockListPresenter extends StockListBasePresenter {
 
     private StockListInteractor stockListInteractor;
 
@@ -58,12 +58,12 @@ public class StockListPresenter extends StockListBasePresenter{
         commodityTypeAdapter.collapseAllViews();
     }
 
-    public List<TradeItemWrapper> getTradeItems(CommodityType commodityType) {
-        return stockListInteractor.getTradeItems(commodityType);
+    public List<TradeItemWrapper> getTradeItems(String programId, CommodityType commodityType) {
+        return stockListInteractor.getTradeItems(programId, commodityType);
     }
 
-    public List<TradeItemWrapper> findTradeItemsByIds(Set<String> tradeItemIds) {
-        return stockListInteractor.findTradeItemsByIds(tradeItemIds);
+    public List<TradeItemWrapper> findTradeItemsByIds(String programId, Set<String> tradeItemIds) {
+        return stockListInteractor.findTradeItemsByIds(programId, tradeItemIds);
     }
 
     @Override

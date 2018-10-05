@@ -103,7 +103,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
 
         Set<String> ids = new HashSet<>();
         ids.add(tradeItemId);
-        when(stockListPresenter.findTradeItemsByIds(ids)).thenReturn(expectedTradeItems);
+        when(stockListPresenter.findTradeItemsByIds(programId, ids)).thenReturn(expectedTradeItems);
 
         LinearLayout vg = new LinearLayout(context);
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
@@ -199,7 +199,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         tradeItemWrappers.add(new TradeItemWrapper(new TradeItem(UUID.randomUUID().toString())));
         tradeItemWrappers.get(0).setTotalStock(12);
         tradeItemWrappers.get(0).getTradeItem().setNetContent(10l);
-        when(stockListPresenter.findTradeItemsByIds(tradeItemIds)).thenReturn(tradeItemWrappers);
+        when(stockListPresenter.findTradeItemsByIds(programId, tradeItemIds)).thenReturn(tradeItemWrappers);
 
         LinearLayout vg = new LinearLayout(context);
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);

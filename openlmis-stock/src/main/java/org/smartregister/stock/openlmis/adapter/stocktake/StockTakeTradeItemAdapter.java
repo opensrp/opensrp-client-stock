@@ -50,7 +50,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemViewType(int position) {
-        if (tradeItems.get(position).getHasLots()) {
+        if (tradeItems.get(position).isHasLots()) {
             return ViewType.LOT_MANAGED.getValue();
         } else {
             return ViewType.NON_LOT_MANGED.getValue();
@@ -75,7 +75,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder stockTakeTradeItemViewHolder, int position) {
         TradeItem tradeItem = tradeItems.get(position);
-        if (tradeItem.getHasLots())
+        if (tradeItem.isHasLots())
             bindLotManaged((StockTakeTradeItemViewHolder) stockTakeTradeItemViewHolder, tradeItem);
         else
             bindNotLotManaged((NonLotTradeItemViewHolder) stockTakeTradeItemViewHolder, tradeItem);
