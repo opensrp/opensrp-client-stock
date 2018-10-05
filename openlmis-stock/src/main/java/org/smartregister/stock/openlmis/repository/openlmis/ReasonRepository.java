@@ -35,7 +35,7 @@ public class ReasonRepository extends BaseRepository {
     public static final String DATE_UPDATED = "date_updated";
 
     public static final String[] REASON_TABLE_COLUMNS = {ID, NAME, PROGRAM_ID, DESCRIPTION, REASON_TYPE, REASON_CATEGORY, FACILITY_TYPE, IS_FREE_TEXT_ALLOWED, DATE_UPDATED};
-    public static final String[] SELECT_TABLE_COLUMNS = {ID, NAME, PROGRAM_ID,REASON_TYPE};
+    public static final String[] SELECT_TABLE_COLUMNS = {ID, NAME, PROGRAM_ID, REASON_TYPE};
 
     public static final String CREATE_ORDERABLE_TABLE =
 
@@ -127,26 +127,26 @@ public class ReasonRepository extends BaseRepository {
     private Reason createReason(Cursor cursor) {
 
         StockCardLineItemReason stockCardLineItemReason = new StockCardLineItemReason(
+                cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(DESCRIPTION)),
                 cursor.getString(cursor.getColumnIndex(REASON_TYPE)),
                 cursor.getString(cursor.getColumnIndex(REASON_CATEGORY)),
                 convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(IS_FREE_TEXT_ALLOWED)))
         );
-        Reason reason = new Reason(
+        return new Reason(
                 cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(PROGRAM_ID)),
                 cursor.getString(cursor.getColumnIndex(FACILITY_TYPE)),
                 stockCardLineItemReason
         );
-        return reason;
     }
 
     private Object[] createQueryValues(Reason reason) {
 
         StockCardLineItemReason stockCardLineItemReason = reason.getStockCardLineItemReason();
-        Object[] values = new Object[]{
-                reason.getId(),
+        return new Object[]{
+                stockCardLineItemReason.getId(),
                 stockCardLineItemReason.getName(),
                 reason.getProgramId(),
                 stockCardLineItemReason.getDescription(),
@@ -156,6 +156,5 @@ public class ReasonRepository extends BaseRepository {
                 stockCardLineItemReason.getFreeTextAllowed(),
                 reason.getDateUpdated()
         };
-        return values;
     }
 }

@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class StockCardLineItemReason {
+
+    @JsonProperty
+    private String id;
+
     @JsonProperty
     private String name;
 
@@ -23,7 +27,8 @@ public class StockCardLineItemReason {
     @JsonProperty
     private List<String> tags;
 
-    public StockCardLineItemReason(String name, String description, String reasonType, String reasonCategory, Boolean isFreeTextAllowed) {
+    public StockCardLineItemReason(String id, String name, String description, String reasonType, String reasonCategory, Boolean isFreeTextAllowed) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.reasonType = reasonType;
@@ -77,5 +82,13 @@ public class StockCardLineItemReason {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
