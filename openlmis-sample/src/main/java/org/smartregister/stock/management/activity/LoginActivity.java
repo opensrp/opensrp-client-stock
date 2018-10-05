@@ -45,7 +45,6 @@ import org.smartregister.stock.management.helper.LocationHelper;
 import org.smartregister.stock.openlmis.view.StockListActivity;
 import org.smartregister.util.Utils;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -56,11 +55,7 @@ import static org.smartregister.AllConstants.DRISHTI_BASE_URL;
 import static org.smartregister.domain.LoginResponse.NO_INTERNET_CONNECTIVITY;
 import static org.smartregister.domain.LoginResponse.UNAUTHORIZED;
 import static org.smartregister.domain.LoginResponse.UNKNOWN_RESPONSE;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ENGLISH_LANGUAGE;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ENGLISH_LOCALE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.IS_REMOTE_LOGIN;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.URDU_LANGUAGE;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.URDU_LOCALE;
 import static org.smartregister.stock.openlmis.util.Utils.hideKeyboard;
 import static org.smartregister.util.Log.logError;
 
