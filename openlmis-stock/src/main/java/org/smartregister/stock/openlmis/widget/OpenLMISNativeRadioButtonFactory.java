@@ -52,14 +52,14 @@ public class OpenLMISNativeRadioButtonFactory extends NativeRadioButtonFactory {
                     getValidSourceDestinationRepository().findValidSourceDestinations(null,
                     programId, facilityType, null, facilityId, RECEIVE_SOURCES.equals(populateValues));
             jsonObject.put(JsonFormConstants.OPTIONS_FIELD_NAME, convertToJsonArray(validFacilities));
+            jsonObject.put(JsonFormConstants.VALUE, validFacilities.get(0).getOpenlmisUuid());
         } else if (RECEIVE_REASONS.equals(populateValues) || ISSUE_REASONS.equals(populateValues)) {
             List<Reason> validReasons = OpenLMISLibrary.getInstance().
                     getReasonRepository().findReasons(null, null, programId,
                     RECEIVE_REASONS.equals(populateValues) ? CREDIT : DEBIT);
             jsonObject.put(JsonFormConstants.OPTIONS_FIELD_NAME, convertReasonsToJsonArray(validReasons));
+            jsonObject.put(JsonFormConstants.VALUE, validReasons.get(0).getId());
         }
-
-
     }
 
     private JSONArray convertToJsonArray(List<ValidSourceDestination> validFacilities) throws JSONException {
