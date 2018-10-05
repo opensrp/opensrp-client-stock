@@ -3,7 +3,6 @@ package org.smartregister.stock.management.repository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.smartregister.stock.openlmis.domain.openlmis.Program;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
@@ -40,7 +39,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(reason);
 
-        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "name", "program_id");
+        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "name", "program_id",null);
         assertEquals(reasons.size(), 1);
     }
 
@@ -67,11 +66,11 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(reason);
 
         // make sure old values are removed
-        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "name", "program_id");
+        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "name", "program_id",null);
         assertEquals(reasons.size(), 0);
 
         // make sure new values exist
-        reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "name_1", "program_id_1");
+        reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "name_1", "program_id_1",null);
 
         assertEquals(reasons.size(), 1);
     }
@@ -97,7 +96,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(reason);
 
         // ensure all matching rows are returned
-        List<Reason> reasons = database.findReasons(null, "name", null);
+        List<Reason> reasons = database.findReasons(null, "name", null,null);
         assertEquals(reasons.size(), 2);
     }
 
@@ -122,7 +121,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(reason);
 
         // fetch reason with non-existing ID
-        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440300", "name", "program_id");
+        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440300", "name", "program_id",null);
 
         assertEquals(reasons.size(), 0);
     }

@@ -77,13 +77,13 @@ public class ValidSourceDestinationRepository extends BaseRepository {
         }
     }
 
-    public List<ValidSourceDestination> findValidSourceDestinations(String id, String programUuid, String facilityTypeUuid, String facilityName, String openlmisUuid, boolean isSource) {
+    public List<ValidSourceDestination> findValidSourceDestinations(String id, String programUuid, String facilityTypeUuid, String facilityName, String openlmisUuid, Boolean isSource) {
 
         List<ValidSourceDestination> validSourceDestinations = new ArrayList<>();
         Cursor cursor = null;
         try {
 
-            String[] selectionArgs = new String[]{id, programUuid, facilityTypeUuid, facilityName, openlmisUuid, Boolean.valueOf(isSource).toString()};
+            String[] selectionArgs = new String[]{id, programUuid, facilityTypeUuid, facilityName, openlmisUuid, isSource == null ? null : isSource ? "1" : "0"};
             Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
             String querySelectString = query.first;
