@@ -7,6 +7,7 @@ import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.Repository;
@@ -118,13 +119,31 @@ public class StockRepository extends BaseRepository {
         contentValues.put(FACILITY_ID, stock.getFacilityId());
         if (stock.getId() != null) {
             getWritableDatabase().update(stock_TABLE_NAME, contentValues, ID_COLUMN + "=?", new String[]{stock.getId().toString()});
-        } else if (stock.getIdentifier() != null) {
+        } else if (exists(stock.getIdentifier())) {
             getWritableDatabase().update(stock_TABLE_NAME, contentValues, IDENTIFIER + "=?", new String[]{stock.getIdentifier()});
         } else {
             contentValues.put(ID_COLUMN, stock.getId());
             contentValues.put(IDENTIFIER, UUID.randomUUID().toString());
             getWritableDatabase().insert(stock_TABLE_NAME, null, contentValues);
         }
+    }
+
+    private boolean exists(String identifier) {
+        if (StringUtils.isBlank(identifier))
+            return false;
+        Cursor cursor = null;
+        try {
+            cursor = getReadableDatabase().rawQuery("SELECT 1 " + " FROM " + stock_TABLE_NAME + " WHERE " + IDENTIFIER + "=?", new String[]{identifier});
+            return cursor.moveToFirst();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return false;
+
     }
 
     public List<Stock> findUnSyncedWithLimit(int limit) {

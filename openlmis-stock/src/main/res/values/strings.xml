@@ -68,5 +68,9 @@
 
     <string name="physical_inventory">Physical Inventory</string>
     <string name="physical_count_invalid">PhysicalCount is not a number</string>
+    <string name="identifier">identifier</string>
+    <string name="orderable_id">orderableId</string>
+    <string name="vvm_status">vvmStatus</string>
+    <string name="facility_id">facilityId</string>
 
 </resources>
