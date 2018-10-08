@@ -91,6 +91,10 @@ public interface OpenLMISConstants {
 
         String LIST_OPTIONS = "list_options";
 
+        String IS_NON_LOT = "is_non_lot";
+
+        String IS_SPINNABLE = "is_spinnable";
+
         String POPULATE_VALUES = "populate_values";
 
         String ISSUE_DESTINATIONS = "issue_destinations";
@@ -100,7 +104,6 @@ public interface OpenLMISConstants {
         String ISSUE_REASONS = "issue_reasons";
 
         String RECEIVE_REASONS = "receive_reasons";
-
     }
 
     interface Forms {
@@ -110,6 +113,8 @@ public interface OpenLMISConstants {
         String INDIVIDUAL_RECEIVED_FORM = "individual_received_form";
 
         String INDIVIDUAL_ADJUST_FORM = "individual_adjustment_form";
+
+        String NON_LOT_INDIVIDUAL_ADJUST_FORM = "non_lot_individual_adjustment_form";
 
         String INDIVIDUAL_NON_LOT_ISSUE_FORM = "non_lot_individual_issue_form";
 

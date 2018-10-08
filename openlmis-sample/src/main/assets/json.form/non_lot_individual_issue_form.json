@@ -51,11 +51,13 @@
     "fields": [
       {
         "key": "Date_Stock_Issued",
+        "trade_item_id": "[trade_item_id]",
         "type": "date_picker",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "hint": "Date",
+        "is_non_lot": true,
         "expanded": false,
         "min_date": "today-1m",
         "max_date": "today",
@@ -143,27 +145,24 @@
         },
         "v_required": {
           "value": true,
-          "err": "Please specify the number of vials issued"
+          "err": "Please specify the quantity issued"
         }
-      },
-      {
-        "key": "labelIssuedDoses",
-        "type": "label",
-        "text": "2 child(ren) vaccinated today. Assuming 300 dose(s) used.",
-        "top_margin": "10dp"
       },
       {
         "key": "Status",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
+        "is_non_lot": true,
         "type": "edit_text",
         "hint": "Status",
         "trade_item": "[trade_item]",
         "trade_item_id": "[trade_item_id]",
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
+        "program_id": "[program_id]",
         "is_spinnable": true,
+        "use_vvm": "[use_vvm]",
         "list_options": [
           {
             "key": "VMM1",
@@ -181,7 +180,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Wasted vials",
+        "hint": "Quantity wasted",
         "edit_type": "number",
         "v_numeric_integer": {
           "value": "true",
@@ -189,7 +188,7 @@
         },
         "v_required": {
           "value": true,
-          "err": "Please specify the number of wasted vials"
+          "err": "Please specify the quantity wasted"
         }
       },
       {
