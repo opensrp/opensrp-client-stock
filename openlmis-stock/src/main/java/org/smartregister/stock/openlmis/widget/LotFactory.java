@@ -170,7 +170,9 @@ public class LotFactory implements FormWidgetFactory {
         }
 
         TextInputEditText lotDropdown = root.findViewById(R.id.lot_dropdown);
-        if (jsonObject.optBoolean(IS_NON_LOT)) {
+
+        boolean isNonLot = jsonObject.optBoolean(IS_NON_LOT);
+        if (isNonLot) {
             totalStock = stockRepository.getTotalStockByTradeItem(tradeItemId);
             stock = new Stock();
             stock.setStockTypeId(tradeItemId);
@@ -200,10 +202,10 @@ public class LotFactory implements FormWidgetFactory {
                 lots = lotRepository.findLotsByTradeItem(tradeItemId);
             }
             for (Lot lot : lots) {
-                if (selectedLotDTos.contains(new LotDto(lot.getId().toString())))
-                    selectedLotsMap.put(lot.getId().toString(), lot);
+                if (selectedLotDTos.contains(new LotDto(lot.getId())))
+                    selectedLotsMap.put(lot.getId(), lot);
                 else
-                    lotMap.put(lot.getId().toString(), lot);
+                    lotMap.put(lot.getId(), lot);
             }
 
             lotDropdown.setTag(R.id.lot_position, 0);
@@ -214,18 +216,22 @@ public class LotFactory implements FormWidgetFactory {
             if (isStockAdjustment)
                 populateReasonsOptions(context, (TextInputEditText) root.findViewById(R.id.reason_dropdown), true);
 
-            restoreAdditionalLotRows(lotDropdown);
         }
 
         if (useVvm) {
             statusOptions = jsonObject.getJSONArray(STATUS_FIELD_NAME);
-            populateStatusOptions(context, statusDropdown, true);
+            populateStatusOptions(context, statusDropdown, !isNonLot);
         } else {
             hideStatusDropdown(root);
         }
 
         root.findViewById(R.id.add_lot).setOnClickListener(lotListener);
+
         ((JsonApi) context).addFormDataView(lotsContainer);
+
+        if (!isNonLot)
+            restoreAdditionalLotRows(lotDropdown);
+
         views.add(root);
 
         return views;

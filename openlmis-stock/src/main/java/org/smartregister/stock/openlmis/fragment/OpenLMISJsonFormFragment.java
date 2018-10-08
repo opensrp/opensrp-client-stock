@@ -174,6 +174,12 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         validateActivateNext(isLotEnabled);
     }
 
+    public void writeValue(String stepName, String key, String s, String
+            openMrsEntityParent, String openMrsEntity, String openMrsEntityId) {
+        super.writeValue(stepName, key, s, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+        validateActivateNext(true);
+    }
+
     @Override
     public void writeValue(String stepName, String prentKey, String childObjectKey, String
             childKey, String value, String openMrsEntityParent, String openMrsEntity, String
