@@ -19,7 +19,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.smartregister.stock.openlmis.BaseUnitTest;
-import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -254,7 +253,7 @@ public class LotFactoryTest extends BaseUnitTest {
 
         TextInputEditText status = new TextInputEditText(activity);
         status.setTag(R.id.lot_id, "7c6d239f-0bbc-4cab-b218-888d8be89d24");
-        PopupMenu popup = lotFactory.populateStatusOptionsLot(activity, status);
+        PopupMenu popup = lotFactory.populateStatusOptions(activity, status,true);
         status.performClick();
 
         MenuItem item = popup.getMenu().getItem(1);
@@ -314,7 +313,7 @@ public class LotFactoryTest extends BaseUnitTest {
                 new StockCardLineItemReason("id_1", "Damage", null, "DEBIT",
                         "ADJUSTMENT", null)));
         when(reasonRepository.findReasons(null, null,"", null)).thenReturn(reasons);
-        PopupMenu popup = lotFactory.populateReasonsOptionsLot(activity, reason);
+        PopupMenu popup = lotFactory.populateReasonsOptions(activity, reason,true);
 
         reason.performClick();
 
