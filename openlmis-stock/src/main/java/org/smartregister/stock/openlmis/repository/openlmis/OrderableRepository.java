@@ -97,7 +97,7 @@ public class OrderableRepository extends BaseRepository {
         try {
 
             String[] selectionArgs = new String[]{id, fullProductCode, fullProductName, netContent, dispensable, tradeItemId, commodityTypeId};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
             String querySelectString = query.first;
             selectionArgs = query.second;
@@ -120,9 +120,9 @@ public class OrderableRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String[] selectionArgs = new String[]{id};
-            Pair<String, String[]> query= createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
+            Pair<String, String[]> query = createQuery(selectionArgs, SELECT_TABLE_COLUMNS);
 
-            String querySelectString =  query.first;
+            String querySelectString = query.first;
             selectionArgs = query.second;
 
             cursor = getReadableDatabase().query(ORDERABLE_TABLE, ORDERABLE_TABLE_COLUMNS, querySelectString, selectionArgs, null, null, null);
@@ -138,6 +138,28 @@ public class OrderableRepository extends BaseRepository {
             }
         }
         return orderable;
+    }
+
+    public String findOrderableIdByTradeItemId(String tradeItemId) {
+        Cursor cursor = null;
+        try {
+            String[] selectionArgs = new String[]{tradeItemId};
+            Pair<String, String[]> query = createQuery(selectionArgs, new String[]{TRADE_ITEM_ID});
+
+            String querySelectString = query.first;
+            selectionArgs = query.second;
+
+            cursor = getReadableDatabase().query(ORDERABLE_TABLE, new String[]{ID}, querySelectString, selectionArgs, null, null, null);
+            if (cursor.moveToFirst())
+                return cursor.getString(0);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
     }
 
 
@@ -164,32 +186,34 @@ public class OrderableRepository extends BaseRepository {
     private Orderable createOrderable(Cursor cursor) {
 
         return new Orderable(
-            cursor.getString(cursor.getColumnIndex(ID)),
-            cursor.getString(cursor.getColumnIndex(FULL_PRODUCT_CODE)),
-            cursor.getString(cursor.getColumnIndex(FULL_PRODUCT_NAME)),
-            cursor.getLong(cursor.getColumnIndex(NET_CONTENT)),
-            cursor.getLong(cursor.getColumnIndex(PACK_ROUNDING_THRESHOLD)),
-            convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ROUND_TO_ZERO))),
-            cursor.getString(cursor.getColumnIndex(DISPENSABLE_ID)),
-            cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
-            cursor.getString(cursor.getColumnIndex(COMMODITY_TYPE_ID))
+                cursor.getString(cursor.getColumnIndex(ID)),
+                cursor.getString(cursor.getColumnIndex(FULL_PRODUCT_CODE)),
+                cursor.getString(cursor.getColumnIndex(FULL_PRODUCT_NAME)),
+                cursor.getLong(cursor.getColumnIndex(NET_CONTENT)),
+                cursor.getLong(cursor.getColumnIndex(PACK_ROUNDING_THRESHOLD)),
+                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ROUND_TO_ZERO))),
+                cursor.getString(cursor.getColumnIndex(DISPENSABLE_ID)),
+                cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
+                cursor.getString(cursor.getColumnIndex(COMMODITY_TYPE_ID))
         );
     }
 
     private Object[] createQueryValues(Orderable orderable) {
 
         Object[] values = new Object[]{
-            orderable.getId().toString(),
-            orderable.getFullProductCode(),
-            orderable.getFullProductName(),
-            orderable.getNetContent(),
-            orderable.getPackRoundingThreshold(),
-            convertBooleanToInt(orderable.isRoundToZero()),
-            orderable.getDispensableId(),
-            orderable.getTradeItemId(),
-            orderable.getCommodityTypeId(),
-            orderable.getDateUpdated()
+                orderable.getId(),
+                orderable.getFullProductCode(),
+                orderable.getFullProductName(),
+                orderable.getNetContent(),
+                orderable.getPackRoundingThreshold(),
+                convertBooleanToInt(orderable.isRoundToZero()),
+                orderable.getDispensableId(),
+                orderable.getTradeItemId(),
+                orderable.getCommodityTypeId(),
+                orderable.getDateUpdated()
         };
         return values;
     }
+
+
 }

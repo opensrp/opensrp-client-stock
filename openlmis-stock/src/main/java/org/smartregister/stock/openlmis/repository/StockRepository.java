@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.ID;
@@ -54,10 +55,17 @@ public class StockRepository extends BaseRepository {
 
     public static final String REASON = "reason";
 
-    public static final String VVM_STATUS = "vvm_status";
+    private static final String VVM_STATUS = "vvm_status";
+
+    private static final String ORDERABLE_ID = "orderable_id";
+
+    private static final String FACILITY_ID = "facility_id";
+
+    private static final String IDENTIFIER = "identifier";
 
     private static final String CREATE_STOCK_TABLE = "CREATE TABLE " + stock_TABLE_NAME +
             " (" + ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+            IDENTIFIER + " VARCHAR NOT NULL," +
             STOCK_TYPE_ID + " VARCHAR NOT NULL," +
             TRANSACTION_TYPE + " VARCHAR NOT NULL," +
             LOT_ID + " VARCHAR," +
@@ -68,14 +76,16 @@ public class StockRepository extends BaseRepository {
             TO_FROM + " VARCHAR NOT NULL," +
             SYNC_STATUS + " VARCHAR," +
             DATE_UPDATED + " INTEGER," +
+            ORDERABLE_ID + " VARCHAR," +
+            FACILITY_ID + " VARCHAR," +
+            VVM_STATUS + " VARCHAR," +
             PROVIDER_ID + " VARCHAR," +
             LOCATION_ID + " VARCHAR," +
             CHILD_LOCATION_ID + " VARCHAR," +
             TEAM_ID + " VARCHAR," +
-            TEAM_NAME + " VARCHAR," +
-            VVM_STATUS + " VARCHAR)";
+            TEAM_NAME + " VARCHAR)";
 
-    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME, VVM_STATUS};
+    private static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME, VVM_STATUS, ORDERABLE_ID, FACILITY_ID};
 
 
     public StockRepository(Repository repository) {
@@ -103,11 +113,16 @@ public class StockRepository extends BaseRepository {
         contentValues.put(CHILD_LOCATION_ID, stock.getChildLocationId());
         contentValues.put(TEAM_NAME, stock.getTeam());
         contentValues.put(TEAM_ID, stock.getTeamId());
-        contentValues.put(VVM_STATUS, stock.getvvmStatus());
+        contentValues.put(VVM_STATUS, stock.getVvmStatus());
+        contentValues.put(ORDERABLE_ID, stock.getOrderableId());
+        contentValues.put(FACILITY_ID, stock.getFacilityId());
         if (stock.getId() != null) {
             getWritableDatabase().update(stock_TABLE_NAME, contentValues, ID_COLUMN + "=?", new String[]{stock.getId().toString()});
+        } else if (stock.getIdentifier() != null) {
+            getWritableDatabase().update(stock_TABLE_NAME, contentValues, IDENTIFIER + "=?", new String[]{stock.getIdentifier()});
         } else {
             contentValues.put(ID_COLUMN, stock.getId());
+            contentValues.put(IDENTIFIER, UUID.randomUUID().toString());
             getWritableDatabase().insert(stock_TABLE_NAME, null, contentValues);
         }
     }
@@ -309,7 +324,9 @@ public class StockRepository extends BaseRepository {
         stock.setChildLocationId(cursor.getString(cursor.getColumnIndex(CHILD_LOCATION_ID)));
         stock.setTeam(cursor.getString(cursor.getColumnIndex(TEAM_NAME)));
         stock.setTeamId(cursor.getString(cursor.getColumnIndex(TEAM_ID)));
-        stock.setvvmStatus(cursor.getString(cursor.getColumnIndex(VVM_STATUS)));
+        stock.setVvmStatus(cursor.getString(cursor.getColumnIndex(VVM_STATUS)));
+        stock.setOrderableId(cursor.getString(cursor.getColumnIndex(ORDERABLE_ID)));
+        stock.setFacilityId(cursor.getString(cursor.getColumnIndex(FACILITY_ID)));
         return stock;
     }
 

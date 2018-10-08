@@ -9,7 +9,9 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -247,7 +249,14 @@ public class StockDetailsPresenter {
             stock.setLotId(lot.getLotId());
             stock.setReason(reason);
             stock.setProgramId(programId);
-            stock.setvvmStatus(lot.getLotStatus());
+            stock.setVvmStatus(lot.getLotStatus());
+            stock.setFacilityId(OpenLMISLibrary.getInstance().getOpenlmisUuid());
+            stock.setOrderableId(stockDetailsInteractor.getOrderableId(tradeItem));
+
+            AllSharedPreferences sharedPreferences = OpenLMISLibrary.getInstance().getContext().userService().getAllSharedPreferences();
+            stock.setLocationId(sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchRegisteredANM()));
+            stock.setTeam(sharedPreferences.fetchDefaultTeam(sharedPreferences.fetchRegisteredANM()));
+            stock.setTeamId(sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM()));
 
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
@@ -299,7 +308,15 @@ public class StockDetailsPresenter {
         }
         stock.setProgramId(programId);
         stock.setReason(reason);
-        stock.setvvmStatus(status);
+        stock.setVvmStatus(status);
+        stock.setFacilityId(OpenLMISLibrary.getInstance().getOpenlmisUuid());
+        stock.setOrderableId(stockDetailsInteractor.getOrderableId(tradeItem));
+
+
+        AllSharedPreferences sharedPreferences = OpenLMISLibrary.getInstance().getContext().userService().getAllSharedPreferences();
+        stock.setLocationId(sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchRegisteredANM()));
+        stock.setTeam(sharedPreferences.fetchDefaultTeam(sharedPreferences.fetchRegisteredANM()));
+        stock.setTeamId(sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM()));
 
         totalStockAdjustment += stock.getValue();
         stockDetailsInteractor.addStock(stock);

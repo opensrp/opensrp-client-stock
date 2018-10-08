@@ -79,4 +79,8 @@ public class StockDetailsInteractor {
             facilityNames.put(facility.getOpenlmisUuid(), facility.getFacilityName());
         return facilityNames;
     }
+
+    public String getOrderableId(String tradeItemId) {
+        return OpenLMISLibrary.getInstance().getOrderableRepository().findOrderableIdByTradeItemId(tradeItemId);
+    }
 }

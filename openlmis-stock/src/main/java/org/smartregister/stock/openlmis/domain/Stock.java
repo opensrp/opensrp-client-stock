@@ -13,8 +13,15 @@ public class Stock extends org.smartregister.stock.domain.Stock {
 
     private String vvmStatus;
 
+    private String facilityId;
+
+    private String orderableId;
+
+
+    private String identifier;
+
     public Stock() {
-        super(null, null, null, 0, null, null,null, null, null);
+        super(null, null, null, 0, null, null, null, null, null);
     }
 
     public Stock(Long id, String transactionType, String providerid, int value, Long dateCreated,
@@ -47,11 +54,35 @@ public class Stock extends org.smartregister.stock.domain.Stock {
         this.reason = reason;
     }
 
-    public String getvvmStatus() {
+    public String getVvmStatus() {
         return vvmStatus;
     }
 
-    public void setvvmStatus(String status) {
+    public void setVvmStatus(String status) {
         this.vvmStatus = status;
+    }
+
+    public String getFacilityId() {
+        return facilityId;
+    }
+
+    public void setFacilityId(String facilityId) {
+        this.facilityId = facilityId;
+    }
+
+    public String getOrderableId() {
+        return orderableId;
+    }
+
+    public void setOrderableId(String orderableId) {
+        this.orderableId = orderableId;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

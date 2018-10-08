@@ -385,7 +385,7 @@ public class LotFactory implements FormWidgetFactory {
                             lotDto.setLotStatus(menuItem.getTitle().toString());
                             writeValues();
                         } else {
-                            stock.setvvmStatus(menuItem.getTitle().toString());
+                            stock.setVvmStatus(menuItem.getTitle().toString());
                             writeValuesNonLot();
                         }
                         return true;
