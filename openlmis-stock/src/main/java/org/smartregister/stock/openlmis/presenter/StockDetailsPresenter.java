@@ -198,7 +198,7 @@ public class StockDetailsPresenter {
             JSONObject values = new JSONObject(stepFields.getJSONObject(0).getString("value"));
             int quantity = values.getInt("value");
             String reason = values.getString("reason");
-            String status = values.optString("vvmStatus", "VVM1");
+            String status = values.optString("vvmStatus", null);
             return processStockNonLot(STEP1, jsonString, provider, simpleDateFormat.format(new Date()),
                     null, loss_adjustment, reason, quantity, status);
         }
@@ -289,16 +289,17 @@ public class StockDetailsPresenter {
             stock.setStockTypeId(tradeItem);
             stock.setDateUpdated(System.currentTimeMillis());
             stock.setValue(quantity);
+            stock.setToFrom(stock.getReason());
         } else {
             stock = new Stock(null, transactionType,
                     provider, transactionType.equals(issued) ? -quantity : quantity,
                     encounterDate.getTime(), facility, BaseRepository.TYPE_Unsynced,
                     System.currentTimeMillis(), tradeItem);
+            stock.setToFrom(facility);
         }
         stock.setProgramId(programId);
         stock.setReason(reason);
         stock.setvvmStatus(status);
-        stock.setToFrom(facility);
 
         totalStockAdjustment += stock.getValue();
         stockDetailsInteractor.addStock(stock);
