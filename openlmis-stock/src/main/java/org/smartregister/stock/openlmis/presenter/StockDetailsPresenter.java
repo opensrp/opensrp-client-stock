@@ -223,7 +223,8 @@ public class StockDetailsPresenter {
 
         String lotsJSON = JsonFormUtils.getFieldValue(stepFields, STOCK_LOTS);
 
-        Type listType = new TypeToken<List<LotDto>>() {}.getType();
+        Type listType = new TypeToken<List<LotDto>>() {
+        }.getType();
 
         List<LotDto> selectedLotDTos = LotFactory.gson.fromJson(lotsJSON, listType);
 
@@ -257,13 +258,14 @@ public class StockDetailsPresenter {
     }
 
     private boolean processStockNonLot(String step, JSONObject jsonString, String provider, String date,
-                                    String facility, String transactionType, String reason, int quantity, String status) throws JSONException {
+                                       String facility, String transactionType, String reason, int quantity, String status) throws JSONException {
 
         JSONArray stepFields = jsonString.getJSONObject(step).getJSONArray(FIELDS);
 
         String stockJSON = JsonFormUtils.getFieldValue(stepFields, STOCK);
 
-        Type stockType = new TypeToken<Stock>() {}.getType();
+        Type stockType = new TypeToken<Stock>() {
+        }.getType();
 
         String tradeItem = extractValue(stepFields, TRADE_ITEM_ID);
         String programId = extractValue(stepFields, PROGRAM_ID);
@@ -294,9 +296,9 @@ public class StockDetailsPresenter {
                     System.currentTimeMillis(), tradeItem);
         }
         stock.setProgramId(programId);
-        stock.setReason(reason);;
+        stock.setReason(reason);
         stock.setvvmStatus(status);
-        stock.setToFrom("facility_name"); // TODO: GET THIS FROM DEVICE LOG IN LOCATION
+        stock.setToFrom(facility);
 
         totalStockAdjustment += stock.getValue();
         stockDetailsInteractor.addStock(stock);
