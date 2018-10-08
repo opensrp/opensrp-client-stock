@@ -157,11 +157,12 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
         if (validationStatus != null && validationStatus.isValid()) {
             nextButton.setEnabled(true);
-            submitButton.setEnabled(true);
             nextButton.setTextColor(getContext().getResources().getColor(R.color.white));
+            submitButton.setEnabled(true);
         } else {
             nextButton.setEnabled(false);
             nextButton.setTextColor(getContext().getResources().getColor(R.color.next_button_disabled));
+            submitButton.setEnabled(false);
         }
     }
 
