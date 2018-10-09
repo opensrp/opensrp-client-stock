@@ -42,6 +42,7 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.S
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.TRADE_ITEM_ID;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.USE_VVM;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.REFRESH_STOCK_ON_HAND;
 
 public class StockDetailsActivity extends BaseActivity implements StockDetailsView, View.OnClickListener {
 
@@ -68,7 +69,7 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
 
         tradeItemDto = getIntent().getParcelableExtra(OpenLMISConstants.TRADE_ITEM);
 
-        stockDetailsPresenter = new StockDetailsPresenter(this,tradeItemDto.getProgramId());
+        stockDetailsPresenter = new StockDetailsPresenter(this, tradeItemDto.getProgramId());
 
         toolbar.setTitle(getString(R.string.stock_details_title, tradeItemDto.getName()));
         setSupportActionBar(toolbar);
@@ -79,7 +80,8 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
 
         dosesTextView = findViewById(R.id.doseTextView);
         dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
-                tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
+                tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock(),
+                tradeItemDto.getRouteOfAdministration()));
 
         TextView lastUpdatedTextView = findViewById(R.id.lastUpdatedTextView);
         Date lastUpdated = new Date(tradeItemDto.getLastUpdated());
@@ -174,7 +176,8 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
             lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
         transactionsRecyclerView.setAdapter(new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter));
         dosesTextView.setText(getString(R.string.stock_balance, tradeItemDto.getTotalStock(),
-                tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock()));
+                tradeItemDto.getDispensingUnit(), tradeItemDto.getNetContent() * tradeItemDto.getTotalStock(),
+                tradeItemDto.getRouteOfAdministration()));
     }
 
     @Override
@@ -209,7 +212,7 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
 
     @Override
     public boolean onSupportNavigateUp() {
-        setResult(RESULT_OK);
+        setResult(RESULT_OK, new Intent().putExtra(REFRESH_STOCK_ON_HAND, true));
         finish();
         return true;
     }

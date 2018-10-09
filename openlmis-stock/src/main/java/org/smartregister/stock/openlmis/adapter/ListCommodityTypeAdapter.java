@@ -76,18 +76,22 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         CommodityType commodityType = commodityTypes.get(position);
         List<TradeItemWrapper> tradeItems;
         if (searchedIds != null) {
-            tradeItems = stockListPresenter.findTradeItemsByIds(programId,searchedIds.get(commodityType.getId()));
+            tradeItems = stockListPresenter.findTradeItemsByIds(programId, searchedIds.get(commodityType.getId()));
         } else if (programIds != null) {
-            tradeItems = stockListPresenter.findTradeItemsByIds(programId,programIds.get(commodityType.getId()));
+            tradeItems = stockListPresenter.findTradeItemsByIds(programId, programIds.get(commodityType.getId()));
         } else {
-            tradeItems = stockListPresenter.getTradeItems(programId,commodityType);
+            tradeItems = stockListPresenter.getTradeItems(programId, commodityType);
         }
         int totalDoses = 0;
-        for (TradeItemWrapper tradeItem : tradeItems)
+        String routeOfAdministration = null;
+        for (TradeItemWrapper tradeItem : tradeItems) {
             totalDoses += tradeItem.getTotalStock() * tradeItem.getTradeItem().getNetContent();
+            if (routeOfAdministration == null)
+                routeOfAdministration = tradeItem.getTradeItem().getDispensable().getKeyRouteOfAdministration();
+        }
         holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter,
                 commodityType.getName(), tradeItems.size()));
-        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, totalDoses));
+        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, totalDoses,routeOfAdministration));
         holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, programId, context));
     }
 
