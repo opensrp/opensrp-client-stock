@@ -2,7 +2,6 @@ package org.smartregister.stock.openlmis.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +25,6 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.N
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_ENABLED;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_LABEL;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NEXT_TYPE;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_NON_LOT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NO_PADDING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PREVIOUS_LABEL;
@@ -117,15 +115,6 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
         if (step.has(NEXT_LABEL))
             nextButton.setText(step.optString(NEXT_LABEL));
-
-        try {
-            boolean isNonLot = step.getJSONArray("fields").getJSONObject(0).optBoolean(IS_NON_LOT);
-            if (isNonLot) {
-                informationTextView.setVisibility(View.INVISIBLE);
-            }
-        } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
-        }
     }
 
     private class BottomNavigationListener implements View.OnClickListener {
@@ -144,40 +133,32 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
     }
 
-    public void validateActivateNext(boolean isLotEnabled) {
+    public void validateActivateNext() {
         if (!isVisible())//form fragment is initializing
             return;
         ValidationStatus validationStatus = null;
         for (View dataView : getJsonApi().getFormDataViews()) {
 
-            validationStatus = getPresenter().validate(this, dataView, false, isLotEnabled);
+            validationStatus = getPresenter().validate(this, dataView, false);
             if (!validationStatus.isValid()) {
                 break;
             }
         }
         if (validationStatus != null && validationStatus.isValid()) {
             nextButton.setEnabled(true);
+            submitButton.setEnabled(true);
             nextButton.setTextColor(getContext().getResources().getColor(R.color.white));
-            if (submitButton != null)
-                submitButton.setEnabled(true);
         } else {
             nextButton.setEnabled(false);
             nextButton.setTextColor(getContext().getResources().getColor(R.color.next_button_disabled));
-            if (submitButton != null)
-                submitButton.setEnabled(false);
         }
     }
 
-    public void writeValue(String stepName, String key, String s, String
-            openMrsEntityParent, String openMrsEntity, String openMrsEntityId, boolean isLotEnabled) {
-        super.writeValue(stepName, key, s, openMrsEntityParent, openMrsEntity, openMrsEntityId);
-        validateActivateNext(isLotEnabled);
-    }
-
+    @Override
     public void writeValue(String stepName, String key, String s, String
             openMrsEntityParent, String openMrsEntity, String openMrsEntityId) {
         super.writeValue(stepName, key, s, openMrsEntityParent, openMrsEntity, openMrsEntityId);
-        validateActivateNext(true);
+        validateActivateNext();
     }
 
     @Override
@@ -185,7 +166,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
             childKey, String value, String openMrsEntityParent, String openMrsEntity, String
                                    openMrsEntityId) {
         super.writeValue(stepName, prentKey, childObjectKey, childKey, value, openMrsEntityParent, openMrsEntity, openMrsEntityId);
-        validateActivateNext(true);
+        validateActivateNext();
     }
 
     public void setBottomNavigationText(String text) {

@@ -34,7 +34,6 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDI
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_ISSUE_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_NON_LOT_RECEIPT_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.INDIVIDUAL_RECEIVED_FORM;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.Forms.NON_LOT_INDIVIDUAL_ADJUST_FORM;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.NET_CONTENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.PROGRAM_ID;
@@ -141,10 +140,7 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
             else
                 startJsonForm(INDIVIDUAL_NON_LOT_RECEIPT_FORM);
         } else if (view.getId() == R.id.loss_adj) {
-            if (tradeItemDto.isHasLots())
-                startJsonForm(INDIVIDUAL_ADJUST_FORM);
-            else
-                startJsonForm(NON_LOT_INDIVIDUAL_ADJUST_FORM);
+            startJsonForm(INDIVIDUAL_ADJUST_FORM);
         }
     }
 
