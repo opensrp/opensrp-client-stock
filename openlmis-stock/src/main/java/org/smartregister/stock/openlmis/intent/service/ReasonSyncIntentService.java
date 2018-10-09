@@ -39,7 +39,7 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        String facilityTypeUuid = OpenLMISLibrary.getInstance().getFacilityTypeUuid();
+        String facilityTypeUuid = OpenLMISLibrary.getInstance().getFacilityTypeUuid();;
         if (NetworkUtils.isNetworkAvailable(context)) {
             // assumes eventual consistency where all programs are synced and reasons for all programs can be fetched
             List<Program> programs = OpenLMISLibrary.getInstance().getProgramRepository().findAllPrograms();
@@ -47,6 +47,9 @@ public class ReasonSyncIntentService extends IntentService implements SyncIntent
                 for (Program program : programs) {
                     if (facilityTypeUuid != null) {
                         pullFromServer(REASON_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + PROGRAM_ID + "=" + program.getId());
+                    } else {
+                        pullFromServer(REASON_SYNC_URL + "?");
+                        break;
                     }
                 }
             }

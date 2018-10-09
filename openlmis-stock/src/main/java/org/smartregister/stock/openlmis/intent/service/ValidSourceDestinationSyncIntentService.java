@@ -41,10 +41,14 @@ public class ValidSourceDestinationSyncIntentService extends IntentService {
     protected void onHandleIntent(Intent workIntent) {
         String facilityTypeUuid = OpenLMISLibrary.getInstance().getFacilityTypeUuid();
         String openlmisUuid = OpenLMISLibrary.getInstance().getOpenlmisUuid();
-        if (NetworkUtils.isNetworkAvailable(context) &&
-                facilityTypeUuid != null && openlmisUuid != null) {
-            pullValidDestinationsFromServer(VALID_DESTINATION_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID + "=" + openlmisUuid);
-            pullValidSourcesFromServer(VALID_SOURCE_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID + "=" + openlmisUuid);
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            if (facilityTypeUuid != null && openlmisUuid != null) {
+                pullValidDestinationsFromServer(VALID_DESTINATION_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID +  "=" + openlmisUuid);
+                pullValidSourcesFromServer(VALID_SOURCE_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID +  "=" + openlmisUuid);
+            }  else if (facilityTypeUuid == null && openlmisUuid == null) {
+                pullValidDestinationsFromServer(VALID_DESTINATION_SYNC_URL + "?");
+                pullValidSourcesFromServer(VALID_SOURCE_SYNC_URL + "?");
+            }
         }
     }
 
