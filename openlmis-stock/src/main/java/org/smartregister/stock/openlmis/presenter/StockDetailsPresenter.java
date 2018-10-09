@@ -244,10 +244,10 @@ public class StockDetailsPresenter {
         for (LotDto lot : selectedLotDTos) {
             Stock stock = new Stock(null, transactionType,
                     provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
-                    encounterDate.getTime(), facility == null ? lot.getReasonId() : facility, BaseRepository.TYPE_Unsynced,
+                    encounterDate.getTime(), facility, BaseRepository.TYPE_Unsynced,
                     System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
-            stock.setReason(reason);
+            stock.setReason(lot.getReasonId());
             stock.setProgramId(programId);
             stock.setVvmStatus(lot.getLotStatus());
             stock.setFacilityId(OpenLMISLibrary.getInstance().getOpenlmisUuid());
@@ -298,7 +298,6 @@ public class StockDetailsPresenter {
             stock.setStockTypeId(tradeItem);
             stock.setDateUpdated(System.currentTimeMillis());
             stock.setValue(quantity);
-            stock.setToFrom(stock.getReason());
         } else {
             stock = new Stock(null, transactionType,
                     provider, transactionType.equals(issued) ? -quantity : quantity,

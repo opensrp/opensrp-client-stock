@@ -74,7 +74,7 @@ public class StockRepository extends BaseRepository {
             VALUE + " INTEGER NOT NULL," +
             REASON + " VARCHAR," +
             DATE_CREATED + " DATETIME NOT NULL," +
-            TO_FROM + " VARCHAR NOT NULL," +
+            TO_FROM + " VARCHAR NULL," +
             SYNC_STATUS + " VARCHAR," +
             DATE_UPDATED + " INTEGER," +
             ORDERABLE_ID + " VARCHAR," +
