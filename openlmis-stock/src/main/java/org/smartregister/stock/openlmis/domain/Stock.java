@@ -13,10 +13,6 @@ public class Stock extends org.smartregister.stock.domain.Stock {
 
     private String vvmStatus;
 
-    public Stock() {
-        super(null, null, null, 0, null, null,null, null, null);
-    }
-
     public Stock(Long id, String transactionType, String providerid, int value, Long dateCreated,
                  String toFrom, String syncStatus, Long dateUpdated, String tradeItemId) {
         super(id, transactionType, providerid, value, dateCreated, toFrom, syncStatus, dateUpdated,

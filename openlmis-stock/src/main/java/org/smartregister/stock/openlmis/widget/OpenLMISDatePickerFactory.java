@@ -13,7 +13,6 @@ import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
-import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
 
 import java.util.List;
@@ -45,8 +44,8 @@ public class OpenLMISDatePickerFactory extends DatePickerFactory {
                 String openMrsEntityParent = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent);
                 String openMrsEntity = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity);
                 String openMrsEntityId = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id);
-                ((OpenLMISJsonFormFragment) formFragment).writeValue(stepName, key, s.toString(), openMrsEntityParent,
-                        openMrsEntity, openMrsEntityId, isLotEnabled);
+                formFragment.writeValue(stepName, key, s.toString(), openMrsEntityParent,
+                        openMrsEntity, openMrsEntityId);
 
             }
 

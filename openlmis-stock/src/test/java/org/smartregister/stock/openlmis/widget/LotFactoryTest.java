@@ -26,7 +26,6 @@ import org.smartregister.stock.openlmis.domain.openlmis.Reason;
 import org.smartregister.stock.openlmis.domain.openlmis.StockCardLineItemReason;
 import org.smartregister.stock.openlmis.domain.openlmis.TradeItem;
 import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
-import org.smartregister.stock.openlmis.repository.StockRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.LotRepository;
 import org.smartregister.stock.openlmis.repository.openlmis.ReasonRepository;
 import org.smartregister.stock.openlmis.shadow.ShadowPopupMenu;
@@ -39,7 +38,6 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -67,9 +65,6 @@ public class LotFactoryTest extends BaseUnitTest {
     private LotRepository lotRepository;
 
     @Mock
-    private StockRepository stockRepository;
-
-    @Mock
     private ReasonRepository reasonRepository;
 
     private OpenLMISJsonForm activity;
@@ -81,8 +76,7 @@ public class LotFactoryTest extends BaseUnitTest {
     @Before
     public void setUp() {
         lots = new ArrayList<>();
-        lotFactory = new LotFactory(lotRepository, reasonRepository, stockRepository);
-
+        lotFactory = new LotFactory(lotRepository, reasonRepository);
         Intent intent = new Intent();
         intent.putExtra("json", ISSUE_FORM_JSON);
         activity = Robolectric.buildActivity(OpenLMISJsonForm.class, intent).create().get();
@@ -184,14 +178,14 @@ public class LotFactoryTest extends BaseUnitTest {
     @Test
     public void testValidateHasValues() throws Exception {
         lotFactory.getViewsFromJson("step2", activity, formFragment, new JSONObject(LOT_WIDGET_JSON), formFragment);
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
         View lotRow = lotFactory.lotsContainer.getChildAt(0);
         ((EditText) lotRow.findViewById(R.id.lot_dropdown)).setText("LC1265 Exp. 21-09-2018");
         ((EditText) lotRow.findViewById(R.id.quantity_textview)).setText(String.valueOf(10));
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
 
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
     }
 
@@ -204,10 +198,10 @@ public class LotFactoryTest extends BaseUnitTest {
         quantity.setText(String.valueOf(0));
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
 
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
         quantity.setText(String.valueOf(1));
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
     }
 
@@ -215,7 +209,7 @@ public class LotFactoryTest extends BaseUnitTest {
     @Test
     public void testValidateNegativeStockBalance() throws Exception {
         lotFactory.getViewsFromJson("step2", activity, formFragment, new JSONObject(LOT_WIDGET_JSON), formFragment);
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
         View lotRow = lotFactory.lotsContainer.getChildAt(0);
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
@@ -226,11 +220,11 @@ public class LotFactoryTest extends BaseUnitTest {
         lotEditText.setTag(R.id.is_stock_issue, true);
         quantityEditText.setTag(R.id.stock_balance, 12);
 
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
         quantityEditText.setText(String.valueOf(10));
 
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
 
     }
@@ -253,14 +247,14 @@ public class LotFactoryTest extends BaseUnitTest {
 
         TextInputEditText status = new TextInputEditText(activity);
         status.setTag(R.id.lot_id, "7c6d239f-0bbc-4cab-b218-888d8be89d24");
-        PopupMenu popup = lotFactory.populateStatusOptions(activity, status,true);
+        PopupMenu popup = lotFactory.populateStatusOptions(activity, status);
         status.performClick();
 
         MenuItem item = popup.getMenu().getItem(1);
         org.robolectric.shadows.ShadowPopupMenu shadowPopupMenu = Shadows.shadowOf(popup);
         shadowPopupMenu.getOnMenuItemClickListener().onMenuItemClick(item);
 
-        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
+        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
         assertEquals("VVM2", status.getText().toString());
         assertEquals("VVM2", lotFactory.getSelectedLotDTos().get(0).getLotStatus());
     }
@@ -279,7 +273,7 @@ public class LotFactoryTest extends BaseUnitTest {
         org.robolectric.shadows.ShadowPopupMenu shadowPopupMenu = Shadows.shadowOf(popup);
         shadowPopupMenu.getOnMenuItemClickListener().onMenuItemClick(item);
 
-        verify(formFragment).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
+        verify(formFragment).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
         assertEquals(1, lotFactory.getSelectedLotDTos().size());
         assertEquals("LC1265 Exp. " + new LocalDate(9889l).toString(DATE_FORMAT), lotDropdown.getText().toString());
         assertEquals("7c6d239f-0bbc-4cab-b218-888d8be89d24", lotFactory.getSelectedLotDTos().get(0).getLotId());
@@ -307,14 +301,12 @@ public class LotFactoryTest extends BaseUnitTest {
         TextInputEditText reason = new TextInputEditText(activity);
         reason.setTag(R.id.lot_id, "7c6d239f-0bbc-4cab-b218-888d8be89d24");
 
-
         List<Reason> reasons = new ArrayList<>();
         reasons.add(new Reason("id_1", "program_1", "type_1",
                 new StockCardLineItemReason("id_1", "Damage", null, "DEBIT",
                         "ADJUSTMENT", null)));
         when(reasonRepository.findReasons(null, null,"", null)).thenReturn(reasons);
-        PopupMenu popup = lotFactory.populateReasonsOptions(activity, reason,true);
-
+        PopupMenu popup = lotFactory.populateReasonsOptions(activity, reason);
         reason.performClick();
 
 
@@ -325,7 +317,7 @@ public class LotFactoryTest extends BaseUnitTest {
         assertEquals("Damage", reason.getText().toString());
         assertEquals("Damage", lotFactory.getSelectedLotDTos().get(0).getReason());
 
-        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
+        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
 
 
     }
@@ -361,11 +353,11 @@ public class LotFactoryTest extends BaseUnitTest {
         ((EditText) lotRow.findViewById(R.id.quantity_textview)).setText(String.valueOf(10));
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
 
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
         ((EditText) lotRow.findViewById(R.id.reason_dropdown)).setText("Damaged");
 
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
     }
 
@@ -379,10 +371,10 @@ public class LotFactoryTest extends BaseUnitTest {
         ((EditText) lotRow.findViewById(R.id.quantity_textview)).setText(String.valueOf(10));
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
         ((EditText) lotRow.findViewById(R.id.reason_dropdown)).setText("Damaged");
-        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
         ((EditText) lotRow.findViewById(R.id.quantity_textview)).setText("-1");
-        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer, true).isValid());
+        assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
     }
 
@@ -400,11 +392,11 @@ public class LotFactoryTest extends BaseUnitTest {
         org.robolectric.shadows.ShadowPopupMenu shadowPopupMenu = Shadows.shadowOf(popup);
         shadowPopupMenu.getOnMenuItemClickListener().onMenuItemClick(item);
 
-        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());
+        verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
         assertEquals(1, lotFactory.getSelectedLotDTos().size());
-        assertEquals("LC1265 Exp. " + new LocalDate(9889l).toString(DATE_FORMAT), lotDropdown.getText().toString());
-        assertEquals("7c6d239f-0bbc-4cab-b218-888d8be89d24", lotFactory.getSelectedLotDTos().get(0).getLotId());
-        assertEquals("7c6d239f-0bbc-4cab-b218-888d8be89d24", lotDropdown.getTag(R.id.lot_id));
+        assertEquals("LC8063 Exp. " + new LocalDate(89239490024l).toString(DATE_FORMAT), lotDropdown.getText().toString());
+        assertEquals("9da34cac-4753-4763-a749-10741cdcce33", lotFactory.getSelectedLotDTos().get(0).getLotId());
+        assertEquals("9da34cac-4753-4763-a749-10741cdcce33", lotDropdown.getTag(R.id.lot_id));
 
     }
 
