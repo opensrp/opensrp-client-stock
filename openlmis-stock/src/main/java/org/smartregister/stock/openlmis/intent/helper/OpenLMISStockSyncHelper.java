@@ -141,6 +141,11 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
                     stock.setOrderableId(stockObject.optString(context.getString(R.string.orderable_id)));
                     stock.setVvmStatus(stockObject.optString(context.getString(R.string.vvm_status)));
                     stock.setFacilityId(stockObject.optString(context.getString(R.string.facility_id)));
+
+
+                    stock.setLocationId(stockObject.optString(context.getString(R.string.location_id)));
+                    stock.setTeamId(stockObject.optString(context.getString(R.string.team_id)));
+                    stock.setTeam(stockObject.optString(context.getString(R.string.team_name)));
                     Stock_arrayList.add(stock);
                 }
             }
@@ -194,6 +199,11 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
                 stock.put(context.getString(R.string.facility_id), stocks.get(i).getFacilityId());
                 stock.put(context.getString(R.string.orderable_id), stocks.get(i).getOrderableId());
                 stock.put(context.getString(R.string.vvm_status), stocks.get(i).getVvmStatus());
+
+
+                stock.put(context.getString(R.string.location_id), stocks.get(i).getLocationId());
+                stock.put(context.getString(R.string.team_id), stocks.get(i).getTeamId());
+                stock.put(context.getString(R.string.team_name), stocks.get(i).getTeam());
                 array.put(stock);
             } catch (JSONException e) {
                 e.printStackTrace();

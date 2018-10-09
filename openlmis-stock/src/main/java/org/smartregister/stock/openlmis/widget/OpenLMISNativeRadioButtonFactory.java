@@ -44,7 +44,6 @@ public class OpenLMISNativeRadioButtonFactory extends NativeRadioButtonFactory {
         if (StringUtils.isBlank(populateValues)) {
             return;
         }
-        String facilityId = OpenLMISLibrary.getInstance().getOpenlmisUuid();
         String facilityType = OpenLMISLibrary.getInstance().getFacilityTypeUuid();
         String programId = jsonObject.optString(PROGRAM_ID);
         if (RECEIVE_SOURCES.equals(populateValues) || ISSUE_DESTINATIONS.equals(populateValues)) {
@@ -52,14 +51,14 @@ public class OpenLMISNativeRadioButtonFactory extends NativeRadioButtonFactory {
                     getValidSourceDestinationRepository().findValidSourceDestinations(null,
                     programId, facilityType, null, null, RECEIVE_SOURCES.equals(populateValues));
             jsonObject.put(JsonFormConstants.OPTIONS_FIELD_NAME, convertToJsonArray(validFacilities));
-            if (StringUtils.isBlank(jsonObject.optString(JsonFormConstants.VALUE)))
+            if (StringUtils.isBlank(jsonObject.optString(JsonFormConstants.VALUE)) && !validFacilities.isEmpty())
                 jsonObject.put(JsonFormConstants.VALUE, validFacilities.get(0).getOpenlmisUuid());
         } else if (RECEIVE_REASONS.equals(populateValues) || ISSUE_REASONS.equals(populateValues)) {
             List<Reason> validReasons = OpenLMISLibrary.getInstance().
                     getReasonRepository().findReasons(null, null, programId,
                     RECEIVE_REASONS.equals(populateValues) ? CREDIT : DEBIT);
             jsonObject.put(JsonFormConstants.OPTIONS_FIELD_NAME, convertReasonsToJsonArray(validReasons));
-            if (StringUtils.isBlank(jsonObject.optString(JsonFormConstants.VALUE)))
+            if (StringUtils.isBlank(jsonObject.optString(JsonFormConstants.VALUE)) && !validReasons.isEmpty())
                 jsonObject.put(JsonFormConstants.VALUE, validReasons.get(0).getId());
         }
     }

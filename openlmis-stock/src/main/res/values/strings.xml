@@ -71,6 +71,9 @@
     <string name="identifier">identifier</string>
     <string name="orderable_id">orderableId</string>
     <string name="vvm_status">vvmStatus</string>
-    <string name="facility_id">facilityId</string>
+    <string name="facility_id">openlmisFacilityId</string>
+    <string name="location_id">locationId</string>
+    <string name="team_id">teamId</string>
+    <string name="team_name">team</string>
 
 </resources>

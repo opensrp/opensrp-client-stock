@@ -86,7 +86,7 @@ public class StockRepository extends BaseRepository {
             TEAM_ID + " VARCHAR," +
             TEAM_NAME + " VARCHAR)";
 
-    private static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME, VVM_STATUS, ORDERABLE_ID, FACILITY_ID};
+    private static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, IDENTIFIER, STOCK_TYPE_ID, TRANSACTION_TYPE, LOT_ID, REASON, PROVIDER_ID, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, CHILD_LOCATION_ID, LOCATION_ID, TEAM_ID, TEAM_NAME, VVM_STATUS, ORDERABLE_ID, FACILITY_ID};
 
 
     public StockRepository(Repository repository) {
@@ -123,7 +123,9 @@ public class StockRepository extends BaseRepository {
             getWritableDatabase().update(stock_TABLE_NAME, contentValues, IDENTIFIER + "=?", new String[]{stock.getIdentifier()});
         } else {
             contentValues.put(ID_COLUMN, stock.getId());
-            contentValues.put(IDENTIFIER, UUID.randomUUID().toString());
+            if (StringUtils.isBlank(stock.getIdentifier()))
+                stock.setIdentifier(UUID.randomUUID().toString());
+            contentValues.put(IDENTIFIER, stock.getIdentifier());
             getWritableDatabase().insert(stock_TABLE_NAME, null, contentValues);
         }
     }
@@ -346,6 +348,7 @@ public class StockRepository extends BaseRepository {
         stock.setVvmStatus(cursor.getString(cursor.getColumnIndex(VVM_STATUS)));
         stock.setOrderableId(cursor.getString(cursor.getColumnIndex(ORDERABLE_ID)));
         stock.setFacilityId(cursor.getString(cursor.getColumnIndex(FACILITY_ID)));
+        stock.setIdentifier(cursor.getString(cursor.getColumnIndex(IDENTIFIER)));
         return stock;
     }
 
