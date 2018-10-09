@@ -129,7 +129,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
                             stockObject.getString(context.getString(org.smartregister.stock.R.string.providerid_key)),
                             stockObject.getInt(context.getString(org.smartregister.stock.R.string.value_key)),
                             stockObject.getLong(context.getString(org.smartregister.stock.R.string.date_created_key)),
-                            stockObject.getString(context.getString(org.smartregister.stock.R.string.to_from_key)),
+                            stockObject.optString(context.getString(org.smartregister.stock.R.string.to_from_key)),
                             TYPE_Synced,
                             stockObject.getLong(context.getString(org.smartregister.stock.R.string.date_updated_key)),
                             stockObject.getString(context.getString(org.smartregister.stock.R.string.stock_type_id_key))
