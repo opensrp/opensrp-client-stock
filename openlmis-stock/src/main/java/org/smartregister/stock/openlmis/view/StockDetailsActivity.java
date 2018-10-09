@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.activity.OpenLMISJsonForm;
 import org.smartregister.stock.openlmis.adapter.LotAdapter;
@@ -187,7 +188,7 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
             android.util.Log.d("JSONResult", jsonString);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
-            stockDetailsPresenter.processFormJsonResult(jsonString, allSharedPreferences.fetchRegisteredANM());
+            stockDetailsPresenter.processFormJsonResult(jsonString, OpenLMISLibrary.getInstance().getOpenlmisUuid(), allSharedPreferences);
         }
     }
 

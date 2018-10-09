@@ -83,15 +83,15 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
             tradeItems = stockListPresenter.getTradeItems(programId, commodityType);
         }
         int totalDoses = 0;
-        String routeOfAdministration = null;
+        String routeOfAdministration = "";
         for (TradeItemWrapper tradeItem : tradeItems) {
             totalDoses += tradeItem.getTotalStock() * tradeItem.getTradeItem().getNetContent();
-            if (routeOfAdministration == null)
+            if (routeOfAdministration.isEmpty() && tradeItem.getTradeItem().getDispensable()!=null)
                 routeOfAdministration = tradeItem.getTradeItem().getDispensable().getKeyRouteOfAdministration();
         }
         holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter,
                 commodityType.getName(), tradeItems.size()));
-        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, totalDoses,routeOfAdministration));
+        holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, totalDoses, routeOfAdministration));
         holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, programId, context));
     }
 

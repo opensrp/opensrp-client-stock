@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
-import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Lot;
@@ -131,7 +130,8 @@ public class StockDetailsPresenter {
         }
     }
 
-    public void processFormJsonResult(String jsonString, String provider) {
+    public void processFormJsonResult(String jsonString, String userFacilityId,
+                                      AllSharedPreferences sharedPreferences) {
         try {
             totalStockAdjustment = 0;
             JSONObject jsonForm = new JSONObject(jsonString);
@@ -139,11 +139,11 @@ public class StockDetailsPresenter {
             String FormTitle = step.getString("title");
             boolean processed = false;
             if (FormTitle.contains("Issue")) {
-                processed = processStockIssued(jsonForm, provider);
+                processed = processStockIssued(jsonForm, userFacilityId, sharedPreferences);
             } else if (FormTitle.contains("Receive")) {
-                processed = processStockReceived(jsonForm, provider);
+                processed = processStockReceived(jsonForm, userFacilityId, sharedPreferences);
             } else if (FormTitle.contains("adjustment")) {
-                processed = processStockAdjusted(jsonForm, provider);
+                processed = processStockAdjusted(jsonForm, userFacilityId, sharedPreferences);
             }
             if (processed)
                 stockDetailsView.refreshStockDetails(totalStockAdjustment);
@@ -153,7 +153,8 @@ public class StockDetailsPresenter {
 
     }
 
-    private boolean processStockIssued(JSONObject jsonString, String provider) throws JSONException {
+    private boolean processStockIssued(JSONObject jsonString, String userFacilityId,
+                                       AllSharedPreferences sharedPreferences) throws JSONException {
         JSONArray stepFields = JsonFormUtils.fields(jsonString);
 
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Issued");
@@ -167,12 +168,15 @@ public class StockDetailsPresenter {
         if (steps == 1) {
             String status = JsonFormUtils.getFieldValue(stepFields, "Status");
             int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Issued"));
-            return processStockNonLot(STEP1, jsonString, provider, date, facility, issued, reason, quantity, status);
+            return processStockNonLot(STEP1, jsonString, date, facility, issued, reason,
+                    quantity, status, userFacilityId, sharedPreferences);
         }
-        return processStockLot(STEP2, jsonString, provider, date, facility, reason, issued);
+        return processStockLot(STEP2, jsonString, date, facility, issued, reason, userFacilityId,
+                sharedPreferences);
     }
 
-    private boolean processStockReceived(JSONObject jsonString, String provider) throws JSONException {
+    private boolean processStockReceived(JSONObject jsonString, String userFacilityId,
+                                         AllSharedPreferences sharedPreferences) throws JSONException {
         JSONArray stepFields = JsonFormUtils.fields(jsonString);
 
         String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Received");
@@ -187,12 +191,13 @@ public class StockDetailsPresenter {
         if (steps == 1) {
             String status = JsonFormUtils.getFieldValue(stepFields, "Status");
             int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Vials_Received"));
-            return processStockNonLot(STEP1, jsonString, provider, date, facility, received, reason, quantity, status);
+            return processStockNonLot(STEP1, jsonString, date, facility, received, reason, quantity, status, userFacilityId, sharedPreferences);
         }
-        return processStockLot(STEP2, jsonString, provider, date, facility, reason, received);
+        return processStockLot(STEP2, jsonString, date, facility, received, reason, userFacilityId, sharedPreferences);
     }
 
-    private boolean processStockAdjusted(JSONObject jsonString, String provider) throws JSONException {
+    private boolean processStockAdjusted(JSONObject jsonString, String userFacilityId,
+                                         AllSharedPreferences sharedPreferences) throws JSONException {
         JSONArray stepFields = JsonFormUtils.fields(jsonString);
         boolean isNonLot = stepFields.getJSONObject(0).optBoolean(IS_NON_LOT);
         if (isNonLot) {
@@ -201,11 +206,11 @@ public class StockDetailsPresenter {
             int quantity = values.getInt("value");
             String reason = values.getString("reason");
             String status = values.optString("vvmStatus", null);
-            return processStockNonLot(STEP1, jsonString, provider, simpleDateFormat.format(new Date()),
-                    null, loss_adjustment, reason, quantity, status);
+            return processStockNonLot(STEP1, jsonString, simpleDateFormat.format(new Date()),
+                    null, loss_adjustment, reason, quantity, status, userFacilityId, sharedPreferences);
         }
-        return processStockLot(STEP1, jsonString, provider, simpleDateFormat.format(new Date()),
-                null, null, loss_adjustment);
+        return processStockLot(STEP1, jsonString, simpleDateFormat.format(new Date()),
+                null, loss_adjustment, null, userFacilityId, sharedPreferences);
     }
 
     private String extractValue(JSONArray stepFields, String key) throws JSONException {
@@ -219,8 +224,9 @@ public class StockDetailsPresenter {
         return null;
     }
 
-    private boolean processStockLot(String step, JSONObject jsonString, String provider, String date,
-                                    String facility, String reason, String transactionType) throws JSONException {
+    private boolean processStockLot(String step, JSONObject jsonString, String date,
+                                    String facility, String transactionType, String reason, String facilityId,
+                                    AllSharedPreferences sharedPreferences) throws JSONException {
         JSONArray stepFields = jsonString.getJSONObject(step).getJSONArray(FIELDS);
 
         String lotsJSON = JsonFormUtils.getFieldValue(stepFields, STOCK_LOTS);
@@ -243,17 +249,16 @@ public class StockDetailsPresenter {
 
         for (LotDto lot : selectedLotDTos) {
             Stock stock = new Stock(null, transactionType,
-                    provider, transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
+                    sharedPreferences.fetchRegisteredANM(), transactionType.equals(issued) ? -lot.getQuantity() : lot.getQuantity(),
                     encounterDate.getTime(), facility, BaseRepository.TYPE_Unsynced,
                     System.currentTimeMillis(), tradeItem);
             stock.setLotId(lot.getLotId());
-            stock.setReason(lot.getReasonId());
+            stock.setReason(loss_adjustment.equals(transactionType) ? lot.getReasonId() : reason);
             stock.setProgramId(programId);
             stock.setVvmStatus(lot.getLotStatus());
-            stock.setFacilityId(OpenLMISLibrary.getInstance().getOpenlmisUuid());
+            stock.setFacilityId(facilityId);
             stock.setOrderableId(stockDetailsInteractor.getOrderableId(tradeItem));
 
-            AllSharedPreferences sharedPreferences = OpenLMISLibrary.getInstance().getContext().userService().getAllSharedPreferences();
             stock.setLocationId(sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchRegisteredANM()));
             stock.setTeam(sharedPreferences.fetchDefaultTeam(sharedPreferences.fetchRegisteredANM()));
             stock.setTeamId(sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM()));
@@ -266,8 +271,10 @@ public class StockDetailsPresenter {
         return true;
     }
 
-    private boolean processStockNonLot(String step, JSONObject jsonString, String provider, String date,
-                                       String facility, String transactionType, String reason, int quantity, String status) throws JSONException {
+    private boolean processStockNonLot(String step, JSONObject jsonString, String date,
+                                       String facility, String transactionType, String reason,
+                                       int quantity, String status, String facilityId,
+                                       AllSharedPreferences sharedPreferences) throws JSONException {
 
         JSONArray stepFields = jsonString.getJSONObject(step).getJSONArray(FIELDS);
 
@@ -291,7 +298,7 @@ public class StockDetailsPresenter {
         if (loss_adjustment.equals(transactionType)) {
             stock = gson.fromJson(stockJSON, stockType);
             stock.setTransactionType(transactionType);
-            stock.setProviderid(provider);
+            stock.setProviderid(sharedPreferences.fetchRegisteredANM());
             stock.setDateCreated(encounterDate.getTime());
             stock.setLocationId(facility);
             stock.setSyncStatus(BaseRepository.TYPE_Unsynced);
@@ -300,7 +307,7 @@ public class StockDetailsPresenter {
             stock.setValue(quantity);
         } else {
             stock = new Stock(null, transactionType,
-                    provider, transactionType.equals(issued) ? -quantity : quantity,
+                    sharedPreferences.fetchRegisteredANM(), transactionType.equals(issued) ? -quantity : quantity,
                     encounterDate.getTime(), facility, BaseRepository.TYPE_Unsynced,
                     System.currentTimeMillis(), tradeItem);
             stock.setToFrom(facility);
@@ -308,11 +315,10 @@ public class StockDetailsPresenter {
         stock.setProgramId(programId);
         stock.setReason(reason);
         stock.setVvmStatus(status);
-        stock.setFacilityId(OpenLMISLibrary.getInstance().getOpenlmisUuid());
+        stock.setFacilityId(facilityId);
         stock.setOrderableId(stockDetailsInteractor.getOrderableId(tradeItem));
 
 
-        AllSharedPreferences sharedPreferences = OpenLMISLibrary.getInstance().getContext().userService().getAllSharedPreferences();
         stock.setLocationId(sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchRegisteredANM()));
         stock.setTeam(sharedPreferences.fetchDefaultTeam(sharedPreferences.fetchRegisteredANM()));
         stock.setTeamId(sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM()));

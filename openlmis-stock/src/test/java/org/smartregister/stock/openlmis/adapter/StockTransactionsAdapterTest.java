@@ -44,7 +44,7 @@ public class StockTransactionsAdapterTest extends BaseUnitTest {
     @Before
     public void setUp() {
         TradeItemDto tradeItemDto = new TradeItemDto(UUID.randomUUID().toString(),
-                "GHGR", 100, System.currentTimeMillis(), 2, "vials", 5l);
+                "GHGR", 100, System.currentTimeMillis(), 2, "vials", 5l, "doses");
 
         List<StockWrapper> stockList = new ArrayList<>();
         long now = System.currentTimeMillis();
@@ -54,8 +54,10 @@ public class StockTransactionsAdapterTest extends BaseUnitTest {
         stockList.add(new StockWrapper(new Stock(null, Stock.issued, "tester11", -12, now,
                 "HO", "unsynched", now, tradeItemDto.getId()), "200K", 38));
 
-        stockList.add(new StockWrapper(new Stock(null, Stock.loss_adjustment, "tester11", 32, now,
-                "Store", "unsynched", now, tradeItemDto.getId()), "200L", 60));
+        StockWrapper stockWrapper = new StockWrapper(new Stock(null, Stock.loss_adjustment, "tester11", 32, now,
+                "Store", "unsynched", now, tradeItemDto.getId()), "200L", 60);
+        stockWrapper.setReason("Beginning Balance Excess");
+        stockList.add(stockWrapper);
         when(stockDetailsPresenter.findStockByTradeItem(tradeItemDto.getId())).thenReturn(null);
         when(stockDetailsPresenter.populateLotNamesAndBalance(tradeItemDto, null)).thenReturn(stockList);
         stockTransactionAdapter = new StockTransactionAdapter(tradeItemDto, stockDetailsPresenter);
@@ -107,7 +109,7 @@ public class StockTransactionsAdapterTest extends BaseUnitTest {
         StockTransactionsViewHolder viewHolder = stockTransactionAdapter.onCreateViewHolder(new LinearLayout(context), 0);
         stockTransactionAdapter.onBindViewHolder(viewHolder, 2);
         assertEquals(StockTransactionAdapter.dateFormatter.format(new Date()), viewHolder.getDateTextView().getText());
-        assertEquals("Store", viewHolder.getToFromTextView().getText());
+        assertEquals("Beginning Balance Excess", viewHolder.getToFromTextView().getText());
         assertEquals("200L", viewHolder.getLotCodeTextView().getText());
         assertEquals("", viewHolder.getReceivedTextView().getText());
         assertEquals("", viewHolder.getIssuedTextView().getText());
