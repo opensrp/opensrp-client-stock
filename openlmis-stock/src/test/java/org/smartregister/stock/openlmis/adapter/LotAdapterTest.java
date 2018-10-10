@@ -46,7 +46,7 @@ public class LotAdapterTest extends BaseUnitTest {
     @Before
     public void setUp() {
         TradeItemDto tradeItemDto = new TradeItemDto(UUID.randomUUID().toString(),
-                "GHGR", 100, System.currentTimeMillis(), 2, "vials", 5l);
+                "GHGR", 100, System.currentTimeMillis(), 2, "vials", 5l,"doses");
         List<Lot> lots = new ArrayList<>();
         Lot lot=new Lot(lotId.toString(), "LC2018G", 934983l,
                 92903l, null, true);

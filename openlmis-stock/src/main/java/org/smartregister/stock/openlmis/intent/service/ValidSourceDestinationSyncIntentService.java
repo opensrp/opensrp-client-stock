@@ -11,7 +11,6 @@ import org.smartregister.stock.openlmis.intent.helper.ValidSourceDestinationSync
 import org.smartregister.stock.util.NetworkUtils;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.FACILITY_TYPE_UUID;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.OPENLMIS_UUID;
 
 public class ValidSourceDestinationSyncIntentService extends IntentService {
 
@@ -40,11 +39,9 @@ public class ValidSourceDestinationSyncIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent workIntent) {
         String facilityTypeUuid = OpenLMISLibrary.getInstance().getFacilityTypeUuid();
-        String openlmisUuid = OpenLMISLibrary.getInstance().getOpenlmisUuid();
-        if (NetworkUtils.isNetworkAvailable(context) &&
-                facilityTypeUuid != null && openlmisUuid != null) {
-            pullValidDestinationsFromServer(VALID_DESTINATION_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID + "=" + openlmisUuid);
-            pullValidSourcesFromServer(VALID_SOURCE_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid + "&" + OPENLMIS_UUID + "=" + openlmisUuid);
+        if (NetworkUtils.isNetworkAvailable(context) && facilityTypeUuid != null) {
+            pullValidDestinationsFromServer(VALID_DESTINATION_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid);
+            pullValidSourcesFromServer(VALID_SOURCE_SYNC_URL + "?" + FACILITY_TYPE_UUID + "=" + facilityTypeUuid);
         }
     }
 

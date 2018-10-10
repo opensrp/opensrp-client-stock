@@ -39,13 +39,14 @@ public class ValidSourceDestinationRepository extends BaseRepository {
 
             "CREATE TABLE " + VALID_SOURCE_DESTINATION_TABLE
                     + "("
-                    + ID + " VARCHAR NOT NULL PRIMARY KEY,"
+                    + ID + " VARCHAR NOT NULL,"
                     + PROGRAM_UUID + " VARCHAR NOT NULL,"
                     + FACILITY_TYPE_UUID + " VARCHAR NOT NULL,"
                     + FACILITY_NAME + " VARCHAR NOT NULL,"
                     + OPENLMIS_UUID + " VARCHAR NOT NULL,"
                     + IS_SOURCE + " INTEGER NOT NULL,"
-                    + DATE_UPDATED + " INTEGER" +
+                    + DATE_UPDATED + " INTEGER, "
+                    + "PRIMARY KEY(" + ID + "," + IS_SOURCE + " )" +
                     ")";
 
     public ValidSourceDestinationRepository(Repository repository) {

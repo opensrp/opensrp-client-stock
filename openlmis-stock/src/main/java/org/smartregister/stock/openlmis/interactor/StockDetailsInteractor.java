@@ -74,9 +74,13 @@ public class StockDetailsInteractor {
 
     public Map<String, String> findFacilityNames(String programId) {
         Map<String, String> facilityNames = new HashMap<>();
-        List<ValidSourceDestination> facilities = OpenLMISLibrary.getInstance().getValidSourceDestinationRepository().findValidSourceDestinations(null, programId, OpenLMISLibrary.getInstance().getFacilityTypeUuid(), null, OpenLMISLibrary.getInstance().getOpenlmisUuid(), null);
+        List<ValidSourceDestination> facilities = OpenLMISLibrary.getInstance().getValidSourceDestinationRepository().findValidSourceDestinations(null, programId, OpenLMISLibrary.getInstance().getFacilityTypeUuid(), null, null, null);
         for (ValidSourceDestination facility : facilities)
             facilityNames.put(facility.getOpenlmisUuid(), facility.getFacilityName());
         return facilityNames;
+    }
+
+    public String getOrderableId(String tradeItemId) {
+        return OpenLMISLibrary.getInstance().getOrderableRepository().findOrderableIdByTradeItemId(tradeItemId);
     }
 }

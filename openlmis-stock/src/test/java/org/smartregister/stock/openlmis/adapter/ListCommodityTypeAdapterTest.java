@@ -14,6 +14,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.stock.openlmis.BaseUnitTest;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
+import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
 import org.smartregister.stock.openlmis.listener.ExpandCollapseListener;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.CommodityTypeViewHolder;
@@ -97,6 +98,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         tradeItem.setCommodityTypeId(bcGCommodityType.getId());
         tradeItem.setName("Intervax BCG 20");
         tradeItem.setNetContent(20l);
+        tradeItem.setDispensable(new Dispensable("id_1", "vials", null, "doses"));
         TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);
         tradeItemWrapper.setTotalStock(60);
         expectedTradeItems.add(tradeItemWrapper);
@@ -121,7 +123,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         CommodityTypeViewHolder holder = listCommodityTypeAdapter.onCreateViewHolder(vg, 0);
         listCommodityTypeAdapter.onBindViewHolder(holder, 1);
         assertEquals("OPV (0)", holder.getCommodityTypeTextView().getText());
-        assertEquals("0 doses", holder.getDoseTextView().getText());
+        assertEquals("0", holder.getDoseTextView().getText().toString().trim());
         assertNotNull(holder.getTradeItemsRecyclerView().getAdapter());
         assertEquals(0, holder.getTradeItemsRecyclerView().getAdapter().getItemCount());
     }
@@ -199,6 +201,7 @@ public class ListCommodityTypeAdapterTest extends BaseUnitTest {
         tradeItemWrappers.add(new TradeItemWrapper(new TradeItem(UUID.randomUUID().toString())));
         tradeItemWrappers.get(0).setTotalStock(12);
         tradeItemWrappers.get(0).getTradeItem().setNetContent(10l);
+        tradeItemWrappers.get(0).getTradeItem().setDispensable(new Dispensable("id_1", "vials", null, "doses"));
         when(stockListPresenter.findTradeItemsByIds(programId, tradeItemIds)).thenReturn(tradeItemWrappers);
 
         LinearLayout vg = new LinearLayout(context);

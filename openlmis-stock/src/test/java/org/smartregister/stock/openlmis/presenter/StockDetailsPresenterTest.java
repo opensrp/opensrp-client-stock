@@ -10,6 +10,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.openlmis.BaseUnitTest;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.domain.TradeItem;
@@ -55,6 +56,9 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
     @Mock
     private StockDetailsInteractor stockDetailsInteractor;
 
+    @Mock
+    private AllSharedPreferences sharedPreferences;
+
     @Captor
     private ArgumentCaptor<Stock> argumentCaptor;
 
@@ -63,6 +67,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
     @Before
     public void setUp() {
         stockDetailsPresenter = new StockDetailsPresenter(stockDetailsView, stockDetailsInteractor);
+
     }
 
     @Test
@@ -192,7 +197,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
         stockList.add(stock);
 
         List<StockWrapper> actual = stockDetailsPresenter.populateLotNamesAndBalance(new TradeItemDto(tradeItemId,
-                        "GHGR", 100, now, 2, "vials", 5l),
+                        "GHGR", 100, now, 2, "vials", 5l, "doses"),
                 stockList);
 
         assertEquals(3, actual.size());
@@ -230,7 +235,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
 
     @Test
     public void testProcessReceiveFormJsonResult() {
-        stockDetailsPresenter.processFormJsonResult(RECEIVE_JSON_FORM_DATA, "tester1");
+        stockDetailsPresenter.processFormJsonResult(RECEIVE_JSON_FORM_DATA, "openlmis_id_1", sharedPreferences);
         verify(stockDetailsInteractor, times(2)).addStock(argumentCaptor.capture());
         verify(stockDetailsView).refreshStockDetails(15);
         for (Stock stock : argumentCaptor.getAllValues()) {
@@ -242,7 +247,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
 
     @Test
     public void testProcessIssueFormJsonResult() {
-        stockDetailsPresenter.processFormJsonResult(ISSUE_JSON_FORM_DATA, "tester1");
+        stockDetailsPresenter.processFormJsonResult(ISSUE_JSON_FORM_DATA, "openlmis_id_1", sharedPreferences);
         verify(stockDetailsInteractor).addStock(argumentCaptor.capture());
         verify(stockDetailsView).refreshStockDetails(-7);
         for (Stock stock : argumentCaptor.getAllValues()) {
@@ -254,20 +259,20 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
 
     @Test
     public void testProcessAdjustFormJsonResult() {
-        stockDetailsPresenter.processFormJsonResult(ADJUST_WIDGET_FORM_DATA, "tester1");
+        stockDetailsPresenter.processFormJsonResult(ADJUST_WIDGET_FORM_DATA, "openlmis_id_1", sharedPreferences);
         verify(stockDetailsInteractor).addStock(argumentCaptor.capture());
         verify(stockDetailsView).refreshStockDetails(-2);
         for (Stock stock : argumentCaptor.getAllValues()) {
             assertEquals(loss_adjustment, stock.getTransactionType());
             assertEquals(-2, stock.getValue());
-            assertEquals("Transferred", stock.getToFrom());
-            assertNull(stock.getReason());
+            assertEquals("Transferred", stock.getReason());
+            assertNull(stock.getToFrom());
         }
     }
 
     @Test
     public void testProcessInvalidJsonResult() {
-        stockDetailsPresenter.processFormJsonResult("12" + ADJUST_WIDGET_FORM_DATA, "tester1");
+        stockDetailsPresenter.processFormJsonResult("12" + ADJUST_WIDGET_FORM_DATA, "openlmis_id_1", sharedPreferences);
         verify(stockDetailsInteractor, never()).addStock(any(Stock.class));
         verify(stockDetailsView, never()).refreshStockDetails(anyInt());
     }
