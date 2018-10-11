@@ -83,4 +83,8 @@ public class StockDetailsInteractor {
     public String getOrderableId(String tradeItemId) {
         return OpenLMISLibrary.getInstance().getOrderableRepository().findOrderableIdByTradeItemId(tradeItemId);
     }
+
+    public Reason findReasonById(String reasonId) {
+        return OpenLMISLibrary.getInstance().getReasonRepository().findReasonById(reasonId);
+    }
 }
