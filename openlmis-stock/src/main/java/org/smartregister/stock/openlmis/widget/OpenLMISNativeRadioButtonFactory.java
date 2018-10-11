@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.CREDIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.DEBIT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.ALL_REASONS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.ISSUE_DESTINATIONS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.ISSUE_REASONS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.POPULATE_VALUES;
@@ -53,10 +54,11 @@ public class OpenLMISNativeRadioButtonFactory extends NativeRadioButtonFactory {
             jsonObject.put(JsonFormConstants.OPTIONS_FIELD_NAME, convertToJsonArray(validFacilities));
             if (StringUtils.isBlank(jsonObject.optString(JsonFormConstants.VALUE)) && !validFacilities.isEmpty())
                 jsonObject.put(JsonFormConstants.VALUE, validFacilities.get(0).getOpenlmisUuid());
-        } else if (RECEIVE_REASONS.equals(populateValues) || ISSUE_REASONS.equals(populateValues)) {
+        } else if (RECEIVE_REASONS.equals(populateValues) || ISSUE_REASONS.equals(populateValues) ||
+                ALL_REASONS.equals(populateValues)) {
             List<Reason> validReasons = OpenLMISLibrary.getInstance().
                     getReasonRepository().findReasons(null, null, programId,
-                    RECEIVE_REASONS.equals(populateValues) ? CREDIT : DEBIT);
+                    ALL_REASONS.equals(populateValues) ? null : RECEIVE_REASONS.equals(populateValues) ? CREDIT : DEBIT);
             jsonObject.put(JsonFormConstants.OPTIONS_FIELD_NAME, convertReasonsToJsonArray(validReasons));
             if (StringUtils.isBlank(jsonObject.optString(JsonFormConstants.VALUE)) && !validReasons.isEmpty())
                 jsonObject.put(JsonFormConstants.VALUE, validReasons.get(0).getId());

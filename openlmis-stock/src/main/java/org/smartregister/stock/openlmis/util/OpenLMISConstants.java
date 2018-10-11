@@ -104,6 +104,8 @@ public interface OpenLMISConstants {
         String ISSUE_REASONS = "issue_reasons";
 
         String RECEIVE_REASONS = "receive_reasons";
+
+        String ALL_REASONS = "all_reasons";
     }
 
     interface Forms {
