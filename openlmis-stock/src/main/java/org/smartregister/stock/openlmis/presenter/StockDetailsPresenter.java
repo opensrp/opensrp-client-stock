@@ -279,7 +279,7 @@ public class StockDetailsPresenter {
                                        AllSharedPreferences sharedPreferences) throws JSONException {
 
         JSONArray stepFields = jsonString.getJSONObject(step).getJSONArray(FIELDS);
-        
+
         String tradeItem = extractValue(stepFields, TRADE_ITEM_ID);
         String programId = extractValue(stepFields, PROGRAM_ID);
         Date encounterDate;

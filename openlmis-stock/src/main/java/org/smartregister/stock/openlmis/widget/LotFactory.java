@@ -268,7 +268,7 @@ public class LotFactory implements FormWidgetFactory {
         if (isStockIssue)
             quantity.setTag(R.id.stock_balance, lotStockBalances.get(lotId));
         else if (isStockAdjustment) {
-            showAdjustmentAndReason(lotRow, quantity, viewIndex, lotId, true);
+            showAdjustmentAndReason(lotRow, quantity, lotId);
         }
         quantity.addTextChangedListener(new QuantityTextWatcher(quantity));
         TextInputEditText status = lotRow.findViewById(R.id.status_dropdown);
@@ -416,28 +416,8 @@ public class LotFactory implements FormWidgetFactory {
     }
 
 
-    private void showAdjustmentAndReason(View lotRow, TextInputEditText quantity, int viewIndex, String lotId, boolean updateQuantity) {
+    private void showAdjustmentAndReason(View lotRow, TextInputEditText quantity, String lotId) {
         quantity.setTag(R.id.stock_balance, lotStockBalances.get(lotId));
-        String balance = "0";
-        if (lotStockBalances.containsKey(lotId)) {
-            balance = lotStockBalances.get(lotId).toString();
-        }
-        if (updateQuantity)
-            quantity.setText(balance);
-        TextInputEditText stockOnHand = lotRow.findViewById(R.id.stock_on_hand_textview);
-        stockOnHand.setVisibility(View.VISIBLE);
-        stockOnHand.setText(balance);
-        lotRow.findViewById(R.id.stock_on_hand).setVisibility(View.VISIBLE);
-
-        View subtract = lotRow.findViewById(R.id.subtract_stock);
-        subtract.setVisibility(View.VISIBLE);
-        subtract.setTag(R.id.lot_position, viewIndex);
-        subtract.setOnClickListener(lotListener);
-
-        View add = lotRow.findViewById(R.id.add_stock);
-        add.setVisibility(View.VISIBLE);
-        add.setTag(R.id.lot_position, viewIndex);
-        add.setOnClickListener(lotListener);
 
         View cancel = lotRow.findViewById(R.id.cancel_button);
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) cancel.getLayoutParams();
@@ -448,13 +428,7 @@ public class LotFactory implements FormWidgetFactory {
     private void displayStockAdjustment(LotDto lotDto, TextInputEditText quantity) {
         int viewIndex = Integer.parseInt(quantity.getTag(R.id.lot_position).toString());
         View lotRow = lotsContainer.getChildAt(viewIndex);
-        showAdjustmentAndReason(lotRow, quantity, viewIndex, lotDto.getLotId(), false);
-        TextInputEditText adjustmentTextView = lotRow.findViewById(R.id.adjustment_textview);
-        if (lotDto.getQuantity() <= 0)
-            adjustmentTextView.setText(String.valueOf(lotDto.getQuantity()));
-        else
-            adjustmentTextView.setText(String.format("+%s", lotDto.getQuantity()));
-        lotRow.findViewById(R.id.adjustment).setVisibility(View.VISIBLE);
+        showAdjustmentAndReason(lotRow, quantity, lotDto.getLotId());
         lotRow.findViewById(R.id.reason).setVisibility(View.VISIBLE);
     }
 
