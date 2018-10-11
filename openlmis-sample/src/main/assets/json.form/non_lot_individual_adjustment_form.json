@@ -89,36 +89,14 @@
         }
       },
       {
-        "key": "Adjusted_Stock_Reason_Other",
+        "key": "Adjusted_Quantity",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please specify: *",
-        "edit_type": "name",
-        "v_required": {
-          "value": true,
-          "err": "Please specify reason stock was adjusted"
-        },
-        "relevance": {
-          "step1:Adjusted_Stock_Reason": {
-            "type": "string",
-            "ex": "equalTo(., \"Other\")"
-          }
-        }
-      },
-      {
-        "key": "Quantity",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "v_max": {
-          "value": "[stock_on_hand]",
-          "err": "Cannot Issue more than [stock_on_hand]"
-        },
         "hint": "Quantity",
         "edit_type": "number",
+        "stock_balance": "[stock_on_hand]",
         "v_numeric_integer": {
           "value": "true",
           "err": "Enter a valid stock quantity"

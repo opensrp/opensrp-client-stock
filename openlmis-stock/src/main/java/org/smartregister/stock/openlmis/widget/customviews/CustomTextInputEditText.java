@@ -7,6 +7,7 @@ import android.widget.EditText;
 
 import com.rengwuxian.materialedittext.validation.METValidator;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
+import com.vijay.jsonwizard.validators.edittext.MaxNumericValidator;
 import com.vijay.jsonwizard.validators.edittext.RequiredValidator;
 
 import java.util.ArrayList;
@@ -53,6 +54,18 @@ public class CustomTextInputEditText extends TextInputEditText {
         }
         this.validators.add(validator);
         return this;
+    }
+
+    public void removeMaxValidators() {
+        if (validators != null) {
+            List<METValidator> maxvalidators = new ArrayList<>();
+            for (METValidator validator : validators) {
+                if (validator instanceof MaxNumericValidator)
+                    maxvalidators.add(validator);
+            }
+            validators.removeAll(maxvalidators);
+        }
+
     }
 
     public boolean validate() {

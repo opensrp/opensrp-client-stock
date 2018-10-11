@@ -10,4 +10,5 @@
     <item name="is_stock_adjustment" type="id" />
     <item name="use_vvm" type="id" />
     <item name="reason_id" type="id" />
+    <item name="reason_type" type="id" />
 </resources>

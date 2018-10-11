@@ -33,6 +33,7 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.I
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_SPINNABLE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.LIST_OPTIONS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.POPULATE_VALUES;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.STOCK_BALANCE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PROGRAM_ID;
 
 public class OpenLMISEditTextFactory extends EditTextFactory {
@@ -102,6 +103,10 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
             public void afterTextChanged(Editable s) {//do nothing
             }
         });
+
+        if (jsonObject.has(STOCK_BALANCE)) {
+            editText.setTag(R.id.stock_balance, jsonObject.getInt(STOCK_BALANCE));
+        }
     }
 
     @VisibleForTesting

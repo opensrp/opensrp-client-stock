@@ -51,7 +51,7 @@ public interface OpenLMISConstants {
     String PROGRAM_ID = "program_id";
 
     String OPENLMIS_UUID = "openlmis_uuid";
-    
+
     String DEBIT = "DEBIT";
 
     String CREDIT = "CREDIT";
@@ -106,6 +106,12 @@ public interface OpenLMISConstants {
         String RECEIVE_REASONS = "receive_reasons";
 
         String ALL_REASONS = "all_reasons";
+
+        String REASON_TYPE = "reason_type";
+
+        String STOCK_BALANCE = "stock_balance";
+
+        String ADJUSTED_QUANTITY ="Adjusted_Quantity";
     }
 
     interface Forms {
