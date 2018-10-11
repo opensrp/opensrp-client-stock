@@ -24,9 +24,12 @@ public class TradeItemDto extends BaseDto implements Parcelable {
 
     private Boolean useVVM;
 
+    private String routeOfAdministration;
+
     public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
                         @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
-                        @NonNull Long netContent, String programId, boolean hasLots, boolean useVVM) {
+                        @NonNull Long netContent, String programId, boolean hasLots, boolean useVVM,
+                        String routeOfAdministration) {
         this.id = id;
         this.name = name;
         this.totalStock = totalStock;
@@ -37,10 +40,11 @@ public class TradeItemDto extends BaseDto implements Parcelable {
         this.programId = programId;
         this.hasLots = hasLots;
         this.useVVM = useVVM;
+        this.routeOfAdministration = routeOfAdministration;
     }
 
     public TradeItemDto(Parcel in) {
-        String[] data = new String[10];
+        String[] data = new String[11];
 
         in.readStringArray(data);
         id = data[0];
@@ -53,12 +57,14 @@ public class TradeItemDto extends BaseDto implements Parcelable {
         programId = data[7];
         hasLots = Boolean.valueOf(data[8]);
         useVVM = Boolean.valueOf(data[9]);
+        routeOfAdministration = data[10];
     }
 
     public TradeItemDto(@NonNull String id, @NonNull String name, @NonNull Integer totalStock,
                         @NonNull Long lastUpdated, Integer numberOfLots, @NonNull String dispensingUnit,
-                        @NonNull Long netContent) {
-        this(id, name, totalStock, lastUpdated, numberOfLots, dispensingUnit, netContent, null, true, true);
+                        @NonNull Long netContent, @NonNull String routeOfAdministration) {
+        this(id, name, totalStock, lastUpdated, numberOfLots, dispensingUnit, netContent, null,
+                true, true, routeOfAdministration);
 
     }
 
@@ -71,7 +77,8 @@ public class TradeItemDto extends BaseDto implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[]{id, name,
                 totalStock.toString(), lastUpdated.toString(), numberOfLots.toString(),
-                dispensingUnit, netContent.toString(), programId, hasLots.toString(), useVVM.toString()});
+                dispensingUnit, netContent.toString(), programId, hasLots.toString(),
+                useVVM.toString(), routeOfAdministration});
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -126,5 +133,9 @@ public class TradeItemDto extends BaseDto implements Parcelable {
 
     public Boolean isUseVVM() {
         return useVVM;
+    }
+
+    public String getRouteOfAdministration() {
+        return routeOfAdministration;
     }
 }

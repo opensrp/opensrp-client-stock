@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
+import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.repository.StockRepository;
 
@@ -128,7 +129,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
                             stockObject.getString(context.getString(org.smartregister.stock.R.string.providerid_key)),
                             stockObject.getInt(context.getString(org.smartregister.stock.R.string.value_key)),
                             stockObject.getLong(context.getString(org.smartregister.stock.R.string.date_created_key)),
-                            stockObject.getString(context.getString(org.smartregister.stock.R.string.to_from_key)),
+                            stockObject.optString(context.getString(org.smartregister.stock.R.string.to_from_key)),
                             TYPE_Synced,
                             stockObject.getLong(context.getString(org.smartregister.stock.R.string.date_updated_key)),
                             stockObject.getString(context.getString(org.smartregister.stock.R.string.stock_type_id_key))
@@ -136,6 +137,15 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
                     stock.setLotId(stockObject.optString(context.getString(org.smartregister.stock.R.string.lot_id)));
                     stock.setReason(stockObject.optString(context.getString(org.smartregister.stock.R.string.reason_id)));
                     stock.setProgramId(stockObject.optString(context.getString(org.smartregister.stock.R.string.program_id)));
+                    stock.setIdentifier(stockObject.optString(context.getString(R.string.identifier)));
+                    stock.setOrderableId(stockObject.optString(context.getString(R.string.orderable_id)));
+                    stock.setVvmStatus(stockObject.optString(context.getString(R.string.vvm_status)));
+                    stock.setFacilityId(stockObject.optString(context.getString(R.string.facility_id)));
+
+
+                    stock.setLocationId(stockObject.optString(context.getString(R.string.location_id)));
+                    stock.setTeamId(stockObject.optString(context.getString(R.string.team_id)));
+                    stock.setTeam(stockObject.optString(context.getString(R.string.team_name)));
                     Stock_arrayList.add(stock);
                 }
             }
@@ -175,7 +185,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
         for (int i = 0; i < stocks.size(); i++) {
             JSONObject stock = new JSONObject();
             try {
-                stock.put("identifier", stocks.get(i).getId());
+                stock.put(context.getString(R.string.identifier), stocks.get(i).getIdentifier());
                 stock.put(context.getString(org.smartregister.stock.R.string.stock_type_id_key), stocks.get(i).getStockTypeId());
                 stock.put(context.getString(org.smartregister.stock.R.string.transaction_type_key), stocks.get(i).getTransactionType());
                 stock.put(context.getString(org.smartregister.stock.R.string.providerid_key), stocks.get(i).getProviderid());
@@ -186,6 +196,14 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
                 stock.put(context.getString(org.smartregister.stock.R.string.lot_id), stocks.get(i).getLotId());
                 stock.put(context.getString(org.smartregister.stock.R.string.reason_id), stocks.get(i).getReason());
                 stock.put(context.getString(org.smartregister.stock.R.string.program_id), stocks.get(i).getProgramId());
+                stock.put(context.getString(R.string.facility_id), stocks.get(i).getFacilityId());
+                stock.put(context.getString(R.string.orderable_id), stocks.get(i).getOrderableId());
+                stock.put(context.getString(R.string.vvm_status), stocks.get(i).getVvmStatus());
+
+
+                stock.put(context.getString(R.string.location_id), stocks.get(i).getLocationId());
+                stock.put(context.getString(R.string.team_id), stocks.get(i).getTeamId());
+                stock.put(context.getString(R.string.team_name), stocks.get(i).getTeam());
                 array.put(stock);
             } catch (JSONException e) {
                 e.printStackTrace();

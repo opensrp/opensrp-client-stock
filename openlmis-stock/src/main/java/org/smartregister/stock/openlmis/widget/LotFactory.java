@@ -556,16 +556,18 @@ public class LotFactory implements FormWidgetFactory {
             if (StringUtils.isBlank(lot.getText()) || StringUtils.isBlank(quantity.getText()) ||
                     (StringUtils.isBlank(status.getText()) && !useVVM))
                 isValid = false;
-            else if (StringUtils.isNotBlank(quantity.getText()) && !isStockAdjustment && "0".equals(quantity.getText().toString()))
-                isValid = false;
-            else if (lot.getTag(R.id.is_stock_issue) != null && Boolean.valueOf(lot.getTag(R.id.is_stock_issue).toString())
+            if (lot.getTag(R.id.is_stock_issue) != null && Boolean.valueOf(lot.getTag(R.id.is_stock_issue).toString())
                     && StringUtils.isNotBlank(quantity.getText()) && quantity.getTag(R.id.stock_balance) != null
                     && Integer.parseInt(quantity.getText().toString()) > Integer.parseInt(quantity.getTag(R.id.stock_balance).toString())) {
                 quantity.setError(lotsContainer.getContext().getString(R.string.stock_issued_more_balance,
                         Integer.parseInt(quantity.getText().toString()),
                         Integer.parseInt(quantity.getTag(R.id.stock_balance).toString())));
                 isValid = false;
-            } else if (isStockAdjustment) {
+            }
+            if (StringUtils.isNotBlank(quantity.getText()) && !isStockAdjustment && "0".equals(quantity.getText().toString())) {
+                isValid = false;
+            }
+            if (isStockAdjustment) {
                 TextInputEditText reason = lotsContainer.getChildAt(i).findViewById(R.id.reason_dropdown);
                 if (StringUtils.isBlank(reason.getText()))
                     isValid = false;
