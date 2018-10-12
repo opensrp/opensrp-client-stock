@@ -3,11 +3,9 @@ package org.smartregister.stock.openlmis.widget;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.TextView;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
-import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
@@ -15,17 +13,12 @@ import org.json.JSONObject;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
 
-import java.util.List;
-
 import static com.vijay.jsonwizard.constants.JsonFormConstants.DATE_PICKER;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_NON_LOT;
 
 /**
  * Created by samuelgithengi on 8/16/18.
  */
 public class OpenLMISDatePickerFactory extends DatePickerFactory {
-
-    private boolean isLotEnabled = true;
 
     @Override
     protected void attachJson(final String stepName, Context context, final JsonFormFragment formFragment,
@@ -53,15 +46,6 @@ public class OpenLMISDatePickerFactory extends DatePickerFactory {
             public void afterTextChanged(Editable s) {//do nothing
             }
         });
-    }
-
-    @Override
-    public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) {
-        List<View> views = super.getViewsFromJson(stepName, context, formFragment, jsonObject, listener);
-        if (jsonObject.optBoolean(IS_NON_LOT)) {
-            isLotEnabled = false;
-        }
-        return views;
     }
 
     @Override

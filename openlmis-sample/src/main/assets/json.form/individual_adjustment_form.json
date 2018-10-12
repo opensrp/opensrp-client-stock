@@ -55,6 +55,24 @@
     "no_padding": true,
     "fields": [
       {
+        "key": "Date_Stock_Adjusted",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Date",
+        "expanded": false,
+        "min_date": "today-1m",
+        "max_date": "today",
+        "background": "#EAEAEA",
+        "underline_color": "#EAEAEA",
+        "padding": "20",
+        "v_required": {
+          "value": "true",
+          "err": "Enter the Stock adjustment date"
+        }
+      },
+      {
         "key": "stockLots",
         "type": "lot",
         "trade_item": "[trade_item]",

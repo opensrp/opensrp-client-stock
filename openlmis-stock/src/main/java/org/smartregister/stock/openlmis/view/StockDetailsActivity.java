@@ -214,7 +214,7 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
             Log.logDebug(e.getMessage());
         }
     }
-    
+
     @Override
     public boolean onSupportNavigateUp() {
         setResult(RESULT_OK, new Intent().putExtra(REFRESH_STOCK_ON_HAND, hasChanges));

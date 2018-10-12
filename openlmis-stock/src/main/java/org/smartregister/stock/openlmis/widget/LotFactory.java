@@ -130,8 +130,10 @@ public class LotFactory implements FormWidgetFactory {
         View root = LayoutInflater.from(context).inflate(isStockAdjustment ?
                 R.layout.openlmis_native_form_item_lot_adjustment : R.layout.openlmis_native_form_item_lot, null);
 
-        TextView tradeItem = root.findViewById(R.id.trade_item);
-        tradeItem.setText(jsonObject.getString(TRADE_ITEM));
+        if (!isStockAdjustment) {
+            TextView tradeItem = root.findViewById(R.id.trade_item);
+            tradeItem.setText(jsonObject.getString(TRADE_ITEM));
+        }
 
         netContent = jsonObject.getLong(NET_CONTENT);
         dispensingUnit = jsonObject.getString(DISPENSING_UNIT);

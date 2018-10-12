@@ -199,10 +199,9 @@ public class StockDetailsPresenter {
     private boolean processStockAdjusted(JSONObject jsonString, String userFacilityId,
                                          AllSharedPreferences sharedPreferences) throws JSONException {
         JSONArray stepFields = JsonFormUtils.fields(jsonString);
-
+        String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Adjusted");
         boolean isNonLot = stepFields.getJSONObject(0).optBoolean(IS_NON_LOT);
         if (isNonLot) {
-            String date = JsonFormUtils.getFieldValue(stepFields, "Date_Stock_Adjusted");
             String reason = JsonFormUtils.getFieldValue(stepFields, "Adjusted_Stock_Reason");
             int quantity = Integer.parseInt(JsonFormUtils.getFieldValue(stepFields, "Adjusted_Quantity"));
             String status = JsonFormUtils.getFieldValue(stepFields, "Status");
@@ -211,7 +210,7 @@ public class StockDetailsPresenter {
             return processStockNonLot(STEP1, jsonString, date,
                     null, loss_adjustment, reason, quantity, status, userFacilityId, sharedPreferences);
         }
-        return processStockLot(STEP1, jsonString, simpleDateFormat.format(new Date()),
+        return processStockLot(STEP1, jsonString, date,
                 null, loss_adjustment, null, userFacilityId, sharedPreferences);
     }
 
