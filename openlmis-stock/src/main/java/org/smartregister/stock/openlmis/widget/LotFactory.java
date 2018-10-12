@@ -448,8 +448,11 @@ public class LotFactory implements FormWidgetFactory {
         if (isStockAdjustment)
             jsonFormFragment.setBottomNavigationText(context.getResources().getQuantityString(R.plurals.adjusted_lots,
                     totalQuantity, totalQuantity));
-        else
+        else if (isStockIssue)
             jsonFormFragment.setBottomNavigationText(context.getString(R.string.issued_dose_formatter,
+                    totalQuantity, dispensingUnit, totalQuantity * netContent));
+        else
+            jsonFormFragment.setBottomNavigationText(context.getString(R.string.received_dose_formatter,
                     totalQuantity, dispensingUnit, totalQuantity * netContent));
     }
 

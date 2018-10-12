@@ -38,6 +38,7 @@
     <string name="quantity">Quantity</string>
     <string name="add_lot">Add Lot</string>
     <string name="issued_dose_formatter">%1d %2s, %3d doses will be issued</string>
+    <string name="received_dose_formatter">%1d %2s, %3d doses will be received</string>
     <string name="items">Items</string>
     <string name="issue_to">Issue To</string>
     <string name="reason">Reason</string>
