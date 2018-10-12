@@ -267,6 +267,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
             assertEquals(-2, stock.getValue());
             assertEquals("Transferred", stock.getReason());
             assertNull(stock.getToFrom());
+            assertEquals(1538686800000l, stock.getDateCreated().longValue());
         }
     }
 
