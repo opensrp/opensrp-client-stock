@@ -171,6 +171,7 @@
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
         "review_type": "Review Your Issue",
+        "is_stock_issue": "true",
         "date": "Date_Stock_Issued",
         "facility": "Issued_Stock_To",
         "reason": "Issued_Stock_Reason"

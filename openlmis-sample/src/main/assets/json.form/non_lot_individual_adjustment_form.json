@@ -48,25 +48,88 @@
   },
   "step1": {
     "title": "[trade_item] loss/adjustment",
-    "next_type": "submit",
-    "next_enabled": "false",
-    "next_label": "Save",
-    "bottom_navigation": "true",
-    "no_padding": true,
     "fields": [
       {
-        "key": "stock",
-        "type": "lot",
+        "key": "Date_Stock_Adjusted",
+        "trade_item_id": "[trade_item_id]",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Date",
+        "is_non_lot": true,
+        "expanded": false,
+        "min_date": "today-1m",
+        "max_date": "today",
+        "background": "#EAEAEA",
+        "underline_color": "#EAEAEA",
+        "v_required": {
+          "value": "true",
+          "err": "Enter the Stock adjustment date"
+        }
+      },
+      {
+        "key": "labelReason",
+        "type": "label",
+        "text": "Reason *",
+        "top_margin": "10dp"
+      },
+      {
+        "key": "Adjusted_Stock_Reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "openmrs_data_type": "select one",
+        "type": "native_radio",
+        "populate_values": "all_reasons",
+        "program_id": "[program_id]",
+        "v_required": {
+          "value": true,
+          "err": "Please select reason stock was adjusted"
+        }
+      },
+      {
+        "key": "Adjusted_Quantity",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Quantity",
+        "edit_type": "number",
+        "stock_balance": "[stock_on_hand]",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Enter a valid stock quantity"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the quantity adjusted"
+        }
+      },
+      {
+        "key": "Status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "is_non_lot": true,
+        "type": "edit_text",
+        "hint": "Status",
         "trade_item": "[trade_item]",
         "trade_item_id": "[trade_item_id]",
-        "program_id": "[program_id]",
         "dispensing_unit": "[dispensing_unit]",
         "net_content": "[net_content]",
-        "is_stock_adjustment": "true",
-        "is_non_lot": true,
-        "lot_status": [
-          "VVM1",
-          "VVM2"
+        "program_id": "[program_id]",
+        "is_spinnable": true,
+        "use_vvm": "[use_vvm]",
+        "list_options": [
+          {
+            "key": "VMM1",
+            "text": "VMM1"
+          },
+          {
+            "key": "VMM2",
+            "text": "VMM2"
+          }
         ]
       }
     ]

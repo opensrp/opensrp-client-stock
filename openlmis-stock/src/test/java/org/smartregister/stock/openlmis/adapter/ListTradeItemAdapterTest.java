@@ -6,12 +6,14 @@ import android.widget.LinearLayout;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.stock.openlmis.BaseUnitTest;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.domain.openlmis.Dispensable;
+import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.TradeItemViewHolder;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
@@ -30,6 +32,9 @@ public class ListTradeItemAdapterTest extends BaseUnitTest {
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 
+    @Mock
+    private StockListPresenter stockListPresenter;
+
     private Context context = RuntimeEnvironment.application;
 
     private ListTradeItemAdapter listTradeItemAdapter;
@@ -47,7 +52,7 @@ public class ListTradeItemAdapterTest extends BaseUnitTest {
         tradeItemWrapper.setTotalStock(50);
         tradeItemWrapper.setHasLots(true);
         expectedTradeItems.add(tradeItemWrapper);
-        listTradeItemAdapter = new ListTradeItemAdapter(expectedTradeItems, null, context);
+        listTradeItemAdapter = new ListTradeItemAdapter(expectedTradeItems, null, context, stockListPresenter);
     }
 
     @Test

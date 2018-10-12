@@ -76,7 +76,7 @@ public class StockTakeInteractor extends StockListBaseInteractor {
     }
 
     public List<Reason> findAdjustReasons(String programId) {
-        return OpenLMISLibrary.getInstance().getReasonRepository().findReasons(null, null, programId, null);
+        return OpenLMISLibrary.getInstance().getReasonRepository().findReasons(null,  programId, null,null);
     }
 
     public Set<StockTake> findStockTakeList(String programId, String tradeItemId) {

@@ -15,4 +15,6 @@
 
     <dimen name="search_margin">15dp</dimen>
     <dimen name="add_subtract_padding_stock_take">24dp</dimen>
+
+    <dimen name="lot_adjust_margin">10dp</dimen>
 </resources>

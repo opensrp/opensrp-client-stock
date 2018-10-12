@@ -51,10 +51,14 @@ public interface OpenLMISConstants {
     String PROGRAM_ID = "program_id";
 
     String OPENLMIS_UUID = "openlmis_uuid";
-    
+
     String DEBIT = "DEBIT";
 
     String CREDIT = "CREDIT";
+
+    String TRANSFER = "TRANSFER";
+
+    String ADJUSTMENT = "ADJUSTMENT";
 
 
     interface JsonForm {
@@ -104,6 +108,14 @@ public interface OpenLMISConstants {
         String ISSUE_REASONS = "issue_reasons";
 
         String RECEIVE_REASONS = "receive_reasons";
+
+        String ALL_REASONS = "all_reasons";
+
+        String REASON_TYPE = "reason_type";
+
+        String STOCK_BALANCE = "stock_balance";
+
+        String ADJUSTED_QUANTITY ="Adjusted_Quantity";
     }
 
     interface Forms {

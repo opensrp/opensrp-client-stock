@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.TradeItem;
+import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.view.viewholder.TradeItemViewHolder;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
@@ -24,17 +25,21 @@ public class ListTradeItemAdapter extends RecyclerView.Adapter<TradeItemViewHold
     private String programId;
     private Context context;
 
-    public ListTradeItemAdapter(List<TradeItemWrapper> tradeItems, String programId, Context context) {
+    private final StockListPresenter stockListPresenter;
+
+    public ListTradeItemAdapter(List<TradeItemWrapper> tradeItems, String programId, Context context,
+                                StockListPresenter stockListPresenter) {
         this.tradeItems = tradeItems;
         this.programId = programId;
         this.context = context;
+        this.stockListPresenter = stockListPresenter;
     }
 
     @NonNull
     @Override
     public TradeItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(context).inflate(R.layout.trade_item_row, parent, false);
-        return new TradeItemViewHolder(itemView);
+        return new TradeItemViewHolder(stockListPresenter, itemView);
     }
 
     @Override

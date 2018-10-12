@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.smartregister.stock.openlmis.widget.LotFactory.DISPENSING_UNIT;
+import static org.smartregister.stock.openlmis.widget.LotFactory.IS_STOCK_ISSUE;
 import static org.smartregister.stock.openlmis.widget.LotFactory.NET_CONTENT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.TRADE_ITEM;
 import static org.smartregister.util.JsonFormUtils.FIELDS;
@@ -46,7 +47,8 @@ public class ReviewFactory implements FormWidgetFactory {
     public final static String OTHER = "Other";
     public final static String STEP2 = "step2";
     public final static String STOCK_LOTS = "stockLots";
-    public final static String STOCK_STATUS = "Status";
+
+    private boolean isStockIssue;
 
     private ReasonRepository reasonRepository;
 
@@ -63,6 +65,7 @@ public class ReviewFactory implements FormWidgetFactory {
         String tradeItem = jsonObject.getString(TRADE_ITEM);
         long netContent = jsonObject.getLong(NET_CONTENT);
         String dispensingUnit = jsonObject.getString(DISPENSING_UNIT);
+        isStockIssue = jsonObject.optBoolean(IS_STOCK_ISSUE);
 
         List<View> views = new ArrayList<>(1);
         View root = LayoutInflater.from(context).inflate(R.layout.openlmis_native_form_item_review, null);
@@ -106,7 +109,8 @@ public class ReviewFactory implements FormWidgetFactory {
         int totalQuantity = 0;
         for (LotDto lot : selectedLotDTos)
             totalQuantity += lot.getQuantity();
-        jsonFormFragment.setBottomNavigationText(context.getString(R.string.issued_dose_formatter,
+        jsonFormFragment.setBottomNavigationText(context.getString(
+                isStockIssue ? R.string.issued_dose_formatter : R.string.received_dose_formatter,
                 totalQuantity, dispensingUnit, totalQuantity * netContent));
     }
 

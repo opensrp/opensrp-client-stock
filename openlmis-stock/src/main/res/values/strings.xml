@@ -38,6 +38,7 @@
     <string name="quantity">Quantity</string>
     <string name="add_lot">Add Lot</string>
     <string name="issued_dose_formatter">%1d %2s, %3d doses will be issued</string>
+    <string name="received_dose_formatter">%1d %2s, %3d doses will be received</string>
     <string name="items">Items</string>
     <string name="issue_to">Issue To</string>
     <string name="reason">Reason</string>
@@ -75,5 +76,7 @@
     <string name="location_id">locationId</string>
     <string name="team_id">teamId</string>
     <string name="team_name">team</string>
+
+    <string name="stock_adjust_more_balance">Stock being Adjusted %1d is more than Stock on Hand %1d</string>
 
 </resources>

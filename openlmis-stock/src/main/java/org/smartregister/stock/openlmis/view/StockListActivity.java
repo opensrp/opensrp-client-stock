@@ -21,9 +21,11 @@ import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
+import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.receiver.OpenLMISAlarmReceiver;
 import org.smartregister.stock.openlmis.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.stock.openlmis.util.OpenLMISConstants;
 import org.smartregister.stock.openlmis.util.TestDataUtils;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 
@@ -45,7 +47,7 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
 
     private ArrayAdapter<Program> programsAdapter;
 
-    public final static int STOCK_TAKE = 2340;
+    public final static int STOCK_LIST = 2340;
 
     private SearchView searchView;
 
@@ -175,12 +177,19 @@ public class StockListActivity extends BaseActivity implements StockListView, Vi
     private void startBulkActivity(Class<? extends AppCompatActivity> activity) {
         Intent intent = new Intent(getApplicationContext(), activity);
         intent.putExtra(PROGRAM_ID, adapter.getProgramId());
-        startActivityForResult(intent, STOCK_TAKE);
+        startActivityForResult(intent, STOCK_LIST);
+    }
+
+    @Override
+    public void startStockDetails(TradeItemDto tradeItemDto) {
+        Intent intent = new Intent(getApplicationContext(), StockDetailsActivity.class);
+        intent.putExtra(OpenLMISConstants.TRADE_ITEM, tradeItemDto);
+        startActivityForResult(intent, STOCK_LIST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == STOCK_TAKE && resultCode == RESULT_OK &&
+        if (requestCode == STOCK_LIST && resultCode == RESULT_OK &&
                 data != null && data.getBooleanExtra(REFRESH_STOCK_ON_HAND, false))
             adapter.refresh();
     }

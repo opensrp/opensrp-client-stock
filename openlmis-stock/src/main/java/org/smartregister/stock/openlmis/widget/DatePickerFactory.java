@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.TimeUtils;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -27,6 +28,7 @@ import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.validators.edittext.RequiredValidator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
@@ -60,7 +62,7 @@ public class DatePickerFactory implements FormWidgetFactory {
 
             CustomTextInputEditText editText = dateViewRelativeLayout.findViewById(R.id.edit_text);
 
-            TextView duration = (TextView) dateViewRelativeLayout.findViewById(R.id.duration);
+            TextView duration = dateViewRelativeLayout.findViewById(R.id.duration);
 
             attachJson(stepName, context, formFragment, jsonObject, editText, duration);
 
@@ -70,6 +72,12 @@ public class DatePickerFactory implements FormWidgetFactory {
             editText.setTag(R.id.canvas_ids, canvasIds.toString());
 
             ((JsonApi) context).addFormDataView(editText);
+            String paddingString = jsonObject.optString("padding");
+            if (StringUtils.isNotBlank(paddingString)) {
+                int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                        Integer.parseInt(paddingString), context.getResources().getDisplayMetrics());
+                dateViewRelativeLayout.setPadding(padding, padding, padding, padding);
+            }
             views.add(dateViewRelativeLayout);
 
         } catch (Exception e) {

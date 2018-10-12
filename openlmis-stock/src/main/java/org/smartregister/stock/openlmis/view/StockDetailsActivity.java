@@ -64,6 +64,8 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
 
     private TextView dosesTextView;
 
+    private boolean hasChanges;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +174,8 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
 
     @Override
     public void refreshStockDetails(int totalStockAdjustment) {
+        if (!hasChanges && totalStockAdjustment != 0)
+            hasChanges = true;
         tradeItemDto.setTotalStock(tradeItemDto.getTotalStock() + totalStockAdjustment);
         if (tradeItemDto.isHasLots())
             lotsRecyclerView.setAdapter(new LotAdapter(tradeItemDto, stockDetailsPresenter));
@@ -213,10 +217,14 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
 
     @Override
     public boolean onSupportNavigateUp() {
-        setResult(RESULT_OK, new Intent().putExtra(REFRESH_STOCK_ON_HAND, true));
+        setResult(RESULT_OK, new Intent().putExtra(REFRESH_STOCK_ON_HAND, hasChanges));
         finish();
         return true;
     }
 
-
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK, new Intent().putExtra(REFRESH_STOCK_ON_HAND, hasChanges));
+        finish();
+    }
 }

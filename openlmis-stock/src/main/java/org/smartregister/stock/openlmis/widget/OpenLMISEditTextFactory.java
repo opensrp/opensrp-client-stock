@@ -23,24 +23,23 @@ import org.json.JSONObject;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.Reason;
-import org.smartregister.stock.openlmis.fragment.OpenLMISJsonFormFragment;
 import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditText;
 
 import java.util.List;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.EDIT_TEXT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ADJUSTMENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.DEBIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.ISSUE_REASONS;
-import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_NON_LOT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_SPINNABLE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.LIST_OPTIONS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.POPULATE_VALUES;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.STOCK_BALANCE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PROGRAM_ID;
 
 public class OpenLMISEditTextFactory extends EditTextFactory {
 
     private JSONArray listOptions;
-    private boolean isLotEnabled = true;
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
@@ -50,8 +49,8 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
             String programId = jsonObject.optString(PROGRAM_ID);
 
             List<Reason> validReasons = OpenLMISLibrary.getInstance().
-                    getReasonRepository().findReasons(null, null, programId,
-                    DEBIT);
+                    getReasonRepository().findReasons(null, programId, DEBIT,
+                    ADJUSTMENT);
             listOptions = convertReasonsToJsonArray(validReasons);
         } else if (jsonObject.has("list_options")) {
             listOptions = jsonObject.getJSONArray(LIST_OPTIONS);
@@ -61,7 +60,7 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
 
         List<View> views = super.getViewsFromJson(stepName, context, formFragment, jsonObject, listener);
 
-        RelativeLayout rootLayout =  (RelativeLayout) views.get(0);
+        RelativeLayout rootLayout = (RelativeLayout) views.get(0);
 
         if (jsonObject.optBoolean(IS_SPINNABLE)) {
             CustomTextInputEditText dropDown = (CustomTextInputEditText) ((TextInputLayout) rootLayout.findViewById(R.id.openlmis_edit_text_parent)).getEditText();
@@ -74,9 +73,7 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
         if (!jsonObject.optBoolean("use_vvm", true)) {
             rootLayout.findViewById(R.id.openlmis_edit_text_parent).setVisibility(View.GONE);
         }
-        if (jsonObject.optBoolean(IS_NON_LOT)) {
-            isLotEnabled = false;
-        }
+
         return views;
     }
 
@@ -99,14 +96,18 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
                 String openMrsEntity = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity);
                 String openMrsEntityId = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id);
                 String nodeValue = (String) editText.getTag(com.vijay.jsonwizard.R.id.node_value);
-                ((OpenLMISJsonFormFragment) formFragment).writeValue(stepName, key, nodeValue == null ? s.toString() : nodeValue, openMrsEntityParent,
-                        openMrsEntity, openMrsEntityId, isLotEnabled);
+                formFragment.writeValue(stepName, key, nodeValue == null ? s.toString() : nodeValue, openMrsEntityParent,
+                        openMrsEntity, openMrsEntityId);
             }
 
             @Override
             public void afterTextChanged(Editable s) {//do nothing
             }
         });
+
+        if (jsonObject.has(STOCK_BALANCE)) {
+            editText.setTag(R.id.stock_balance, jsonObject.getInt(STOCK_BALANCE));
+        }
     }
 
     @VisibleForTesting

@@ -173,34 +173,6 @@
             "text": "VMM2"
           }
         ]
-      },
-      {
-        "key": "Wasted_Vials",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Quantity wasted",
-        "edit_type": "number",
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Enter a valid stock quantity"
-        },
-        "v_required": {
-          "value": true,
-          "err": "Please specify the quantity wasted"
-        }
-      },
-      {
-        "key": "Wasted_Reason",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Wasted reason",
-        "is_spinnable": true,
-        "populate_values": "issue_reasons",
-        "program_id": "[program_id]"
       }
     ]
   }
