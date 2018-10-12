@@ -33,4 +33,5 @@
 
     <dimen name="stock_take_top_margin">120dp</dimen>
     <dimen name="add_subtract_padding_stock_take">8dp</dimen>
+    <dimen name="lot_adjust_margin">5dp</dimen>
 </resources>
