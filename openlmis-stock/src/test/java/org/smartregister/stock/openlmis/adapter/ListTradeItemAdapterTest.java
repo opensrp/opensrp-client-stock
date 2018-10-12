@@ -47,7 +47,7 @@ public class ListTradeItemAdapterTest extends BaseUnitTest {
         tradeItemWrapper.setTotalStock(50);
         tradeItemWrapper.setHasLots(true);
         expectedTradeItems.add(tradeItemWrapper);
-        listTradeItemAdapter = new ListTradeItemAdapter(expectedTradeItems, null, context);
+        listTradeItemAdapter = new ListTradeItemAdapter(expectedTradeItems, null, context, stockListPresenter);
     }
 
     @Test

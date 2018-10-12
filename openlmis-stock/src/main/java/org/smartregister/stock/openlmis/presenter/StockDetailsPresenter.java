@@ -265,6 +265,8 @@ public class StockDetailsPresenter {
             stock.setTeam(sharedPreferences.fetchDefaultTeam(sharedPreferences.fetchRegisteredANM()));
             stock.setTeamId(sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM()));
 
+            if (loss_adjustment.equals(transactionType) && DEBIT.equals(lot.getReasonType()))
+                stock.setValue(-lot.getQuantity());
             totalStockAdjustment += stock.getValue();
             stockDetailsInteractor.addStock(stock);
             if (transactionType.equals(received))

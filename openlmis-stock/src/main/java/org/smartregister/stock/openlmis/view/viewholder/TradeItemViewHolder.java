@@ -9,6 +9,7 @@ import android.widget.TextView;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.dto.TradeItemDto;
+import org.smartregister.stock.openlmis.presenter.StockListPresenter;
 import org.smartregister.stock.openlmis.util.OpenLMISConstants;
 import org.smartregister.stock.openlmis.view.StockDetailsActivity;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
@@ -17,6 +18,8 @@ import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
  * Created by samuelgithengi on 7/17/18.
  */
 public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+    private final StockListPresenter stockListPresenter;
 
     private Context context;
     private TextView nameTextView;
@@ -29,8 +32,9 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
     private String programId;
 
 
-    public TradeItemViewHolder(View itemView) {
+    public TradeItemViewHolder(StockListPresenter stockListPresenter, View itemView) {
         super(itemView);
+        this.stockListPresenter = stockListPresenter;
         context = itemView.getContext();
         nameTextView = itemView.findViewById(R.id.nameTextView);
         lotsTextView = itemView.findViewById(R.id.lotsTextView);
@@ -39,9 +43,9 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
         itemView.setOnClickListener(this);
     }
 
+
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(context, StockDetailsActivity.class);
         TradeItem tradeItem = tradeItemWrapper.getTradeItem();
         TradeItemDto tradeItemDto = new TradeItemDto(tradeItem.getId(),
                 tradeItem.getName(), tradeItemWrapper.getTotalStock(),
@@ -49,9 +53,7 @@ public class TradeItemViewHolder extends RecyclerView.ViewHolder implements View
                 tradeItem.getDispensable().getKeyDispensingUnit(), tradeItem.getNetContent(),
                 programId, tradeItem.isHasLots(), tradeItem.isUseVvm(),
                 tradeItem.getDispensable().getKeyRouteOfAdministration());
-        intent.putExtra(OpenLMISConstants.TRADE_ITEM, tradeItemDto);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        stockListPresenter.startStockDetailsActivity(tradeItemDto);
     }
 
     public TextView getNameTextView() {

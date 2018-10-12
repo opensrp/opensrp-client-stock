@@ -6,6 +6,7 @@ import android.view.View;
 import org.smartregister.stock.openlmis.adapter.ListCommodityTypeAdapter;
 import org.smartregister.stock.openlmis.domain.openlmis.CommodityType;
 import org.smartregister.stock.openlmis.domain.openlmis.Program;
+import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.interactor.StockListInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockListView;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
@@ -69,5 +70,9 @@ public class StockListPresenter extends StockListBasePresenter {
     @Override
     public StockListInteractor getStockListInteractor() {
         return stockListInteractor;
+    }
+
+    public void startStockDetailsActivity(TradeItemDto tradeItemDto) {
+        stockListView.startStockDetails(tradeItemDto);
     }
 }

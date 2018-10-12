@@ -45,7 +45,7 @@ public class TradeItemViewHolderTest extends BaseUnitTest {
     @Before
     public void setUp() {
         view = LayoutInflater.from(context).inflate(R.layout.trade_item_row, null);
-        viewHolder = new TradeItemViewHolder(view);
+        viewHolder = new TradeItemViewHolder(stockListPresenter, view);
         TradeItem tradeItem = new TradeItem(UUID.randomUUID().toString());
         tradeItem.setName("Intervax BCG 20");
         tradeItem.setCommodityTypeId("305730154758");

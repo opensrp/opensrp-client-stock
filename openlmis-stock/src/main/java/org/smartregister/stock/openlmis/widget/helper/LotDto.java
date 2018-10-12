@@ -17,6 +17,8 @@ public class LotDto {
 
     private String reasonId;
 
+    private String reasonType;
+
     public LotDto(String lotId) {
         this.lotId = lotId;
     }
@@ -77,6 +79,14 @@ public class LotDto {
 
     public void setReasonId(String reasonId) {
         this.reasonId = reasonId;
+    }
+
+    public String getReasonType() {
+        return reasonType;
+    }
+
+    public void setReasonType(String reasonType) {
+        this.reasonType = reasonType;
     }
 
     @Override

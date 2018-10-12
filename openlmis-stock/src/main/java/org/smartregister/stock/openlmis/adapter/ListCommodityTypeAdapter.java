@@ -92,7 +92,7 @@ public class ListCommodityTypeAdapter extends RecyclerView.Adapter<CommodityType
         holder.getCommodityTypeTextView().setText(context.getString(R.string.commodity_type_formatter,
                 commodityType.getName(), tradeItems.size()));
         holder.getDoseTextView().setText(context.getString(R.string.dose_formatter, totalDoses, routeOfAdministration));
-        holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, programId, context));
+        holder.getTradeItemsRecyclerView().setAdapter(new ListTradeItemAdapter(tradeItems, programId, context, stockListPresenter));
     }
 
     @Override

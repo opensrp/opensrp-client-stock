@@ -76,4 +76,6 @@
     <string name="team_id">teamId</string>
     <string name="team_name">team</string>
 
+    <string name="stock_adjust_more_balance">Stock being Adjusted %1d is more than Stock on Hand %1d</string>
+
 </resources>
