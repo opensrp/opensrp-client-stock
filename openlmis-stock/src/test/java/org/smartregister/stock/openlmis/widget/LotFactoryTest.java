@@ -379,7 +379,7 @@ public class LotFactoryTest extends BaseUnitTest {
         reason.setText("Damaged");
         reason.setTag(R.id.reason_type, "DEBIT");
         assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
-        
+
         quantity.setText("100");
         assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
 
