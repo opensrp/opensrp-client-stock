@@ -20,6 +20,7 @@ import org.smartregister.stock.openlmis.interactor.StockDetailsInteractor;
 import org.smartregister.stock.openlmis.view.contract.StockDetailsView;
 import org.smartregister.stock.openlmis.wrapper.StockWrapper;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -258,7 +259,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testProcessAdjustFormJsonResult() {
+    public void testProcessAdjustFormJsonResult() throws ParseException {
         stockDetailsPresenter.processFormJsonResult(ADJUST_WIDGET_FORM_DATA, "openlmis_id_1", sharedPreferences);
         verify(stockDetailsInteractor).addStock(argumentCaptor.capture());
         verify(stockDetailsView).refreshStockDetails(-2);
@@ -267,7 +268,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
             assertEquals(-2, stock.getValue());
             assertEquals("Transferred", stock.getReason());
             assertNull(stock.getToFrom());
-            assertEquals(1538686800000l, stock.getDateCreated().longValue());
+            assertEquals(stockDetailsPresenter.simpleDateFormat.parse("05-10-2018").getTime(), stock.getDateCreated().longValue());
         }
     }
 

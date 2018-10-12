@@ -57,7 +57,7 @@ public class StockDetailsPresenter {
 
     private int totalStockAdjustment;
 
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+    public SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 
     private static final String STOCK = "stock";
 
