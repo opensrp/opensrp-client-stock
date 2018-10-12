@@ -39,7 +39,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         );
         database.addOrUpdate(reason);
 
-        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "name", "program_id", null);
+        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200",  "program_id", null,null);
         assertEquals(reasons.size(), 1);
     }
 
@@ -66,11 +66,11 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(reason);
 
         // make sure old values are removed
-        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "name", "program_id", null);
+        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "program_id", null, null);
         assertEquals(reasons.size(), 0);
 
         // make sure new values exist
-        reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "name_1", "program_id_1", null);
+        reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440200", "program_id_1", null, null);
 
         assertEquals(reasons.size(), 1);
     }
@@ -96,7 +96,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(reason);
 
         // ensure all matching rows are returned
-        List<Reason> reasons = database.findReasons(null, "name", null, null);
+        List<Reason> reasons = database.findReasons(null, null, null, null);
         assertEquals(reasons.size(), 2);
     }
 
@@ -121,7 +121,7 @@ public class ReasonRepositoryTest extends BaseRepositoryTest {
         database.addOrUpdate(reason);
 
         // fetch reason with non-existing ID
-        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440300", "name", "program_id", null);
+        List<Reason> reasons = database.findReasons("123e4567-e89b-42d3-a456-556642440300", "program_id", null, null);
 
         assertEquals(reasons.size(), 0);
     }

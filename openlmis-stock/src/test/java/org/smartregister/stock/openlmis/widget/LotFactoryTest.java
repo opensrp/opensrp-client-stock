@@ -305,8 +305,8 @@ public class LotFactoryTest extends BaseUnitTest {
         List<Reason> reasons = new ArrayList<>();
         reasons.add(new Reason("id_1", "program_1", "type_1",
                 new StockCardLineItemReason("id_1", "Damage", null, "DEBIT",
-                        "ADJUSTMENT", null)));
-        when(reasonRepository.findReasons(null, null, "fcd27429-d901-4692-b61d-836cd30e67c6", null)).thenReturn(reasons);
+                        "TRANSFER", null)));
+        when(reasonRepository.findReasons(null,  "fcd27429-d901-4692-b61d-836cd30e67c6",null, "ADJUSTMENT")).thenReturn(reasons);
         PopupMenu popup = lotFactory.populateReasonsOptions(activity, reason);
         reason.performClick();
 
