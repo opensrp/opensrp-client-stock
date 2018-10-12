@@ -48,11 +48,13 @@ import java.util.Map;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.stock.openlmis.adapter.LotAdapter.DATE_FORMAT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ADJUSTMENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.CREDIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.DEBIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.EXPIRING_MONTHS_WARNING;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.LOT_WIDGET;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PROGRAM_ID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.TRANSFER;
 
 /**
  * Created by samuelgithengi on 8/23/18.
@@ -372,7 +374,9 @@ public class LotFactory implements FormWidgetFactory {
     @VisibleForTesting
     protected PopupMenu populateReasonsOptions(final Context context, final TextInputEditText editText) {
         final PopupMenu popupMenu = new PopupMenu(context, editText);
-        for (Reason reason : reasonsRepository.findReasons(null, null, programId, isStockAdjustment ? null : isStockIssue ? CREDIT : DEBIT)) {
+        for (Reason reason : reasonsRepository.findReasons(null, programId,
+                isStockAdjustment ? null : isStockIssue ? CREDIT : DEBIT,
+                isStockAdjustment ? ADJUSTMENT : TRANSFER)) {
             MenuItem menuItem = popupMenu.getMenu().add(reason.getStockCardLineItemReason().getName());
             View actionView = new View(context);
             actionView.setTag(R.id.reason_id, reason.getId());

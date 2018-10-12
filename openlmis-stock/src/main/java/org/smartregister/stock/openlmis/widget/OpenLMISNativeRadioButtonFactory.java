@@ -33,6 +33,7 @@ import static com.vijay.jsonwizard.utils.FormUtils.MATCH_PARENT;
 import static com.vijay.jsonwizard.utils.FormUtils.WRAP_CONTENT;
 import static com.vijay.jsonwizard.utils.FormUtils.getLayoutParams;
 import static com.vijay.jsonwizard.utils.FormUtils.getTextViewWith;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ADJUSTMENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.CREDIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.DEBIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.ALL_REASONS;
@@ -43,6 +44,7 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.R
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.RECEIVE_REASONS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.RECEIVE_SOURCES;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PROGRAM_ID;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.TRANSFER;
 
 /**
  * Created by samuelgithengi on 10/4/18.
@@ -143,8 +145,9 @@ public class OpenLMISNativeRadioButtonFactory implements FormWidgetFactory {
         } else if (RECEIVE_REASONS.equals(populateValues) || ISSUE_REASONS.equals(populateValues) ||
                 ALL_REASONS.equals(populateValues)) {
             List<Reason> validReasons = OpenLMISLibrary.getInstance().
-                    getReasonRepository().findReasons(null, null, programId,
-                    ALL_REASONS.equals(populateValues) ? null : RECEIVE_REASONS.equals(populateValues) ? CREDIT : DEBIT);
+                    getReasonRepository().findReasons(null, programId,
+                    ALL_REASONS.equals(populateValues) ? null : RECEIVE_REASONS.equals(populateValues) ? CREDIT : DEBIT,
+                    ALL_REASONS.equals(populateValues) ? ADJUSTMENT : TRANSFER);
             jsonObject.put(JsonFormConstants.OPTIONS_FIELD_NAME, convertReasonsToJsonArray(validReasons));
             if (StringUtils.isBlank(jsonObject.optString(JsonFormConstants.VALUE)) && !validReasons.isEmpty())
                 jsonObject.put(JsonFormConstants.VALUE, validReasons.get(0).getId());

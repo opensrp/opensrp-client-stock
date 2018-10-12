@@ -56,6 +56,10 @@ public interface OpenLMISConstants {
 
     String CREDIT = "CREDIT";
 
+    String TRANSFER = "TRANSFER";
+
+    String ADJUSTMENT = "ADJUSTMENT";
+
 
     interface JsonForm {
 

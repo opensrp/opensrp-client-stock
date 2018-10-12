@@ -66,7 +66,7 @@ public class StockDetailsInteractor {
 
     public Map<String, String> findReasonNames(String programId) {
         Map<String, String> reasonNames = new HashMap<>();
-        List<Reason> reasons = OpenLMISLibrary.getInstance().getReasonRepository().findReasons(null, null, programId, null);
+        List<Reason> reasons = OpenLMISLibrary.getInstance().getReasonRepository().findReasons(null, programId, null, null);
         for (Reason reason : reasons)
             reasonNames.put(reason.getId(), reason.getStockCardLineItemReason().getName());
         return reasonNames;

@@ -28,6 +28,7 @@ import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditTe
 import java.util.List;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.EDIT_TEXT;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ADJUSTMENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.DEBIT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.ISSUE_REASONS;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.JsonForm.IS_SPINNABLE;
@@ -48,8 +49,8 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
             String programId = jsonObject.optString(PROGRAM_ID);
 
             List<Reason> validReasons = OpenLMISLibrary.getInstance().
-                    getReasonRepository().findReasons(null, null, programId,
-                    DEBIT);
+                    getReasonRepository().findReasons(null, programId, DEBIT,
+                    ADJUSTMENT);
             listOptions = convertReasonsToJsonArray(validReasons);
         } else if (jsonObject.has("list_options")) {
             listOptions = jsonObject.getJSONArray(LIST_OPTIONS);
