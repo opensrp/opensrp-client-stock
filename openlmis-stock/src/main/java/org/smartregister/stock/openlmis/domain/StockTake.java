@@ -27,6 +27,8 @@ public class StockTake implements Comparable<StockTake> {
 
     private boolean valid;
 
+    private boolean displayStatus;
+
 
     public StockTake(String programId, String commodityTypeId, String tradeItemId, String lotId) {
         this.programId = programId;
@@ -113,6 +115,14 @@ public class StockTake implements Comparable<StockTake> {
 
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    public boolean isDisplayStatus() {
+        return displayStatus;
+    }
+
+    public void setDisplayStatus(boolean displayStatus) {
+        this.displayStatus = displayStatus;
     }
 
     @Override

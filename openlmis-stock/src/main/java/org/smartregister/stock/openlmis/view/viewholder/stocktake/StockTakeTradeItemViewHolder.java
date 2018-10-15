@@ -134,7 +134,7 @@ public class StockTakeTradeItemViewHolder extends RecyclerView.ViewHolder implem
         completedStockTake.setVisibility(View.GONE);
         StockTake stockTake = stockTakeSet.iterator().next();
         StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, stockTake.getProgramId(), stockTake.getCommodityTypeId(),
-                stockTake.getTradeItemId(), stockTakeSet, this);
+                stockTake.getTradeItemId(), stockTakeSet, this, stockTake.isDisplayStatus());
         getLotsRecyclerView().setAdapter(adapter);
     }
 

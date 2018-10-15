@@ -41,15 +41,18 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
 
     private Map<String, Integer> stockBalances;
 
+    private boolean displayStatus;
+
 
     public StockTakeLotAdapter(StockTakePresenter stockTakePresenter, String programId,
                                String commodityTypeId, String tradeItemId, Set<StockTake> stockTakeList,
-                               StockTakeListener stockTakeListener) {
+                               StockTakeListener stockTakeListener, boolean displayStatus) {
         this.commodityTypeId = commodityTypeId;
         this.stockTakeList = stockTakeList;
         this.stockTakeListener = stockTakeListener;
         this.programId = programId;
         this.tradeItemId = tradeItemId;
+        this.displayStatus = displayStatus;
         lots = stockTakePresenter.findLotsByTradeItem(tradeItemId);
         adjustReasons = stockTakePresenter.findAdjustReasons();
         stockBalances = stockTakePresenter.findStockBalanceByLots(programId, lots);
@@ -69,6 +72,8 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
     public void onBindViewHolder(@NonNull StockTakeLotViewHolder stockTakeLotViewHolder, int position) {
         stockTakeLotViewHolder.setStockAdjustReasons(adjustReasons);
         stockTakeLotViewHolder.setStockTakeListener(stockTakeListener);
+        if (!displayStatus)
+            stockTakeLotViewHolder.hideVVMStatus();
         Lot lot = lots.get(position);
         int stockOnHand = 0;
         if (stockBalances.containsKey(lot.getId()))
@@ -89,6 +94,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
         }
         if (stockTakeLotViewHolder.getStockTake() == null) {
             StockTake stockTake = new StockTake(programId, commodityTypeId, tradeItemId, lot.getId());
+            stockTake.setDisplayStatus(displayStatus);
             stockTake.setLastUpdated(System.currentTimeMillis());
             stockTakeLotViewHolder.setStockTake(stockTake);
             stockTakeLotViewHolder.setPhysicalCount(stockOnHand);
@@ -107,7 +113,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
             stockTake.setValid(true);
         } else if (stockTake.getQuantity() - stockOnHand < 0 || stockTake.getQuantity() == 0 ||
                 StringUtils.isBlank(stockTake.getReasonId()) ||
-                StringUtils.isBlank(stockTake.getStatus())) {
+                (stockTake.isDisplayStatus() && StringUtils.isBlank(stockTake.getStatus()))) {
             stockTake.setValid(false);
         } else {
             stockTake.setValid(true);

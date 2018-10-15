@@ -17,10 +17,13 @@ public class StockTakeLotViewHolder extends BaseStockTakeViewHolder {
 
     private TextView lotCodeAndExpiryTextView;
 
+    private View vvmStatus;
+
 
     public StockTakeLotViewHolder(@NonNull View itemView) {
         super(itemView);
         lotCodeAndExpiryTextView = itemView.findViewById(R.id.lot_code);
+        vvmStatus = itemView.findViewById(R.id.lot_status);
     }
 
     public void setLot(Lot lot) {
@@ -29,4 +32,7 @@ public class StockTakeLotViewHolder extends BaseStockTakeViewHolder {
         stockTake.setLotId(lot.getId());
     }
 
+    public void hideVVMStatus() {
+        vvmStatus.setVisibility(View.GONE);
+    }
 }

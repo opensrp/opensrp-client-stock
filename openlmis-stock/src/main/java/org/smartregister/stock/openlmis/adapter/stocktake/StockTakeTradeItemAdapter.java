@@ -94,7 +94,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
             stockTakeTradeItemViewHolder.setStockOnHand(0);
         if (!stockTakePresenter.getAdjustedTradeItems().contains(tradeItem.getId())) {
             StockTakeLotAdapter adapter = new StockTakeLotAdapter(stockTakePresenter, programId, commodityTypeId,
-                    tradeItem.getId(), stockTakeSet, stockTakeTradeItemViewHolder);
+                    tradeItem.getId(), stockTakeSet, stockTakeTradeItemViewHolder, tradeItem.isUseVvm());
             stockTakeTradeItemViewHolder.getLotsRecyclerView().setAdapter(adapter);
         } else {
             stockTakeTradeItemViewHolder.setStockTakeSet(stockTakeSet);
@@ -110,7 +110,8 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
         stockTakeTradeItemViewHolder.setTradeItemId(tradeItem.getId());
         stockTakeTradeItemViewHolder.setStockTakePresenter(stockTakePresenter);
         stockTakeTradeItemViewHolder.setDispensingUnit(tradeItem.getDispensable().getKeyDispensingUnit());
-
+        if (!tradeItem.isUseVvm())
+            stockTakeTradeItemViewHolder.hideVVMStatus();
         int stockOnHand = 0;
         if (stockBalances.containsKey(tradeItem.getId()))
             stockOnHand = stockBalances.get(tradeItem.getId());
@@ -135,6 +136,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
                 stockTakeTradeItemViewHolder.stockTakeCompleted();
         } else {
             StockTake stockTake = new StockTake(programId, commodityTypeId, tradeItem.getId(), null);
+            stockTake.setDisplayStatus(tradeItem.isUseVvm());
             stockTake.setLastUpdated(System.currentTimeMillis());
             stockTakeTradeItemViewHolder.setStockTake(stockTake);
             stockTakeTradeItemViewHolder.setPhysicalCount(stockOnHand);

@@ -36,6 +36,8 @@ public class NonLotTradeItemViewHolder extends BaseStockTakeViewHolder implement
 
     private TextView adjustment;
 
+    private View vvmStatus;
+
     public NonLotTradeItemViewHolder(@NonNull View itemView) {
         super(itemView);
         pendingStockTake = itemView.findViewById(R.id.pending_stock_take);
@@ -63,6 +65,7 @@ public class NonLotTradeItemViewHolder extends BaseStockTakeViewHolder implement
                 displayForm();
             }
         });
+        vvmStatus = itemView.findViewById(R.id.lot_status);
 
     }
 
@@ -120,5 +123,9 @@ public class NonLotTradeItemViewHolder extends BaseStockTakeViewHolder implement
     private void displayForm() {
         pendingStockTake.setVisibility(View.VISIBLE);
         completedStockTake.setVisibility(View.GONE);
+    }
+
+    public void hideVVMStatus() {
+        vvmStatus.setVisibility(View.GONE);
     }
 }

@@ -39,6 +39,8 @@ public class StockTakeRepository extends BaseRepository {
 
     private static final String NO_CHANGE = "no_change";
 
+    private static final String DISPLAY_STATUS = "display_status";
+
     private static final String CREATE_STOCK_TAKE_TABLE = "CREATE TABLE " + STOCK_TAKE_TABLE +
             " (" + PROGRAM_ID + " VARCHAR  NOT NULL, " +
             COMMODITY_TYPE_ID + " VARCHAR NOT NULL, " +
@@ -48,6 +50,7 @@ public class StockTakeRepository extends BaseRepository {
             STATUS + " VARCHAR, " +
             VALUE + " INTEGER NOT NULL, " +
             NO_CHANGE + " INTEGER NOT NULL, " +
+            DISPLAY_STATUS + " INTEGER NOT NULL, " +
             LAST_UPDATED + " INTEGER NOT NULL)";
 
     private static final String CREATE_PROGRAM_TRADE_ITEM_INDEX = "CREATE INDEX "
@@ -80,6 +83,7 @@ public class StockTakeRepository extends BaseRepository {
         contentValues.put(VALUE, stockTake.getQuantity());
         contentValues.put(LAST_UPDATED, stockTake.getLastUpdated());
         contentValues.put(NO_CHANGE, stockTake.isNoChange());
+        contentValues.put(DISPLAY_STATUS, stockTake.isDisplayStatus());
         if (exists(stockTake)) {
             if (StringUtils.isBlank(stockTake.getLotId()))
                 getWritableDatabase().update(STOCK_TAKE_TABLE, contentValues, String.format("%s=? AND %s=?",
@@ -239,6 +243,7 @@ public class StockTakeRepository extends BaseRepository {
         stockTake.setQuantity(cursor.getInt(cursor.getColumnIndex(VALUE)));
         stockTake.setLastUpdated(cursor.getLong(cursor.getColumnIndex(LAST_UPDATED)));
         stockTake.setNoChange(cursor.getInt(cursor.getColumnIndex(NO_CHANGE)) > 0);
+        stockTake.setDisplayStatus(cursor.getInt(cursor.getColumnIndex(DISPLAY_STATUS)) > 0);
         return stockTake;
     }
 
