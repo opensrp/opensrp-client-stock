@@ -12,12 +12,14 @@ import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.openlmis.ProgramOrderable;
+import org.smartregister.stock.openlmis.intent.service.ReasonSyncIntentService;
 import org.smartregister.stock.openlmis.repository.openlmis.ProgramOrderableRepository;
 
 import java.text.MessageFormat;
 import java.util.List;
 
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.PREV_SYNC_SERVER_VERSION_PROGRAM_ORDERABLE;
+import static org.smartregister.stock.openlmis.util.ServiceUtils.startService;
 import static org.smartregister.stock.openlmis.util.Utils.BASE_URL;
 import static org.smartregister.stock.openlmis.util.Utils.makeGetRequest;
 import static org.smartregister.util.Log.logError;
@@ -72,7 +74,8 @@ public class ProgramOrderableSyncHelper extends BaseSyncHelper {
 
         // store programOrderables
         Long highestTimeStamp = 0L;
-        List<ProgramOrderable> programOrderables = new Gson().fromJson(jsonPayload, new TypeToken<List<ProgramOrderable>>(){}.getType());
+        List<ProgramOrderable> programOrderables = new Gson().fromJson(jsonPayload, new TypeToken<List<ProgramOrderable>>() {
+        }.getType());
         boolean isEmptyResponse = true;
         for (ProgramOrderable programOrderable : programOrderables) {
             isEmptyResponse = false;
@@ -86,6 +89,7 @@ public class ProgramOrderableSyncHelper extends BaseSyncHelper {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(PREV_SYNC_SERVER_VERSION_PROGRAM_ORDERABLE, highestTimeStamp + 1);
             editor.commit();
+            startService(context, ReasonSyncIntentService.class);
         }
         return isEmptyResponse;
     }

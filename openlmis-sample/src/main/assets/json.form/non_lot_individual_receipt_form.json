@@ -161,12 +161,12 @@
         "is_spinnable": true,
         "list_options": [
           {
-            "key": "VMM1",
-            "text": "VMM1"
+            "key": "VVM1",
+            "text": "VVM1"
           },
           {
-            "key": "VMM2",
-            "text": "VMM2"
+            "key": "VVM2",
+            "text": "VVM2"
           }
         ]
       }

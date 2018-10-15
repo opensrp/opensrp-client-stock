@@ -213,7 +213,7 @@ public abstract class BaseStockTakeViewHolder extends RecyclerView.ViewHolder im
             stockTake.setValid(true);
         } else if (physicalCount < 0 || StringUtils.isBlank(differenceTextView.getText()) ||
                 StringUtils.isBlank(reasonTextView.getText()) ||
-                StringUtils.isBlank(statusTextView.getText())) {
+                (stockTake.isDisplayStatus() && StringUtils.isBlank(statusTextView.getText()))) {
             stockTake.setValid(false);
         } else {
             stockTake.setValid(true);
