@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.smartregister.stock.domain.Stock.loss_adjustment;
+import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ADJUSTMENT;
 
 /**
  * Created by samuelgithengi on 9/20/18.
@@ -76,7 +77,7 @@ public class StockTakeInteractor extends StockListBaseInteractor {
     }
 
     public List<Reason> findAdjustReasons(String programId) {
-        return OpenLMISLibrary.getInstance().getReasonRepository().findReasons(null,  programId, null,null);
+        return OpenLMISLibrary.getInstance().getReasonRepository().findReasons(null, programId, null, ADJUSTMENT);
     }
 
     public Set<StockTake> findStockTakeList(String programId, String tradeItemId) {
