@@ -137,7 +137,7 @@
           "value": "[stock_on_hand]",
           "err": "Cannot Issue more than [stock_on_hand]"
         },
-        "hint": "[dispensing_unit] issued",
+        "hint": "Quantity issued",
         "edit_type": "number",
         "v_numeric_integer": {
           "value": "true",
