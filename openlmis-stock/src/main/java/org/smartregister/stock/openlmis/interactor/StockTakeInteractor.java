@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
@@ -119,6 +120,16 @@ public class StockTakeInteractor extends StockListBaseInteractor {
                 stock.setProgramId(stockTake.getProgramId());
                 stock.setLotId(stockTake.getLotId());
                 stock.setVvmStatus(stockTake.getStatus());
+                stock.setReason(stockTake.getReasonId());
+                stock.setOrderableId(getOrderableId(stockTake.getTradeItemId()));
+                stock.setFacilityId(OpenLMISLibrary.getInstance().getOpenlmisUuid());
+
+
+                AllSharedPreferences sharedPreferences = OpenLMISLibrary.getInstance().getContext().allSharedPreferences();
+                stock.setLocationId(sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchRegisteredANM()));
+                stock.setTeam(sharedPreferences.fetchDefaultTeam(sharedPreferences.fetchRegisteredANM()));
+                stock.setTeamId(sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM()));
+
                 stockRepository.addOrUpdate(stock);
             }
             return stockTakeRepository.deleteStockTake(programId, adjustedTradeItems) == stockTakeSet.size();
@@ -130,5 +141,9 @@ public class StockTakeInteractor extends StockListBaseInteractor {
 
     public List<TradeItem> findTradeItemsWithActiveLotsByTradeItemIds(Set<String> tradeItemIds) {
         return tradeItemRepository.findTradeItemsWithActiveLotsByTradeItemIds(tradeItemIds);
+    }
+
+    public String getOrderableId(String tradeItemId) {
+        return OpenLMISLibrary.getInstance().getOrderableRepository().findOrderableIdByTradeItemId(tradeItemId);
     }
 }

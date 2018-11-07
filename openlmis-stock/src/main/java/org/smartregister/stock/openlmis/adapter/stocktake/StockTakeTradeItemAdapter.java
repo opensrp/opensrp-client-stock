@@ -128,7 +128,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
             stockTakeTradeItemViewHolder.setStockTake(stockTake);
             stockTakeTradeItemViewHolder.setDifference(stockTake.getQuantity());
             stockTakeTradeItemViewHolder.setStatus(stockTake.getStatus());
-            stockTakeTradeItemViewHolder.setReason(stockTake.getReasonId());
+            stockTakeTradeItemViewHolder.setReason(stockTake.getReason());
             stockTakeTradeItemViewHolder.setPhysicalCount(stockOnHand + stockTake.getQuantity());
             stockTakeTradeItemViewHolder.activateNoChange(stockTake.isNoChange());
             stockTakeTradeItemViewHolder.registerStockTake(stockTake);

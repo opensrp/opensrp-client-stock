@@ -19,6 +19,8 @@ public class StockTake implements Comparable<StockTake> {
 
     private int quantity;
 
+    private String reason;
+
     private String reasonId;
 
     private long lastUpdated;
@@ -83,6 +85,14 @@ public class StockTake implements Comparable<StockTake> {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public String getReasonId() {
