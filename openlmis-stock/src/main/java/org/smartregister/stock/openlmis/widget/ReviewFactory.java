@@ -101,6 +101,9 @@ public class ReviewFactory implements FormWidgetFactory {
 
         displayDosesQuantity((OpenLMISJsonFormFragment) formFragment, context, selectedLotDTos, dispensingUnit, netContent);
 
+        if (isStockIssue) {
+            ((TextView) root.findViewById(R.id.facility_label)).setText(R.string.issue_to);
+        }
         return views;
     }
 
