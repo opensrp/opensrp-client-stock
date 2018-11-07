@@ -21,6 +21,7 @@ public class Stock {
     public static final String issued = "issued";
     public static final String received = "received";
     public static final String loss_adjustment = "loss_adjustment";
+    public static final String stock_take = "stock_take";
 
     public Stock(Long id, String transactionType, String providerid, int value, Long dateCreated, String toFrom, String syncStatus, Long dateUpdated, String stockTypeId) {
         this.id = id;

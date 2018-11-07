@@ -21,6 +21,7 @@ import java.util.Locale;
 import static org.smartregister.stock.domain.Stock.issued;
 import static org.smartregister.stock.domain.Stock.loss_adjustment;
 import static org.smartregister.stock.domain.Stock.received;
+import static org.smartregister.stock.domain.Stock.stock_take;
 
 /**
  * Created by samuelgithengi on 8/1/18.
@@ -63,6 +64,11 @@ public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransacti
             holder.getReceivedTextView().setText("");
             holder.getAdjustmentTextView().setText("");
         } else if (stock.getTransactionType().equals(loss_adjustment)) {
+            holder.getAdjustmentTextView().setText(String.valueOf(stock.getValue()));
+            holder.getReceivedTextView().setText("");
+            holder.getIssuedTextView().setText("");
+            holder.getToFromTextView().setText(stockWrapper.getReason());
+        } else if (stock.getTransactionType().equals(stock_take)) {
             holder.getAdjustmentTextView().setText(String.valueOf(stock.getValue()));
             holder.getReceivedTextView().setText("");
             holder.getIssuedTextView().setText("");

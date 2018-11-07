@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.smartregister.stock.domain.Stock.loss_adjustment;
+import static org.smartregister.stock.domain.Stock.stock_take;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ADJUSTMENT;
 
 /**
@@ -110,7 +111,7 @@ public class StockTakeInteractor extends StockListBaseInteractor {
         try {
             Set<StockTake> stockTakeSet = stockTakeRepository.getStockTakeListByTradeItemIds(programId, adjustedTradeItems);
             for (StockTake stockTake : stockTakeSet) {
-                Stock stock = new Stock(null, loss_adjustment,
+                Stock stock = new Stock(null, stock_take,
                         provider, stockTake.isNoChange() ? 0 : stockTake.getQuantity(),
                         stockTake.getLastUpdated(),
                         stockTake.isNoChange() ? context.getString(R.string.physical_inventory) : stockTake.getReasonId(),
