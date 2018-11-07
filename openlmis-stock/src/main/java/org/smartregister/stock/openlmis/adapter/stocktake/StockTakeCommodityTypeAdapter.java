@@ -36,7 +36,7 @@ public class StockTakeCommodityTypeAdapter extends RecyclerView.Adapter<StockTak
         this.stockTakePresenter = stockTakePresenter;
         this.programId = programId;
         programIds = stockTakePresenter.searchIdsByPrograms(programId);
-        this.commodityTypeList = stockTakePresenter.findCommodityTypesWithActiveLots(programIds.keySet());
+        this.commodityTypeList = stockTakePresenter.findActiveCommodityTypes(programIds.keySet());
         stockTakePresenter.iniatializePresenter(programId, programIds.keySet());
     }
 
@@ -50,7 +50,7 @@ public class StockTakeCommodityTypeAdapter extends RecyclerView.Adapter<StockTak
         } else {
             searchedIds = stockTakePresenter.filterValidPrograms(programIds,
                     stockTakePresenter.searchIds(searchPhrase));
-            commodityTypeList = stockTakePresenter.findCommodityTypesWithActiveLots(searchedIds.keySet());
+            commodityTypeList = stockTakePresenter.findActiveCommodityTypes(searchedIds.keySet());
             notifyDataSetChanged();
         }
     }
