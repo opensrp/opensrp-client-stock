@@ -69,12 +69,16 @@ public class StockTakeInteractor extends StockListBaseInteractor {
         return lotRepository.findLotsByTradeItem(tradeItemId);
     }
 
-    public List<CommodityType> findCommodityTypesWithActiveLots(Set<String> commodityTypeIds) {
-        return commodityTypeRepository.findCommodityTypesWithActiveLotsByIds(commodityTypeIds);
+    public List<CommodityType> findActiveCommodityTypes(Set<String> commodityTypeIds) {
+        List<CommodityType> commodityTypes = commodityTypeRepository.findCommodityTypesWithActiveLotsByIds(commodityTypeIds);
+        commodityTypes.addAll(commodityTypeRepository.findActiveCommodityTypesWithoutLotsByIds(commodityTypeIds));
+        return commodityTypes;
     }
 
-    public List<TradeItem> findTradeItemsActiveLots(String commodityTypeId) {
-        return tradeItemRepository.findTradeItemsWithActiveLotsByCommodityType(commodityTypeId);
+    public List<TradeItem> findActiveTradeItems(String commodityTypeId) {
+        List<TradeItem> tradeItems = tradeItemRepository.findTradeItemsWithActiveLotsByCommodityType(commodityTypeId);
+        tradeItems.addAll(tradeItemRepository.findActiveTradeItemsWithoutLotsByCommodityType(commodityTypeId));
+        return tradeItems;
     }
 
     public List<Reason> findAdjustReasons(String programId) {

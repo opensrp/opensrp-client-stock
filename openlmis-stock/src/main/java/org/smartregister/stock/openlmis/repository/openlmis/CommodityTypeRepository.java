@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static org.smartregister.stock.openlmis.repository.TradeItemRepository.COMMODITY_TYPE_ID;
+import static org.smartregister.stock.openlmis.repository.TradeItemRepository.HAS_LOTS;
 import static org.smartregister.stock.openlmis.repository.TradeItemRepository.TRADE_ITEM_TABLE;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.EXPIRATION_DATE;
 import static org.smartregister.stock.openlmis.repository.openlmis.LotRepository.LOT_TABLE;
@@ -147,6 +149,34 @@ public class CommodityTypeRepository extends BaseRepository {
         return commodityTypes;
     }
 
+    public List<CommodityType> findActiveCommodityTypesWithoutLotsByIds(Set<String> commodityTypeIds) {
+        List<CommodityType> commodityTypes = new ArrayList<>();
+
+        if (commodityTypeIds == null)
+            return commodityTypes;
+
+        commodityTypeIds.remove(null);
+        if (commodityTypeIds.isEmpty())
+            return commodityTypes;
+        int len = commodityTypeIds.size();
+        Cursor cursor = null;
+        try {
+            String query = String.format("SELECT DISTINCT c.* FROM %s c JOIN %s t on c.%s = t.%s " +
+                            " WHERE c.%s IN (%s) AND t.%s = 0",
+                    COMMODITY_TYPE_TABLE, TRADE_ITEM_TABLE, ID, COMMODITY_TYPE_ID,
+                    ID, TextUtils.join(",", Collections.nCopies(len, "?")), HAS_LOTS);
+            cursor = getReadableDatabase().rawQuery(query, commodityTypeIds.toArray(new String[len]));
+            commodityTypes = readCommodityTypes(cursor);
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return commodityTypes;
+    }
+
     public List<CommodityType> findCommodityTypesWithActiveLotsByIds(Set<String> commodityTypeIds) {
         List<CommodityType> commodityTypes = new ArrayList<>();
         if (commodityTypeIds == null)
@@ -158,10 +188,10 @@ public class CommodityTypeRepository extends BaseRepository {
         Cursor cursor = null;
         try {
             String query = String.format("SELECT DISTINCT c.* FROM %s c JOIN  %s t on c.%s=t.%s JOIN %s l on l.%s=t.%s" +
-                            " WHERE %s IN (%s) AND l.%s >= ?",
+                            " WHERE %s IN (%s) AND l.%s >= ? AND %s =1",
                     COMMODITY_TYPE_TABLE, TRADE_ITEM_TABLE, ID, TradeItemRepository.COMMODITY_TYPE_ID,
                     LOT_TABLE, LotRepository.TRADE_ITEM_ID, TradeItemRepository.ID, ID,
-                    TextUtils.join(",", Collections.nCopies(len, "?")), EXPIRATION_DATE);
+                    TextUtils.join(",", Collections.nCopies(len, "?")), EXPIRATION_DATE, HAS_LOTS);
             String[] params = commodityTypeIds.toArray(new String[len + 1]);
             params[len] = String.valueOf(new LocalDate().toDate().getTime());
             cursor = getReadableDatabase().rawQuery(query, params);

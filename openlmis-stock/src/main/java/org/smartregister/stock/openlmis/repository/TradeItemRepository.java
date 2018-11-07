@@ -51,7 +51,7 @@ public class TradeItemRepository extends BaseRepository {
 
     private static final String USE_VVM = "use_vvm";
 
-    private static final String HAS_LOTS = "has_lots";
+    public static final String HAS_LOTS = "has_lots";
 
     private static final String CREATE_TRADE_ITEM_TABLE = "CREATE TABLE " + TRADE_ITEM_TABLE +
             "(" + ID + " VARCHAR NOT NULL PRIMARY KEY," +
@@ -191,13 +191,37 @@ public class TradeItemRepository extends BaseRepository {
             return new ArrayList<>();
         }
         String query = String.format("SELECT DISTINCT t.* FROM %s t JOIN %s l on t.%s=l.%s" +
-                        " WHERE t.%s = ? AND l.%s >=?",
-                TRADE_ITEM_TABLE, LOT_TABLE, ID, TRADE_ITEM_ID, COMMODITY_TYPE_ID, EXPIRATION_DATE);
+                        " WHERE t.%s = ? AND l.%s >=? AND %s=1",
+                TRADE_ITEM_TABLE, LOT_TABLE, ID, TRADE_ITEM_ID, COMMODITY_TYPE_ID, EXPIRATION_DATE, HAS_LOTS);
         Cursor cursor = null;
         List<TradeItem> tradeItems = new ArrayList<>();
         try {
             cursor = getReadableDatabase().rawQuery(query, new String[]{commodityTypeId
                     , String.valueOf(new LocalDate().toDate().getTime())});
+            while (cursor.moveToNext()) {
+                tradeItems.add(createTradeItem(cursor));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return tradeItems;
+    }
+
+    public List<TradeItem> findActiveTradeItemsWithoutLotsByCommodityType(String commodityTypeId) {
+        if (commodityTypeId == null) {
+            return new ArrayList<>();
+        }
+        String query = String.format("SELECT DISTINCT t.* FROM %s t " +
+                        " WHERE t.%s = ? AND t.%s =0 ",
+                TRADE_ITEM_TABLE, COMMODITY_TYPE_ID, HAS_LOTS);
+        Cursor cursor = null;
+        List<TradeItem> tradeItems = new ArrayList<>();
+        try {
+            cursor = getReadableDatabase().rawQuery(query, new String[]{commodityTypeId});
             while (cursor.moveToNext()) {
                 tradeItems.add(createTradeItem(cursor));
             }
@@ -244,10 +268,10 @@ public class TradeItemRepository extends BaseRepository {
             return 0;
         }
         int len = commodityTypeIds.size();
-        String query = String.format("SELECT COUNT(DISTINCT t.%s) FROM %s t JOIN %s l on t.%s=l.%s" +
-                        " WHERE t.%s  IN (%s) AND l.%s >=?",
+        String query = String.format("SELECT COUNT(DISTINCT t.%s) FROM %s t LEFT JOIN %s l on t.%s=l.%s" +
+                        " WHERE t.%s  IN (%s) AND ( t.%s = 0 OR l.%s >=? )",
                 ID, TRADE_ITEM_TABLE, LOT_TABLE, ID, TRADE_ITEM_ID, COMMODITY_TYPE_ID,
-                TextUtils.join(",", Collections.nCopies(len, "?")), EXPIRATION_DATE);
+                TextUtils.join(",", Collections.nCopies(len, "?")), HAS_LOTS, EXPIRATION_DATE);
         Cursor cursor = null;
         try {
             String[] params = commodityTypeIds.toArray(new String[len + 1]);
