@@ -119,7 +119,11 @@ public abstract class BaseStockTakeViewHolder extends RecyclerView.ViewHolder im
 
     public void setReason(String reason) {
         reasonTextView.setText(reason);
-        stockTake.setReasonId(reason);
+        stockTake.setReason(reason);
+    }
+
+    private void setReasonId(String reasonId) {
+        stockTake.setReasonId(reasonId);
     }
 
     private void displayDifferenceAndReason() {
@@ -151,12 +155,15 @@ public abstract class BaseStockTakeViewHolder extends RecyclerView.ViewHolder im
     private void showReasonsDropdown() {
         PopupMenu popupMenu = new PopupMenu(context, reasonTextView);
         for (Reason reason : stockAdjustReasons) {
-            popupMenu.getMenu().add(reason.getStockCardLineItemReason().getName());
+            MenuItem menuItem = popupMenu.getMenu().add(reason.getStockCardLineItemReason().getName());
+            menuItem.setActionView(new View(context));
+            menuItem.getActionView().setTag(R.id.reason_id, reason.getStockCardLineItemReason().getId());
         }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 setReason(item.getTitle().toString());
+                setReasonId(item.getActionView().getTag(R.id.reason_id).toString());
                 validateData();
                 return true;
             }

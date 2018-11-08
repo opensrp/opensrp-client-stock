@@ -84,7 +84,7 @@ public class StockTakeLotAdapter extends RecyclerView.Adapter<StockTakeLotViewHo
                 stockTakeLotViewHolder.setStockTake(stockTake);
                 stockTakeLotViewHolder.setDifference(stockTake.getQuantity());
                 stockTakeLotViewHolder.setStatus(stockTake.getStatus());
-                stockTakeLotViewHolder.setReason(stockTake.getReasonId());
+                stockTakeLotViewHolder.setReason(stockTake.getReason());
                 stockTakeLotViewHolder.setPhysicalCount(stockOnHand + stockTake.getQuantity());
                 stockTakeLotViewHolder.activateNoChange(stockTake.isNoChange());
                 validateStockTake(stockOnHand, stockTake);

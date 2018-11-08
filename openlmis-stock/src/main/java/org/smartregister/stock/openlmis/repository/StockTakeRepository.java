@@ -41,11 +41,14 @@ public class StockTakeRepository extends BaseRepository {
 
     private static final String DISPLAY_STATUS = "display_status";
 
+    private static final String REASON_ID = "reason_id";
+
     private static final String CREATE_STOCK_TAKE_TABLE = "CREATE TABLE " + STOCK_TAKE_TABLE +
             " (" + PROGRAM_ID + " VARCHAR  NOT NULL, " +
             COMMODITY_TYPE_ID + " VARCHAR NOT NULL, " +
             TRADE_ITEM_ID + " VARCHAR NOT NULL, " +
             LOT_ID + " VARCHAR  NULL, " +
+            REASON_ID + " VARCHAR, " +
             REASON + " VARCHAR, " +
             STATUS + " VARCHAR, " +
             VALUE + " INTEGER NOT NULL, " +
@@ -78,7 +81,8 @@ public class StockTakeRepository extends BaseRepository {
         contentValues.put(COMMODITY_TYPE_ID, stockTake.getCommodityTypeId());
         contentValues.put(TRADE_ITEM_ID, stockTake.getTradeItemId());
         contentValues.put(LOT_ID, stockTake.getLotId());
-        contentValues.put(REASON, stockTake.getReasonId());
+        contentValues.put(REASON, stockTake.getReason());
+        contentValues.put(REASON_ID, stockTake.getReasonId());
         contentValues.put(STATUS, stockTake.getStatus());
         contentValues.put(VALUE, stockTake.getQuantity());
         contentValues.put(LAST_UPDATED, stockTake.getLastUpdated());
@@ -239,7 +243,8 @@ public class StockTakeRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
                 cursor.getString(cursor.getColumnIndex(LOT_ID)));
         stockTake.setStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
-        stockTake.setReasonId(cursor.getString(cursor.getColumnIndex(REASON)));
+        stockTake.setReasonId(cursor.getString(cursor.getColumnIndex(REASON_ID)));
+        stockTake.setReason(cursor.getString(cursor.getColumnIndex(REASON)));
         stockTake.setQuantity(cursor.getInt(cursor.getColumnIndex(VALUE)));
         stockTake.setLastUpdated(cursor.getLong(cursor.getColumnIndex(LAST_UPDATED)));
         stockTake.setNoChange(cursor.getInt(cursor.getColumnIndex(NO_CHANGE)) > 0);
