@@ -72,7 +72,6 @@ public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransacti
             holder.getAdjustmentTextView().setText(String.valueOf(stock.getValue()));
             holder.getReceivedTextView().setText("");
             holder.getIssuedTextView().setText("");
-            holder.getToFromTextView().setText(stockWrapper.getReason());
             holder.getToFromTextView().setText(R.string.stock_take);
         }
 
