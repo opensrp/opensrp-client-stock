@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.Stock;
 import org.smartregister.stock.openlmis.dto.TradeItemDto;
@@ -66,7 +67,11 @@ public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransacti
             holder.getAdjustmentTextView().setText(String.valueOf(stock.getValue()));
             holder.getReceivedTextView().setText("");
             holder.getIssuedTextView().setText("");
-            holder.getToFromTextView().setText(stockWrapper.getReason());
+            if (StringUtils.isNotBlank(stockWrapper.getReason())) {
+                holder.getToFromTextView().setText(stockWrapper.getReason());
+            } else {
+                holder.getToFromTextView().setText(stockWrapper.getStock().getToFrom());
+            }
         }
 
         if (!hasLots)
