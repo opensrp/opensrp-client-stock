@@ -71,12 +71,12 @@ public class StockTakePresenter extends StockListBasePresenter {
     }
 
 
-    public List<CommodityType> findCommodityTypesWithActiveLots(Set<String> commodityTypeIds) {
-        return stockTakeInteractor.findCommodityTypesWithActiveLots(commodityTypeIds);
+    public List<CommodityType> findActiveCommodityTypes(Set<String> commodityTypeIds) {
+        return stockTakeInteractor.findActiveCommodityTypes(commodityTypeIds);
     }
 
-    public List<TradeItem> findTradeItemsWithActiveLots(String commodityTypeId) {
-        return stockTakeInteractor.findTradeItemsActiveLots(commodityTypeId);
+    public List<TradeItem> findActiveTradeItems(String commodityTypeId) {
+        return stockTakeInteractor.findActiveTradeItems(commodityTypeId);
     }
 
     public List<Reason> findAdjustReasons() {

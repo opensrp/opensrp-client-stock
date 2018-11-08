@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/review_margin"
         android:paddingStart="@dimen/default_left_margin"
-        android:text="@string/issue_to"
+        android:text="@string/received_from"
         android:textColor="@color/stock_list_light_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@id/facility"

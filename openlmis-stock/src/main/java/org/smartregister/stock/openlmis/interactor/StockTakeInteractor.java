@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.smartregister.stock.domain.Stock.loss_adjustment;
+import static org.smartregister.stock.domain.Stock.stock_take;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ADJUSTMENT;
 
 /**
@@ -69,12 +70,16 @@ public class StockTakeInteractor extends StockListBaseInteractor {
         return lotRepository.findLotsByTradeItem(tradeItemId);
     }
 
-    public List<CommodityType> findCommodityTypesWithActiveLots(Set<String> commodityTypeIds) {
-        return commodityTypeRepository.findCommodityTypesWithActiveLotsByIds(commodityTypeIds);
+    public List<CommodityType> findActiveCommodityTypes(Set<String> commodityTypeIds) {
+        List<CommodityType> commodityTypes = commodityTypeRepository.findCommodityTypesWithActiveLotsByIds(commodityTypeIds);
+        commodityTypes.addAll(commodityTypeRepository.findActiveCommodityTypesWithoutLotsByIds(commodityTypeIds));
+        return commodityTypes;
     }
 
-    public List<TradeItem> findTradeItemsActiveLots(String commodityTypeId) {
-        return tradeItemRepository.findTradeItemsWithActiveLotsByCommodityType(commodityTypeId);
+    public List<TradeItem> findActiveTradeItems(String commodityTypeId) {
+        List<TradeItem> tradeItems = tradeItemRepository.findTradeItemsWithActiveLotsByCommodityType(commodityTypeId);
+        tradeItems.addAll(tradeItemRepository.findActiveTradeItemsWithoutLotsByCommodityType(commodityTypeId));
+        return tradeItems;
     }
 
     public List<Reason> findAdjustReasons(String programId) {
@@ -111,7 +116,7 @@ public class StockTakeInteractor extends StockListBaseInteractor {
         try {
             Set<StockTake> stockTakeSet = stockTakeRepository.getStockTakeListByTradeItemIds(programId, adjustedTradeItems);
             for (StockTake stockTake : stockTakeSet) {
-                Stock stock = new Stock(null, loss_adjustment,
+                Stock stock = new Stock(null, stock_take,
                         provider, stockTake.isNoChange() ? 0 : stockTake.getQuantity(),
                         stockTake.getLastUpdated(),
                         stockTake.isNoChange() ? context.getString(R.string.physical_inventory) : stockTake.getReasonId(),

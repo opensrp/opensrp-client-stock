@@ -41,7 +41,7 @@ public class StockTakeTradeItemAdapter extends RecyclerView.Adapter<RecyclerView
         this.programId = programId;
         this.commodityTypeId = commodityTypeId;
         if (tradeItemIds == null)
-            tradeItems = stockTakePresenter.findTradeItemsWithActiveLots(commodityTypeId);
+            tradeItems = stockTakePresenter.findActiveTradeItems(commodityTypeId);
         else
             tradeItems = stockTakePresenter.findTradeItemsWithActiveLotsByTradeItemIds(tradeItemIds);
         stockBalances = stockTakePresenter.findStockBalanceByTradeItemIds(programId, tradeItems);
