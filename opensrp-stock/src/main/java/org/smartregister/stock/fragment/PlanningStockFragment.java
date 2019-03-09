@@ -129,8 +129,6 @@ public class PlanningStockFragment extends Fragment {
         graph.getViewport().setMinX(now.minusMonths(3).toDate().getTime());
         graph.getViewport().setMaxX(now.toDate().getTime());
         graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(0.0);
         graph.getGridLabelRenderer().setHumanRounding(false);
     }
 
@@ -301,6 +299,7 @@ public class PlanningStockFragment extends Fragment {
         series.setColor(getResources().getColor(R.color.bluetext));
         graph.addSeries(series);
         graph.getViewport().setYAxisBoundsManual(true);
+        graph.getGridLabelRenderer().setHumanRounding(true);
         graph.getViewport().setMaxY(series.getHighestValueY());
         return series;
 
