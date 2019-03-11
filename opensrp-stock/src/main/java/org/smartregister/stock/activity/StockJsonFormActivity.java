@@ -344,7 +344,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     }
                     refreshVialsBalance(vaccineName, existingbalance);
                     if (value != null && !StringUtils.isBlank(value) && StringUtils.isNumeric(value) && StringUtils.isNumeric(wastedvials)) {
-                        newBalance = existingbalance - Integer.parseInt(value) - Integer.parseInt(wastedvials);
+
+                        int vialsIssued = Integer.parseInt(value);
+                        if(existingbalance >= vialsIssued)
+                            newBalance = existingbalance - vialsIssued - Integer.parseInt(wastedvials);
+                        else {
+                            balancetextview.setText(String.valueOf(0));
+                            balancetextview.setError("Enter a value not greater than "+vaccineName+" vials available");
+                        }
                         refreshVialsBalance(vaccineName, newBalance);
 
                     } else {
