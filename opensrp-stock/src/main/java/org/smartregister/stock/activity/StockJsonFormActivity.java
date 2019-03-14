@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.activities.JsonFormActivity;
@@ -191,15 +192,15 @@ public class StockJsonFormActivity extends JsonFormActivity {
                 int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccineName);
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Date_Stock_Issued") && value != null && !value.equalsIgnoreCase("")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
-                        for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText &&
+
+                    ArrayList<View> views = getFormDataViews();
+                    for (int i = 0; i < views.size(); i++) {
+                        if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
-                                balancetextview = (MaterialEditText) views.get(i);
-                            }
+                            balancetextview = (MaterialEditText) views.get(i);
                         }
                     }
+
                     String label = "";
                     int currentBalance = 0;
                     int newBalance = 0;
@@ -295,15 +296,15 @@ public class StockJsonFormActivity extends JsonFormActivity {
             if (object.getString("title").contains("Stock Issued")) {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Vials_Issued")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
-                        for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText &&
+
+                    ArrayList<View> views = getFormDataViews();
+                    for (int i = 0; i < views.size(); i++) {
+                        if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
                                 balancetextview = (MaterialEditText) views.get(i);
-                            }
                         }
                     }
+
                     String label = "";
                     int currentBalanceVaccineUsed = 0;
                     int newBalance = 0;
@@ -344,7 +345,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     }
                     refreshVialsBalance(vaccineName, existingbalance);
                     if (value != null && !StringUtils.isBlank(value) && StringUtils.isNumeric(value) && StringUtils.isNumeric(wastedvials)) {
-                        newBalance = existingbalance - Integer.parseInt(value) - Integer.parseInt(wastedvials);
+
+                        int vialsIssued = Integer.parseInt(value);
+                        if(existingbalance >= vialsIssued)
+                            newBalance = existingbalance - vialsIssued - Integer.parseInt(wastedvials);
+                        else {
+                            showNegativeBalanceError(balancetextview,vaccineName,"0");
+                            return;
+                        }
                         refreshVialsBalance(vaccineName, newBalance);
 
                     } else {
@@ -392,14 +400,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
             if (object.getString("title").contains("Stock Issued")) {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Vials_Wasted")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
-                        for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText && ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
-                                balancetextview = (MaterialEditText) views.get(i);
-                            }
+
+                    ArrayList<View> views = getFormDataViews();
+                    for (int i = 0; i < views.size(); i++) {
+                        if (views.get(i) instanceof MaterialEditText && ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Wasted")) {
+                            balancetextview = (MaterialEditText) views.get(i);
                         }
                     }
+
                     String label = "";
                     int currentBalanceVaccineUsed = 0;
                     int newBalance = 0;
@@ -455,8 +463,15 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalanceVaccineUsed != 0) {
                         vialsused = (currentBalanceVaccineUsed / dosesPerVial) + 1;
                     }
-                    displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, Integer.parseInt(wastedvials));
-                    refreshDosesWasted(balancetextview, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
+
+                    int wastedVial = Integer.parseInt(wastedvials);
+                    if(!(existingbalance >= wastedVial)) {
+                        showNegativeBalanceError(balancetextview, vaccineName, "0");
+                        return;
+                    }
+
+                    displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, wastedVial);
+                    refreshDosesWasted(balancetextview, currentBalanceVaccineUsed, wastedVial, dosesPerVial);
                 }
             }
         } catch (JSONException e) {
@@ -633,15 +648,15 @@ public class StockJsonFormActivity extends JsonFormActivity {
         try {
             if (object.getString("title").contains("Stock Loss/Adjustment")) {
                 if (key.equalsIgnoreCase("Vials_Adjustment") && value != null && !value.equalsIgnoreCase("")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
-                        for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText &&
+
+                    ArrayList<View> views = getFormDataViews();
+                    for (int i = 0; i < views.size(); i++) {
+                        if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {
                                 balancetextview = (MaterialEditText) views.get(i);
-                            }
                         }
                     }
+
                     String label = "";
                     int currentBalance = 0;
                     int displaybalance = 0;
@@ -664,9 +679,12 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                 currentBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                             }
                             if (StringUtils.isNotBlank(value) && !value.equalsIgnoreCase("-") && NumberUtils.isNumber(value)) {
-                                displaybalance = currentBalance + Integer.parseInt(value);
+                                int adjustValue = Integer.parseInt(value);
+                                displaybalance = currentBalance + adjustValue;
                                 if (balancetextview != null && displaybalance < 0) {
                                     balancetextview.addValidator(negativeBalanceValidator);
+                                    showNegativeBalanceError(balancetextview, vaccineName,""+(adjustValue + 1));
+                                    return;
                                 } else if (balancetextview != null && displaybalance >= 0)
                                     balancetextview.getValidators().remove(negativeBalanceValidator);
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
@@ -694,5 +712,11 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
     public void addLabel(View view) {
         labels.add(view);
+    }
+
+    private void showNegativeBalanceError(EditText view, String vaccineName, @NonNull String defaultValue){
+
+        view.setText(defaultValue);
+        view.setError(vaccineName+" vials balance cannot be less than 0");
     }
 }
