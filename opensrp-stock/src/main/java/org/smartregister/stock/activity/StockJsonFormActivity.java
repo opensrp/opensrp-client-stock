@@ -192,15 +192,15 @@ public class StockJsonFormActivity extends JsonFormActivity {
                 int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccineName);
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Date_Stock_Issued") && value != null && !value.equalsIgnoreCase("")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
-                        for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText &&
+
+                    ArrayList<View> views = getFormDataViews();
+                    for (int i = 0; i < views.size(); i++) {
+                        if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
-                                balancetextview = (MaterialEditText) views.get(i);
-                            }
+                            balancetextview = (MaterialEditText) views.get(i);
                         }
                     }
+
                     String label = "";
                     int currentBalance = 0;
                     int newBalance = 0;
@@ -296,15 +296,15 @@ public class StockJsonFormActivity extends JsonFormActivity {
             if (object.getString("title").contains("Stock Issued")) {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Vials_Issued")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
-                        for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText &&
+
+                    ArrayList<View> views = getFormDataViews();
+                    for (int i = 0; i < views.size(); i++) {
+                        if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
                                 balancetextview = (MaterialEditText) views.get(i);
-                            }
                         }
                     }
+
                     String label = "";
                     int currentBalanceVaccineUsed = 0;
                     int newBalance = 0;
@@ -648,15 +648,15 @@ public class StockJsonFormActivity extends JsonFormActivity {
         try {
             if (object.getString("title").contains("Stock Loss/Adjustment")) {
                 if (key.equalsIgnoreCase("Vials_Adjustment") && value != null && !value.equalsIgnoreCase("")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
-                        for (int i = 0; i < views.size(); i++) {
-                            if (views.get(i) instanceof MaterialEditText &&
+
+                    ArrayList<View> views = getFormDataViews();
+                    for (int i = 0; i < views.size(); i++) {
+                        if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {
                                 balancetextview = (MaterialEditText) views.get(i);
-                            }
                         }
                     }
+
                     String label = "";
                     int currentBalance = 0;
                     int displaybalance = 0;

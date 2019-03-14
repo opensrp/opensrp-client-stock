@@ -258,7 +258,7 @@ public class CurrentStock extends Fragment implements
     }
 
     private void returnfromform() {
-        ((StockControlActivity) getActivity()).planningStockFragment.loatDataView(((StockControlActivity) getActivity()).planningStockFragment.mainview);
+        ((StockControlActivity) getActivity()).planningStockFragment.loadDataView(((StockControlActivity) getActivity()).planningStockFragment.mainview);
     }
 
     @Override

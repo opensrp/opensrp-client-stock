@@ -87,7 +87,7 @@ public class PlanningStockFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_planning__stock_fragment, container, false);
         mainview = view;
 //        creatgraphview(mainview);
-        loatDataView(mainview);
+        loadDataView(mainview);
         return view;
     }
 
@@ -132,7 +132,7 @@ public class PlanningStockFragment extends Fragment {
         graph.getGridLabelRenderer().setHumanRounding(false);
     }
 
-    public void loatDataView(View view) {
+    public void loadDataView(View view) {
         createTitle(view);
         createActiveChildrenStatsView(view);
         creatgraphview(view);
@@ -301,6 +301,7 @@ public class PlanningStockFragment extends Fragment {
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getGridLabelRenderer().setHumanRounding(true);
         graph.getViewport().setMaxY(series.getHighestValueY());
+        graph.getViewport().setMinY(0);
         return series;
 
     }
