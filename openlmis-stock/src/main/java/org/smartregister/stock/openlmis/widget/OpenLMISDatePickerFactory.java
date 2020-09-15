@@ -37,9 +37,7 @@ public class OpenLMISDatePickerFactory extends DatePickerFactory {
                 String openMrsEntityParent = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent);
                 String openMrsEntity = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity);
                 String openMrsEntityId = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id);
-                formFragment.writeValue(stepName, key, s.toString(), openMrsEntityParent,
-                        openMrsEntity, openMrsEntityId);
-
+                formFragment.writeValue(stepName, key, s.toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
             }
 
             @Override

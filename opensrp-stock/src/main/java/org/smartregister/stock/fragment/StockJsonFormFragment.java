@@ -41,8 +41,8 @@ public class StockJsonFormFragment extends JsonFormFragment {
 
         Iterator iterator = views.iterator();
 
-        while(iterator.hasNext()) {
-            View view = (View)iterator.next();
+        while (iterator.hasNext()) {
+            View view = (View) iterator.next();
             getMainView().addView(view);
 
             // Make sure this TextView is not part of another widget -
@@ -54,7 +54,7 @@ public class StockJsonFormFragment extends JsonFormFragment {
             }
         }
 
-        getJsonApi().refreshHiddenViews();
+        getJsonApi().refreshHiddenViews(false);
         getJsonApi().resetFocus();
     }
 

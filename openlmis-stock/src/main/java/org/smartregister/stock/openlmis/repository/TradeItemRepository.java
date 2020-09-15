@@ -70,7 +70,7 @@ public class TradeItemRepository extends BaseRepository {
             + TRADE_ITEM_TABLE + "(" + COMMODITY_TYPE_ID + "," + ID + ")";
 
     public TradeItemRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

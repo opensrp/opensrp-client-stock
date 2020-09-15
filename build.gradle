@@ -1,28 +1,31 @@
 buildscript {
+    repositories {
+        google()
+        jcenter()
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
 
     dependencies {
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
+        classpath 'org.smartregister:gradle-jarjar-plugin:1.0.0-SNAPSHOT'
+        classpath 'com.android.tools.build:gradle:4.0.1'
     }
-
-    apply plugin: 'jacoco'
-    apply plugin: 'java'
-
-    jacoco {
-        toolVersion = '0.8.0'
-    }
-
 }
+
 plugins {
+    id 'java'
     id "com.github.kt3k.coveralls" version "2.8.1"
+    id 'jacoco'
 }
 
-repositories {
-    mavenCentral()
+jacoco {
+    toolVersion = '0.8.0'
 }
 
 configure(allprojects) { project ->
     buildscript {
-
         version = VERSION_NAME
         group = GROUP
 
@@ -30,6 +33,7 @@ configure(allprojects) { project ->
             jcenter()
             mavenCentral()
             maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+            maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
             mavenLocal()
             google()
         }
@@ -63,14 +67,14 @@ subprojects { prj ->
 
     group = 'org.smartregister'
 
-    ext.androidToolsBuildGradle = '21.1.2'
-    ext.androidBuildToolsVersion = '27.0.3'
-    ext.androidMinSdkVersion = 16
-    ext.androidCompileSdkVersion = 27
-    ext.androidTargetSdkVersion = 27
+    ext.androidToolsBuildGradle = '4.0.1'
+    ext.androidBuildToolsVersion = '29.0.2'
+    ext.androidMinSdkVersion = 18
+    ext.androidCompileSdkVersion = 29
+    ext.androidTargetSdkVersion = 29
 
-    ext.androidAnnotationsVersion = '3.0.1';
-    ext.androidAnnotationsAPIVersion = '3.0.1';
+    ext.androidAnnotationsVersion = '3.0.1'
+    ext.androidAnnotationsAPIVersion = '3.0.1'
 
     repositories {
         jcenter()
@@ -79,7 +83,7 @@ subprojects { prj ->
         maven { url "http://nexus.motechproject.org/content/repositories/drishti" }
         maven { url "http://nexus.motechproject.org/content/repositories/snapshots" }
         maven { url "http://acra.googlecode.com/svn/repository/releases" }
-        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url "https://repo.maven.apache.org/maven2" }
         mavenLocal()
         google()
     }
@@ -117,12 +121,12 @@ subprojects { prj ->
             def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
             def mainSrc = "$project.projectDir/src/main/java"
 
-            sourceDirectories = files([mainSrc])
-            classDirectories = files([debugTree])
+            sourceDirectories.setFrom(files([mainSrc]))
+            classDirectories.setFrom(files([debugTree]))
 
-            executionData = fileTree(dir: project.buildDir, includes: [
+            executionData.setFrom(fileTree(dir: project.buildDir, includes: [
                     'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
-            ])
+            ]))
         }
 
     }
@@ -137,9 +141,9 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
     description = 'Generates an aggregate report from all subprojects'
     dependsOn publishedProjects.jacocoTestReport
 
-    sourceDirectories = files(publishedProjects.jacocoTestReport.sourceDirectories)
-    classDirectories = files(publishedProjects.jacocoTestReport.classDirectories)
-    executionData = files(publishedProjects.jacocoTestReport.executionData)
+    sourceDirectories.setFrom(files(publishedProjects.jacocoTestReport.sourceDirectories))
+    classDirectories.setFrom(files(publishedProjects.jacocoTestReport.classDirectories))
+    executionData.setFrom(files(publishedProjects.jacocoTestReport.executionData))
 
     getReports().getXml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"))
     getReports().getHtml().setDestination(file("${buildDir}/reports/jacoco/jacocoRootReport/html"))
@@ -161,7 +165,7 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
 }
 
 coveralls {
-    for (int i = 0; i  <   publishedProjects.jacocoTestReport.sourceDirectories.size() ; i++) {
+    for (int i = 0; i < publishedProjects.jacocoTestReport.sourceDirectories.size(); i++) {
         sourceDirs.add(publishedProjects.jacocoTestReport.sourceDirectories.get(i).getAsPath())
     }
 

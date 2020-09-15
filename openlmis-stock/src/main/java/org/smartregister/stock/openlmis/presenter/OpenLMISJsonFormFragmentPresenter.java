@@ -5,7 +5,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
-import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
@@ -41,16 +40,24 @@ public class OpenLMISJsonFormFragmentPresenter extends JsonFormFragmentPresenter
     }
 
     @Override
-    public void onNextClick(LinearLayout mainView) {
-        ValidationStatus validationStatus = this.writeValuesAndValidate(mainView);
-        if (validationStatus.isValid()) {
-            JsonFormFragment next = OpenLMISJsonFormFragment.getFormFragment(mStepDetails.optString("next"));
-            getView().hideKeyBoard();
-            getView().transactThis(next);
-        } else {
-            validationStatus.requestAttention();
-            getView().showToast(validationStatus.getErrorMessage());
-        }
+    public boolean onNextClick(LinearLayout mainView) {
+//        ValidationStatus validationStatus = this.writeValuesAndValidate(mainView);
+        this.validateAndWriteValues();
+
+//        if (validationStatus.isValid()) {
+//            JsonFormFragment next = OpenLMISJsonFormFragment.getFormFragment(mStepDetails.optString("next"));
+//            getView().hideKeyBoard();
+//            getView().transactThis(next);
+//
+//            return true;
+//        } else {
+//            validationStatus.requestAttention();
+//            getView().showToast(validationStatus.getErrorMessage());
+//
+//            return true;
+//        }
+
+        return true;
     }
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, View childAt, boolean requestFocus) {
@@ -72,7 +79,7 @@ public class OpenLMISJsonFormFragmentPresenter extends JsonFormFragmentPresenter
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
         if (compoundButton instanceof android.widget.RadioButton && isChecked &&
                 StringUtils.isNotBlank(compoundButton.getTag(R.id.reason_type).toString())) {
-            List<View> views = formFragment.getJsonApi().getFormDataViews();
+            List<View> views = (List<View>) formFragment.getJsonApi().getFormDataViews();
             for (View view : views) {
                 if (ADJUSTED_QUANTITY.equals(view.getTag(R.id.key))) {
                     CustomTextInputEditText editText = (CustomTextInputEditText) view;

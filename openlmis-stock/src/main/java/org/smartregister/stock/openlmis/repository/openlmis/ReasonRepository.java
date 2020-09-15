@@ -53,7 +53,7 @@ public class ReasonRepository extends BaseRepository {
                     + ")";
 
     public ReasonRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

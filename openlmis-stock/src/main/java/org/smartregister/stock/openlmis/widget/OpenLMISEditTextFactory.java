@@ -96,8 +96,7 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
                 String openMrsEntity = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity);
                 String openMrsEntityId = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id);
                 String nodeValue = (String) editText.getTag(com.vijay.jsonwizard.R.id.node_value);
-                formFragment.writeValue(stepName, key, nodeValue == null ? s.toString() : nodeValue, openMrsEntityParent,
-                        openMrsEntity, openMrsEntityId);
+                formFragment.writeValue(stepName, key, nodeValue == null ? s.toString() : nodeValue, openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
             }
 
             @Override

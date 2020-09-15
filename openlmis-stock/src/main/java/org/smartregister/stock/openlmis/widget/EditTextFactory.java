@@ -1,6 +1,7 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import org.smartregister.stock.openlmis.widget.customviews.CustomTextInputEditTe
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by vincent karuri
@@ -45,6 +47,11 @@ public class EditTextFactory implements FormWidgetFactory {
     private int mainLayout;
     private int editTextId;
     private TextInputLayout textInputLayout;
+
+    @Override
+    public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener, boolean popup) throws Exception {
+        return null;
+    }
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
@@ -66,6 +73,12 @@ public class EditTextFactory implements FormWidgetFactory {
         ((JsonApi) context).addFormDataView(editText);
         views.add(rootLayout);
         return views;
+    }
+
+    @NonNull
+    @Override
+    public Set<String> getCustomTranslatableWidgetFields() {
+        return null;
     }
 
     protected void attachJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CustomTextInputEditText editText) throws Exception {

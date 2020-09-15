@@ -186,9 +186,9 @@ public class CurrentStock extends Fragment implements
         clientsView.setAdapter(clientAdapter);
         clientAdapter.notifyDataSetChanged();
         setTablename(tableName);
-        SmartRegisterQueryBuilder countqueryBUilder = new SmartRegisterQueryBuilder();
-        countqueryBUilder.SelectInitiateMainTableCounts(tableName);
-        countSelect = countqueryBUilder.mainCondition("stocks." + StockRepository.STOCK_TYPE_ID + " = " + ((StockControlActivity) getActivity()).stockType.getId());
+        SmartRegisterQueryBuilder countQueryBuilder = new SmartRegisterQueryBuilder();
+        countQueryBuilder.selectInitiateMainTableCounts(tableName);
+        countSelect = countQueryBuilder.mainCondition("stocks." + StockRepository.STOCK_TYPE_ID + " = " + ((StockControlActivity) getActivity()).stockType.getId());
         countExecute();
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
         queryBUilder.setSelectquery("Select * FROM stocks Where stocks." + StockRepository.STOCK_TYPE_ID + " = " + ((StockControlActivity) getActivity()).stockType.getId());

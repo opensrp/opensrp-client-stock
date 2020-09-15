@@ -47,7 +47,7 @@ public class LotRepository extends BaseRepository {
             + LOT_TABLE + "(" + EXPIRATION_DATE + ")";
 
     public LotRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

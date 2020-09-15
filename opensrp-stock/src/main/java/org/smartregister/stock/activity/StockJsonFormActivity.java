@@ -119,17 +119,17 @@ public class StockJsonFormActivity extends JsonFormActivity {
         // Should run on when the first date field is changed i.e. the only field not disabled
         if (!TextUtils.isEmpty(mainDateFieldKey) && mainDateFieldKey.equals(key) && !otherStockFieldsEnabled) {
             if (!TextUtils.isEmpty(value)) {
-                ArrayList<View> views = getFormDataViews();
+                ArrayList<View> views = (ArrayList<View>) getFormDataViews();
 
                 Iterator<View> viewIterator = views.iterator();
-                while(viewIterator.hasNext()) {
+                while (viewIterator.hasNext()) {
                     View view = viewIterator.next();
                     String viewKey = (String) view.getTag(R.id.key);
 
                     if (viewKey == null || (!TextUtils.isEmpty(viewKey) && !mainDateFieldKey.equals(viewKey))) {
                         String address = (String) view.getTag(R.id.address);
                         if (!TextUtils.isEmpty(address)) {
-                            JSONObject jsonObject = getObjectUsingAddress(address.split(":"));
+                            JSONObject jsonObject = getObjectUsingAddress(address.split(":"), false);
                             boolean previousValue = false;
 
                             if (previousReadOnlyValues.containsKey(viewKey)) {
@@ -137,10 +137,10 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             }
 
                             jsonObject.put(JsonFormConstants.READ_ONLY, previousValue);
-                            toggleViewVisibility(view, !previousValue);
+                            toggleViewVisibility(view, !previousValue, false);
 
                         } else {
-                            toggleViewVisibility(view, true);
+                            toggleViewVisibility(view, true, false);
                         }
 
                         if (view instanceof MaterialEditText) {
@@ -149,7 +149,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
                         // Re-hide fields not relevant, since they will be enabled
                         if (!TextUtils.isEmpty(viewKey)) {
-                            refreshSkipLogic(viewKey, null);
+                            refreshSkipLogic(viewKey, null, false);
                         }
                     }
                 }
@@ -157,7 +157,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                 Iterator<View> labelViewsIterator = labels.iterator();
 
                 // Re-enable labels which are not part of form-data-elements
-                while(labelViewsIterator.hasNext()) {
+                while (labelViewsIterator.hasNext()) {
                     View label = labelViewsIterator.next();
                     label.setEnabled(true);
                 }
@@ -192,7 +192,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Date_Stock_Issued") && value != null && !value.equalsIgnoreCase("")) {
                     if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
+                        ArrayList<View> views = (ArrayList<View>) getFormDataViews();
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
@@ -257,7 +257,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalance != 0) {
                         vialsused = (currentBalance / dosesPerVial) + 1;
                     }
-                    if(StringUtils.isBlank(balancetextview.getText().toString())) {
+                    if (StringUtils.isBlank(balancetextview.getText().toString())) {
                         balancetextview.setText(String.valueOf(vialsused));
                     }
                     refreshVialsBalance(vaccineName, calculateNewStock(str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()), vialsused));
@@ -296,7 +296,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Vials_Issued")) {
                     if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
+                        ArrayList<View> views = (ArrayList<View>) getFormDataViews();
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
@@ -393,7 +393,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Vials_Wasted")) {
                     if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
+                        ArrayList<View> views = (ArrayList<View>) getFormDataViews();
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText && ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
                                 balancetextview = (MaterialEditText) views.get(i);
@@ -569,9 +569,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
             }
         } catch (
                 JSONException e
-                )
-
-        {
+        ) {
             e.printStackTrace();
         }
 
@@ -634,7 +632,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
             if (object.getString("title").contains("Stock Loss/Adjustment")) {
                 if (key.equalsIgnoreCase("Vials_Adjustment") && value != null && !value.equalsIgnoreCase("")) {
                     if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
+                        ArrayList<View> views = (ArrayList<View>) getFormDataViews();
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {

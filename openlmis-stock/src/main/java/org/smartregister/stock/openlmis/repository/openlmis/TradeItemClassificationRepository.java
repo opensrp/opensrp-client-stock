@@ -42,7 +42,7 @@ public class TradeItemClassificationRepository extends BaseRepository {
                     + DATE_UPDATED + " INTEGER"
             + ")";
 
-    public TradeItemClassificationRepository(Repository repository) { super(repository); }
+    public TradeItemClassificationRepository(Repository repository) { super(); }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_TRADE_ITEM_CLASSIFICATION_TABLE);

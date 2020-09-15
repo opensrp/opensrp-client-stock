@@ -5,6 +5,7 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -38,7 +39,7 @@ public class StockEditTextFactory extends EditTextFactory {
                     R.layout.item_edit_text_number_picker, null);
             final MaterialEditText editText = (MaterialEditText) rootLayout.findViewById(R.id.edit_text);
 
-            attachJson(stepName, context, formFragment, jsonObject, editText);
+            attachJson(stepName, context, formFragment, jsonObject, listener, false);
 
             JSONArray canvasIds = new JSONArray();
             rootLayout.setId(ViewUtil.generateViewId());
@@ -101,5 +102,10 @@ public class StockEditTextFactory extends EditTextFactory {
         } else {
             return super.getViewsFromJson(stepName, context, formFragment, jsonObject, listener);
         }
+    }
+
+    @Override
+    protected void attachLayout(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, MaterialEditText editText, ImageView editButton) throws Exception {
+        super.attachLayout(stepName, context, formFragment, jsonObject, editText, editButton);
     }
 }

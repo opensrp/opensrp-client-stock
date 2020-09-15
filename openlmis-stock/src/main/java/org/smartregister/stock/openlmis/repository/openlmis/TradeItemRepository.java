@@ -40,7 +40,7 @@ public class TradeItemRepository extends BaseRepository {
                     + DATE_UPDATED + " INTEGER"
             + ")";
 
-    public TradeItemRepository(Repository repository) { super(repository); }
+    public TradeItemRepository(Repository repository) { super(); }
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(CREATE_TRADE_ITEM_TABLE);

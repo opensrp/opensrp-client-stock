@@ -90,7 +90,7 @@ public class StockRepository extends BaseRepository {
 
 
     public StockRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

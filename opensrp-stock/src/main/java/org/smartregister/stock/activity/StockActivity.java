@@ -1,6 +1,8 @@
 package org.smartregister.stock.activity;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 public abstract class StockActivity extends AppCompatActivity {
     private GridView stockGrid;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +76,6 @@ public abstract class StockActivity extends AppCompatActivity {
         }
 
         stockGrid = (GridView) findViewById(R.id.stockgrid);
-
     }
 
     protected abstract String getLoggedInUserInitials();

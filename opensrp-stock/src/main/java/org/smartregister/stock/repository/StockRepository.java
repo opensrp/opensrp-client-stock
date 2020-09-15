@@ -53,7 +53,7 @@ public class StockRepository extends BaseRepository {
     private static final String TYPE_Synced = "Synced";
 
     public StockRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

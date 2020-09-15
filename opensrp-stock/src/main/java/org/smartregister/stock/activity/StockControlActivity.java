@@ -38,7 +38,6 @@ public class StockControlActivity extends AppCompatActivity {
 
         setTitle("");
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.location_switching_toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

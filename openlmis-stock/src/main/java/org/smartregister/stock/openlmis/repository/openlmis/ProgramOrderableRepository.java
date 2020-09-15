@@ -60,7 +60,7 @@ public class ProgramOrderableRepository extends BaseRepository {
             + PROGRAM_ORDERABLE_TABLE + "(" + PROGRAM + ")";
 
     public ProgramOrderableRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

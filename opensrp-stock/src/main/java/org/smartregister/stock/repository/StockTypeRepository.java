@@ -32,7 +32,7 @@ public class StockTypeRepository extends BaseRepository {
 
 
     public StockTypeRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

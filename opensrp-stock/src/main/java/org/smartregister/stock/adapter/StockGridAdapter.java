@@ -55,8 +55,6 @@ public class StockGridAdapter extends BaseAdapter {
                     .findViewById(R.id.vials);
 
             // set image based on selected text
-
-
             final StockType stockType = stockTypes[position];
             StockRepository stockRepository = StockLibrary.getInstance().getStockRepository();
             int currentvials = stockRepository.getBalanceFromNameAndDate(stockType.getName(), System.currentTimeMillis());
