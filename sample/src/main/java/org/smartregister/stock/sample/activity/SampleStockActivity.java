@@ -1,11 +1,13 @@
 package org.smartregister.stock.sample.activity;
 
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.smartregister.stock.activity.StockActivity;
 import org.smartregister.stock.activity.StockControlActivity;

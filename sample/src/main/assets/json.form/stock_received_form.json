@@ -78,7 +78,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
-        "type": "radio",
+        "type": "extended_radio_button",
         "label": "Received from *",
         "options":[
           {

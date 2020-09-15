@@ -1,8 +1,6 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -10,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.material.textfield.TextInputLayout;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.R;
@@ -38,7 +39,7 @@ import java.util.Set;
 
 /**
  * Created by vincent karuri
- *
+ * <p>
  * Borrows heavily from the similarly named class in com.vijay.jsonwizard.widgets
  */
 public class EditTextFactory implements FormWidgetFactory {
@@ -59,7 +60,7 @@ public class EditTextFactory implements FormWidgetFactory {
         List<View> views = new ArrayList<>(1);
 
         RelativeLayout rootLayout = (RelativeLayout) LayoutInflater.from(context).inflate(
-               getMainLayout(), null);
+                getMainLayout(), null);
         CustomTextInputEditText editText = rootLayout.findViewById(getEditTextId());
         textInputLayout = rootLayout.findViewById(org.smartregister.stock.openlmis.R.id.openlmis_edit_text_parent);
 

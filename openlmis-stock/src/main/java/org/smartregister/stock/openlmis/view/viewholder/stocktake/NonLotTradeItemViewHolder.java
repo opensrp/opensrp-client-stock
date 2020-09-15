@@ -1,9 +1,10 @@
 package org.smartregister.stock.openlmis.view.viewholder.stocktake;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.StockTake;

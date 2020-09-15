@@ -1,8 +1,9 @@
 package org.smartregister.stock.openlmis.presenter;
 
-import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.VisibleForTesting;
 
 import com.google.gson.reflect.TypeToken;
 

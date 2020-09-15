@@ -2,11 +2,12 @@ package org.smartregister.stock.openlmis.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.adapter.stocktake.StockTakeCommodityTypeAdapter;

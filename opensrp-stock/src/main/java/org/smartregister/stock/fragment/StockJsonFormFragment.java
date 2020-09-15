@@ -38,7 +38,6 @@ public class StockJsonFormFragment extends JsonFormFragment {
 
     @Override
     public void addFormElements(List<View> views) {
-
         Iterator iterator = views.iterator();
 
         while (iterator.hasNext()) {
@@ -77,5 +76,4 @@ public class StockJsonFormFragment extends JsonFormFragment {
             }
         }
     }
-
 }

@@ -1,8 +1,9 @@
 package org.smartregister.stock.openlmis.view.viewholder;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.stock.openlmis.R;
 

@@ -1,8 +1,9 @@
 package org.smartregister.stock.openlmis.view.viewholder;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.stock.openlmis.R;
 
@@ -19,9 +20,9 @@ public class LotViewHolder extends RecyclerView.ViewHolder {
 
     public LotViewHolder(View itemView) {
         super(itemView);
-        lotCodeTextView=itemView.findViewById(R.id.lot_code);
-        stockOnHandTextView=itemView.findViewById(R.id.stock_on_hand);
-        statusTextView=itemView.findViewById(R.id.lot_status);
+        lotCodeTextView = itemView.findViewById(R.id.lot_code);
+        stockOnHandTextView = itemView.findViewById(R.id.stock_on_hand);
+        statusTextView = itemView.findViewById(R.id.lot_status);
     }
 
     public TextView getLotCodeTextView() {

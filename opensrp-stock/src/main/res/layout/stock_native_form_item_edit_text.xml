@@ -15,4 +15,5 @@
         app:met_floatingLabelTextSize="@dimen/default_text_size"
         app:met_primaryColor="?colorAccent"
         app:met_singleLineEllipsis="true" />
+
 </RelativeLayout>

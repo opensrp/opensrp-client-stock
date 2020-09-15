@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
@@ -27,8 +28,8 @@ import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.activity.StockControlActivity;
 import org.smartregister.stock.domain.ActiveChildrenStats;
 import org.smartregister.stock.domain.Stock;
-import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockExternalRepository;
+import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.util.StockUtils;
 
 import java.text.DateFormat;

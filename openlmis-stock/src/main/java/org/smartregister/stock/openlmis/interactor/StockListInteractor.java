@@ -1,6 +1,6 @@
 package org.smartregister.stock.openlmis.interactor;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 import org.joda.time.LocalDate;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
@@ -65,7 +65,7 @@ public class StockListInteractor extends StockListBaseInteractor {
     }
 
     public List<TradeItemWrapper> getTradeItems(String programId, CommodityType commodityType) {
-        return populateTradeItemWrapper(programId,getTradeItemsByCommodityType(commodityType.getId()));
+        return populateTradeItemWrapper(programId, getTradeItemsByCommodityType(commodityType.getId()));
     }
 
     public List<TradeItemWrapper> findTradeItemsByIds(String programId, Set<String> tradeItemIds) {
@@ -82,8 +82,8 @@ public class StockListInteractor extends StockListBaseInteractor {
             else
                 tradeItemsWithoutLotsIds.add(tradeItem.getId());
         }
-        Map<String, List<LotDetailsDto>> lotsListMap = stockRepository.getNumberOfLotsByTradeItem(programId,tradeItemsWithLotsIds);
-        Map<String, Integer> nonLotManagedBalances = stockRepository.getTotalStockByTradeItems(programId,tradeItemsWithoutLotsIds);
+        Map<String, List<LotDetailsDto>> lotsListMap = stockRepository.getNumberOfLotsByTradeItem(programId, tradeItemsWithLotsIds);
+        Map<String, Integer> nonLotManagedBalances = stockRepository.getTotalStockByTradeItems(programId, tradeItemsWithoutLotsIds);
 
         for (TradeItem tradeItem : tradeItems) {
             TradeItemWrapper tradeItemWrapper = new TradeItemWrapper(tradeItem);

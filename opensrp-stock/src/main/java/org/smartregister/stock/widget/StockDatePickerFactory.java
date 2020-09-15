@@ -25,7 +25,7 @@ public class StockDatePickerFactory extends DatePickerFactory {
     @Override
     protected void attachLayout(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, MaterialEditText editText, TextView duration) {
         super.attachLayout(stepName, context, formFragment, jsonObject, editText, duration);
-        editText.setHintTextColor(context.getResources().getColor(R.color.text_black));
+//        editText.setHintTextColor(context.getResources().getColor(R.color.text_black));
     }
 
     @Override

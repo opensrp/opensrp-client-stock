@@ -1,10 +1,11 @@
 package org.smartregister.stock.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.activities.JsonFormActivity;
@@ -106,8 +107,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
     @Override
     public void initializeFormFragment() {
         stockJsonFormFragment = StockJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, stockJsonFormFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, stockJsonFormFragment).commit();
         negativeBalanceValidator = new MinNumericValidator(getResources().getString(R.string.negative_balance), 0);
     }
 
@@ -381,7 +381,6 @@ public class StockJsonFormActivity extends JsonFormActivity {
         stockJsonFormFragment.getLabelViewFromTag("Doses_wasted", "Total wasted doses: " + wastedDoses + " doses");
     }
 
-
     public void refreshVialsBalance(String vaccineName, int newBalance) {
         stockJsonFormFragment.getLabelViewFromTag("Vials_Balance", "New " + vaccineName + " balance: " + newBalance + " vials");
     }
@@ -514,7 +513,6 @@ public class StockJsonFormActivity extends JsonFormActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     private void stockVialsenteredinReceivedForm(String key, String value) {
@@ -567,12 +565,9 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                 }
             }
-        } catch (
-                JSONException e
-        ) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     private void stockDateEnteredinAdjustmentForm(String key, String value) {
@@ -613,10 +608,8 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             } else if (balancetextview != null && displaybalance >= 0)
                                 balancetextview.getValidators().remove(negativeBalanceValidator);
                             stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
-
                         } else {
                             stockJsonFormFragment.getLabelViewFromTag("Balance", "");
-
                         }
                     }
                 }
@@ -668,7 +661,6 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                 } else if (balancetextview != null && displaybalance >= 0)
                                     balancetextview.getValidators().remove(negativeBalanceValidator);
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
-
                             } else {
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                             }

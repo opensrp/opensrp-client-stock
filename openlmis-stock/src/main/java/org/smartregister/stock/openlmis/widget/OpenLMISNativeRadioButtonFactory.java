@@ -1,12 +1,13 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import androidx.annotation.NonNull;
 
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
