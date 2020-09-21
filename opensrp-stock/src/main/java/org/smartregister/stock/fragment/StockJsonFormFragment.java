@@ -2,6 +2,7 @@ package org.smartregister.stock.fragment;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -65,12 +66,19 @@ public class StockJsonFormFragment extends JsonFormFragment {
         if (mMainView != null) {
             int childCount = mMainView.getChildCount();
             for (int i = 0; i < childCount; i++) {
-                View view = mMainView.getChildAt(i);
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
-                    String key = (String) textView.getTag(R.id.key);
-                    if (key.equals(currentKey)) {
-                        textView.setText(textString);
+                View layout = mMainView.getChildAt(i);
+                if (layout instanceof ViewGroup) {
+                    int layoutCount = ((ViewGroup) layout).getChildCount();
+                    for (int j = 0; j < layoutCount; j++) {
+                        View view = ((ViewGroup) layout).getChildAt(j);
+                        if (view instanceof TextView) {
+                            TextView textView = (TextView) view;
+                            String key = (String) textView.getTag(R.id.key);
+                            if (key != null && key.equals(currentKey)) {
+                                textView.setText(textString);
+                                textView.setTextColor(1);
+                            }
+                        }
                     }
                 }
             }

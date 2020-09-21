@@ -85,7 +85,7 @@ public class PlanningStockFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_planning__stock_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_planning_stock_fragment, container, false);
         mainview = view;
 //        creatgraphview(mainview);
         loatDataView(mainview);

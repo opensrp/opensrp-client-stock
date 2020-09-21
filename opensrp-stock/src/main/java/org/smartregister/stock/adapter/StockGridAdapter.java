@@ -31,37 +31,30 @@ public class StockGridAdapter extends BaseAdapter {
         this.controlActivity = controlActivity;
     }
 
-
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View gridView;
 
         if (convertView == null) {
-
             gridView = new View(context);
 
             // get layout from mobile.xml
             gridView = inflater.inflate(R.layout.stock_grid_block, null);
 
             // set value into textview
-            TextView name = (TextView) gridView
-                    .findViewById(R.id.vaccine_type_name);
-            TextView doses = (TextView) gridView
-                    .findViewById(R.id.doses);
-            TextView vials = (TextView) gridView
-                    .findViewById(R.id.vials);
+            TextView name = (TextView) gridView.findViewById(R.id.vaccine_type_name);
+            TextView doses = (TextView) gridView.findViewById(R.id.doses);
+            TextView vials = (TextView) gridView.findViewById(R.id.vials);
 
             // set image based on selected text
             final StockType stockType = stockTypes[position];
             StockRepository stockRepository = StockLibrary.getInstance().getStockRepository();
             int currentvials = stockRepository.getBalanceFromNameAndDate(stockType.getName(), System.currentTimeMillis());
+
             name.setText(stockType.getName());
-
             doses.setText("" + currentvials * stockType.getQuantity() + " doses");
-
             vials.setText("" + currentvials + " vials");
 
             gridView.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +65,6 @@ public class StockGridAdapter extends BaseAdapter {
                     context.startActivity(intent);
                 }
             });
-
         } else {
             gridView = convertView;
         }

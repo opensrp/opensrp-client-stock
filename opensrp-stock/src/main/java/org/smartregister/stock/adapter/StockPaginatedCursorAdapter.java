@@ -34,7 +34,6 @@ public class StockPaginatedCursorAdapter extends CursorAdapter {
         Stock personinlist = stockRepository.readAllStockforCursorAdapter(cursor);
 
         listItemProvider.getView(personinlist, view);
-
     }
 
     @Override
