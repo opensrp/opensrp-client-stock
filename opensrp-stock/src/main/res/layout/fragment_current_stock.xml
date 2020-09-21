@@ -99,6 +99,7 @@
                 android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
                 android:textColor="#767676"
                 android:textSize="18sp" />
+
         </LinearLayout>
 
         <ImageView
@@ -193,6 +194,7 @@
                 android:text="Balance"
                 android:textColor="@color/dim_foreground_material_light"
                 android:textSize="18sp" />
+
         </LinearLayout>
 
         <ImageView
@@ -205,7 +207,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
 
             <FrameLayout
                 android:id="@+id/child_fragment_container"
@@ -237,9 +238,11 @@
                         android:visibility="invisible" />
 
                 </FrameLayout>
+
             </FrameLayout>
+
         </LinearLayout>
 
-
     </LinearLayout>
+
 </FrameLayout>

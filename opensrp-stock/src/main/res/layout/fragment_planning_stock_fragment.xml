@@ -58,6 +58,7 @@
                     android:layout_height="match_parent"
                     app:seriesColor="#3D9CE3"
                     app:seriesType="line" />
+
             </LinearLayout>
 
             <ImageView
@@ -111,6 +112,7 @@
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -142,6 +144,7 @@
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -173,6 +176,7 @@
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -204,6 +208,7 @@
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -241,6 +246,7 @@
                     android:text="14 vials"
                     android:textColor="@color/bluetext"
                     android:textSize="20sp" />
+
             </LinearLayout>
 
             <ImageView
@@ -322,6 +328,7 @@
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -369,6 +376,7 @@
                         android:text="10"
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -416,6 +424,7 @@
                         android:text="20"
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -468,7 +477,9 @@
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp"
                         android:textStyle="bold" />
+
                 </LinearLayout>
+
             </LinearLayout>
 
             <ImageView
@@ -506,6 +517,7 @@
                     android:text="14 vials"
                     android:textColor="@color/bluetext"
                     android:textSize="20sp" />
+
             </LinearLayout>
 
             <org.smartregister.view.customcontrols.CustomFontTextView
@@ -551,6 +563,7 @@
                     android:text="10%"
                     android:textColor="@color/bluetext"
                     android:textSize="20sp" />
+
             </LinearLayout>
 
             <ImageView
@@ -559,6 +572,9 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:src="@color/smart_register_client_divider_color" />
+
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
+
 </FrameLayout>

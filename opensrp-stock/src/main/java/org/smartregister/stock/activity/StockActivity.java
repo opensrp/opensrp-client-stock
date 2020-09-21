@@ -91,7 +91,7 @@ public abstract class StockActivity extends AppCompatActivity {
     protected abstract Class getControlActivity();
 
     @SuppressWarnings("unchecked")
-    private void refreshadapter() {
+    private void refreshAdapter() {
         ArrayList<StockType> allStockTypes = (ArrayList) StockLibrary.getInstance().getStockTypeRepository().getAllStockTypes(null);
         StockType[] stockTypes = allStockTypes.toArray(new StockType[allStockTypes.size()]);
         StockGridAdapter adapter = new StockGridAdapter(this, stockTypes, getControlActivity());
@@ -102,7 +102,6 @@ public abstract class StockActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        refreshadapter();
+        refreshAdapter();
     }
-
 }

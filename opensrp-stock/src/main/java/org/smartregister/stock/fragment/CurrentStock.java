@@ -127,10 +127,9 @@ public class CurrentStock extends Fragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_current__stock, container, false);
+        View view = inflater.inflate(R.layout.fragment_current_stock, container, false);
         mView = view;
         clientsProgressView = (ProgressBar) view.findViewById(R.id.client_list_progress);
         clientsView = (ListView) view.findViewById(R.id.list);
@@ -200,7 +199,7 @@ public class CurrentStock extends Fragment implements
         currentlimit = 20;
         currentoffset = 0;
 
-        filterandSortInInitializeQueries();
+        filterAndSortInInitializeQueries();
 
         refresh();
     }
@@ -253,12 +252,12 @@ public class CurrentStock extends Fragment implements
     public void onResume() {
         super.onResume();
         countExecute();
-        filterandSortInInitializeQueries();
+        filterAndSortInInitializeQueries();
         refresh();
         getValueForStock(mView);
     }
 
-    private void returnfromform() {
+    private void returnFromForm() {
         ((StockControlActivity) getActivity()).planningStockFragment.loatDataView(((StockControlActivity) getActivity()).planningStockFragment.mainview);
     }
 
@@ -318,7 +317,7 @@ public class CurrentStock extends Fragment implements
             }
             Stock stock = new Stock(null, Stock.loss_adjustment, allSharedPreferences.fetchRegisteredANM(), Integer.parseInt(vials_received), encounterDate.getTime(), Received_Stock_From, StockRepository.TYPE_Unsynced, System.currentTimeMillis(), "" + ((StockControlActivity) (getActivity())).stockType.getId());
             str.add(stock);
-            returnfromform();
+            returnFromForm();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -351,7 +350,7 @@ public class CurrentStock extends Fragment implements
             }
             Stock stock = new Stock(null, Stock.received, allSharedPreferences.fetchRegisteredANM(), Integer.parseInt(vials_received), encounterDate.getTime(), Received_Stock_From, StockRepository.TYPE_Unsynced, System.currentTimeMillis(), "" + ((StockControlActivity) (getActivity())).stockType.getId());
             str.add(stock);
-            returnfromform();
+            returnFromForm();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -388,7 +387,7 @@ public class CurrentStock extends Fragment implements
             }
             Stock stock = new Stock(null, Stock.issued, allSharedPreferences.fetchRegisteredANM(), -1 * Integer.parseInt(vials_received), encounterDate.getTime(), Received_Stock_From, StockRepository.TYPE_Unsynced, System.currentTimeMillis(), "" + ((StockControlActivity) (getActivity())).stockType.getId());
             str.add(stock);
-            returnfromform();
+            returnFromForm();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -406,7 +405,7 @@ public class CurrentStock extends Fragment implements
         }
     }
 
-    private int getTotalcount() {
+    private int getTotalCount() {
         if (totalcount % currentlimit == 0) {
             return totalcount / currentlimit;
         } else {
@@ -418,7 +417,7 @@ public class CurrentStock extends Fragment implements
         pageInfoView.setText(
                 format(getResources().getString(R.string.str_page_info),
                         getCurrentPageCount(),
-                        getTotalcount()));
+                        getTotalCount()));
         if (hasNextPage()) {
             paginationViewHandler.getPaginationView().setVisibility(VISIBLE);
             pageInfoView.setVisibility(VISIBLE);
@@ -446,38 +445,38 @@ public class CurrentStock extends Fragment implements
     private void gotoNextPage() {
         if (currentoffset + currentlimit < totalcount) {
             currentoffset = currentoffset + currentlimit;
-            filterandSortExecute();
+            filterAndSortExecute();
         }
     }
 
     private void goBackToPreviousPage() {
         if (currentoffset > 0) {
             currentoffset = currentoffset - currentlimit;
-            filterandSortExecute();
+            filterAndSortExecute();
         }
     }
 
-    private void filterandSortInInitializeQueries() {
+    private void filterAndSortInInitializeQueries() {
         if (isPausedOrRefreshList()) {
             this.showProgressView();
-            this.filterandSortExecute();
+            this.filterAndSortExecute();
         } else {
-            this.initialFilterandSortExecute();
+            this.initialFilterAndSortExecute();
         }
     }
 
 
-    private void initialFilterandSortExecute() {
+    private void initialFilterAndSortExecute() {
         Loader<Cursor> loader = getLoaderManager().getLoader(LOADER_ID);
         showProgressView();
         if (loader != null) {
-            filterandSortExecute();
+            filterAndSortExecute();
         } else {
             getLoaderManager().initLoader(LOADER_ID, null, this);
         }
     }
 
-    private void filterandSortExecute() {
+    private void filterAndSortExecute() {
         refresh();
 
         getLoaderManager().restartLoader(LOADER_ID, null, this);
@@ -502,7 +501,7 @@ public class CurrentStock extends Fragment implements
         }
     }
 
-    private String filterandSortQuery() {
+    private String filterAndSortQuery() {
         SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder(mainSelect);
 
         String query = "";
@@ -556,7 +555,7 @@ public class CurrentStock extends Fragment implements
                 return new CursorLoader(getActivity()) {
                     @Override
                     public Cursor loadInBackground() {
-                        String query = filterandSortQuery();
+                        String query = filterAndSortQuery();
                         Cursor cursor = StockLibrary.getInstance().getRepository().getReadableDatabase().rawQuery(query, null);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
