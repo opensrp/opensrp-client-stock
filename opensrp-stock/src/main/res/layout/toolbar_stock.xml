@@ -35,6 +35,7 @@
                 android:gravity="center"
                 android:src="@drawable/abc_ic_ab_back_material"
                 android:visibility="gone" />
+
         </LinearLayout>
 
         <FrameLayout

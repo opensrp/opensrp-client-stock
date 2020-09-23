@@ -23,8 +23,10 @@ import java.util.List;
  */
 
 public class StockRepository extends BaseRepository {
+
     private static final String TAG = StockRepository.class.getCanonicalName();
-    private static final String stock_SQL = "CREATE TABLE stocks (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+
+    private static final String STOCK_SQL = "CREATE TABLE stocks (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             "stock_type_id VARCHAR NOT NULL," +
             "transaction_type VARCHAR NULL," +
             "providerid VARCHAR NOT NULL," +
@@ -33,7 +35,7 @@ public class StockRepository extends BaseRepository {
             "to_from VARCHAR NULL," +
             "sync_status VARCHAR," +
             "date_updated INTEGER NULL)";
-    public static final String stock_TABLE_NAME = "stocks";
+    public static final String STOCK_TABLE_NAME = "stocks";
     public static final String ID_COLUMN = "_id";
     public static final String STOCK_TYPE_ID = "stock_type_id";
     public static final String TRANSACTION_TYPE = "transaction_type";
@@ -47,26 +49,27 @@ public class StockRepository extends BaseRepository {
     public static final String CHILD_LOCATION_ID = "child_location_id";
     public static final String TEAM_NAME = "team_name";
     public static final String TEAM_ID = "team_id";
-    public static final String[] stock_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED};
+    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED};
 
-    public static final String TYPE_Unsynced = "Unsynced";
-    private static final String TYPE_Synced = "Synced";
+    public static final String TYPE_UNSYNCED = "Unsynced";
+    private static final String TYPE_SYNCED = "Synced";
 
     public StockRepository(Repository repository) {
         super();
     }
 
     public static void createTable(SQLiteDatabase database) {
-        database.execSQL(stock_SQL);
+        database.execSQL(STOCK_SQL);
     }
 
     public void add(Stock stock) {
         if (stock == null) {
             return;
         }
+
         try {
             if (StringUtils.isBlank(stock.getSyncStatus())) {
-                stock.setSyncStatus(TYPE_Unsynced);
+                stock.setSyncStatus(TYPE_UNSYNCED);
             }
 
             if (stock.getUpdatedAt() == null) {
@@ -75,16 +78,15 @@ public class StockRepository extends BaseRepository {
 
             SQLiteDatabase database = getWritableDatabase();
             if (stock.getId() == null) {
-                stock.setId(database.insert(stock_TABLE_NAME, null, createValuesFor(stock)));
+                stock.setId(database.insert(STOCK_TABLE_NAME, null, createValuesFor(stock)));
             } else {
                 //mark the stock as unsynced for processing as an updated stock
                 String idSelection = ID_COLUMN + " = ?";
-                database.update(stock_TABLE_NAME, createValuesFor(stock), idSelection, new String[]{stock.getId().toString()});
+                database.update(STOCK_TABLE_NAME, createValuesFor(stock), idSelection, new String[]{stock.getId().toString()});
             }
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
-
     }
 
     private ContentValues createValuesFor(Stock stock) {
@@ -110,7 +112,7 @@ public class StockRepository extends BaseRepository {
 
             Long time = calendar.getTimeInMillis();
 
-            cursor = getReadableDatabase().query(stock_TABLE_NAME, stock_TABLE_COLUMNS, DATE_UPDATED + " < ? AND " + SYNC_STATUS + " = ?", new String[]{time.toString(), TYPE_Unsynced}, null, null, null, null);
+            cursor = getReadableDatabase().query(STOCK_TABLE_NAME, STOCK_TABLE_COLUMNS, DATE_UPDATED + " < ? AND " + SYNC_STATUS + " = ?", new String[]{time.toString(), TYPE_UNSYNCED}, null, null, null, null);
             stocks = readAllstocks(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -126,9 +128,7 @@ public class StockRepository extends BaseRepository {
         List<Stock> stocks = new ArrayList<>();
         Cursor cursor = null;
         try {
-
-
-            cursor = getReadableDatabase().query(stock_TABLE_NAME, stock_TABLE_COLUMNS, SYNC_STATUS + " = ?", new String[]{TYPE_Unsynced}, null, null, null, "" + limit);
+            cursor = getReadableDatabase().query(STOCK_TABLE_NAME, STOCK_TABLE_COLUMNS, SYNC_STATUS + " = ?", new String[]{TYPE_UNSYNCED}, null, null, null, "" + limit);
             stocks = readAllstocks(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -144,7 +144,7 @@ public class StockRepository extends BaseRepository {
         List<Stock> stocks = new ArrayList<>();
         Cursor cursor = null;
         try {
-            cursor = getReadableDatabase().query(stock_TABLE_NAME, stock_TABLE_COLUMNS, STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + DATE_CREATED + " = ? AND " + TO_FROM + " = ?", new String[]{stock_type_id, transaction_type, providerid, value, date_created, to_from}, null, null, null, null);
+            cursor = getReadableDatabase().query(STOCK_TABLE_NAME, STOCK_TABLE_COLUMNS, STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + DATE_CREATED + " = ? AND " + TO_FROM + " = ?", new String[]{stock_type_id, transaction_type, providerid, value, date_created, to_from}, null, null, null, null);
             stocks = readAllstocks(cursor);
 
         } catch (Exception e) {
@@ -171,8 +171,8 @@ public class StockRepository extends BaseRepository {
 
     private List<Stock> readAllstocks(Cursor cursor) {
         List<Stock> stocks = new ArrayList<>();
-        try {
 
+        try {
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
 
@@ -253,11 +253,10 @@ public class StockRepository extends BaseRepository {
     public void markEventsAsSynced(ArrayList<Stock> stocks) {
         for (int i = 0; i < stocks.size(); i++) {
             Stock stockToAdd = stocks.get(i);
-            stockToAdd.setSyncStatus(TYPE_Synced);
+            stockToAdd.setSyncStatus(TYPE_SYNCED);
             add(stockToAdd);
         }
     }
-
 
     public int getBalanceFromNameAndDate(String name, Long updatedAt) {
         SQLiteDatabase database = getReadableDatabase();
@@ -303,9 +302,8 @@ public class StockRepository extends BaseRepository {
     public static void migrateFromOldStockRepository(SQLiteDatabase database, String oldTableName) {
         database.execSQL("ALTER TABLE " + oldTableName + " RENAME TO old_" + oldTableName);
         createTable(database);
-        String sql = "INSERT INTO " + stock_TABLE_NAME + " SELECT * FROM old_" + oldTableName;
+        String sql = "INSERT INTO " + STOCK_TABLE_NAME + " SELECT * FROM old_" + oldTableName;
         database.execSQL(sql);
         database.execSQL("DROP TABLE IF EXISTS old_" + oldTableName);
     }
-
 }

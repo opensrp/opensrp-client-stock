@@ -176,7 +176,7 @@ public class CurrentStock extends Fragment implements
 
 
     private void onInitialization() {
-        String tableName = StockRepository.stock_TABLE_NAME;
+        String tableName = StockRepository.STOCK_TABLE_NAME;
 //        String parentTableName = "ec_mother";
 
 
@@ -315,7 +315,7 @@ public class CurrentStock extends Fragment implements
                     encounterDate = dateTime;
                 }
             }
-            Stock stock = new Stock(null, Stock.loss_adjustment, allSharedPreferences.fetchRegisteredANM(), Integer.parseInt(vials_received), encounterDate.getTime(), Received_Stock_From, StockRepository.TYPE_Unsynced, System.currentTimeMillis(), "" + ((StockControlActivity) (getActivity())).stockType.getId());
+            Stock stock = new Stock(null, Stock.loss_adjustment, allSharedPreferences.fetchRegisteredANM(), Integer.parseInt(vials_received), encounterDate.getTime(), Received_Stock_From, StockRepository.TYPE_UNSYNCED, System.currentTimeMillis(), "" + ((StockControlActivity) (getActivity())).stockType.getId());
             str.add(stock);
             returnFromForm();
         } catch (JSONException e) {
@@ -348,7 +348,7 @@ public class CurrentStock extends Fragment implements
                     encounterDate = dateTime;
                 }
             }
-            Stock stock = new Stock(null, Stock.received, allSharedPreferences.fetchRegisteredANM(), Integer.parseInt(vials_received), encounterDate.getTime(), Received_Stock_From, StockRepository.TYPE_Unsynced, System.currentTimeMillis(), "" + ((StockControlActivity) (getActivity())).stockType.getId());
+            Stock stock = new Stock(null, Stock.received, allSharedPreferences.fetchRegisteredANM(), Integer.parseInt(vials_received), encounterDate.getTime(), Received_Stock_From, StockRepository.TYPE_UNSYNCED, System.currentTimeMillis(), "" + ((StockControlActivity) (getActivity())).stockType.getId());
             str.add(stock);
             returnFromForm();
         } catch (JSONException e) {
@@ -385,7 +385,7 @@ public class CurrentStock extends Fragment implements
                     encounterDate = dateTime;
                 }
             }
-            Stock stock = new Stock(null, Stock.issued, allSharedPreferences.fetchRegisteredANM(), -1 * Integer.parseInt(vials_received), encounterDate.getTime(), Received_Stock_From, StockRepository.TYPE_Unsynced, System.currentTimeMillis(), "" + ((StockControlActivity) (getActivity())).stockType.getId());
+            Stock stock = new Stock(null, Stock.issued, allSharedPreferences.fetchRegisteredANM(), -1 * Integer.parseInt(vials_received), encounterDate.getTime(), Received_Stock_From, StockRepository.TYPE_UNSYNCED, System.currentTimeMillis(), "" + ((StockControlActivity) (getActivity())).stockType.getId());
             str.add(stock);
             returnFromForm();
         } catch (JSONException e) {

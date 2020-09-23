@@ -19,8 +19,9 @@ import java.util.List;
 import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
 
 public class StockTypeRepository extends BaseRepository {
-    private static final String STOCK_Type_SQL = "CREATE TABLE stock_types (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,quantity INTEGER,name VARCHAR NOT NULL,openmrs_parent_entity_id VARCHAR NULL,openmrs_date_concept_id VARCHAR NULL,openmrs_quantity_concept_id VARCHAR)";
-    public static final String STOCK_Type_TABLE_NAME = "stock_types";
+
+    private static final String STOCK_TYPE_SQL = "CREATE TABLE stock_types (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,quantity INTEGER,name VARCHAR NOT NULL,openmrs_parent_entity_id VARCHAR NULL,openmrs_date_concept_id VARCHAR NULL,openmrs_quantity_concept_id VARCHAR)";
+    public static final String STOCK_TYPE_TABLE_NAME = "stock_types";
     public static final String ID_COLUMN = "_id";
     public static final String QUANTITY = "quantity";
     public static final String NAME = "name";
@@ -30,13 +31,12 @@ public class StockTypeRepository extends BaseRepository {
 
     public static final String[] STOCK_Type_TABLE_COLUMNS = {ID_COLUMN, QUANTITY, NAME, OPENMRS_PARENT_ENTITIY_ID, OPENMRS_DATE_CONCEPT_ID, OPENMRS_QUANTITY_CONCEPT_ID};
 
-
     public StockTypeRepository(Repository repository) {
         super();
     }
 
     public static void createTable(SQLiteDatabase database) {
-        database.execSQL(STOCK_Type_SQL);
+        database.execSQL(STOCK_TYPE_SQL);
     }
 
     public void add(StockType stockType, SQLiteDatabase database_) {
@@ -50,19 +50,17 @@ public class StockTypeRepository extends BaseRepository {
         }
 
         if (stockType.getId() == null) {
-            stockType.setId(database.insert(STOCK_Type_TABLE_NAME, null, createValuesFor(stockType)));
+            stockType.setId(database.insert(STOCK_TYPE_TABLE_NAME, null, createValuesFor(stockType)));
         } else {
             //mark the stock as unsynced for processing as an updated event
-
             String idSelection = ID_COLUMN + " = ?";
-            database.update(STOCK_Type_TABLE_NAME, createValuesFor(stockType), idSelection, new String[]{stockType.getId().toString()});
+            database.update(STOCK_TYPE_TABLE_NAME, createValuesFor(stockType), idSelection, new String[]{stockType.getId().toString()});
         }
     }
 
-
     public List<StockType> findIDByName(String Name) {
         SQLiteDatabase database = getReadableDatabase();
-        Cursor cursor = database.query(STOCK_Type_TABLE_NAME, STOCK_Type_TABLE_COLUMNS, this.NAME + " = ? ", new String[]{Name}, null, null, null, null);
+        Cursor cursor = database.query(STOCK_TYPE_TABLE_NAME, STOCK_Type_TABLE_COLUMNS, this.NAME + " = ? ", new String[]{Name}, null, null, null, null);
         return readAllStock(cursor);
     }
 
@@ -72,7 +70,7 @@ public class StockTypeRepository extends BaseRepository {
             database = getReadableDatabase();
         }
 
-        Cursor cursor = database.query(STOCK_Type_TABLE_NAME, STOCK_Type_TABLE_COLUMNS, null, null, null, null, null, null);
+        Cursor cursor = database.query(STOCK_TYPE_TABLE_NAME, STOCK_Type_TABLE_COLUMNS, null, null, null, null, null, null);
         return readAllStock(cursor);
     }
 
@@ -89,10 +87,8 @@ public class StockTypeRepository extends BaseRepository {
         List<StockType> stocks = new ArrayList<StockType>();
 
         try {
-
             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-
                     stocks.add(
                             new StockType(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
                                     cursor.getInt(cursor.getColumnIndex(QUANTITY)),
@@ -113,7 +109,6 @@ public class StockTypeRepository extends BaseRepository {
         }
         return stocks;
     }
-
 
     private ContentValues createValuesFor(StockType stockType) {
         ContentValues values = new ContentValues();
@@ -149,5 +144,4 @@ public class StockTypeRepository extends BaseRepository {
             }
         }
     }
-
 }
