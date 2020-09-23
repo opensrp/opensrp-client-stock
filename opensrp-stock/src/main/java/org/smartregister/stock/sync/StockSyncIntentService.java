@@ -1,5 +1,6 @@
 package org.smartregister.stock.sync;
 
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Response;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
@@ -20,25 +20,23 @@ import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Stock;
 import org.smartregister.stock.repository.StockRepository;
-import org.smartregister.sync.intent.BaseSyncIntentService;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.smartregister.util.Log.logError;
-import static org.smartregister.util.Log.logInfo;
 
 /**
  * Created by samuelgithengi on 2/16/18.
  */
 
-public class StockSyncIntentService extends BaseSyncIntentService {
+public class StockSyncIntentService extends IntentService {
 
     private static final String TAG = "StockSyncIntentService";
 
     private static final String STOCK_ADD_PATH = "/rest/stockresource/add/";
-    private static final String STOCK_SYNC_PATH = "rest/stockresource/sync/";
+    private static final String STOCK_SYNC_PATH = "/rest/stockresource/sync/";
 
     private Context context;
     private HTTPAgent httpAgent;
@@ -62,28 +60,18 @@ public class StockSyncIntentService extends BaseSyncIntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d(TAG, "onHandleIntent: Stock sync called ---------------------------------");
-
-        if (StockLibrary.getInstance().getContext().IsUserLoggedOut()) {
-            logInfo("Not updating from server as user is not logged in.");
-            return;
-        }
-
-        super.onHandleIntent(intent);
-
-//        if (NetworkUtils.isNetworkAvailable(context)) {
         // push
         pushStockToServer();
 
         // pull
         pullStockFromServer();
         actionService.fetchNewActions();
-//        }
     }
 
     @NotNull
     public String getFormattedBaseUrl() {
-        String baseUrl = CoreLibrary.getInstance().context().configuration().dristhiBaseURL();
+//        String baseUrl = CoreLibrary.getInstance().context().configuration().dristhiBaseURL();
+        String baseUrl = "https://wellnesspass-stage.smartregister.org/stock/";
         String endString = "/";
         if (baseUrl.endsWith(endString)) {
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(endString));
@@ -93,9 +81,9 @@ public class StockSyncIntentService extends BaseSyncIntentService {
 
     private void pullStockFromServer() {
         final String LAST_STOCK_SYNC = "last_stock_sync";
-
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+        String anmId = allSharedPreferences.fetchRegisteredANM();
         String baseUrl = getFormattedBaseUrl();
 
         while (true) {
@@ -104,7 +92,7 @@ public class StockSyncIntentService extends BaseSyncIntentService {
             String uri = MessageFormat.format("{0}/{1}?providerid={2}&serverVersion={3}",
                     baseUrl,
                     STOCK_SYNC_PATH,
-                    allSharedPreferences.fetchDefaultLocalityId(allSharedPreferences.fetchRegisteredANM()),
+                    anmId,
                     timeStampString
             );
             Response<String> response = httpAgent.fetch(uri);
@@ -113,17 +101,17 @@ public class StockSyncIntentService extends BaseSyncIntentService {
                 return;
             }
             String jsonPayload = response.payload();
-            ArrayList<Stock> Stock_arrayList = getStockFromPayload(jsonPayload);
+            ArrayList<Stock> stockItems = getStockFromPayload(jsonPayload);
             Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(LAST_STOCK_SYNC, highestTimestamp);
             editor.commit();
-            if (Stock_arrayList.isEmpty()) {
+            if (stockItems.isEmpty()) {
                 return;
             } else {
                 StockRepository stockRepository = StockLibrary.getInstance().getStockRepository();
-                for (int j = 0; j < Stock_arrayList.size(); j++) {
-                    Stock fromServer = Stock_arrayList.get(j);
+                for (int j = 0; j < stockItems.size(); j++) {
+                    Stock fromServer = stockItems.get(j);
                     List<Stock> existingStock = stockRepository.findUniqueStock(fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
                             String.valueOf(fromServer.getValue()), String.valueOf(fromServer.getDateCreated()), fromServer.getToFrom());
                     if (!existingStock.isEmpty()) {
@@ -195,10 +183,8 @@ public class StockSyncIntentService extends BaseSyncIntentService {
                     return;
                 }
 
-                String baseUrl = StockLibrary.getInstance().getContext().configuration().dristhiBaseURL();
-                if (baseUrl.endsWith(context.getString(R.string.url_separator))) {
-                    baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
-                }
+                String baseUrl = getFormattedBaseUrl();
+
                 // create request body
                 JSONObject request = new JSONObject();
                 request.put(context.getString(R.string.stocks_key), stocksarray);
