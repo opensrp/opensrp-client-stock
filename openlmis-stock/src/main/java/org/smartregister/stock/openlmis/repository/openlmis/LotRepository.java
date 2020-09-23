@@ -20,7 +20,7 @@ import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
 import static org.smartregister.stock.openlmis.util.Utils.getCurrentTime;
 import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
-import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
+import static org.smartregister.stock.repository.StockRepository.STOCK_TABLE_NAME;
 
 /**
  * Created by samuelgithengi on 26/7/18.
@@ -98,7 +98,7 @@ public class LotRepository extends BaseRepository {
             query = String.format("SELECT * FROM %s WHERE %s IN " +
                             "(SELECT %s FROM %s  WHERE %s=? AND %s > ? GROUP BY %s having SUM(%s) >0 )" +
                             "ORDER BY %s, %s desc",
-                    LOT_TABLE, ID, LOT_ID, stock_TABLE_NAME, STOCK_TYPE_ID, EXPIRATION_DATE, LOT_ID,
+                    LOT_TABLE, ID, LOT_ID, STOCK_TABLE_NAME, STOCK_TYPE_ID, EXPIRATION_DATE, LOT_ID,
                     VALUE, EXPIRATION_DATE, LOT_STATUS);
         else
             query = String.format("SELECT * FROM %s WHERE %s=? AND %s > ? " +
@@ -181,7 +181,7 @@ public class LotRepository extends BaseRepository {
 
     public Map<String, Integer> getStockByLot(String tradeItemId) {
         String query = String.format("SELECT %s, sum(%s) FROM %s WHERE %s=? GROUP BY %s", LOT_ID, VALUE,
-                stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID);
+                STOCK_TABLE_NAME, STOCK_TYPE_ID, LOT_ID);
         Cursor cursor = null;
         Map<String, Integer> lots = new HashMap<>();
         try {
