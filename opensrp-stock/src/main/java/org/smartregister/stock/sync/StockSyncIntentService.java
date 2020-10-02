@@ -71,7 +71,7 @@ public class StockSyncIntentService extends IntentService {
     @NotNull
     public String getFormattedBaseUrl() {
 //        String baseUrl = CoreLibrary.getInstance().context().configuration().dristhiBaseURL();
-        String baseUrl = "https://wellnesspass-stage.smartregister.org/stock/";
+        String baseUrl = "https://wellnesspass-stage.smartregister.org/opensrp";
         String endString = "/";
         if (baseUrl.endsWith(endString)) {
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(endString));
