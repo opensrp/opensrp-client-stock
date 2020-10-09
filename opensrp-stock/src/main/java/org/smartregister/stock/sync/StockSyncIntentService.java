@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Response;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
@@ -70,8 +71,7 @@ public class StockSyncIntentService extends IntentService {
 
     @NotNull
     public String getFormattedBaseUrl() {
-//        String baseUrl = CoreLibrary.getInstance().context().configuration().dristhiBaseURL();
-        String baseUrl = "https://wellnesspass-stage.smartregister.org/opensrp";
+        String baseUrl = CoreLibrary.getInstance().context().configuration().dristhiBaseURL();
         String endString = "/";
         if (baseUrl.endsWith(endString)) {
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(endString));
