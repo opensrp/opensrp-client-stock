@@ -36,8 +36,8 @@ public class StockSyncIntentService extends IntentService {
 
     private static final String TAG = "StockSyncIntentService";
 
-    private static final String STOCK_ADD_PATH = "/rest/stockresource/add/";
-    private static final String STOCK_SYNC_PATH = "/rest/stockresource/sync/";
+    private static final String STOCK_ADD_PATH = "rest/stockresource/add/";
+    private static final String STOCK_SYNC_PATH = "rest/stockresource/sync/";
 
     private Context context;
     private HTTPAgent httpAgent;
