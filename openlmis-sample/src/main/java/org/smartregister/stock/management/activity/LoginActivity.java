@@ -83,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.edit().putString(DRISHTI_BASE_URL, "https://vreach-dev.smartregister.org/opensrp/").commit();
-        preferences.edit().putString(PIONEER_USER, "admin").commit();
 
         appContext = this;
         positionViews();
@@ -98,10 +97,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ;
-//        if (!getOpenSRPContext().IsUserLoggedOut()) {
-//            goToHome(false);
-//        }
+        if (!getOpenSRPContext().IsUserLoggedOut()) {
+            goToHome(false);
+        }
     }
 
     private void setDoneActionHandlerOnPasswordField() {
@@ -361,8 +359,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected LoginResponse doInBackground(Void... params) {
-//            if (getOpenSRPContext().userService().isValidLocalLogin(username, password.getBytes())){
-            if (true) {
+            if (getOpenSRPContext().userService().isValidLocalLogin(username, password.getBytes())){
                 return SUCCESS;
             } else {
                 return UNAUTHORIZED;
