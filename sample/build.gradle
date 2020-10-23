@@ -35,7 +35,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
     buildTypes {
@@ -56,6 +56,7 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'LICENSE.txt'
         exclude 'META-INF/license.txt'
+        exclude 'licenses/javolution.license.TXT'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/NOTICE.md'
         exclude 'META-INF/NOTICE'
@@ -80,9 +81,12 @@ android {
 
 dependencies {
     api project(':opensrp-stock')
-    androidTestImplementation ('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
 
-    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.core:core:1.3.2'
+
+//    androidTestImplementation ('androidx.test.espresso:espresso-core:1.3.0', {
+//        exclude group: 'com.android.support', module: 'annotation'
+//    })
+
+    testImplementation 'junit:junit:4.13'
 }
