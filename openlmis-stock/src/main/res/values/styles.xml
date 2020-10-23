@@ -13,6 +13,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
         <item name="android:paddingTop">10dp</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="Lot.Add.Subtract" parent="android:Widget.TextView">
@@ -33,7 +35,13 @@
         <item name="android:textColorHint">@color/dark_grey</item>
         <item name="android:editTextColor">@color/stock_list_dark_text</item>
         <item name="colorControlNormal">@color/dark_grey</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>
