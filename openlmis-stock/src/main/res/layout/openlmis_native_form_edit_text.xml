@@ -6,7 +6,7 @@
     android:paddingTop="20dp"
     android:paddingBottom="20dp">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -22,5 +22,7 @@
             android:focusable="true"
             android:gravity="center_vertical"
             android:drawablePadding="15dp" />
-    </android.support.design.widget.TextInputLayout>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 </RelativeLayout>

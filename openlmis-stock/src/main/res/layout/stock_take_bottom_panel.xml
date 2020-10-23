@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/botton_navigation_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bottom_navigation_border"
-    android:paddingEnd="30dp"
-    android:paddingStart="30dp">
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp">
 
     <TextView
         android:id="@+id/items_changed"
@@ -36,14 +36,14 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/bottom_navigation_margin"
-        android:layout_marginEnd="20dp"
         android:layout_marginStart="@dimen/bottom_navigation_margin"
         android:layout_marginTop="@dimen/bottom_navigation_margin"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="@dimen/bottom_navigation_margin"
         android:background="@drawable/save_draft_border"
         android:drawableStart="@drawable/ic_save"
-        android:paddingEnd="10dp"
         android:paddingStart="5dp"
+        android:paddingEnd="10dp"
         android:text="@string/save_as_draft"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -58,12 +58,12 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/bottom_navigation_margin"
         android:layout_marginTop="@dimen/bottom_navigation_margin"
+        android:layout_marginBottom="@dimen/bottom_navigation_margin"
         android:background="@drawable/rounded_button"
         android:enabled="false"
-        android:paddingEnd="@dimen/bottom_navigation_padding"
         android:paddingStart="@dimen/bottom_navigation_padding"
+        android:paddingEnd="@dimen/bottom_navigation_padding"
         android:text="@string/submit"
         android:textAllCaps="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -72,4 +72,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

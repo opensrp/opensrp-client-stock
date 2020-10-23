@@ -9,22 +9,21 @@
         android:id="@+id/commodityTypeTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:background="#E6E6E6"
-        android:paddingEnd="0dp"
         android:paddingStart="@dimen/stock_details_margin"
+        android:paddingEnd="0dp"
         android:textAllCaps="true"
         android:textColor="@color/text_black"
         android:textSize="18sp" />
 
-
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tradeItemsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:overScrollMode="never"
         android:scrollbars="vertical"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>

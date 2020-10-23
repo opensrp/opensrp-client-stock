@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/list_stock_cardview_vertical_margin"
-    android:layout_marginEnd="@dimen/list_stock_cardview_horizontal_margin"
     android:layout_marginStart="@dimen/list_stock_cardview_horizontal_margin"
     android:layout_marginTop="@dimen/list_stock_cardview_vertical_margin"
+    android:layout_marginEnd="@dimen/list_stock_cardview_horizontal_margin"
+    android:layout_marginBottom="@dimen/list_stock_cardview_vertical_margin"
     app:cardCornerRadius="@dimen/list_stock_cardview_corner">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
 
         <ImageView
             android:id="@+id/collapseExpandButton"
@@ -56,7 +55,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <View
             android:id="@+id/commodityBorder"
             android:layout_width="match_parent"
@@ -66,16 +64,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/doseTextView" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tradeItemsView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:overScrollMode="never"
             android:visibility="gone"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/commodityBorder" />
-    </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

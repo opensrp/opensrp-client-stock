@@ -10,14 +10,12 @@
         android:layout_weight="1.2"
         android:text="@string/date" />
 
-
     <TextView
         style="@style/StockDetails.Header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
         android:text="@string/to_from" />
-
 
     <TextView
         android:id="@+id/transactions_lot_code"
@@ -27,7 +25,6 @@
         android:layout_weight="1.2"
         android:text="@string/lot_code" />
 
-
     <TextView
         style="@style/StockDetails.Header"
         android:layout_width="0dp"
@@ -35,7 +32,6 @@
         android:layout_weight="1"
         android:gravity="center_horizontal"
         android:text="@string/stock_received" />
-
 
     <TextView
         style="@style/StockDetails.Header"
@@ -60,6 +56,5 @@
         android:layout_weight="1"
         android:gravity="right"
         android:text="@string/balance" />
-
 
 </LinearLayout>
