@@ -16,6 +16,7 @@ import static junit.framework.Assert.assertNull;
  */
 
 public class StockLibraryTest extends BaseUnitTest {
+
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 
@@ -29,13 +30,11 @@ public class StockLibraryTest extends BaseUnitTest {
         StockLibrary.init(context, repository);
         StockLibrary library = StockLibrary.getInstance();
         assertNotNull(library);
-
     }
 
     @Test(expected = IllegalStateException.class)
     public void callingGetInstanceOfStockLibraryWithoutInitFirstThrowsIllegalStateException() {
         StockLibrary library = StockLibrary.getInstance();
         assertNull(library);
-
     }
 }

@@ -124,7 +124,18 @@ public class OpenLMISJsonFormFragmentTest extends BaseUnitTest {
         assertFalse(view.findViewById(R.id.next_button).isEnabled());
         doReturn(true).when(formFragment).isVisible();
         try {
-            ((MaterialEditText) relativeLayout.getChildAt(0)).setText("31-08-2018");
+            for (int i = 0; i < relativeLayout.getChildCount(); i++) {
+                View child = relativeLayout.getChildAt(i);
+                if (child instanceof RelativeLayout) {
+                    for (int j = 0; j < ((RelativeLayout) child).getChildCount(); j++) {
+                        View editText = ((RelativeLayout) child).getChildAt(0);
+                        if (editText instanceof MaterialEditText) {
+                            ((MaterialEditText) editText).setText("31-08-2018");
+                            break;
+                        }
+                    }
+                }
+            }
         } catch (VerifyError e) {
         }
         formFragment.validateActivateNext();

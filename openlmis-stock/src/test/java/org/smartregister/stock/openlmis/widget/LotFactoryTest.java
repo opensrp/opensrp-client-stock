@@ -1,11 +1,12 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Intent;
-import android.support.design.widget.TextInputEditText;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.joda.time.LocalDate;
 import org.json.JSONObject;
@@ -95,16 +96,13 @@ public class LotFactoryTest extends BaseUnitTest {
                 tradeItem.getId(), true);
         lots.add(lot2);
         when(lotRepository.findLotsByTradeItem("0cf8b2f4-3e1b-4d35-b839-5a4268ef03d6")).thenReturn(lots);
-
     }
 
     @Test
     public void testGetViewsFromJson() throws Exception {
-
         List<View> viewsFromJson = lotFactory.getViewsFromJson("step2", activity, formFragment, new JSONObject(LOT_WIDGET_JSON), formFragment);
         assertEquals(1, viewsFromJson.size());
         assertEquals(2, lotFactory.lotsContainer.getChildCount());
-
     }
 
     @Test
@@ -113,7 +111,6 @@ public class LotFactoryTest extends BaseUnitTest {
         assertEquals(1, viewsFromJson.size());
 
         assertEquals(3, lotFactory.lotsContainer.getChildCount());
-
     }
 
     @Test
@@ -127,11 +124,8 @@ public class LotFactoryTest extends BaseUnitTest {
         lotJson.put(IS_STOCK_ISSUE, true);
         List<View> viewsFromJson = lotFactory.getViewsFromJson("step2", activity, formFragment, lotJson, formFragment);
         assertEquals(1, viewsFromJson.size());
-
         assertEquals(3, lotFactory.lotsContainer.getChildCount());
-
     }
-
 
     @Test
     public void testGetViewsFromJsonIssueWithSingleLot() throws Exception {
@@ -143,19 +137,14 @@ public class LotFactoryTest extends BaseUnitTest {
         lotJson.put(IS_STOCK_ISSUE, true);
         List<View> viewsFromJson = lotFactory.getViewsFromJson("step2", activity, formFragment, lotJson, formFragment);
         assertEquals(1, viewsFromJson.size());
-
         assertEquals(2, lotFactory.lotsContainer.getChildCount());
-
     }
-
 
     @Test
     public void testGetViewsFromJsonLotAdjustment() throws Exception {
-
         List<View> viewsFromJson = lotFactory.getViewsFromJson("step2", activity, formFragment, new JSONObject(ADJUST_WIDGET_JSON), formFragment);
         assertEquals(1, viewsFromJson.size());
         assertEquals(2, lotFactory.lotsContainer.getChildCount());
-
     }
 
     @Test
@@ -187,7 +176,6 @@ public class LotFactoryTest extends BaseUnitTest {
         ((EditText) lotRow.findViewById(R.id.status_dropdown)).setText("VVM1");
 
         assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
-
     }
 
     @Test
@@ -203,9 +191,7 @@ public class LotFactoryTest extends BaseUnitTest {
 
         quantity.setText(String.valueOf(1));
         assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
-
     }
-
 
     @Test
     public void testValidateNegativeStockBalance() throws Exception {
@@ -226,10 +212,7 @@ public class LotFactoryTest extends BaseUnitTest {
         quantityEditText.setText(String.valueOf(10));
 
         assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
-
-
     }
-
 
     @Test
     public void testAddLotAdjustmentRow() throws Exception {
@@ -239,7 +222,6 @@ public class LotFactoryTest extends BaseUnitTest {
         lotRow.findViewById(R.id.add_lot).performClick();
         assertEquals(3, lotFactory.lotsContainer.getChildCount());
     }
-
 
     @Test
     public void testPopulateStatusOptions() throws Exception {
@@ -281,7 +263,6 @@ public class LotFactoryTest extends BaseUnitTest {
         assertEquals("7c6d239f-0bbc-4cab-b218-888d8be89d24", lotDropdown.getTag(R.id.lot_id));
     }
 
-
     private void selectLot() throws Exception {
         when(lotRepository.findLotsByTradeItem("0cf8b2f4-3e1b-4d35-b839-5a4268ef03d6", false)).thenReturn(lots);
         lotFactory.getViewsFromJson("step1", activity, formFragment, new JSONObject(ADJUST_WIDGET_JSON), formFragment);
@@ -306,10 +287,9 @@ public class LotFactoryTest extends BaseUnitTest {
         reasons.add(new Reason("id_1", "program_1", "type_1",
                 new StockCardLineItemReason("id_1", "Damage", null, "DEBIT",
                         "TRANSFER", null)));
-        when(reasonRepository.findReasons(null,  "fcd27429-d901-4692-b61d-836cd30e67c6",null, "ADJUSTMENT")).thenReturn(reasons);
+        when(reasonRepository.findReasons(null, "fcd27429-d901-4692-b61d-836cd30e67c6", null, "ADJUSTMENT")).thenReturn(reasons);
         PopupMenu popup = lotFactory.populateReasonsOptions(activity, reason);
         reason.performClick();
-
 
         MenuItem item = popup.getMenu().getItem(0);
         org.robolectric.shadows.ShadowPopupMenu shadowPopupMenu = Shadows.shadowOf(popup);
@@ -319,8 +299,6 @@ public class LotFactoryTest extends BaseUnitTest {
         assertEquals("Damage", lotFactory.getSelectedLotDTos().get(0).getReason());
 
         verify(formFragment, times(2)).writeValue(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
-
-
     }
 
     @Test
@@ -332,7 +310,6 @@ public class LotFactoryTest extends BaseUnitTest {
         lotRow.findViewById(R.id.add_stock).performClick();
         assertEquals("1", ((TextInputEditText) lotRow.findViewById(R.id.quantity_textview)).getText().toString());
         assertEquals("+1", ((TextInputEditText) lotRow.findViewById(R.id.adjustment_textview)).getText().toString());
-
     }
 
     @Test
@@ -343,7 +320,6 @@ public class LotFactoryTest extends BaseUnitTest {
         lotRow.findViewById(R.id.subtract_stock).performClick();
         assertEquals("-1", ((TextInputEditText) lotRow.findViewById(R.id.quantity_textview)).getText().toString());
         assertEquals("-1", ((TextInputEditText) lotRow.findViewById(R.id.adjustment_textview)).getText().toString());
-
     }
 
     @Test
@@ -361,7 +337,6 @@ public class LotFactoryTest extends BaseUnitTest {
         ((EditText) lotRow.findViewById(R.id.reason_dropdown)).setText("Damaged");
 
         assertTrue(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
-
     }
 
     @Test
@@ -382,7 +357,6 @@ public class LotFactoryTest extends BaseUnitTest {
 
         quantity.setText("100");
         assertFalse(LotFactory.validate(formFragment, lotFactory.lotsContainer).isValid());
-
     }
 
     @Test
@@ -404,7 +378,5 @@ public class LotFactoryTest extends BaseUnitTest {
         assertEquals("LC8063 Exp. " + new LocalDate(89239490024l).toString(DATE_FORMAT), lotDropdown.getText().toString());
         assertEquals("9da34cac-4753-4763-a749-10741cdcce33", lotFactory.getSelectedLotDTos().get(0).getLotId());
         assertEquals("9da34cac-4753-4763-a749-10741cdcce33", lotDropdown.getTag(R.id.lot_id));
-
     }
-
 }
