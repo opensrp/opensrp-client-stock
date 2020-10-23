@@ -161,7 +161,6 @@ public class LotFactory implements FormWidgetFactory {
             selectedLotDTos = gson.fromJson(selectedLotDTosJSON, listType);
         }
 
-
         isStockIssue = jsonObject.optBoolean(IS_STOCK_ISSUE);
         useVvm = jsonObject.optBoolean(USE_VMM);
         List<Lot> lots;

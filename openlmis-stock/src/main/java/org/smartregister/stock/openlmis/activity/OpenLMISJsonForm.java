@@ -14,8 +14,9 @@ public class OpenLMISJsonForm extends JsonFormActivity {
     @Override
     public void initializeFormFragment() {
         OpenLMISJsonFormFragment stockJsonFormFragment = OpenLMISJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, stockJsonFormFragment).commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.container, stockJsonFormFragment)
+                .commit();
     }
-
 }

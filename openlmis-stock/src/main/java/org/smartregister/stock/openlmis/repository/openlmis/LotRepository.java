@@ -18,9 +18,9 @@ import java.util.Map;
 import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
 import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
 import static org.smartregister.stock.openlmis.util.Utils.getCurrentTime;
+import static org.smartregister.stock.repository.StockRepository.STOCK_TABLE_NAME;
 import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
-import static org.smartregister.stock.repository.StockRepository.STOCK_TABLE_NAME;
 
 /**
  * Created by samuelgithengi on 26/7/18.
@@ -123,7 +123,6 @@ public class LotRepository extends BaseRepository {
     }
 
     public Lot findLotById(String lotId) {
-
         String query = String.format("SELECT * FROM %s WHERE %s=?",
                 LOT_TABLE, ID);
         Cursor cursor = null;
@@ -207,12 +206,13 @@ public class LotRepository extends BaseRepository {
 
 
     private Lot createLot(Cursor cursor) {
-        Lot lot = new Lot(cursor.getString(cursor.getColumnIndex(ID)),
+        Lot lot = new Lot(
+                cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(LOT_CODE)),
                 cursor.getLong(cursor.getColumnIndex(EXPIRATION_DATE)),
                 cursor.getLong(cursor.getColumnIndex(MANUFACTURE_DATE)),
                 cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE)))
+                convertIntToBoolean(cursor.getColumnIndex(ACTIVE))
         );
         lot.setLotStatus(cursor.getString(cursor.getColumnIndex(LOT_STATUS)));
         return lot;
