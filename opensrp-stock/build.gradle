@@ -100,6 +100,7 @@ allprojects {
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+        maven { url 'https://dl.bintray.com/ibm-watson-health/ibm-fhir-server-releases' }
         mavenLocal()
     }
 }
@@ -124,6 +125,8 @@ dependencies {
         exclude group: 'com.android.support'
         exclude group: 'androidx.core', module: 'core'
     }
+
+    jarJar 'com.ibm.fhir:fhir-model:4.2.3'
 
     implementation fileTree(dir: "./build/libs", include: ['*.jar'])
 
