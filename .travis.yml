@@ -52,7 +52,9 @@ before_script:
 
 script:
   - travis_wait ./gradlew :opensrp-stock:jacocoTestReport --stacktrace
+  - travis_wait ./gradlew :openlmis-stock:jacocoTestReport --stacktrace
   - travis_wait ./gradlew :opensrp-stock:coveralls --stacktrace
+  - travis_wait ./gradlew :openlmis-stock:coveralls --stacktrace
 
 after_failure:
   - pandoc opensrp-stock/build/reports/tests/index.html -t plain
