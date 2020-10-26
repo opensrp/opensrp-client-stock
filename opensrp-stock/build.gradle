@@ -125,8 +125,6 @@ dependencies {
         exclude group: 'androidx.core', module: 'core'
     }
 
-    jarJar 'com.ibm.fhir:fhir-model:4.2.3'
-
     implementation fileTree(dir: "./build/libs", include: ['*.jar'])
 
     implementation 'androidx.cardview:cardview:1.0.0'
