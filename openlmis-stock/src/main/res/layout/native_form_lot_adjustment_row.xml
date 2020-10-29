@@ -7,7 +7,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/lot_code"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/lot_adjust_margin"
@@ -31,7 +30,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/lot_quantity"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/lot_adjust_margin"
@@ -65,7 +63,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/reason"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/lot_adjust_margin"
@@ -90,7 +87,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/lot_status"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
