@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
@@ -27,8 +28,8 @@ import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.activity.StockControlActivity;
 import org.smartregister.stock.domain.ActiveChildrenStats;
 import org.smartregister.stock.domain.Stock;
-import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockExternalRepository;
+import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.util.StockUtils;
 
 import java.text.DateFormat;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class PlanningStockFragment extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -81,10 +83,9 @@ public class PlanningStockFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_planning__stock_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_planning_stock_fragment, container, false);
         mainview = view;
 //        creatgraphview(mainview);
         loatDataView(mainview);
@@ -102,7 +103,6 @@ public class PlanningStockFragment extends Fragment {
         graph.setId(R.id.graph);
 
         graphparent.addView(graph, index);
-
 
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
         String[] montharry;
@@ -163,7 +163,6 @@ public class PlanningStockFragment extends Fragment {
         }
         DecimalFormat df = new DecimalFormat("####0");
         ((TextView) view.findViewById(R.id.avg_vacc_waste_rate_value)).setText("" + df.format(Math.ceil(wastepercent)) + "%");
-
     }
 
     private void getLastThreeMonthStockIssued(View view) {
@@ -174,7 +173,6 @@ public class PlanningStockFragment extends Fragment {
         TextView thirdmonthlabel = (TextView) view.findViewById(R.id.month3);
         TextView thirdmonthvialsUsed = (TextView) view.findViewById(R.id.month3vials);
         TextView threemonthaverage = (TextView) view.findViewById(R.id.month3average);
-
 
         DateTime today = new DateTime(System.currentTimeMillis());
         DateTime startofthismonth = today.dayOfMonth().withMinimumValue();
@@ -209,12 +207,10 @@ public class PlanningStockFragment extends Fragment {
 
         thirdmonthlabel.setText(thirdlastmonth + " " + thirdlastmonthyear);
         thirdmonthvialsUsed.setText("" + stockissued3rdlastmonth + " vials");
-
         //////////////////////////////////////////////////////////////////////////////////////////
 
         int threemonthaveragevalue = (int) Math.ceil((double) (stockissuedlastmonth + stockissued2ndlastmonth + stockissued3rdlastmonth) / 3);
         threemonthaverage.setText(threemonthaveragevalue + " vials");
-
     }
 
     private int getStockIssuedIntimeFrame(DateTime startofLastMonth, DateTime startofthismonth) {
@@ -242,7 +238,6 @@ public class PlanningStockFragment extends Fragment {
     private void getValueForStock(View view) {
         TextView stockvalue = (TextView) view.findViewById(R.id.vials);
         stockvalue.setText("" + StockLibrary.getInstance().getStockRepository().getCurrentStockNumber(((StockControlActivity) getActivity()).stockType) + " vials");
-
     }
 
     private void createTitle(View view) {
@@ -252,7 +247,6 @@ public class PlanningStockFragment extends Fragment {
         TextView avg_vacc_waste_rate_label = (TextView) view.findViewById(R.id.avg_vacc_waste_rate_label);
         TextView due_vacc_description = (TextView) view.findViewById(R.id.due_vacc_description);
         TextView lastthreemonthstocktitle = (TextView) view.findViewById(R.id.last_three_months_stock_title);
-
 
         String vaccineName = ((StockControlActivity) getActivity()).stockType.getName();
 
@@ -265,7 +259,6 @@ public class PlanningStockFragment extends Fragment {
 
         DateTime NextMonth = new DateTime(System.currentTimeMillis()).plusMonths(1);
         ((TextView) view.findViewById(R.id.due_vacc_next_month_label)).setText("Due " + vaccineName + " next month " + NextMonth.monthOfYear().getAsShortText() + " " + NextMonth.year().getAsShortText() + ": ");
-
     }
 
     private LineGraphSeries<DataPoint> createGraphDataAndView(View view) {
@@ -288,7 +281,6 @@ public class PlanningStockFragment extends Fragment {
             }
             datapointsforgraphs.add(new DataPoint(threemonthEarlierIterator.toDate(), Double.parseDouble(stockvalue)));
             threemonthEarlierIterator = threemonthEarlierIterator.plusDays(1);
-
         }
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(
@@ -303,7 +295,6 @@ public class PlanningStockFragment extends Fragment {
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMaxY(series.getHighestValueY());
         return series;
-
     }
 
     private int processVaccinesDueNextMonth() {
@@ -319,7 +310,6 @@ public class PlanningStockFragment extends Fragment {
         }
         return vaccinesDueNextMonth;
     }
-
 
     private ArrayList<JSONObject> readvaccineFileAndReturnVaccinesofSameType(String vaccinetypename) {
         ArrayList<JSONObject> vaccinesofsametype = new ArrayList<>();
@@ -338,17 +328,13 @@ public class PlanningStockFragment extends Fragment {
                     }
                 }
             }
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return vaccinesofsametype;
     }
 
-
     private void createActiveChildrenStatsView(View view) {
-
         TextView zerotoelevenlastmonth = (TextView) view.findViewById(R.id.zerotoelevenlastmonth);
         TextView zerotoeleventhismonth = (TextView) view.findViewById(R.id.zerotoeleventhismonth);
         TextView twelvetofiftyninethismonth = (TextView) view.findViewById(R.id.twelvetofiftyninethismonth);
@@ -362,7 +348,6 @@ public class PlanningStockFragment extends Fragment {
         String stringDifference12to59 = "";
         StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
         ActiveChildrenStats activeChildrenStats = stockExternalRepository.getActiveChildrenStat();
-
 
         zerotoelevenlastmonth.setText("" + activeChildrenStats.getChildrenLastMonthZeroToEleven());
         zerotoeleventhismonth.setText("" + activeChildrenStats.getChildrenThisMonthZeroToEleven());
@@ -384,7 +369,6 @@ public class PlanningStockFragment extends Fragment {
         } else {
             stringDifference12to59 = "+" + difference12to59;
         }
-
 
         twelvetofiftyninedifference.setText(stringDifference12to59);
         zerotoelevendifference.setText(stringDifference0to11);
@@ -479,6 +463,4 @@ public class PlanningStockFragment extends Fragment {
 //        c.close();
 //        return toreturn;
 //    }
-
-
 }

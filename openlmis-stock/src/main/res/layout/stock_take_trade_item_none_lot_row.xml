@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/list_stock_cardview_vertical_margin"
     app:cardCornerRadius="@dimen/list_stock_cardview_corner">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/pending_stock_take"
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
 
         </TextView>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/stock_on_hand"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="0dp"
@@ -39,7 +39,7 @@
             app:layout_constraintStart_toEndOf="@id/trade_item"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/stock_on_hand_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,9 +48,10 @@
                 android:focusable="false"
                 android:hint="@string/stock_on_hand"
                 android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/lot_quantity"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="0dp"
@@ -61,13 +62,14 @@
             app:layout_constraintStart_toEndOf="@id/stock_on_hand"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/quantity_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/physical_count"
                 android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/subtract_stock"
@@ -100,8 +102,7 @@
             app:layout_constraintStart_toEndOf="@id/lot_quantity"
             app:layout_constraintTop_toBottomOf="@id/subtract_stock" />
 
-
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/adjustment"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="0dp"
@@ -112,7 +113,7 @@
             app:layout_constraintStart_toStartOf="@id/stock_on_hand"
             app:layout_constraintTop_toBottomOf="@id/stock_on_hand">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/adjustment_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -120,9 +121,10 @@
                 android:cursorVisible="false"
                 android:focusable="false"
                 android:hint="@string/difference" />
-        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/reason"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="0dp"
@@ -133,7 +135,7 @@
             app:layout_constraintStart_toStartOf="@id/lot_quantity"
             app:layout_constraintTop_toBottomOf="@id/lot_quantity">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/reason_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -141,9 +143,10 @@
                 android:drawableEnd="@drawable/abc_spinner_mtrl_am_alpha"
                 android:focusable="false"
                 android:hint="@string/reason" />
-        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/lot_status"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="0dp"
@@ -153,7 +156,7 @@
             app:layout_constraintStart_toStartOf="@id/stock_on_hand"
             app:layout_constraintTop_toBottomOf="@id/adjustment">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/status_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -161,22 +164,23 @@
                 android:drawableEnd="@drawable/abc_spinner_mtrl_am_alpha"
                 android:focusable="false"
                 android:hint="@string/status" />
-        </android.support.design.widget.TextInputLayout>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/bottom_navigation_margin"
             android:layout_marginTop="@dimen/bottom_navigation_margin"
+            android:layout_marginBottom="@dimen/bottom_navigation_margin"
             android:background="@drawable/save_border"
             android:enabled="false"
             android:minHeight="0dp"
-            android:paddingBottom="5dp"
-            android:paddingEnd="@dimen/bottom_navigation_padding"
             android:paddingStart="@dimen/bottom_navigation_padding"
             android:paddingTop="5dp"
+            android:paddingEnd="@dimen/bottom_navigation_padding"
+            android:paddingBottom="5dp"
             android:text="@string/save"
             android:textAllCaps="false"
             android:textColor="@color/save_disabled"
@@ -185,9 +189,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lot_status" />
 
-    </android.support.constraint.ConstraintLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include layout="@layout/stock_take_trade_item_completed" />
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1A88B7</color>
-    <color name="colorPrimaryDark">#166991</color>
-    <color name="colorAccent">#1A88B7</color>
+    <color name="colorPrimary">#00A750</color>
+    <color name="colorPrimaryDark">#008B45</color>
+    <color name="colorAccent">#39B66B</color>
 
     <color name="silver">#A9A9A9</color>
 
-    <color name="status_bar_bg_dark_grey">#494949</color>
+    <color name="status_bar_bg_dark_grey">#51B86B</color>
     <color name="bluetext">#3D9EC9</color>
 
     <color name="actionbar">#208CC5</color>

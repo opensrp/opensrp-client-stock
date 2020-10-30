@@ -1,13 +1,14 @@
 package org.smartregister.stock.openlmis.view.viewholder;
 
 import android.content.Context;
-import android.support.v7.view.ContextThemeWrapper;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.listener.ExpandCollapseListener;

@@ -17,9 +17,9 @@ import org.smartregister.stock.R;
 public class StockDatePickerFactory extends DatePickerFactory {
 
     @Override
-    protected void attachJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, MaterialEditText editText, TextView duration) {
-        super.attachJson(stepName, context, formFragment, jsonObject, editText, duration);
-        editText.setHintTextColor(context.getResources().getColor(R.color.text_black));
+    protected void attachLayout(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, MaterialEditText editText, TextView duration) {
+        super.attachLayout(stepName, context, formFragment, jsonObject, editText, duration);
+//        editText.setHintTextColor(context.getResources().getColor(R.color.text_black));
     }
 
     @Override

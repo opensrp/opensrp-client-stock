@@ -27,7 +27,7 @@
             android:textAllCaps="true"
             android:textColor="@color/button_color"
             android:textSize="16sp" />
-    </LinearLayout>
 
+    </LinearLayout>
 
 </LinearLayout>

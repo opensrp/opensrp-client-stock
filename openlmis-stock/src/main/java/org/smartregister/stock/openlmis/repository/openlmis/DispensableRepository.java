@@ -42,7 +42,7 @@ public class DispensableRepository extends BaseRepository {
                     + ")";
 
     public DispensableRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

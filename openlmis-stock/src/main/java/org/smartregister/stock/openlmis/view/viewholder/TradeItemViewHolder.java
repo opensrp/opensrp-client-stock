@@ -1,17 +1,15 @@
 package org.smartregister.stock.openlmis.view.viewholder;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.domain.TradeItem;
 import org.smartregister.stock.openlmis.dto.TradeItemDto;
 import org.smartregister.stock.openlmis.presenter.StockListPresenter;
-import org.smartregister.stock.openlmis.util.OpenLMISConstants;
-import org.smartregister.stock.openlmis.view.StockDetailsActivity;
 import org.smartregister.stock.openlmis.wrapper.TradeItemWrapper;
 
 /**

@@ -7,9 +7,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Response;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
@@ -19,30 +21,30 @@ import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Stock;
 import org.smartregister.stock.repository.StockRepository;
-import org.smartregister.stock.util.NetworkUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.smartregister.util.Log.logError;
-import static org.smartregister.util.Log.logInfo;
 
 /**
  * Created by samuelgithengi on 2/16/18.
  */
 
 public class StockSyncIntentService extends IntentService {
-    private static final String STOCK_Add_PATH = "/rest/stockresource/add/";
+
+    private static final String TAG = "StockSyncIntentService";
+
+    private static final String STOCK_ADD_PATH = "rest/stockresource/add/";
     private static final String STOCK_SYNC_PATH = "rest/stockresource/sync/";
 
     private Context context;
     private HTTPAgent httpAgent;
     private ActionService actionService;
 
-
     public StockSyncIntentService() {
-        super("StockSyncIntentService");
+        super(TAG);
     }
 
     public StockSyncIntentService(String name) {
@@ -58,34 +60,31 @@ public class StockSyncIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent workIntent) {
+    protected void onHandleIntent(Intent intent) {
+        // push
+        pushStockToServer();
 
-        if (StockLibrary.getInstance().getContext().IsUserLoggedOut()) {
-            logInfo("Not updating from server as user is not logged in.");
-            return;
-        }
-
-        if (NetworkUtils.isNetworkAvailable(context)) {
-            // push
-            pushStockToServer();
-
-            // pull
-            pullStockFromServer();
-            actionService.fetchNewActions();
-
-        }
+        // pull
+        pullStockFromServer();
+        actionService.fetchNewActions();
     }
 
+    @NotNull
+    public String getFormattedBaseUrl() {
+        String baseUrl = CoreLibrary.getInstance().context().configuration().dristhiBaseURL();
+        String endString = "/";
+        if (baseUrl.endsWith(endString)) {
+            baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(endString));
+        }
+        return baseUrl;
+    }
 
     private void pullStockFromServer() {
         final String LAST_STOCK_SYNC = "last_stock_sync";
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
         String anmId = allSharedPreferences.fetchRegisteredANM();
-        String baseUrl = StockLibrary.getInstance().getContext().configuration().dristhiBaseURL();
-        if (baseUrl.endsWith(context.getString(R.string.url_separator))) {
-            baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
-        }
+        String baseUrl = getFormattedBaseUrl();
 
         while (true) {
             long timestamp = preferences.getLong(LAST_STOCK_SYNC, 0);
@@ -102,17 +101,17 @@ public class StockSyncIntentService extends IntentService {
                 return;
             }
             String jsonPayload = response.payload();
-            ArrayList<Stock> Stock_arrayList = getStockFromPayload(jsonPayload);
+            ArrayList<Stock> stockItems = getStockFromPayload(jsonPayload);
             Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(LAST_STOCK_SYNC, highestTimestamp);
             editor.commit();
-            if (Stock_arrayList.isEmpty()) {
+            if (stockItems.isEmpty()) {
                 return;
             } else {
                 StockRepository stockRepository = StockLibrary.getInstance().getStockRepository();
-                for (int j = 0; j < Stock_arrayList.size(); j++) {
-                    Stock fromServer = Stock_arrayList.get(j);
+                for (int j = 0; j < stockItems.size(); j++) {
+                    Stock fromServer = stockItems.get(j);
                     List<Stock> existingStock = stockRepository.findUniqueStock(fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
                             String.valueOf(fromServer.getValue()), String.valueOf(fromServer.getDateCreated()), fromServer.getToFrom());
                     if (!existingStock.isEmpty()) {
@@ -122,7 +121,6 @@ public class StockSyncIntentService extends IntentService {
                     }
                     stockRepository.add(fromServer);
                 }
-
             }
         }
     }
@@ -134,12 +132,10 @@ public class StockSyncIntentService extends IntentService {
             if (stockContainer.has(context.getString(R.string.stocks_key))) {
                 JSONArray stockArray = stockContainer.getJSONArray(context.getString(R.string.stocks_key));
                 for (int i = 0; i < stockArray.length(); i++) {
-
                     JSONObject stockObject = stockArray.getJSONObject(i);
                     if (stockObject.getLong(context.getString(R.string.server_version_key)) > toreturn) {
                         toreturn = stockObject.getLong(context.getString(R.string.server_version_key));
                     }
-
                 }
             }
         } catch (Exception e) {
@@ -179,7 +175,6 @@ public class StockSyncIntentService extends IntentService {
         int limit = 50;
 
         try {
-
             while (keepSyncing) {
                 StockRepository stockRepository = StockLibrary.getInstance().getStockRepository();
                 ArrayList<Stock> stocks = (ArrayList<Stock>) stockRepository.findUnSyncedWithLimit(limit);
@@ -188,10 +183,8 @@ public class StockSyncIntentService extends IntentService {
                     return;
                 }
 
-                String baseUrl = StockLibrary.getInstance().getContext().configuration().dristhiBaseURL();
-                if (baseUrl.endsWith(context.getString(R.string.url_separator))) {
-                    baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
-                }
+                String baseUrl = getFormattedBaseUrl();
+
                 // create request body
                 JSONObject request = new JSONObject();
                 request.put(context.getString(R.string.stocks_key), stocksarray);
@@ -200,7 +193,7 @@ public class StockSyncIntentService extends IntentService {
                 Response<String> response = httpAgent.post(
                         MessageFormat.format("{0}/{1}",
                                 baseUrl,
-                                STOCK_Add_PATH),
+                                STOCK_ADD_PATH),
                         jsonPayload);
                 if (response.isFailure()) {
                     Log.e(getClass().getName(), "Stocks sync failed.");
@@ -234,5 +227,4 @@ public class StockSyncIntentService extends IntentService {
         }
         return array;
     }
-
 }

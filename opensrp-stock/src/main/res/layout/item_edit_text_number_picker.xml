@@ -5,33 +5,34 @@
     android:minHeight="60dp">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <Button
+            android:id="@+id/addbutton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/stock_plus"
-            android:id="@+id/addbutton" />
+            android:background="@drawable/stock_plus" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_weight="1"
             android:textSize="@dimen/default_text_size"
             app:met_floatingLabel="highlight"
             app:met_floatingLabelText=""
             app:met_floatingLabelTextSize="@dimen/default_text_size"
             app:met_primaryColor="?colorAccent"
-            app:met_singleLineEllipsis="true"
-            android:layout_weight="1" />
+            app:met_singleLineEllipsis="true" />
+
         <Button
+            android:id="@+id/minusbutton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/stock_minus"
-            android:id="@+id/minusbutton" />
+            android:background="@drawable/stock_minus" />
 
     </LinearLayout>
 

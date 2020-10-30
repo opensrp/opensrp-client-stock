@@ -16,7 +16,7 @@
         android:textSize="@dimen/default_text_size"
         android:visibility="gone" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,5 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/default_text_size" />
-    </android.support.design.widget.TextInputLayout>
+
+    </com.google.android.material.textfield.TextInputLayout>
+    
 </RelativeLayout>

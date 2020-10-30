@@ -7,11 +7,11 @@
     <application>
         <activity
             android:name=".view.StockListActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="org.smartregister.stock.openlmis.activity.OpenLMISJsonForm"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <receiver android:name=".receiver.OpenLMISAlarmReceiver" />

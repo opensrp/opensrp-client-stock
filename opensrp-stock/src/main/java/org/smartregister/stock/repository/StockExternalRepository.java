@@ -12,7 +12,7 @@ import org.smartregister.stock.domain.ActiveChildrenStats;
 public abstract class StockExternalRepository extends BaseRepository {
 
     public StockExternalRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public abstract int getVaccinesUsedUntilDate(Long date, String vaccineName);

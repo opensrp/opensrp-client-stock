@@ -54,7 +54,7 @@ public class CommodityTypeRepository extends BaseRepository {
                     + ")";
 
     public CommodityTypeRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

@@ -1,6 +1,6 @@
 package org.smartregister.stock.openlmis.domain;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by samuelgithengi on 9/26/18.

@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import androidx.annotation.NonNull;
+
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
@@ -27,11 +29,12 @@ import org.smartregister.stock.openlmis.util.OpenLMISConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.vijay.jsonwizard.utils.FormUtils.FONT_BOLD_PATH;
 import static com.vijay.jsonwizard.utils.FormUtils.MATCH_PARENT;
 import static com.vijay.jsonwizard.utils.FormUtils.WRAP_CONTENT;
-import static com.vijay.jsonwizard.utils.FormUtils.getLayoutParams;
+import static com.vijay.jsonwizard.utils.FormUtils.getLinearLayoutParams;
 import static com.vijay.jsonwizard.utils.FormUtils.getTextViewWith;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.ADJUSTMENT;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.CREDIT;
@@ -50,6 +53,11 @@ import static org.smartregister.stock.openlmis.util.OpenLMISConstants.TRANSFER;
  * Created by samuelgithengi on 10/4/18.
  */
 public class OpenLMISNativeRadioButtonFactory implements FormWidgetFactory {
+
+    @Override
+    public List<View> getViewsFromJson(String s, Context context, JsonFormFragment jsonFormFragment, JSONObject jsonObject, CommonListener commonListener, boolean b) throws Exception {
+        return null;
+    }
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
@@ -74,7 +82,7 @@ public class OpenLMISNativeRadioButtonFactory implements FormWidgetFactory {
             CustomTextView textView = getTextViewWith(context, 27, label, jsonObject.getString(JsonFormConstants.KEY),
                     jsonObject.getString("type"), openMrsEntityParent, openMrsEntity, openMrsEntityId,
                     relevance,
-                    getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0), FONT_BOLD_PATH);
+                    getLinearLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, 0), FONT_BOLD_PATH);
             canvasIds.put(textView.getId());
             textView.setEnabled(!readOnly);
             views.add(textView);
@@ -85,8 +93,7 @@ public class OpenLMISNativeRadioButtonFactory implements FormWidgetFactory {
         RadioGroup radioGroup = new RadioGroup(context);
         for (int i = 0; i < options.length(); i++) {
             JSONObject item = options.getJSONObject(i);
-            RadioButton radioButton = (RadioButton) LayoutInflater.from(context).inflate(R.layout.item_radio_button,
-                    null);
+            RadioButton radioButton = (RadioButton) LayoutInflater.from(context).inflate(R.layout.native_item_radio_button, null);
             radioButton.setId(ViewUtil.generateViewId());
             radioButton.setText(item.getString(JsonFormConstants.TEXT));
             radioButton.setTag(R.id.key, jsonObject.getString(JsonFormConstants.KEY));
@@ -117,7 +124,7 @@ public class OpenLMISNativeRadioButtonFactory implements FormWidgetFactory {
                 ((JsonApi) context).addSkipLogicView(radioButton);
             }
         }
-        radioGroup.setLayoutParams(getLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, (int) context
+        radioGroup.setLayoutParams(getLinearLayoutParams(MATCH_PARENT, WRAP_CONTENT, 0, 0, 0, (int) context
                 .getResources().getDimension(R.dimen.extra_bottom_margin)));
         views.add(radioGroup);
 
@@ -126,6 +133,12 @@ public class OpenLMISNativeRadioButtonFactory implements FormWidgetFactory {
         }
 
         return views;
+    }
+
+    @NonNull
+    @Override
+    public Set<String> getCustomTranslatableWidgetFields() {
+        return null;
     }
 
     private void populateValues(JSONObject jsonObject) throws JSONException {

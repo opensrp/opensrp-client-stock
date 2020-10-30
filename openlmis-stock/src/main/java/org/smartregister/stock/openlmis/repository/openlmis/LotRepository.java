@@ -18,9 +18,9 @@ import java.util.Map;
 import static org.smartregister.stock.openlmis.repository.StockRepository.LOT_ID;
 import static org.smartregister.stock.openlmis.util.Utils.convertIntToBoolean;
 import static org.smartregister.stock.openlmis.util.Utils.getCurrentTime;
+import static org.smartregister.stock.repository.StockRepository.STOCK_TABLE_NAME;
 import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
-import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
 
 /**
  * Created by samuelgithengi on 26/7/18.
@@ -47,7 +47,7 @@ public class LotRepository extends BaseRepository {
             + LOT_TABLE + "(" + EXPIRATION_DATE + ")";
 
     public LotRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {
@@ -98,7 +98,7 @@ public class LotRepository extends BaseRepository {
             query = String.format("SELECT * FROM %s WHERE %s IN " +
                             "(SELECT %s FROM %s  WHERE %s=? AND %s > ? GROUP BY %s having SUM(%s) >0 )" +
                             "ORDER BY %s, %s desc",
-                    LOT_TABLE, ID, LOT_ID, stock_TABLE_NAME, STOCK_TYPE_ID, EXPIRATION_DATE, LOT_ID,
+                    LOT_TABLE, ID, LOT_ID, STOCK_TABLE_NAME, STOCK_TYPE_ID, EXPIRATION_DATE, LOT_ID,
                     VALUE, EXPIRATION_DATE, LOT_STATUS);
         else
             query = String.format("SELECT * FROM %s WHERE %s=? AND %s > ? " +
@@ -123,7 +123,6 @@ public class LotRepository extends BaseRepository {
     }
 
     public Lot findLotById(String lotId) {
-
         String query = String.format("SELECT * FROM %s WHERE %s=?",
                 LOT_TABLE, ID);
         Cursor cursor = null;
@@ -181,7 +180,7 @@ public class LotRepository extends BaseRepository {
 
     public Map<String, Integer> getStockByLot(String tradeItemId) {
         String query = String.format("SELECT %s, sum(%s) FROM %s WHERE %s=? GROUP BY %s", LOT_ID, VALUE,
-                stock_TABLE_NAME, STOCK_TYPE_ID, LOT_ID);
+                STOCK_TABLE_NAME, STOCK_TYPE_ID, LOT_ID);
         Cursor cursor = null;
         Map<String, Integer> lots = new HashMap<>();
         try {
@@ -207,12 +206,13 @@ public class LotRepository extends BaseRepository {
 
 
     private Lot createLot(Cursor cursor) {
-        Lot lot = new Lot(cursor.getString(cursor.getColumnIndex(ID)),
+        Lot lot = new Lot(
+                cursor.getString(cursor.getColumnIndex(ID)),
                 cursor.getString(cursor.getColumnIndex(LOT_CODE)),
                 cursor.getLong(cursor.getColumnIndex(EXPIRATION_DATE)),
                 cursor.getLong(cursor.getColumnIndex(MANUFACTURE_DATE)),
                 cursor.getString(cursor.getColumnIndex(TRADE_ITEM_ID)),
-                convertIntToBoolean(cursor.getInt(cursor.getColumnIndex(ACTIVE)))
+                convertIntToBoolean(cursor.getColumnIndex(ACTIVE))
         );
         lot.setLotStatus(cursor.getString(cursor.getColumnIndex(LOT_STATUS)));
         return lot;

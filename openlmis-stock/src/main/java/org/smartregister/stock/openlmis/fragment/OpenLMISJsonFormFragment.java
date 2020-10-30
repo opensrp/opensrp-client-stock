@@ -1,7 +1,6 @@
 package org.smartregister.stock.openlmis.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
@@ -157,17 +158,26 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         }
     }
 
-    public void writeValue(String stepName, String key, String s, String
-            openMrsEntityParent, String openMrsEntity, String openMrsEntityId) {
-        super.writeValue(stepName, key, s, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+    public void writeValue(String stepName, String key, String s, String openMrsEntityParent,
+                           String openMrsEntity, String openMrsEntityId) {
+        super.writeValue(stepName, key, s, openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
         validateActivateNext();
     }
 
     @Override
-    public void writeValue(String stepName, String prentKey, String childObjectKey, String
-            childKey, String value, String openMrsEntityParent, String openMrsEntity, String
-                                   openMrsEntityId) {
-        super.writeValue(stepName, prentKey, childObjectKey, childKey, value, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+    public void writeValue(String stepName, String key, String selectedValue, String openMrsEntityParent,
+                           String openMrsEntity, String openMrsEntityId, boolean popup) {
+        super.writeValue(stepName, key, selectedValue, openMrsEntityParent, openMrsEntity, openMrsEntityId, popup);
+
+        validateActivateNext();
+    }
+
+    @Override
+    public void writeValue(String stepName, String prentKey, String childObjectKey, String childKey, String value,
+                           String openMrsEntityParent, String openMrsEntity, String openMrsEntityId, boolean popup) {
+        super.writeValue(stepName, prentKey, childObjectKey, childKey, value,
+                openMrsEntityParent, openMrsEntity, openMrsEntityId, popup);
+
         validateActivateNext();
     }
 
@@ -175,7 +185,7 @@ public class OpenLMISJsonFormFragment extends JsonFormFragment {
         informationTextView.setText(text);
     }
 
-    private OpenLMISJsonFormFragmentPresenter getPresenter() {
+    public OpenLMISJsonFormFragmentPresenter getPresenter() {
         return (OpenLMISJsonFormFragmentPresenter) presenter;
     }
 

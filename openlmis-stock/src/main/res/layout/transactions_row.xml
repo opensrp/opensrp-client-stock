@@ -13,14 +13,12 @@
         android:layout_weight="1.2"
         android:textColor="@color/stock_list_dark_text" />
 
-
     <TextView
         android:id="@+id/to_from"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
         android:textColor="@color/stock_list_dark_text" />
-
 
     <TextView
         android:id="@+id/lot_code"
@@ -29,7 +27,6 @@
         android:layout_weight="1.2"
         android:textColor="@color/stock_list_dark_text" />
 
-
     <TextView
         android:id="@+id/received"
         android:layout_width="0dp"
@@ -37,7 +34,6 @@
         android:layout_weight="1"
         android:gravity="center_horizontal"
         android:textColor="@color/stock_list_dark_text" />
-
 
     <TextView
         android:id="@+id/issued"
@@ -62,6 +58,5 @@
         android:layout_weight="1"
         android:gravity="right"
         android:textColor="@color/stock_list_dark_text" />
-
 
 </LinearLayout>

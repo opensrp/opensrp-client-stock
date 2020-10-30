@@ -38,7 +38,7 @@ import static org.smartregister.stock.repository.StockRepository.TEAM_NAME;
 import static org.smartregister.stock.repository.StockRepository.TO_FROM;
 import static org.smartregister.stock.repository.StockRepository.TRANSACTION_TYPE;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
-import static org.smartregister.stock.repository.StockRepository.stock_TABLE_NAME;
+import static org.smartregister.stock.repository.StockRepository.STOCK_TABLE_NAME;
 
 /**
  * Created by samuelgithengi on 26/7/18.
@@ -64,7 +64,7 @@ public class StockRepository extends BaseRepository {
 
     private static final String IDENTIFIER = "identifier";
 
-    private static final String CREATE_STOCK_TABLE = "CREATE TABLE " + stock_TABLE_NAME +
+    private static final String CREATE_STOCK_TABLE = "CREATE TABLE " + STOCK_TABLE_NAME +
             " (" + ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
             IDENTIFIER + " VARCHAR NOT NULL," +
             STOCK_TYPE_ID + " VARCHAR NOT NULL," +
@@ -90,7 +90,7 @@ public class StockRepository extends BaseRepository {
 
 
     public StockRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {
@@ -118,15 +118,15 @@ public class StockRepository extends BaseRepository {
         contentValues.put(ORDERABLE_ID, stock.getOrderableId());
         contentValues.put(FACILITY_ID, stock.getFacilityId());
         if (stock.getId() != null) {
-            getWritableDatabase().update(stock_TABLE_NAME, contentValues, ID_COLUMN + "=?", new String[]{stock.getId().toString()});
+            getWritableDatabase().update(STOCK_TABLE_NAME, contentValues, ID_COLUMN + "=?", new String[]{stock.getId().toString()});
         } else if (exists(stock.getIdentifier())) {
-            getWritableDatabase().update(stock_TABLE_NAME, contentValues, IDENTIFIER + "=?", new String[]{stock.getIdentifier()});
+            getWritableDatabase().update(STOCK_TABLE_NAME, contentValues, IDENTIFIER + "=?", new String[]{stock.getIdentifier()});
         } else {
             contentValues.put(ID_COLUMN, stock.getId());
             if (StringUtils.isBlank(stock.getIdentifier()))
                 stock.setIdentifier(UUID.randomUUID().toString());
             contentValues.put(IDENTIFIER, stock.getIdentifier());
-            getWritableDatabase().insert(stock_TABLE_NAME, null, contentValues);
+            getWritableDatabase().insert(STOCK_TABLE_NAME, null, contentValues);
         }
     }
 
@@ -135,7 +135,7 @@ public class StockRepository extends BaseRepository {
             return false;
         Cursor cursor = null;
         try {
-            cursor = getReadableDatabase().rawQuery("SELECT 1 " + " FROM " + stock_TABLE_NAME + " WHERE " + IDENTIFIER + "=?", new String[]{identifier});
+            cursor = getReadableDatabase().rawQuery("SELECT 1 " + " FROM " + STOCK_TABLE_NAME + " WHERE " + IDENTIFIER + "=?", new String[]{identifier});
             return cursor.moveToFirst();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -152,7 +152,7 @@ public class StockRepository extends BaseRepository {
         List<Stock> stocks = new ArrayList<>();
         Cursor cursor = null;
         try {
-            cursor = getReadableDatabase().rawQuery("SELECT * " + " FROM " + stock_TABLE_NAME + " WHERE " + SYNC_STATUS + "=?" + " LIMIT ?", new String[]{TYPE_Unsynced, String.valueOf(limit)});
+            cursor = getReadableDatabase().rawQuery("SELECT * " + " FROM " + STOCK_TABLE_NAME + " WHERE " + SYNC_STATUS + "=?" + " LIMIT ?", new String[]{TYPE_Unsynced, String.valueOf(limit)});
             stocks = readAllstocks(cursor);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -181,7 +181,7 @@ public class StockRepository extends BaseRepository {
     }
 
     public int getTotalStockByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT sum(%s) FROM %s WHERE %s=?", VALUE, stock_TABLE_NAME, STOCK_TYPE_ID);
+        String query = String.format("SELECT sum(%s) FROM %s WHERE %s=?", VALUE, STOCK_TABLE_NAME, STOCK_TYPE_ID);
         Cursor cursor = null;
         try {
             cursor = getReadableDatabase().rawQuery(query, new String[]{tradeItemId});
@@ -199,7 +199,7 @@ public class StockRepository extends BaseRepository {
 
 
     public List<Stock> getStockByTradeItem(String tradeItemId) {
-        String query = String.format("SELECT * FROM %s WHERE %s=? ORDER BY %s desc, %s desc", stock_TABLE_NAME
+        String query = String.format("SELECT * FROM %s WHERE %s=? ORDER BY %s desc, %s desc", STOCK_TABLE_NAME
                 , STOCK_TYPE_ID, DATE_CREATED, DATE_UPDATED);
         Cursor cursor = null;
         List<Stock> stockList = new ArrayList<>();
@@ -224,7 +224,7 @@ public class StockRepository extends BaseRepository {
             return stockBalances;
         int len = tradeItemIds.size();
         String query = String.format("SELECT %s, SUM(%s) FROM %s WHERE %s IN (%s) AND %s=? GROUP BY %s ",
-                STOCK_TYPE_ID, VALUE, stock_TABLE_NAME, STOCK_TYPE_ID,
+                STOCK_TYPE_ID, VALUE, STOCK_TABLE_NAME, STOCK_TYPE_ID,
                 TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID, STOCK_TYPE_ID);
         Cursor cursor = null;
         try {
@@ -253,7 +253,7 @@ public class StockRepository extends BaseRepository {
         int len = tradeItemIds.size();
         String query = String.format("SELECT l.%s ,l.%s, min(%s), sum(%s) FROM %s l LEFT JOIN %s s on s.%s=l.%s" +
                         " WHERE %s IN (%s) AND %s >= ? AND %s = ? GROUP BY l.%s ORDER BY 3 ",
-                TRADE_ITEM_ID, ID, EXPIRATION_DATE, VALUE, LOT_TABLE, stock_TABLE_NAME, LOT_ID, ID,
+                TRADE_ITEM_ID, ID, EXPIRATION_DATE, VALUE, LOT_TABLE, STOCK_TABLE_NAME, LOT_ID, ID,
                 TRADE_ITEM_ID, TextUtils.join(",", Collections.nCopies(len, "?")),
                 EXPIRATION_DATE, PROGRAM_ID, ID);
         Cursor cursor = null;
@@ -285,7 +285,7 @@ public class StockRepository extends BaseRepository {
     }
 
     public int getTotalStockByLot(String lotId) {
-        String query = String.format("SELECT sum(%s) FROM %s WHERE %s=?", VALUE, stock_TABLE_NAME, LOT_ID);
+        String query = String.format("SELECT sum(%s) FROM %s WHERE %s=?", VALUE, STOCK_TABLE_NAME, LOT_ID);
         Cursor cursor = null;
         int totalStock = 0;
         try {
@@ -307,7 +307,7 @@ public class StockRepository extends BaseRepository {
         List<Stock> stocks = new ArrayList<>();
         Cursor cursor = null;
         try {
-            cursor = getReadableDatabase().query(stock_TABLE_NAME, STOCK_TABLE_COLUMNS, STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + DATE_CREATED + " = ? AND " + TO_FROM + " = ?", new String[]{stock_type_id, transaction_type, providerid, value, date_created, to_from}, null, null, null, null);
+            cursor = getReadableDatabase().query(STOCK_TABLE_NAME, STOCK_TABLE_COLUMNS, STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + DATE_CREATED + " = ? AND " + TO_FROM + " = ?", new String[]{stock_type_id, transaction_type, providerid, value, date_created, to_from}, null, null, null, null);
             stocks = readAllstocks(cursor);
 
         } catch (Exception e) {
@@ -355,7 +355,7 @@ public class StockRepository extends BaseRepository {
     public Map<String, Integer> findStockByTradeItemIds(String programId, List<String> tradeItemIds) {
         int len = tradeItemIds.size();
         String query = String.format("SELECT %s, SUM(%s) FROM %s WHERE %s IN (%s) AND %s=? GROUP BY %s",
-                STOCK_TYPE_ID, VALUE, stock_TABLE_NAME, STOCK_TYPE_ID,
+                STOCK_TYPE_ID, VALUE, STOCK_TABLE_NAME, STOCK_TYPE_ID,
                 TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID, STOCK_TYPE_ID);
         Cursor cursor = null;
         Map<String, Integer> stockBalances = new HashMap<>();
@@ -380,7 +380,7 @@ public class StockRepository extends BaseRepository {
     public Map<String, Integer> findStockByLotIds(String programId, List<String> lotIds) {
         int len = lotIds.size();
         String query = String.format("SELECT %s, SUM(%s) FROM %s WHERE %s IN (%s) AND %s=? GROUP BY %s",
-                LOT_ID, VALUE, stock_TABLE_NAME, LOT_ID,
+                LOT_ID, VALUE, STOCK_TABLE_NAME, LOT_ID,
                 TextUtils.join(",", Collections.nCopies(len, "?")), PROGRAM_ID, LOT_ID);
         Cursor cursor = null;
         Map<String, Integer> stockBalances = new HashMap<>();

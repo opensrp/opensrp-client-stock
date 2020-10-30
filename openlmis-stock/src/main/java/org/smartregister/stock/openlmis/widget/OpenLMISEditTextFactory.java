@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -13,6 +11,9 @@ import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.VisibleForTesting;
+
+import com.google.android.material.textfield.TextInputLayout;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
@@ -96,8 +97,7 @@ public class OpenLMISEditTextFactory extends EditTextFactory {
                 String openMrsEntity = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity);
                 String openMrsEntityId = (String) editText.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id);
                 String nodeValue = (String) editText.getTag(com.vijay.jsonwizard.R.id.node_value);
-                formFragment.writeValue(stepName, key, nodeValue == null ? s.toString() : nodeValue, openMrsEntityParent,
-                        openMrsEntity, openMrsEntityId);
+                formFragment.writeValue(stepName, key, nodeValue == null ? s.toString() : nodeValue, openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
             }
 
             @Override

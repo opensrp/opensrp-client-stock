@@ -1,10 +1,12 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.reflect.TypeToken;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
@@ -26,6 +28,7 @@ import org.smartregister.util.JsonFormUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.smartregister.stock.openlmis.widget.LotFactory.DISPENSING_UNIT;
 import static org.smartregister.stock.openlmis.widget.LotFactory.IS_STOCK_ISSUE;
@@ -57,6 +60,11 @@ public class ReviewFactory implements FormWidgetFactory {
     public ReviewFactory(ReasonRepository reasonRepository, ValidSourceDestinationRepository validSourceDestinationRepository) {
         this.reasonRepository = reasonRepository;
         this.validSourceDestinationRepository = validSourceDestinationRepository;
+    }
+
+    @Override
+    public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener, boolean popup) throws Exception {
+        return null;
     }
 
     @Override
@@ -105,6 +113,12 @@ public class ReviewFactory implements FormWidgetFactory {
             ((TextView) root.findViewById(R.id.facility_label)).setText(R.string.issue_to);
         }
         return views;
+    }
+
+    @NonNull
+    @Override
+    public Set<String> getCustomTranslatableWidgetFields() {
+        return null;
     }
 
     private void displayDosesQuantity(OpenLMISJsonFormFragment jsonFormFragment, Context context,

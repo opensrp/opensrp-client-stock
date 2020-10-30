@@ -1,9 +1,10 @@
 package org.smartregister.stock.openlmis.view.viewholder;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import org.smartregister.stock.openlmis.R;
 

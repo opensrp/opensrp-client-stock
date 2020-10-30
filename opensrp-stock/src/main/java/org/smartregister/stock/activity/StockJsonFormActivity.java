@@ -1,10 +1,11 @@
 package org.smartregister.stock.activity;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.activities.JsonFormActivity;
@@ -35,7 +36,7 @@ import java.util.Iterator;
 public class StockJsonFormActivity extends JsonFormActivity {
 
     private static final String TAG = StockJsonFormActivity.class.getName();
-    private MaterialEditText balancetextview;
+    private MaterialEditText balanceTextView;
     private StockJsonFormFragment stockJsonFormFragment;
 
     private MinNumericValidator negativeBalanceValidator;
@@ -99,37 +100,36 @@ public class StockJsonFormActivity extends JsonFormActivity {
             } catch (JSONException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
             }
-
         }
     }
 
     @Override
     public void initializeFormFragment() {
         stockJsonFormFragment = StockJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, stockJsonFormFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, stockJsonFormFragment).commit();
         negativeBalanceValidator = new MinNumericValidator(getResources().getString(R.string.negative_balance), 0);
     }
 
     @Override
-    public void writeValue(String stepName, String key, String value, String openMrsEntityParent, String openMrsEntity, String openMrsEntityId) throws JSONException {
-        super.writeValue(stepName, key, value, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+    public void writeValue(String stepName, String key, String value, String openMrsEntityParent, String openMrsEntity, String openMrsEntityId, boolean popup) throws JSONException {
+        super.writeValue(stepName, key, value, openMrsEntityParent, openMrsEntity, openMrsEntityId, popup);
+
         refreshCalculateLogic(key, value);
 
         // Should run on when the first date field is changed i.e. the only field not disabled
         if (!TextUtils.isEmpty(mainDateFieldKey) && mainDateFieldKey.equals(key) && !otherStockFieldsEnabled) {
             if (!TextUtils.isEmpty(value)) {
-                ArrayList<View> views = getFormDataViews();
+                ArrayList<View> views = new ArrayList<>(getFormDataViews());
 
                 Iterator<View> viewIterator = views.iterator();
-                while(viewIterator.hasNext()) {
+                while (viewIterator.hasNext()) {
                     View view = viewIterator.next();
                     String viewKey = (String) view.getTag(R.id.key);
 
                     if (viewKey == null || (!TextUtils.isEmpty(viewKey) && !mainDateFieldKey.equals(viewKey))) {
                         String address = (String) view.getTag(R.id.address);
                         if (!TextUtils.isEmpty(address)) {
-                            JSONObject jsonObject = getObjectUsingAddress(address.split(":"));
+                            JSONObject jsonObject = getObjectUsingAddress(address.split(":"), false);
                             boolean previousValue = false;
 
                             if (previousReadOnlyValues.containsKey(viewKey)) {
@@ -137,10 +137,9 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             }
 
                             jsonObject.put(JsonFormConstants.READ_ONLY, previousValue);
-                            toggleViewVisibility(view, !previousValue);
-
+                            toggleViewVisibility(view, !previousValue, false);
                         } else {
-                            toggleViewVisibility(view, true);
+                            toggleViewVisibility(view, true, false);
                         }
 
                         if (view instanceof MaterialEditText) {
@@ -149,7 +148,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
                         // Re-hide fields not relevant, since they will be enabled
                         if (!TextUtils.isEmpty(viewKey)) {
-                            refreshSkipLogic(viewKey, null);
+                            refreshSkipLogic(viewKey, null, false);
                         }
                     }
                 }
@@ -157,7 +156,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                 Iterator<View> labelViewsIterator = labels.iterator();
 
                 // Re-enable labels which are not part of form-data-elements
-                while(labelViewsIterator.hasNext()) {
+                while (labelViewsIterator.hasNext()) {
                     View label = labelViewsIterator.next();
                     label.setEnabled(true);
                 }
@@ -173,16 +172,16 @@ public class StockJsonFormActivity extends JsonFormActivity {
     }
 
     protected void refreshCalculateLogic(String key, String value) {
-        stockVialsenteredinReceivedForm(key, value);
-        stockDateEnteredinReceivedForm(key, value);
-        stockDateEnteredinIssuedForm(key, value);
-        stockVialsEnteredinIssuedForm(key, value);
-        stockWastedVialsEnteredinIssuedForm(key, value);
-        stockDateEnteredinAdjustmentForm(key, value);
-        stockVialsenteredinAdjustmentForm(key, value);
+        stockVialsEnteredInReceivedForm(key, value);
+        stockDateEnteredInReceivedForm(key, value);
+        stockDateEnteredInIssuedForm(key, value);
+        stockVialsEnteredInIssuedForm(key, value);
+        stockWastedVialsEnteredInIssuedForm(key, value);
+        stockDateEnteredInAdjustmentForm(key, value);
+        stockVialsEnteredInAdjustmentForm(key, value);
     }
 
-    private void stockDateEnteredinIssuedForm(String key, String value) {
+    private void stockDateEnteredInIssuedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
             if (object.getString("title").contains("Stock Issued")) {
@@ -191,12 +190,13 @@ public class StockJsonFormActivity extends JsonFormActivity {
                 int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccineName);
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Date_Stock_Issued") && value != null && !value.equalsIgnoreCase("")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
+                    if (balanceTextView == null) {
+                        ArrayList<View> views = new ArrayList<>(getFormDataViews());
+
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
-                                balancetextview = (MaterialEditText) views.get(i);
+                                balanceTextView = (MaterialEditText) views.get(i);
                             }
                         }
                     }
@@ -222,7 +222,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                     }
                                 }
                                 StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
-                                currentBalance = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkifmeasles(vaccineName.toLowerCase()));
+                                currentBalance = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkIfMeasles(vaccineName.toLowerCase()));
                             }
 
                             if (questions.getString("key").equalsIgnoreCase("Vials_Wasted")) {
@@ -240,11 +240,10 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                         vialsvalue = questions.getString("value");
                                     }
                                 } else {
-                                    refreshDosesWasted(balancetextview, currentBalance, Integer.parseInt(wastedvials), dosesPerVial);
+                                    refreshDosesWasted(balanceTextView, currentBalance, Integer.parseInt(wastedvials), dosesPerVial);
                                     refreshVialsBalance(vaccineName, str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()));
                                 }
                             }
-
                         }
                     }
                     if (!StringUtils.isBlank(vialsvalue) && StringUtils.isNumeric(vialsvalue) && StringUtils.isNumeric(wastedvials)) {
@@ -257,12 +256,11 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalance != 0) {
                         vialsused = (currentBalance / dosesPerVial) + 1;
                     }
-                    if(StringUtils.isBlank(balancetextview.getText().toString())) {
-                        balancetextview.setText(String.valueOf(vialsused));
+                    if (StringUtils.isBlank(balanceTextView.getText().toString())) {
+                        balanceTextView.setText(String.valueOf(vialsused));
                     }
                     refreshVialsBalance(vaccineName, calculateNewStock(str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()), vialsused));
-                    refreshDosesWasted(balancetextview, currentBalance, Integer.parseInt(wastedvials), dosesPerVial);
-
+                    refreshDosesWasted(balanceTextView, currentBalance, Integer.parseInt(wastedvials), dosesPerVial);
                 }
             }
         } catch (JSONException e) {
@@ -289,18 +287,19 @@ public class StockJsonFormActivity extends JsonFormActivity {
         stockJsonFormFragment.getLabelViewFromTag("Vials_Issued_Count", "Estimated vials issued on this date: " + vialsUsed);
     }
 
-    private void stockVialsEnteredinIssuedForm(String key, String value) {
+    private void stockVialsEnteredInIssuedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
             if (object.getString("title").contains("Stock Issued")) {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Vials_Issued")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
+                    if (balanceTextView == null) {
+                        ArrayList<View> views = new ArrayList<>(getFormDataViews());
+
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
-                                balancetextview = (MaterialEditText) views.get(i);
+                                balanceTextView = (MaterialEditText) views.get(i);
                             }
                         }
                     }
@@ -326,11 +325,9 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                     }
                                     existingbalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                                     StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
-                                    currentBalanceVaccineUsed = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkifmeasles(vaccineName.toLowerCase()));
-
+                                    currentBalanceVaccineUsed = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkIfMeasles(vaccineName.toLowerCase()));
                                 }
                             } else if (questions.getString("key").equalsIgnoreCase("Vials_Wasted")) {
-
                                 if (questions.has("value")) {
                                     if (!StringUtils.isBlank(questions.getString("value")) && StringUtils.isNumeric(questions.getString("value"))) {
                                         wastedvials = questions.getString("value");
@@ -339,17 +336,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                     wastedvials = "0";
                                 }
                             }
-
                         }
                     }
                     refreshVialsBalance(vaccineName, existingbalance);
                     if (value != null && !StringUtils.isBlank(value) && StringUtils.isNumeric(value) && StringUtils.isNumeric(wastedvials)) {
                         newBalance = existingbalance - Integer.parseInt(value) - Integer.parseInt(wastedvials);
                         refreshVialsBalance(vaccineName, newBalance);
-
                     } else {
                         refreshVialsBalance(vaccineName, existingbalance);
-
                     }
                     int vialsused = 0;
                     StockTypeRepository vaccineTypeRepository = StockLibrary.getInstance().getStockTypeRepository();
@@ -359,7 +353,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else if (currentBalanceVaccineUsed != 0) {
                         vialsused = (currentBalanceVaccineUsed / dosesPerVial) + 1;
                     }
-                    refreshDosesWasted(balancetextview, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
+                    refreshDosesWasted(balanceTextView, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
                     displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, Integer.parseInt(wastedvials));
                 }
             }
@@ -381,22 +375,22 @@ public class StockJsonFormActivity extends JsonFormActivity {
         stockJsonFormFragment.getLabelViewFromTag("Doses_wasted", "Total wasted doses: " + wastedDoses + " doses");
     }
 
-
     public void refreshVialsBalance(String vaccineName, int newBalance) {
         stockJsonFormFragment.getLabelViewFromTag("Vials_Balance", "New " + vaccineName + " balance: " + newBalance + " vials");
     }
 
-    private void stockWastedVialsEnteredinIssuedForm(String key, String value) {
+    private void stockWastedVialsEnteredInIssuedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
             if (object.getString("title").contains("Stock Issued")) {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Vials_Wasted")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
+                    if (balanceTextView == null) {
+                        ArrayList<View> views = new ArrayList<>(getFormDataViews());
+
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText && ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Issued")) {
-                                balancetextview = (MaterialEditText) views.get(i);
+                                balanceTextView = (MaterialEditText) views.get(i);
                             }
                         }
                     }
@@ -424,7 +418,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
                                 existingbalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                                 StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
-                                currentBalanceVaccineUsed = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkifmeasles(vaccineName.toLowerCase()));
+                                currentBalanceVaccineUsed = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkIfMeasles(vaccineName.toLowerCase()));
                             } else if (questions.getString("key").equalsIgnoreCase("Vials_Issued")) {
                                 if (questions.has("value")) {
                                     if (!StringUtils.isBlank(questions.getString("value")) && StringUtils.isNumeric(questions.getString("value"))) {
@@ -441,7 +435,6 @@ public class StockJsonFormActivity extends JsonFormActivity {
                         wastedvials = "0";
                     }
                     if (vialsvalue != null && !StringUtils.isBlank(vialsvalue) && StringUtils.isNumeric(wastedvials)) {
-
                         newBalance = existingbalance - Integer.parseInt(vialsvalue) - Integer.parseInt(wastedvials);
                         refreshVialsBalance(vaccineName, newBalance);
                     } else {
@@ -456,7 +449,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                         vialsused = (currentBalanceVaccineUsed / dosesPerVial) + 1;
                     }
                     displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, Integer.parseInt(wastedvials));
-                    refreshDosesWasted(balancetextview, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
+                    refreshDosesWasted(balanceTextView, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
                 }
             }
         } catch (JSONException e) {
@@ -464,7 +457,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
         }
     }
 
-    private void stockDateEnteredinReceivedForm(String key, String value) {
+    private void stockDateEnteredInReceivedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
             if (object.getString("title").contains("Stock Received")
@@ -514,16 +507,16 @@ public class StockJsonFormActivity extends JsonFormActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
-    private void stockVialsenteredinReceivedForm(String key, String value) {
+    private void stockVialsEnteredInReceivedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
             if (object.getString("title").contains("Stock Received")) {
                 if (key.equalsIgnoreCase("Vials_Received") && value != null && !value.equalsIgnoreCase("")) {
 //                    if(balancetextview == null) {
-//                        ArrayList<View> views = getFormDataViews();
+//                        ArrayList<View> views = new ArrayList<>(getFormDataViews());
+//
 //                        for (int i = 0; i < views.size(); i++) {
 //                            if (views.get(i) instanceof MaterialEditText) {
 //                                if (((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {
@@ -557,7 +550,6 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             if (StringUtils.isNotBlank(value) && StringUtils.isNumeric(value)) {
                                 displaybalance = currentBalance + Integer.parseInt(value);
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
-
                             } else {
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                             }
@@ -567,17 +559,12 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                 }
             }
-        } catch (
-                JSONException e
-                )
-
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
-    private void stockDateEnteredinAdjustmentForm(String key, String value) {
+    private void stockDateEnteredInAdjustmentForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
             if (object.getString("title").contains("Stock Loss/Adjustment") &&
@@ -610,15 +597,13 @@ public class StockJsonFormActivity extends JsonFormActivity {
                         }
                         if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && NumberUtils.isNumber(vialsvalue)) {
                             displaybalance = currentBalance + Integer.parseInt(vialsvalue);
-                            if (balancetextview != null && displaybalance < 0) {
-                                balancetextview.addValidator(negativeBalanceValidator);
-                            } else if (balancetextview != null && displaybalance >= 0)
-                                balancetextview.getValidators().remove(negativeBalanceValidator);
+                            if (balanceTextView != null && displaybalance < 0) {
+                                balanceTextView.addValidator(negativeBalanceValidator);
+                            } else if (balanceTextView != null && displaybalance >= 0)
+                                balanceTextView.getValidators().remove(negativeBalanceValidator);
                             stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
-
                         } else {
                             stockJsonFormFragment.getLabelViewFromTag("Balance", "");
-
                         }
                     }
                 }
@@ -628,17 +613,18 @@ public class StockJsonFormActivity extends JsonFormActivity {
         }
     }
 
-    private void stockVialsenteredinAdjustmentForm(String key, String value) {
+    private void stockVialsEnteredInAdjustmentForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
             if (object.getString("title").contains("Stock Loss/Adjustment")) {
                 if (key.equalsIgnoreCase("Vials_Adjustment") && value != null && !value.equalsIgnoreCase("")) {
-                    if (balancetextview == null) {
-                        ArrayList<View> views = getFormDataViews();
+                    if (balanceTextView == null) {
+                        ArrayList<View> views = new ArrayList<>(getFormDataViews());
+
                         for (int i = 0; i < views.size(); i++) {
                             if (views.get(i) instanceof MaterialEditText &&
                                     ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase(key)) {
-                                balancetextview = (MaterialEditText) views.get(i);
+                                balanceTextView = (MaterialEditText) views.get(i);
                             }
                         }
                     }
@@ -665,12 +651,11 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             }
                             if (StringUtils.isNotBlank(value) && !value.equalsIgnoreCase("-") && NumberUtils.isNumber(value)) {
                                 displaybalance = currentBalance + Integer.parseInt(value);
-                                if (balancetextview != null && displaybalance < 0) {
-                                    balancetextview.addValidator(negativeBalanceValidator);
-                                } else if (balancetextview != null && displaybalance >= 0)
-                                    balancetextview.getValidators().remove(negativeBalanceValidator);
+                                if (balanceTextView != null && displaybalance < 0) {
+                                    balanceTextView.addValidator(negativeBalanceValidator);
+                                } else if (balanceTextView != null && displaybalance >= 0)
+                                    balanceTextView.getValidators().remove(negativeBalanceValidator);
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
-
                             } else {
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                             }
@@ -685,7 +670,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
         }
     }
 
-    private String checkifmeasles(String vaccineName) {
+    private String checkIfMeasles(String vaccineName) {
         if (vaccineName.equalsIgnoreCase("M/MR")) {
             return "measles";
         }

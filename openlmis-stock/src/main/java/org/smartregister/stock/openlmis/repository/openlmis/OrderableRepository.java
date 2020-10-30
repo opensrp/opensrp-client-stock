@@ -61,7 +61,7 @@ public class OrderableRepository extends BaseRepository {
             + ORDERABLE_TABLE + "(" + COMMODITY_TYPE_ID + "," + TRADE_ITEM_ID + ")";
 
     public OrderableRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

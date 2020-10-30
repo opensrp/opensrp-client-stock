@@ -4,31 +4,38 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath "com.android.tools.build:gradle:$androidToolsBuildGradle"
     }
 }
 
 allprojects {
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
         mavenLocal()
     }
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'org.smartregister.gradle.jarjar'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "29.0.2"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         multiDexEnabled true
         applicationId "org.smartregister.stock.sample"
         minSdkVersion 18
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
     buildTypes {
@@ -44,17 +51,23 @@ android {
     }
 
     packagingOptions {
-        exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE.md'
         exclude 'META-INF/LICENSE'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/notice.txt'
+        exclude 'LICENSE.txt'
         exclude 'META-INF/license.txt'
+        exclude 'licenses/javolution.license.TXT'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE.md'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
-        exclude 'LICENSE.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'androidsupportmultidexversion.txt'
+        exclude("META-INF/*.kotlin_module")
     }
 
     lintOptions {
@@ -68,9 +81,12 @@ android {
 
 dependencies {
     api project(':opensrp-stock')
-    androidTestImplementation ('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
 
-    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.core:core:1.3.2'
+
+//    androidTestImplementation ('androidx.test.espresso:espresso-core:1.3.0', {
+//        exclude group: 'com.android.support', module: 'annotation'
+//    })
+
+    testImplementation 'junit:junit:4.13'
 }

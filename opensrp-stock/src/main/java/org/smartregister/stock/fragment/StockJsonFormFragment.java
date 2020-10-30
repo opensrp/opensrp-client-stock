@@ -2,6 +2,7 @@ package org.smartregister.stock.fragment;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,11 +39,10 @@ public class StockJsonFormFragment extends JsonFormFragment {
 
     @Override
     public void addFormElements(List<View> views) {
-
         Iterator iterator = views.iterator();
 
-        while(iterator.hasNext()) {
-            View view = (View)iterator.next();
+        while (iterator.hasNext()) {
+            View view = (View) iterator.next();
             getMainView().addView(view);
 
             // Make sure this TextView is not part of another widget -
@@ -54,7 +54,7 @@ public class StockJsonFormFragment extends JsonFormFragment {
             }
         }
 
-        getJsonApi().refreshHiddenViews();
+        getJsonApi().refreshHiddenViews(false);
         getJsonApi().resetFocus();
     }
 
@@ -66,16 +66,22 @@ public class StockJsonFormFragment extends JsonFormFragment {
         if (mMainView != null) {
             int childCount = mMainView.getChildCount();
             for (int i = 0; i < childCount; i++) {
-                View view = mMainView.getChildAt(i);
-                if (view instanceof TextView) {
-                    TextView textView = (TextView) view;
-                    String key = (String) textView.getTag(R.id.key);
-                    if (key.equals(currentKey)) {
-                        textView.setText(textString);
+                View layout = mMainView.getChildAt(i);
+                if (layout instanceof ViewGroup) {
+                    int layoutCount = ((ViewGroup) layout).getChildCount();
+                    for (int j = 0; j < layoutCount; j++) {
+                        View view = ((ViewGroup) layout).getChildAt(j);
+                        if (view instanceof TextView) {
+                            TextView textView = (TextView) view;
+                            String key = (String) textView.getTag(R.id.key);
+                            if (key != null && key.equals(currentKey)) {
+                                textView.setText(textString);
+                                textView.setTextColor(1);
+                            }
+                        }
                     }
                 }
             }
         }
     }
-
 }

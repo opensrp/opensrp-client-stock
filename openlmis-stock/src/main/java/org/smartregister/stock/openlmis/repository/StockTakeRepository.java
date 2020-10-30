@@ -65,7 +65,7 @@ public class StockTakeRepository extends BaseRepository {
             + STOCK_TAKE_TABLE + "(" + PROGRAM_ID + "," + COMMODITY_TYPE_ID + ")";
 
     public StockTakeRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

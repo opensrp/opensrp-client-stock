@@ -2,10 +2,6 @@ package org.smartregister.stock.openlmis.widget;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
@@ -17,6 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -44,6 +46,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
@@ -117,6 +120,11 @@ public class LotFactory implements FormWidgetFactory {
     }
 
     @Override
+    public List<View> getViewsFromJson(String s, Context context, JsonFormFragment jsonFormFragment, JSONObject jsonObject, CommonListener commonListener, boolean b) throws Exception {
+        return null;
+    }
+
+    @Override
     public List<View> getViewsFromJson(String stepName, final Context context, JsonFormFragment jsonFormFragment, JSONObject jsonObject, CommonListener commonListener) throws Exception {
         this.stepName = stepName;
         this.context = context;
@@ -152,7 +160,6 @@ public class LotFactory implements FormWidgetFactory {
             }.getType();
             selectedLotDTos = gson.fromJson(selectedLotDTosJSON, listType);
         }
-
 
         isStockIssue = jsonObject.optBoolean(IS_STOCK_ISSUE);
         useVvm = jsonObject.optBoolean(USE_VMM);
@@ -195,6 +202,12 @@ public class LotFactory implements FormWidgetFactory {
         restoreAdditionalLotRows(lotDropdown);
 
         return views;
+    }
+
+    @NonNull
+    @Override
+    public Set<String> getCustomTranslatableWidgetFields() {
+        return null;
     }
 
     private void restoreAdditionalLotRows(TextInputEditText lotDropdown) {

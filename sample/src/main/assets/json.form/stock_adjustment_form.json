@@ -44,7 +44,7 @@
       "openmrs_data_type": "phonenumber",
       "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
     },
-    "encounter_location":""
+    "encounter_location": ""
   },
   "step1": {
     "title": "[vaccine] Stock Loss/Adjustment",
@@ -55,7 +55,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "date_picker",
-        "hint": "Date of [vaccine] stock loss/adjustment *",
+        "hint": "Date of [vaccine] stock loss/adjustment",
         "expanded": false,
         "min_date": "today-1m",
         "max_date": "today",
@@ -78,16 +78,16 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
-        "type": "radio",
-        "label": "Reason for [vaccine] adjustment *",
-        "options":[
+        "type": "native_radio",
+        "label": "Reason for [vaccine] adjustment",
+        "options": [
           {
-            "key":"Physical_recount",
-            "text":"Physical recount"
+            "key": "Physical_recount",
+            "text": "Physical recount"
           },
           {
-            "key":"Other",
-            "text":"Other"
+            "key": "Other",
+            "text": "Other"
           }
         ],
         "value": "Physical_recount",
@@ -102,7 +102,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please specify: *",
+        "hint": "Please specify:",
         "edit_type": "name",
         "v_required": {
           "value": true,
@@ -122,8 +122,8 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "text",
         "type": "edit_text",
-        "hint": "Vials [vaccine] adjustment *",
-        "number_picker":"true",
+        "hint": "Vials [vaccine] adjustment",
+        "number_picker": "true",
         "value": "0",
         "v_required": {
           "value": "true",
@@ -135,27 +135,27 @@
         }
       },
       {
-        "key":"Empty_Label",
+        "key": "Empty_Label",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "openmrs_data_type": "text",
-        "type":"label",
-        "text":""
+        "type": "label",
+        "text": ""
       },
       {
-        "key":"Balance",
+        "key": "Balance",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "openmrs_data_type": "text",
-        "type":"label",
-        "text":"",
+        "type": "label",
+        "text": "",
         "has_bg": true,
-        "top_padding": "20dp",
-        "left_padding": "20dp",
+        "top_padding": "10dp",
         "right_padding": "20dp",
-        "bottom_padding": "0dp",
+        "bottom_padding": "10dp",
+        "left_padding": "20dp",
         "text_size": "14sp",
         "text_color": "#000000",
         "relevance": {
@@ -170,11 +170,12 @@
         "type": "label",
         "text": "Compare this number with stock on hand",
         "has_bg": true,
-        "text_size": "12sp",
+        "text_size": "10sp",
         "text_color": "#737373",
-        "left_padding": "20dp",
+        "top_padding": "10dp",
         "right_padding": "20dp",
-        "bottom_padding": "20dp",
+        "bottom_padding": "10dp",
+        "left_padding": "20dp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",

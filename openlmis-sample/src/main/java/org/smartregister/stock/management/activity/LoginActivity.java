@@ -13,7 +13,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -30,6 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.joda.time.DateTime;
 import org.smartregister.Context;
@@ -52,7 +53,9 @@ import java.util.TimeZone;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static org.smartregister.AllConstants.DRISHTI_BASE_URL;
+import static org.smartregister.AllConstants.PIONEER_USER;
 import static org.smartregister.domain.LoginResponse.NO_INTERNET_CONNECTIVITY;
+import static org.smartregister.domain.LoginResponse.SUCCESS;
 import static org.smartregister.domain.LoginResponse.UNAUTHORIZED;
 import static org.smartregister.domain.LoginResponse.UNKNOWN_RESPONSE;
 import static org.smartregister.stock.openlmis.util.OpenLMISConstants.IS_REMOTE_LOGIN;
@@ -93,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();;
+        super.onResume();
         if (!getOpenSRPContext().IsUserLoggedOut()) {
             goToHome(false);
         }
@@ -147,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(final View view) {
-        login(view, !getOpenSRPContext().allSharedPreferences().fetchForceRemoteLogin());
+        login(view, !getOpenSRPContext().allSharedPreferences().fetchForceRemoteLogin(getOpenSRPContext().allSharedPreferences().fetchRegisteredANM()));
     }
 
     private void login(final View view, boolean localLogin) {
@@ -157,12 +160,12 @@ public class LoginActivity extends AppCompatActivity {
         view.setClickable(false);
 
         final String userName = userNameEditText.getText().toString().trim();
-        final String password = passwordEditText.getText().toString().trim();
-        if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
+        final char[] password = passwordEditText.getText().toString().trim().toCharArray();
+        if (!TextUtils.isEmpty(userName) && password.length > 0) {
             if (localLogin) {
                 localLogin(view, userName, password);
             } else {
-                remoteLogin(view, userName, password);
+                remoteLogin(view, userName, String.valueOf(password));
             }
         } else {
             showErrorDialog(getResources().getString(R.string.unauthorized));
@@ -171,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.i(getClass().getName(), "Login result finished " + DateTime.now().toString());
     }
 
-    private void localLogin(View view, String userName, String password) {
+    private void localLogin(View view, String userName, char[] password) {
         view.setClickable(true);
         if (getOpenSRPContext().userService().isUserInValidGroup(userName, password)
                 && (!BuildConfig.TIME_CHECK || TimeStatus.OK.equals(getOpenSRPContext().userService().validateStoredServerTimeZone()))) {
@@ -181,8 +184,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void localLoginWith(String userName, String password) {
-        getOpenSRPContext().userService().localLogin(userName, password);
+    private void localLoginWith(String userName, char[] password) {
+        getOpenSRPContext().userService().localLoginWith(userName);
         goToHome(false);
     }
 
@@ -252,7 +255,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void remoteLoginWith(String userName, String password, LoginResponseData userInfo) {
-        getOpenSRPContext().userService().remoteLogin(userName, password, userInfo);
+        getOpenSRPContext().userService().forceRemoteLogin(userName);
         goToHome(true);
     }
 
@@ -308,7 +311,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void positionViews() {
         final ScrollView canvasSV = findViewById(R.id.canvasSV);
-        final RelativeLayout canvasRL =  findViewById(R.id.login_layout);
+        final RelativeLayout canvasRL = findViewById(R.id.login_layout);
         final LinearLayout logoCanvasLL = findViewById(R.id.bottom_section);
         final LinearLayout credentialsCanvasLL = findViewById(R.id.middle_section);
 
@@ -356,7 +359,11 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected LoginResponse doInBackground(Void... params) {
-            return getOpenSRPContext().userService().isValidRemoteLogin(username, password);
+            if (getOpenSRPContext().userService().isValidLocalLogin(username, password.getBytes())){
+                return SUCCESS;
+            } else {
+                return UNAUTHORIZED;
+            }
         }
 
         @Override

@@ -8,7 +8,7 @@
     tools:context=".view.StockTakeActivity"
     tools:showIn="@layout/activity_stock_take">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commodityTypeRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -16,10 +16,11 @@
         android:layout_weight="1"
         android:overScrollMode="never"
         android:scrollbars="vertical"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <include
         layout="@layout/stock_take_bottom_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 </LinearLayout>

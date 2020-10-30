@@ -50,7 +50,7 @@ public class ValidSourceDestinationRepository extends BaseRepository {
                     ")";
 
     public ValidSourceDestinationRepository(Repository repository) {
-        super(repository);
+        super();
     }
 
     public static void createTable(SQLiteDatabase database) {

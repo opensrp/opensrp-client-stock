@@ -1,9 +1,10 @@
 package org.smartregister.stock.openlmis.widget;
 
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONObject;
 import org.junit.Before;
