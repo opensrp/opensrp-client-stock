@@ -362,6 +362,13 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     }
                     refreshDosesWasted(balanceTextView, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
                     displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, Integer.parseInt(wastedvials));
+
+                    if (balanceTextView != null
+                            && (!value.trim().equals("") && !value.trim().equals("0"))
+                            && ((Integer.parseInt(value) + Integer.parseInt(wastedvials)) > str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()))) {
+
+                        balanceTextView.setError("Vials issued cannot be more than vials in stock. Record received stock to proceed.");
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -467,6 +474,24 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     }
                     displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, Integer.parseInt(wastedvials));
                     refreshDosesWasted(balanceTextView, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
+
+                    if ((!value.trim().equals("") && !value.trim().equals("0"))
+                            && ((Integer.parseInt(value) + Integer.parseInt(wastedvials)) > str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()))) {
+
+                        MaterialEditText vialsWasted = null;
+                        ArrayList<View> views = new ArrayList<>(getFormDataViews());
+
+                        for (int i = 0; i < views.size(); i++) {
+                            if (views.get(i) instanceof MaterialEditText && ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Wasted")) {
+                                vialsWasted = (MaterialEditText) views.get(i);
+                            }
+                        }
+
+                        if (vialsWasted != null) {
+                            vialsWasted.setError("Vials wasted cannot be more than vials in stock. Record received stock to proceed.");
+
+                        }
+                    }
                 }
             }
         } catch (JSONException e) {

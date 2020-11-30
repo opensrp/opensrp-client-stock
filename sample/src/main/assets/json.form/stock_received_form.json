@@ -125,7 +125,7 @@
         "hint": "Vials [vaccine] received",
         "v_min": {
           "value": "1",
-          "err": "issued vials must be greater than 0"
+          "err": "Received vials must be greater than 0"
         },
         "v_numeric_integer": {
           "value": "true",
