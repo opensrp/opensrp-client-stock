@@ -4,19 +4,23 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.repository.BaseRepository;
-import org.smartregister.repository.Repository;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Stock;
 import org.smartregister.stock.domain.StockType;
+import org.smartregister.util.DatabaseMigrationUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by samuelgithengi on 2/6/18.
@@ -26,15 +30,6 @@ public class StockRepository extends BaseRepository {
 
     private static final String TAG = StockRepository.class.getCanonicalName();
 
-    private static final String STOCK_SQL = "CREATE TABLE stocks (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-            "stock_type_id VARCHAR NOT NULL," +
-            "transaction_type VARCHAR NULL," +
-            "providerid VARCHAR NOT NULL," +
-            "value INTEGER," +
-            "date_created DATETIME NOT NULL," +
-            "to_from VARCHAR NULL," +
-            "sync_status VARCHAR," +
-            "date_updated INTEGER NULL)";
     public static final String STOCK_TABLE_NAME = "stocks";
     public static final String ID_COLUMN = "_id";
     public static final String STOCK_TYPE_ID = "stock_type_id";
@@ -49,14 +44,28 @@ public class StockRepository extends BaseRepository {
     public static final String CHILD_LOCATION_ID = "child_location_id";
     public static final String TEAM_NAME = "team_name";
     public static final String TEAM_ID = "team_id";
-    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED};
+    public static final String IDENTIFIER = "identifier";
+    public static final String CUSTOM_PROPERTIES = "custom_properties";
+
+    private static final String STOCK_SQL = "CREATE TABLE " + STOCK_TABLE_NAME + " (" +
+            ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+            IDENTIFIER + " VARCHAR NULL," +
+            STOCK_TYPE_ID + " VARCHAR NOT NULL," +
+            TRANSACTION_TYPE + " VARCHAR NULL," +
+            PROVIDER_ID + " VARCHAR NOT NULL," +
+            VALUE + " INTEGER," +
+            DATE_CREATED + " DATETIME NOT NULL," +
+            TO_FROM + " VARCHAR NULL," +
+            SYNC_STATUS + " VARCHAR," +
+            LOCATION_ID + " VARCHAR NULL," +
+            CUSTOM_PROPERTIES + " VARCHAR NULL," +
+            DATE_UPDATED + " INTEGER NULL)";
+
+    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, LOCATION_ID, IDENTIFIER, CUSTOM_PROPERTIES};
 
     public static final String TYPE_UNSYNCED = "Unsynced";
-    private static final String TYPE_SYNCED = "Synced";
 
-    public StockRepository(Repository repository) {
-        super();
-    }
+    private static final String TYPE_SYNCED = "Synced";
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(STOCK_SQL);
@@ -85,7 +94,7 @@ public class StockRepository extends BaseRepository {
                 database.update(STOCK_TABLE_NAME, createValuesFor(stock), idSelection, new String[]{stock.getId().toString()});
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
     }
 
@@ -100,6 +109,8 @@ public class StockRepository extends BaseRepository {
         values.put(TO_FROM, stock.getToFrom());
         values.put(SYNC_STATUS, stock.getSyncStatus());
         values.put(DATE_UPDATED, stock.getUpdatedAt() != null ? stock.getUpdatedAt() : null);
+        values.put(IDENTIFIER, stock.getIdentifier());
+        values.put(LOCATION_ID, stock.getLocationId());
         return values;
     }
 
@@ -131,7 +142,7 @@ public class StockRepository extends BaseRepository {
             cursor = getReadableDatabase().query(STOCK_TABLE_NAME, STOCK_TABLE_COLUMNS, SYNC_STATUS + " = ?", new String[]{TYPE_UNSYNCED}, null, null, null, "" + limit);
             stocks = readAllstocks(cursor);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -142,23 +153,17 @@ public class StockRepository extends BaseRepository {
 
     public List<Stock> findUniqueStock(String stock_type_id, String transaction_type, String providerid, String value, String date_created, String to_from) {
         List<Stock> stocks = new ArrayList<>();
-        Cursor cursor = null;
-        try {
-            cursor = getReadableDatabase().query(STOCK_TABLE_NAME, STOCK_TABLE_COLUMNS, STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + DATE_CREATED + " = ? AND " + TO_FROM + " = ?", new String[]{stock_type_id, transaction_type, providerid, value, date_created, to_from}, null, null, null, null);
+        try (Cursor cursor = getReadableDatabase().query(STOCK_TABLE_NAME, STOCK_TABLE_COLUMNS, STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + DATE_CREATED + " = ? AND " + TO_FROM + " = ?", new String[]{stock_type_id, transaction_type, providerid, value, date_created, to_from}, null, null, null, null)) {
             stocks = readAllstocks(cursor);
 
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
+            Timber.e(e);
         }
         return stocks;
     }
 
     public Stock readAllStockforCursorAdapter(Cursor cursor) {
-        return new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
+        Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
                 cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
                 cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
                 cursor.getInt(cursor.getColumnIndex(VALUE)),
@@ -167,32 +172,33 @@ public class StockRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
                 cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
                 cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID)));
+        stock.setIdentifier(cursor.getString(cursor.getColumnIndex(IDENTIFIER)));
+        stock.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
+        return stock;
     }
 
     private List<Stock> readAllstocks(Cursor cursor) {
         List<Stock> stocks = new ArrayList<>();
-
         try {
-            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-
-                    stocks.add(
-                            new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
-                                    cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
-                                    cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
-                                    cursor.getInt(cursor.getColumnIndex(VALUE)),
-                                    cursor.getLong(cursor.getColumnIndex(DATE_CREATED)),
-                                    cursor.getString(cursor.getColumnIndex(TO_FROM)),
-                                    cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
-                                    cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
-                                    cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID))
-                            ));
-
-                    cursor.moveToNext();
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
+                            cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
+                            cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
+                            cursor.getInt(cursor.getColumnIndex(VALUE)),
+                            cursor.getLong(cursor.getColumnIndex(DATE_CREATED)),
+                            cursor.getString(cursor.getColumnIndex(TO_FROM)),
+                            cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
+                            cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
+                            cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID))
+                    );
+                    stock.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
+                    stock.setIdentifier(cursor.getString(cursor.getColumnIndex(IDENTIFIER)));
+                    stocks.add(stock);
                 }
             }
         } catch (Exception e) {
-            Log.e(getClass().getCanonicalName(), e.getMessage());
+            Timber.e(e);
         } finally {
             if (cursor != null)
                 cursor.close();
@@ -305,5 +311,13 @@ public class StockRepository extends BaseRepository {
         String sql = "INSERT INTO " + STOCK_TABLE_NAME + " SELECT * FROM old_" + oldTableName;
         database.execSQL(sql);
         database.execSQL("DROP TABLE IF EXISTS old_" + oldTableName);
+    }
+
+    public static void migrateAddLocationAndIdentifierColumns(@NonNull SQLiteDatabase database) {
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, IDENTIFIER, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, LOCATION_ID, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, CUSTOM_PROPERTIES, "VARCHAR");
+        DatabaseMigrationUtils.addIndexIfNotExists(database, STOCK_TABLE_NAME, IDENTIFIER);
+        DatabaseMigrationUtils.addIndexIfNotExists(database, STOCK_TABLE_NAME, LOCATION_ID);
     }
 }

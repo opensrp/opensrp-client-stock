@@ -17,6 +17,8 @@ public class Stock {
     private String childLocationId;
     private String team;
     private String teamId;
+    private String identifier;
+    private String customProperties;
 
     public static final String issued = "issued";
     public static final String received = "received";
@@ -157,5 +159,21 @@ public class Stock {
 
     public static String getLossAdjusment() {
         return loss_adjustment;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public String getCustomProperties() {
+        return customProperties;
+    }
+
+    public void setCustomProperties(String customProperties) {
+        this.customProperties = customProperties;
     }
 }
