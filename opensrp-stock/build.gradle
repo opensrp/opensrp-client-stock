@@ -116,7 +116,7 @@ dependencies {
         exclude group: 'androidx.core', module: 'core'
     }
 
-    api('org.smartregister:opensrp-client-core:4.0.0-v3-SNAPSHOT@aar') {
+    api('org.smartregister:opensrp-client-core:4.0.2-SNAPSHOT@aar') {
         transitive true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.github.johnkil.print', module: 'print'
