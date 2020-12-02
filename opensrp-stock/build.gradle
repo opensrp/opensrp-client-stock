@@ -145,7 +145,7 @@ dependencies {
 
     testImplementation 'org.mockito:mockito-core:2.28.2'
 
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'androidx.annotation', module: 'annotation'
     })
 }
