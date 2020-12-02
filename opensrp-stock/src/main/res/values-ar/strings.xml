@@ -1,11 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OpenSRP Client Stock</string>
-    <string name="stock_title">Stock Control</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="stock_title">مراقبة المخزون</string>
+    <string name="section_format">d$1% :مرحبا العالم من القسم</string>
+    <string name="navigation_drawer_open">افتح درج التنقل</string>
+    <string name="navigation_drawer_close">أغلق درج التنقل</string>
     <string name="title_activity_stock_control">StockControlActivity</string>
-
     <string name="url_separator">/</string>
     <string name="stocks_key">stocks</string>
     <string name="server_version_key">serverVersion</string>
@@ -19,6 +19,6 @@
     <string name="program_id">programId</string>
     <string name="date_updated_key">date_updated</string>
     <string name="stock_type_id_key">vaccine_type_id</string>
-    <string name="negative_balance">New balance cannot be negative.</string>
-    <string name="negative_adjustment">Cannot adjust stock by more than stock on hand %1d</string>
+    <string name="negative_balance">لا يمكن أن يكون الرصيد الجديد سالبًا.</string>
+    <string name="negative_adjustment">d1% لا يمكن ضبط المخزون بأكثر من المخزون المتوفر</string>
 </resources>
