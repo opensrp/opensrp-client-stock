@@ -1,24 +1,42 @@
 package org.smartregister.stock.domain;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 /**
  * Created by samuelgithengi on 2/6/18.
  */
-public class Stock {
+public class Stock implements Serializable {
+    @SerializedName("_id")
     private Long id;
     private String stockTypeId;
+    @SerializedName("transaction_type")
     private String transactionType;
     private String providerid;
     private int value;
+    @SerializedName("date_created")
     private Long dateCreated;
+    @SerializedName("to_from")
     private String toFrom;
     private String syncStatus;
+    @SerializedName("date_updated")
     private Long dateUpdated;
     private String locationId;
     private String childLocationId;
     private String team;
     private String teamId;
     private String identifier;
-    private String customProperties;
+    private Object customProperties;
+    @SerializedName("id")
+    private String stockId;
+    private String serialNumber;
+    private String deliveryDate;
+    private String accountabilityEndDate;
+    private String type;
+    private String donor;
+    private Long version;
+    private Long serverVersion;
 
     public static final String issued = "issued";
     public static final String received = "received";
@@ -169,11 +187,75 @@ public class Stock {
         this.identifier = identifier;
     }
 
-    public String getCustomProperties() {
+    public Object getCustomProperties() {
         return customProperties;
     }
 
-    public void setCustomProperties(String customProperties) {
+    public void setCustomProperties(Object customProperties) {
         this.customProperties = customProperties;
+    }
+
+    public String getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(String stockId) {
+        this.stockId = stockId;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public String getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(String deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public String getAccountabilityEndDate() {
+        return accountabilityEndDate;
+    }
+
+    public void setAccountabilityEndDate(String accountabilityEndDate) {
+        this.accountabilityEndDate = accountabilityEndDate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDonor() {
+        return donor;
+    }
+
+    public void setDonor(String donor) {
+        this.donor = donor;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public Long getServerVersion() {
+        return serverVersion;
+    }
+
+    public void setServerVersion(Long serverVersion) {
+        this.serverVersion = serverVersion;
     }
 }

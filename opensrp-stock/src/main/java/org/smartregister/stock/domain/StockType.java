@@ -21,6 +21,7 @@ public class StockType implements Serializable {
     private String accountabilityPeriod;
     private String availability;
     private String isAttractiveItem;
+    private String photoUrl;
     private String openmrsParentEntityId;
     private String openmrsDateConceptId;
     private String openmrsQuantityConceptId;
@@ -143,5 +144,13 @@ public class StockType implements Serializable {
 
     public void setUniqueId(Long uniqueId) {
         this.uniqueId = uniqueId;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

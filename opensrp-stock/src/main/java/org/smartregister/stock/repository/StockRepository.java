@@ -19,6 +19,7 @@ import org.smartregister.util.DatabaseMigrationUtils;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -46,6 +47,14 @@ public class StockRepository extends BaseRepository {
     public static final String TEAM_ID = "team_id";
     public static final String IDENTIFIER = "identifier";
     public static final String CUSTOM_PROPERTIES = "custom_properties";
+    public static final String STOCK_ID = "stock_id";
+    public static final String SERIAL_NUMBER = "serial_number";
+    public static final String DELIVERY_DATE = "delivery_date";
+    public static final String ACCOUNTABILITY_END_DATE = "accountability_end_date";
+    public static final String TYPE = "type";
+    public static final String DONOR = "donor";
+    public static final String VERSION = "version";
+    public static final String SERVER_VERSION = "server_version";
 
     private static final String STOCK_SQL = "CREATE TABLE " + STOCK_TABLE_NAME + " (" +
             ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
@@ -58,10 +67,20 @@ public class StockRepository extends BaseRepository {
             TO_FROM + " VARCHAR NULL," +
             SYNC_STATUS + " VARCHAR," +
             LOCATION_ID + " VARCHAR NULL," +
+            STOCK_ID + " VARCHAR NULL," +
             CUSTOM_PROPERTIES + " VARCHAR NULL," +
+            SERIAL_NUMBER + " VARCHAR NULL," +
+            DELIVERY_DATE + " VARCHAR NULL," +
+            ACCOUNTABILITY_END_DATE + " VARCHAR NULL," +
+            TYPE + " VARCHAR NULL," +
+            DONOR + " VARCHAR NULL," +
+            VERSION + " INTEGER," +
+            SERVER_VERSION + " INTEGER," +
             DATE_UPDATED + " INTEGER NULL)";
 
-    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, PROVIDER_ID, VALUE, DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, LOCATION_ID, IDENTIFIER, CUSTOM_PROPERTIES};
+    public static final String[] STOCK_TABLE_COLUMNS = {ID_COLUMN, STOCK_TYPE_ID, TRANSACTION_TYPE, PROVIDER_ID, VALUE,
+            DATE_CREATED, TO_FROM, SYNC_STATUS, DATE_UPDATED, LOCATION_ID, IDENTIFIER, CUSTOM_PROPERTIES, STOCK_ID,
+            SERVER_VERSION, VERSION, DONOR, TYPE, ACCOUNTABILITY_END_DATE, SERIAL_NUMBER, DELIVERY_DATE};
 
     public static final String TYPE_UNSYNCED = "Unsynced";
 
@@ -69,6 +88,18 @@ public class StockRepository extends BaseRepository {
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(STOCK_SQL);
+    }
+
+    public void batchInsertStocks(List<Stock> stocks, Map<String, String> params) {
+        String[] selectionArgs = new String[params.size()];
+        String[] selectionValues = new String[params.size()];
+        int count = 0;
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            selectionArgs[count] = entry.getKey();
+            selectionValues[count] = entry.getValue();
+            count++;
+        }
+
     }
 
     public void add(Stock stock) {
@@ -111,6 +142,15 @@ public class StockRepository extends BaseRepository {
         values.put(DATE_UPDATED, stock.getUpdatedAt() != null ? stock.getUpdatedAt() : null);
         values.put(IDENTIFIER, stock.getIdentifier());
         values.put(LOCATION_ID, stock.getLocationId());
+        values.put(STOCK_ID, stock.getStockId());
+        values.put(CUSTOM_PROPERTIES, String.valueOf(stock.getCustomProperties()));
+        values.put(SERVER_VERSION, stock.getServerVersion());
+        values.put(VERSION, stock.getVersion());
+        values.put(DONOR, stock.getDonor());
+        values.put(ACCOUNTABILITY_END_DATE, stock.getAccountabilityEndDate());
+        values.put(SERIAL_NUMBER, stock.getSerialNumber());
+        values.put(TYPE, stock.getType());
+        values.put(DELIVERY_DATE, stock.getDeliveryDate());
         return values;
     }
 
@@ -174,6 +214,15 @@ public class StockRepository extends BaseRepository {
                 cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID)));
         stock.setIdentifier(cursor.getString(cursor.getColumnIndex(IDENTIFIER)));
         stock.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
+        stock.setStockId(cursor.getString(cursor.getColumnIndex(STOCK_ID)));
+        stock.setCustomProperties(cursor.getString(cursor.getColumnIndex(CUSTOM_PROPERTIES)));
+        stock.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
+        stock.setVersion(cursor.getLong(cursor.getColumnIndex(VERSION)));
+        stock.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
+        stock.setDonor(cursor.getString(cursor.getColumnIndex(DONOR)));
+        stock.setDeliveryDate(cursor.getString(cursor.getColumnIndex(DELIVERY_DATE)));
+        stock.setAccountabilityEndDate(cursor.getString(cursor.getColumnIndex(ACCOUNTABILITY_END_DATE)));
+        stock.setSerialNumber(cursor.getString(cursor.getColumnIndex(SERIAL_NUMBER)));
         return stock;
     }
 
@@ -194,6 +243,15 @@ public class StockRepository extends BaseRepository {
                     );
                     stock.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
                     stock.setIdentifier(cursor.getString(cursor.getColumnIndex(IDENTIFIER)));
+                    stock.setStockId(cursor.getString(cursor.getColumnIndex(STOCK_ID)));
+                    stock.setCustomProperties(cursor.getString(cursor.getColumnIndex(CUSTOM_PROPERTIES)));
+                    stock.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
+                    stock.setVersion(cursor.getLong(cursor.getColumnIndex(VERSION)));
+                    stock.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
+                    stock.setDonor(cursor.getString(cursor.getColumnIndex(DONOR)));
+                    stock.setDeliveryDate(cursor.getString(cursor.getColumnIndex(DELIVERY_DATE)));
+                    stock.setAccountabilityEndDate(cursor.getString(cursor.getColumnIndex(ACCOUNTABILITY_END_DATE)));
+                    stock.setSerialNumber(cursor.getString(cursor.getColumnIndex(SERIAL_NUMBER)));
                     stocks.add(stock);
                 }
             }
@@ -313,10 +371,20 @@ public class StockRepository extends BaseRepository {
         database.execSQL("DROP TABLE IF EXISTS old_" + oldTableName);
     }
 
-    public static void migrateAddLocationAndIdentifierColumns(@NonNull SQLiteDatabase database) {
+    public static void migrateAddInventoryColumns(@NonNull SQLiteDatabase database) {
         DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, IDENTIFIER, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, LOCATION_ID, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, CUSTOM_PROPERTIES, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, STOCK_ID, "VARCHAR");
+
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, SERVER_VERSION, "INTEGER");
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, SERIAL_NUMBER, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, VERSION, "INTEGER");
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, TYPE, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, DONOR, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, DELIVERY_DATE, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(database, STOCK_TABLE_NAME, ACCOUNTABILITY_END_DATE, "VARCHAR");
+
         DatabaseMigrationUtils.addIndexIfNotExists(database, STOCK_TABLE_NAME, IDENTIFIER);
         DatabaseMigrationUtils.addIndexIfNotExists(database, STOCK_TABLE_NAME, LOCATION_ID);
     }

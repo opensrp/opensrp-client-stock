@@ -14,11 +14,4 @@ public class Constants {
     public static final String NUMBER_PICKER = "number_picker";
     public static final String MEDIA_URL = "multimedia/media";
     public static final String PRODUCT_IMAGE = "product_image";
-
-    public interface Columns {
-        interface Stock {
-            String LOCATION_ID = "location_id";
-            String IDENTIFIER = "identifier";
-        }
-    }
 }

@@ -6,21 +6,24 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.gson.reflect.TypeToken;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Response;
-import org.smartregister.repository.BaseRepository;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.configuration.StockSyncConfiguration;
 import org.smartregister.stock.domain.Stock;
+import org.smartregister.stock.domain.StockResponse;
 import org.smartregister.stock.repository.StockRepository;
-import org.smartregister.stock.util.Constants;
+import org.smartregister.stock.util.GsonUtil;
+import org.smartregister.stock.util.StockSyncIntentServiceHelper;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ public class StockSyncIntentService extends IntentService {
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private StockSyncConfiguration stockSyncConfiguration;
+    private StockSyncIntentServiceHelper stockSyncIntentServiceHelper;
 
     public StockSyncIntentService() {
         super(TAG);
@@ -60,6 +64,7 @@ public class StockSyncIntentService extends IntentService {
         httpAgent = StockLibrary.getInstance().getContext().getHttpAgent();
         actionService = StockLibrary.getInstance().getContext().actionService();
         stockSyncConfiguration = StockLibrary.getInstance().getStockSyncConfiguration();
+        stockSyncIntentServiceHelper = stockSyncConfiguration.getStockSyncIntentServiceHelper();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -103,26 +108,15 @@ public class StockSyncIntentService extends IntentService {
                 return;
             }
             String jsonPayload = response.payload();
-            ArrayList<Stock> stockItems = getStockFromPayload(jsonPayload);
-            Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
+            List<Stock> stockItems = getStockFromPayload(jsonPayload);
+            Long highestTimestamp = getHighestTimestampFromStockPayLoad(stockItems);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(LAST_STOCK_SYNC, highestTimestamp);
             editor.commit();
             if (stockItems.isEmpty()) {
                 return;
             } else {
-                StockRepository stockRepository = StockLibrary.getInstance().getStockRepository();
-                for (int j = 0; j < stockItems.size(); j++) {
-                    Stock fromServer = stockItems.get(j);
-                    List<Stock> existingStock = stockRepository.findUniqueStock(fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
-                            String.valueOf(fromServer.getValue()), String.valueOf(fromServer.getDateCreated()), fromServer.getToFrom());
-                    if (!existingStock.isEmpty()) {
-                        for (Stock stock : existingStock) {
-                            fromServer.setId(stock.getId());
-                        }
-                    }
-                    stockRepository.add(fromServer);
-                }
+                stockSyncIntentServiceHelper.batchInsertStocks(stockItems);
             }
         }
     }
@@ -136,51 +130,29 @@ public class StockSyncIntentService extends IntentService {
         );
     }
 
-    private Long getHighestTimestampFromStockPayLoad(String jsonPayload) {
-        Long toreturn = 0l;
+    private Long getHighestTimestampFromStockPayLoad(List<Stock> stocks) {
+        Long toReturn = 0L;
         try {
-            JSONObject stockContainer = new JSONObject(jsonPayload);
-            if (stockContainer.has(context.getString(R.string.stocks_key))) {
-                JSONArray stockArray = stockContainer.getJSONArray(context.getString(R.string.stocks_key));
-                for (int i = 0; i < stockArray.length(); i++) {
-                    JSONObject stockObject = stockArray.getJSONObject(i);
-                    if (stockObject.getLong(context.getString(R.string.server_version_key)) > toreturn) {
-                        toreturn = stockObject.getLong(context.getString(R.string.server_version_key));
-                    }
+            for (Stock stock : stocks) {
+                if (stock.getServerVersion() > toReturn) {
+                    toReturn = stock.getServerVersion();
                 }
             }
         } catch (Exception e) {
             Timber.e(e);
         }
-        return toreturn;
+        return toReturn;
     }
 
-    private ArrayList<Stock> getStockFromPayload(String jsonPayload) {
-        ArrayList<Stock> stockArrayList = new ArrayList<>();
+    public List<Stock> getStockFromPayload(String jsonPayload) {
         try {
-            JSONObject stockContainer = new JSONObject(jsonPayload);
-            if (stockContainer.has(context.getString(R.string.stocks_key))) {
-                JSONArray stockArray = stockContainer.getJSONArray(context.getString(R.string.stocks_key));
-                for (int i = 0; i < stockArray.length(); i++) {
-                    JSONObject stockObject = stockArray.getJSONObject(i);
-                    Stock stock = new Stock(null,
-                            stockObject.optString(context.getString(R.string.transaction_type_key)),
-                            stockObject.optString(context.getString(R.string.providerid_key)),
-                            stockObject.optInt(context.getString(R.string.value_key)),
-                            stockObject.optLong(context.getString(R.string.date_created_key)),
-                            stockObject.optString(context.getString(R.string.to_from_key)),
-                            BaseRepository.TYPE_Synced,
-                            stockObject.optLong(context.getString(R.string.date_updated_key)),
-                            stockObject.optString(context.getString(R.string.stock_type_id_key)));
-                    stock.setLocationId(stockObject.optString(Constants.Columns.Stock.LOCATION_ID));
-                    stock.setIdentifier(stockObject.optString(Constants.Columns.Stock.IDENTIFIER));
-                    stockArrayList.add(stock);
-                }
-            }
+            StockResponse stockResponse = GsonUtil.getGson().fromJson(jsonPayload, new TypeToken<StockResponse>() {
+            }.getType());
+            return stockResponse.getStocks();
         } catch (Exception e) {
             Timber.e(e);
         }
-        return stockArrayList;
+        return new ArrayList<>();
     }
 
     private void pushStockToServer() {

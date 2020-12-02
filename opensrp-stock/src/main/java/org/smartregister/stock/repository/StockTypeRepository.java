@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteException;
@@ -40,6 +41,7 @@ public class StockTypeRepository extends BaseRepository {
     public static final String OPENMRS_PARENT_ENTITIY_ID = "openmrs_parent_entity_id";
     public static final String OPENMRS_DATE_CONCEPT_ID = "openmrs_date_concept_id";
     public static final String OPENMRS_QUANTITY_CONCEPT_ID = "openmrs_quantity_concept_id";
+    public static final String PHOTO_URL = "photo_url";
 
     private static final String STOCK_TYPE_SQL = "CREATE TABLE stock_types (" +
             ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
@@ -52,12 +54,13 @@ public class StockTypeRepository extends BaseRepository {
             CONDITION + " VARCHAR NULL," +
             APPROPRIATE_USAGE + " VARCHAR NULL," +
             ACCOUNTABILITY_PERIOD + " VARCHAR NULL," +
+            PHOTO_URL + " VARCHAR NULL," +
             OPENMRS_PARENT_ENTITIY_ID + " VARCHAR NULL," +
             OPENMRS_DATE_CONCEPT_ID + " VARCHAR NULL," +
             OPENMRS_QUANTITY_CONCEPT_ID + " VARCHAR)";
 
     public static final String[] STOCK_Type_TABLE_COLUMNS = {ID_COLUMN, UNIQUE_ID, QUANTITY, NAME, MATERIAL_NUMBER, IS_ATTRACTIVE_ITEM,
-            AVAILABILITY, CONDITION, APPROPRIATE_USAGE, ACCOUNTABILITY_PERIOD, OPENMRS_PARENT_ENTITIY_ID, OPENMRS_DATE_CONCEPT_ID, OPENMRS_QUANTITY_CONCEPT_ID};
+            AVAILABILITY, CONDITION, APPROPRIATE_USAGE, ACCOUNTABILITY_PERIOD, OPENMRS_PARENT_ENTITIY_ID, OPENMRS_DATE_CONCEPT_ID, OPENMRS_QUANTITY_CONCEPT_ID, PHOTO_URL};
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(STOCK_TYPE_SQL);
@@ -160,6 +163,7 @@ public class StockTypeRepository extends BaseRepository {
                     stockType.setIsAttractiveItem(cursor.getString(cursor.getColumnIndex(IS_ATTRACTIVE_ITEM)));
                     stockType.setMaterialNumber(cursor.getString(cursor.getColumnIndex(MATERIAL_NUMBER)));
                     stockType.setUniqueId(cursor.getLong(cursor.getColumnIndex(UNIQUE_ID)));
+                    stockType.setPhotoUrl(cursor.getString(cursor.getColumnIndex(PHOTO_URL)));
                     stocks.add(stockType);
                 }
             }
@@ -184,6 +188,7 @@ public class StockTypeRepository extends BaseRepository {
         values.put(CONDITION, stockType.getCondition());
         values.put(MATERIAL_NUMBER, stockType.getMaterialNumber());
         values.put(UNIQUE_ID, stockType.getUniqueId());
+        values.put(PHOTO_URL, stockType.getPhotoUrl());
         values.put(OPENMRS_DATE_CONCEPT_ID, stockType.getOpenmrsDateConceptId());
         values.put(OPENMRS_QUANTITY_CONCEPT_ID, stockType.getOpenmrsQuantityConceptId());
         values.put(OPENMRS_PARENT_ENTITIY_ID, stockType.getOpenmrsParentEntityId());
@@ -214,6 +219,18 @@ public class StockTypeRepository extends BaseRepository {
         }
     }
 
+    public void batchInsertStockTypes(@Nullable List<StockType> stockTypes) {
+        if (stockTypes == null)
+            return;
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        for (StockType stockType : stockTypes) {
+            add(stockType, sqLiteDatabase, StockTypeRepository.UNIQUE_ID);
+        }
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();
+    }
+
     public static void migrationAdditionalProductProperties(@NonNull SQLiteDatabase
                                                                     sqLiteDatabase) {
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, MATERIAL_NUMBER, "VARCHAR");
@@ -222,6 +239,7 @@ public class StockTypeRepository extends BaseRepository {
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, CONDITION, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, UNIQUE_ID, "INTEGER");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, ACCOUNTABILITY_PERIOD, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, PHOTO_URL, "VARCHAR");
         DatabaseMigrationUtils.addIndexIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, UNIQUE_ID);
     }
 }

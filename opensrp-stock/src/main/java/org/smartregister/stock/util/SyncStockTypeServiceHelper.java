@@ -6,15 +6,10 @@ import android.content.Context;
 
 import com.google.gson.reflect.TypeToken;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.smartregister.AllConstants;
 import org.smartregister.CoreLibrary;
 import org.smartregister.domain.DownloadStatus;
-import org.smartregister.domain.ProfileImage;
 import org.smartregister.domain.Response;
-import org.smartregister.domain.SyncEntity;
-import org.smartregister.domain.SyncProgress;
 import org.smartregister.repository.ImageRepository;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.StockLibrary;
@@ -33,7 +28,6 @@ import java.util.Map;
 import timber.log.Timber;
 
 import static java.text.MessageFormat.format;
-import static org.smartregister.repository.BaseRepository.TYPE_Synced;
 import static org.smartregister.stock.sync.StockTypeIntentService.SYNC_URL;
 import static org.smartregister.util.JsonFormUtils.gson;
 
@@ -45,6 +39,7 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
     private SyncUtils syncUtils;
     private StockLibrary stockLibrary;
     private Context context;
+
     public SyncStockTypeServiceHelper(Context context) {
         this.context = context;
         init(context);
@@ -88,16 +83,9 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
     }
 
     public void saveAllStockTypes(String payload) {
-        SQLiteDatabase sqLiteDatabase = stockTypeRepository.getWritableDatabase();
         List<StockType> stockTypes = gson.fromJson(payload, new TypeToken<List<StockType>>() {
         }.getType());
-
-        sqLiteDatabase.beginTransaction();
-        for (StockType stockType : stockTypes) {
-            stockTypeRepository.add(stockType, sqLiteDatabase, StockTypeRepository.UNIQUE_ID);
-        }
-        sqLiteDatabase.setTransactionSuccessful();
-        sqLiteDatabase.endTransaction();
+        stockTypeRepository.batchInsertStockTypes(stockTypes);
     }
 
     public void downloadStockTypeImages() {
@@ -113,13 +101,15 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
             Response<DownloadStatus> status = httpAgent.downloadFromURL(photoUrl, fileName, map);
             DownloadStatus downloadStatus = status.payload();
             if (downloadStatus == downloadStatus.downloaded) {
-                ProfileImage profileImage = new ProfileImage();
-                profileImage.setEntityID(String.valueOf(stockType.getUniqueId()));
-                profileImage.setImageid(String.valueOf(stockType.getUniqueId()));
-                profileImage.setSyncStatus(TYPE_Synced);
-                profileImage.setFilecategory(Constants.PRODUCT_IMAGE);
-                profileImage.setFilepath(map.get(AllConstants.DownloadFileConstants.FILE_PATH));
-                imageRepository.add(profileImage);
+                stockType.setPhotoUrl(map.get(AllConstants.DownloadFileConstants.FILE_PATH));
+                stockTypeRepository.add(stockType, stockTypeRepository.getWritableDatabase());
+//                ProfileImage profileImage = new ProfileImage();
+//                profileImage.setEntityID(String.valueOf(stockType.getUniqueId()));
+//                profileImage.setImageid(String.valueOf(stockType.getUniqueId()));
+//                profileImage.setSyncStatus(TYPE_Synced);
+//                profileImage.setFilecategory(Constants.PRODUCT_IMAGE);
+//                profileImage.setFilepath(map.get(AllConstants.DownloadFileConstants.FILE_PATH));
+//                imageRepository.add(profileImage);
             }
         }
     }
