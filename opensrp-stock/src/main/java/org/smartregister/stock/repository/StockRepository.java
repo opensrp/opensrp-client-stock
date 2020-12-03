@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,8 +19,9 @@ import org.smartregister.util.DatabaseMigrationUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import timber.log.Timber;
 
@@ -90,16 +92,52 @@ public class StockRepository extends BaseRepository {
         database.execSQL(STOCK_SQL);
     }
 
-    public void batchInsertStocks(List<Stock> stocks, Map<String, String> params) {
-        String[] selectionArgs = new String[params.size()];
-        String[] selectionValues = new String[params.size()];
-        int count = 0;
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            selectionArgs[count] = entry.getKey();
-            selectionValues[count] = entry.getValue();
-            count++;
+    public void batchInsertStock(@NonNull List<Stock> stocks) {
+        Set<String> stockIdsFromResponse = getStockIdsFromResponse(stocks);
+        Set<String> stockIds = populateStockIds(stockIdsFromResponse);
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        for (Stock stock : stocks) {
+            stock.setSyncStatus(TYPE_SYNCED);
+            stock.setUpdatedAt(System.currentTimeMillis());
+            ContentValues contentValues = createValuesFor(stock);
+            if (!stockIds.contains(stock.getStockId())) {
+                sqLiteDatabase.insert(STOCK_TABLE_NAME, null, contentValues);
+            } else {
+                String idSelection = STOCK_ID + " = ?";
+                contentValues.remove(ID_COLUMN);
+                sqLiteDatabase.update(STOCK_TABLE_NAME, contentValues, idSelection, new String[]{stock.getStockId()});
+            }
         }
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();
+    }
 
+    private Set<String> getStockIdsFromResponse(@NonNull List<Stock> stocks) {
+        Set<String> stockIds = new HashSet<>();
+        for (Stock stock : stocks) {
+            String stockId = stock.getStockId();
+            if (StringUtils.isNotBlank(stockId)) {
+                stockIds.add(stockId);
+            }
+        }
+        return stockIds;
+    }
+
+    private Set<String> populateStockIds(@NonNull Set<String> stockIds) {
+        Set<String> tempStockIds = new HashSet<>();
+        String query = "SELECT " + STOCK_ID + " FROM " + STOCK_TABLE_NAME +
+                " WHERE " + STOCK_ID + " IN ( " + StringUtils.repeat("?", ", ", stockIds.size()) + ")";
+        try (Cursor mCursor = getReadableDatabase().rawQuery(query, stockIds.toArray(new String[0]))) {
+            if (mCursor != null) {
+                while (mCursor.moveToNext()) {
+                    tempStockIds.add(mCursor.getString(0));
+                }
+            }
+        } catch (SQLException e) {
+            Timber.e(e);
+        }
+        return tempStockIds;
     }
 
     public void add(Stock stock) {
@@ -132,14 +170,14 @@ public class StockRepository extends BaseRepository {
     private ContentValues createValuesFor(Stock stock) {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, stock.getId());
-        values.put(STOCK_TYPE_ID, stock.getStockTypeId());
+        values.put(STOCK_TYPE_ID, stock.getStockTypeId() == null ? stock.getIdentifier() : "0");
         values.put(TRANSACTION_TYPE, stock.getTransactionType());
         values.put(PROVIDER_ID, stock.getProviderid());
         values.put(VALUE, stock.getValue());
-        values.put(DATE_CREATED, stock.getDateCreated() != null ? stock.getDateCreated() : null);
+        values.put(DATE_CREATED, stock.getDateCreated() != null ? stock.getDateCreated() : System.currentTimeMillis());
         values.put(TO_FROM, stock.getToFrom());
         values.put(SYNC_STATUS, stock.getSyncStatus());
-        values.put(DATE_UPDATED, stock.getUpdatedAt() != null ? stock.getUpdatedAt() : null);
+        values.put(DATE_UPDATED, stock.getUpdatedAt() != null ? stock.getUpdatedAt() : System.currentTimeMillis());
         values.put(IDENTIFIER, stock.getIdentifier());
         values.put(LOCATION_ID, stock.getLocationId());
         values.put(STOCK_ID, stock.getStockId());

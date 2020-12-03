@@ -10,8 +10,8 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.BaseRepository;
@@ -19,7 +19,9 @@ import org.smartregister.stock.domain.StockType;
 import org.smartregister.util.DatabaseMigrationUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import timber.log.Timber;
 
@@ -42,6 +44,7 @@ public class StockTypeRepository extends BaseRepository {
     public static final String OPENMRS_DATE_CONCEPT_ID = "openmrs_date_concept_id";
     public static final String OPENMRS_QUANTITY_CONCEPT_ID = "openmrs_quantity_concept_id";
     public static final String PHOTO_URL = "photo_url";
+    public static final String PHOTO_FILE_LOCATION = "photo_file_location";
 
     private static final String STOCK_TYPE_SQL = "CREATE TABLE stock_types (" +
             ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
@@ -55,22 +58,66 @@ public class StockTypeRepository extends BaseRepository {
             APPROPRIATE_USAGE + " VARCHAR NULL," +
             ACCOUNTABILITY_PERIOD + " VARCHAR NULL," +
             PHOTO_URL + " VARCHAR NULL," +
+            PHOTO_FILE_LOCATION + " VARCHAR NULL," +
             OPENMRS_PARENT_ENTITIY_ID + " VARCHAR NULL," +
             OPENMRS_DATE_CONCEPT_ID + " VARCHAR NULL," +
             OPENMRS_QUANTITY_CONCEPT_ID + " VARCHAR)";
 
     public static final String[] STOCK_Type_TABLE_COLUMNS = {ID_COLUMN, UNIQUE_ID, QUANTITY, NAME, MATERIAL_NUMBER, IS_ATTRACTIVE_ITEM,
-            AVAILABILITY, CONDITION, APPROPRIATE_USAGE, ACCOUNTABILITY_PERIOD, OPENMRS_PARENT_ENTITIY_ID, OPENMRS_DATE_CONCEPT_ID, OPENMRS_QUANTITY_CONCEPT_ID, PHOTO_URL};
+            AVAILABILITY, CONDITION, APPROPRIATE_USAGE, ACCOUNTABILITY_PERIOD, OPENMRS_PARENT_ENTITIY_ID, OPENMRS_DATE_CONCEPT_ID,
+            OPENMRS_QUANTITY_CONCEPT_ID, PHOTO_URL, PHOTO_FILE_LOCATION};
 
     public static void createTable(SQLiteDatabase database) {
         database.execSQL(STOCK_TYPE_SQL);
     }
 
-    public void add(StockType stockType, SQLiteDatabase database) {
-        add(stockType, database, null);
+    public void batchInsertStockTypes(@Nullable List<StockType> stockTypes) {
+        Set<Long> stockTypeIdsFromResponse = getStockTypeUniqueIdsFromResponse(stockTypes);
+        Set<Long> stockTypeIds = populateStockTypeUniqueIds(stockTypeIdsFromResponse);
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        for (StockType stockType : stockTypes) {
+            ContentValues contentValues = createValuesFor(stockType);
+            if (!stockTypeIds.contains(stockType.getUniqueId())) {
+                sqLiteDatabase.insert(STOCK_TYPE_TABLE_NAME, null, contentValues);
+            } else {
+                String idSelection = UNIQUE_ID + " = ?";
+                contentValues.remove(ID_COLUMN);
+                sqLiteDatabase.update(STOCK_TYPE_TABLE_NAME, contentValues, idSelection, new String[]{stockType.getUniqueId().toString()});
+            }
+        }
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();
     }
 
-    public void add(StockType stockType, SQLiteDatabase database_, String uniqueColumn) {
+    private Set<Long> getStockTypeUniqueIdsFromResponse(@NonNull List<StockType> stockTypes) {
+        Set<Long> stockTypeUniqueIds = new HashSet<>();
+        for (StockType stockType : stockTypes) {
+            Long stockTypeUniqueId = stockType.getUniqueId();
+            if (stockTypeUniqueId != null) {
+                stockTypeUniqueIds.add(stockTypeUniqueId);
+            }
+        }
+        return stockTypeUniqueIds;
+    }
+
+    private Set<Long> populateStockTypeUniqueIds(@NonNull Set<Long> stockTypeUniqueIds) {
+        Set<Long> tempStockTypeUniqueIds = new HashSet<>();
+        String query = "SELECT " + UNIQUE_ID + " FROM " + STOCK_TYPE_TABLE_NAME +
+                " WHERE " + UNIQUE_ID + " IN ( " + StringUtils.repeat("?", ", ", stockTypeUniqueIds.size()) + ")";
+        try (Cursor mCursor = getReadableDatabase().rawQuery(query, stockTypeUniqueIds.toArray(new Long[0]))) {
+            if (mCursor != null) {
+                while (mCursor.moveToNext()) {
+                    tempStockTypeUniqueIds.add(mCursor.getLong(0));
+                }
+            }
+        } catch (SQLException e) {
+            Timber.e(e);
+        }
+        return tempStockTypeUniqueIds;
+    }
+
+    public void add(StockType stockType, SQLiteDatabase database_) {
         SQLiteDatabase database = database_;
         if (stockType == null) {
             return;
@@ -80,43 +127,18 @@ public class StockTypeRepository extends BaseRepository {
             database = getWritableDatabase();
         }
 
-        if (StringUtils.isBlank(uniqueColumn) || ID_COLUMN.equals(uniqueColumn)) {
-            if (stockType.getId() == null) {
-                stockType.setId(database.insert(STOCK_TYPE_TABLE_NAME, null, createValuesFor(stockType)));
-            } else {
-                //mark the stock as unsynced for processing as an updated event
-                String idSelection = ID_COLUMN + " = ?";
-                database.update(STOCK_TYPE_TABLE_NAME, createValuesFor(stockType), idSelection, new String[]{stockType.getId().toString()});
-            }
+        if (stockType.getId() == null) {
+            stockType.setId(database.insert(STOCK_TYPE_TABLE_NAME, null, createValuesFor(stockType)));
         } else {
-            if (checkIfStockTypeExist(String.valueOf(stockType.getUniqueId()))) {
-                String idSelection = UNIQUE_ID + " = ?";
-                ContentValues contentValues = createValuesFor(stockType);
-                contentValues.remove(ID_COLUMN);
-                database.update(STOCK_TYPE_TABLE_NAME, contentValues, idSelection, new String[]{stockType.getUniqueId().toString()});
-            } else {
-                database.insert(STOCK_TYPE_TABLE_NAME, null, createValuesFor(stockType));
-            }
+            //mark the stock as unsynced for processing as an updated event
+            String idSelection = ID_COLUMN + " = ?";
+            database.update(STOCK_TYPE_TABLE_NAME, createValuesFor(stockType), idSelection, new String[]{stockType.getId().toString()});
         }
-    }
-
-    public boolean checkIfStockTypeExist(String id) {
-        if (StringUtils.isNotBlank(id)) {
-            SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-            try (Cursor cursor = sqLiteDatabase.query(STOCK_TYPE_TABLE_NAME, new String[]{UNIQUE_ID}, UNIQUE_ID + " =? ", new String[]{id}, null, null, null, "1")) {
-                if (cursor != null) {
-                    return cursor.getCount() > 0;
-                }
-            } catch (SQLiteException e) {
-                Timber.e(e);
-            }
-        }
-        return false;
     }
 
     public List<StockType> findIDByName(String Name) {
         SQLiteDatabase database = getReadableDatabase();
-        Cursor cursor = database.query(STOCK_TYPE_TABLE_NAME, STOCK_Type_TABLE_COLUMNS, this.NAME + " = ? ", new String[]{Name}, null, null, null, null);
+        Cursor cursor = database.query(STOCK_TYPE_TABLE_NAME, STOCK_Type_TABLE_COLUMNS, NAME + " = ? ", new String[]{Name}, null, null, null, null);
         return readAllStock(cursor);
     }
 
@@ -126,12 +148,20 @@ public class StockTypeRepository extends BaseRepository {
             database = getReadableDatabase();
         }
 
-        Cursor cursor = database.query(STOCK_TYPE_TABLE_NAME, STOCK_Type_TABLE_COLUMNS, null, null, null, null, null, null);
+        Cursor cursor = database.query(STOCK_TYPE_TABLE_NAME, STOCK_Type_TABLE_COLUMNS, null,
+                null, null, null, null, null);
         return readAllStock(cursor);
     }
 
     public List<StockType> getAllStockTypes() {
         return getAllStockTypes(getReadableDatabase());
+    }
+
+    public List<StockType> findAllWithUnDownloadedPhoto() {
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.query(STOCK_TYPE_TABLE_NAME, STOCK_Type_TABLE_COLUMNS, PHOTO_URL + " IS NOT NULL AND " + PHOTO_FILE_LOCATION + " IS NULL",
+                null, null, null, null);
+        return readAllStock(cursor);
     }
 
     public int getDosesPerVial(String name) {
@@ -164,6 +194,7 @@ public class StockTypeRepository extends BaseRepository {
                     stockType.setMaterialNumber(cursor.getString(cursor.getColumnIndex(MATERIAL_NUMBER)));
                     stockType.setUniqueId(cursor.getLong(cursor.getColumnIndex(UNIQUE_ID)));
                     stockType.setPhotoUrl(cursor.getString(cursor.getColumnIndex(PHOTO_URL)));
+                    stockType.setPhotoFileLocation(cursor.getString(cursor.getColumnIndex(PHOTO_FILE_LOCATION)));
                     stocks.add(stockType);
                 }
             }
@@ -174,6 +205,12 @@ public class StockTypeRepository extends BaseRepository {
                 cursor.close();
         }
         return stocks;
+    }
+
+    public void updatePhotoLocation(Long id, String location) {
+        SQLiteDatabase database = getWritableDatabase();
+        database.execSQL("UPDATE " + STOCK_TYPE_TABLE_NAME + " SET " + PHOTO_FILE_LOCATION + " = ? " +
+                "WHERE " + ID_COLUMN + " = ?", new String[]{location, id.toString()});
     }
 
     private ContentValues createValuesFor(@NonNull StockType stockType) {
@@ -188,7 +225,7 @@ public class StockTypeRepository extends BaseRepository {
         values.put(CONDITION, stockType.getCondition());
         values.put(MATERIAL_NUMBER, stockType.getMaterialNumber());
         values.put(UNIQUE_ID, stockType.getUniqueId());
-        values.put(PHOTO_URL, stockType.getPhotoUrl());
+        values.put(PHOTO_URL, StringUtils.isNotBlank(stockType.getPhotoUrl()) ? stockType.getPhotoUrl() : null);
         values.put(OPENMRS_DATE_CONCEPT_ID, stockType.getOpenmrsDateConceptId());
         values.put(OPENMRS_QUANTITY_CONCEPT_ID, stockType.getOpenmrsQuantityConceptId());
         values.put(OPENMRS_PARENT_ENTITIY_ID, stockType.getOpenmrsParentEntityId());
@@ -219,27 +256,17 @@ public class StockTypeRepository extends BaseRepository {
         }
     }
 
-    public void batchInsertStockTypes(@Nullable List<StockType> stockTypes) {
-        if (stockTypes == null)
-            return;
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        sqLiteDatabase.beginTransaction();
-        for (StockType stockType : stockTypes) {
-            add(stockType, sqLiteDatabase, StockTypeRepository.UNIQUE_ID);
-        }
-        sqLiteDatabase.setTransactionSuccessful();
-        sqLiteDatabase.endTransaction();
-    }
-
     public static void migrationAdditionalProductProperties(@NonNull SQLiteDatabase
                                                                     sqLiteDatabase) {
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, MATERIAL_NUMBER, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, APPROPRIATE_USAGE, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, IS_ATTRACTIVE_ITEM, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, CONDITION, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, PHOTO_FILE_LOCATION, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, UNIQUE_ID, "INTEGER");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, ACCOUNTABILITY_PERIOD, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, PHOTO_URL, "VARCHAR");
+
         DatabaseMigrationUtils.addIndexIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, UNIQUE_ID);
     }
 }

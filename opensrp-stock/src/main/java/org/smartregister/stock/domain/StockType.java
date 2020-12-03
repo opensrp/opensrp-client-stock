@@ -21,10 +21,12 @@ public class StockType implements Serializable {
     private String accountabilityPeriod;
     private String availability;
     private String isAttractiveItem;
+    @SerializedName("photoURL")
     private String photoUrl;
     private String openmrsParentEntityId;
     private String openmrsDateConceptId;
     private String openmrsQuantityConceptId;
+    private String photoFileLocation;
 
     public StockType() {
     }
@@ -152,5 +154,13 @@ public class StockType implements Serializable {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getPhotoFileLocation() {
+        return photoFileLocation;
+    }
+
+    public void setPhotoFileLocation(String photoFileLocation) {
+        this.photoFileLocation = photoFileLocation;
     }
 }

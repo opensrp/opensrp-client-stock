@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import androidx.annotation.Nullable;
 
-import org.smartregister.stock.util.SyncStockTypeServiceHelper;
+import org.smartregister.stock.helper.SyncStockTypeServiceHelper;
 
 public class StockTypeIntentService extends IntentService {
     public static final String SYNC_URL = "/rest/product-catalogue";

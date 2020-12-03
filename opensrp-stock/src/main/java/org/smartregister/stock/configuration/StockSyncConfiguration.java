@@ -1,6 +1,6 @@
 package org.smartregister.stock.configuration;
 
-import org.smartregister.stock.util.StockSyncIntentServiceHelper;
+import org.smartregister.stock.helper.StockSyncServiceHelper;
 import org.smartregister.util.Utils;
 
 public class StockSyncConfiguration {
@@ -21,7 +21,11 @@ public class StockSyncConfiguration {
         return false;
     }
 
-    public StockSyncIntentServiceHelper getStockSyncIntentServiceHelper(){
-        return new StockSyncIntentServiceHelper();
+    public StockSyncServiceHelper getStockSyncIntentServiceHelper(){
+        return new StockSyncServiceHelper(this);
+    }
+
+    public boolean useDefaultStockExistenceCheck() {
+        return true;
     }
 }

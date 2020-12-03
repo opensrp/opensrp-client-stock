@@ -23,7 +23,7 @@ import org.smartregister.stock.domain.Stock;
 import org.smartregister.stock.domain.StockResponse;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.util.GsonUtil;
-import org.smartregister.stock.util.StockSyncIntentServiceHelper;
+import org.smartregister.stock.helper.StockSyncServiceHelper;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class StockSyncIntentService extends IntentService {
     private HTTPAgent httpAgent;
     private ActionService actionService;
     private StockSyncConfiguration stockSyncConfiguration;
-    private StockSyncIntentServiceHelper stockSyncIntentServiceHelper;
+    private StockSyncServiceHelper stockSyncServiceHelper;
 
     public StockSyncIntentService() {
         super(TAG);
@@ -64,7 +64,7 @@ public class StockSyncIntentService extends IntentService {
         httpAgent = StockLibrary.getInstance().getContext().getHttpAgent();
         actionService = StockLibrary.getInstance().getContext().actionService();
         stockSyncConfiguration = StockLibrary.getInstance().getStockSyncConfiguration();
-        stockSyncIntentServiceHelper = stockSyncConfiguration.getStockSyncIntentServiceHelper();
+        stockSyncServiceHelper = stockSyncConfiguration.getStockSyncIntentServiceHelper();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -116,7 +116,7 @@ public class StockSyncIntentService extends IntentService {
             if (stockItems.isEmpty()) {
                 return;
             } else {
-                stockSyncIntentServiceHelper.batchInsertStocks(stockItems);
+                stockSyncServiceHelper.batchInsertStocks(stockItems);
             }
         }
     }

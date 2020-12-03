@@ -1,4 +1,4 @@
-package org.smartregister.stock.util;
+package org.smartregister.stock.helper;
 
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
@@ -16,6 +16,7 @@ import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.configuration.StockSyncConfiguration;
 import org.smartregister.stock.domain.StockType;
 import org.smartregister.stock.repository.StockTypeRepository;
+import org.smartregister.stock.util.Constants;
 import org.smartregister.sync.helper.BaseHelper;
 import org.smartregister.util.NetworkUtils;
 import org.smartregister.util.SyncUtils;
@@ -89,7 +90,7 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
     }
 
     public void downloadStockTypeImages() {
-        List<StockType> stockTypes = stockTypeRepository.getAllStockTypes();
+        List<StockType> stockTypes = stockTypeRepository.findAllWithUnDownloadedPhoto();
         for (StockType stockType : stockTypes) {
             String photoId = String.valueOf(stockType.getUniqueId());
             String photoUrl = format("{0}/{1}/{2}",
@@ -101,8 +102,7 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
             Response<DownloadStatus> status = httpAgent.downloadFromURL(photoUrl, fileName, map);
             DownloadStatus downloadStatus = status.payload();
             if (downloadStatus == downloadStatus.downloaded) {
-                stockType.setPhotoUrl(map.get(AllConstants.DownloadFileConstants.FILE_PATH));
-                stockTypeRepository.add(stockType, stockTypeRepository.getWritableDatabase());
+                stockTypeRepository.updatePhotoLocation(stockType.getId(), map.get(AllConstants.DownloadFileConstants.FILE_PATH));
 //                ProfileImage profileImage = new ProfileImage();
 //                profileImage.setEntityID(String.valueOf(stockType.getUniqueId()));
 //                profileImage.setImageid(String.valueOf(stockType.getUniqueId()));

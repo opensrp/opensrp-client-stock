@@ -126,6 +126,8 @@ dependencies {
         exclude group: 'androidx.core', module: 'core'
     }
 
+    implementation 'com.google.code.gson:gson:2.8.6'
+
     jarJar 'com.ibm.fhir:fhir-model:4.2.3'
 
     implementation fileTree(dir: "./build/libs", include: ['*.jar'])
