@@ -142,7 +142,7 @@ public class CurrentStock extends Fragment implements
         Button adjustment = (Button) view.findViewById(R.id.loss_adj);
 
         TextView vaccine_name = (TextView) view.findViewById(R.id.name);
-        vaccine_name.setText(((StockControlActivity) getActivity()).stockType.getName() + " Stock: ");
+        vaccine_name.setText(((StockControlActivity) getActivity()).stockType.getName() + " " + getString(R.string.stock) + ": ");
 
         received.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,7 +170,7 @@ public class CurrentStock extends Fragment implements
 
     private void getValueForStock(View view) {
         TextView stockvalue = (TextView) view.findViewById(R.id.vials);
-        stockvalue.setText("" + stockRepository.getCurrentStockNumber(((StockControlActivity) getActivity()).stockType) + " vials");
+        stockvalue.setText("" + stockRepository.getCurrentStockNumber(((StockControlActivity) getActivity()).stockType) + " " + this.getString(R.string.vials));
     }
 
     private void onInitialization() {
@@ -267,13 +267,13 @@ public class CurrentStock extends Fragment implements
                     JSONObject jsonForm = new JSONObject(jsonString);
                     JSONObject step = jsonForm.getJSONObject("step1");
                     String FormTitle = step.getString("title");
-                    if (FormTitle.contains("Stock Issued")) {
+                    if (FormTitle.contains(getString(R.string.stock_issued))) {
                         processStockIssued(jsonString);
                     }
-                    if (FormTitle.contains("Stock Received")) {
+                    if (FormTitle.contains(getString(R.string.stock_received))) {
                         processStockReceived(jsonString);
                     }
-                    if (FormTitle.contains("Stock Loss/Adjustment")) {
+                    if (FormTitle.contains(getString(R.string.stock_loss))) {
                         processStockLossAdjustment(jsonString);
                     }
                 } catch (Exception e) {

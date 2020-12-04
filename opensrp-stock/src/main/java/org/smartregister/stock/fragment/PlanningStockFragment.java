@@ -1,5 +1,6 @@
 package org.smartregister.stock.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
@@ -36,6 +37,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -148,7 +151,7 @@ public class PlanningStockFragment extends Fragment {
 
     private void vaccinesDueNextMonth(View view) {
         int dosespervial = ((StockControlActivity) getActivity()).stockType.getQuantity();
-        ((TextView) view.findViewById(R.id.due_vacc_next_month_value)).setText("" + (int) Math.ceil((double) processVaccinesDueNextMonth() / dosespervial) + " vials");
+        ((TextView) view.findViewById(R.id.due_vacc_next_month_value)).setText("" + (int) Math.ceil((double) processVaccinesDueNextMonth() / dosespervial) + " " + getString(R.string.vials));
     }
 
     private void wasteRateCalculate(View view) {
@@ -185,7 +188,7 @@ public class PlanningStockFragment extends Fragment {
         int stockissuedlastmonth = -1 * getStockIssuedIntimeFrame(startofLastMonth, startofthismonth);
 
         lastmonthlabel.setText(lastmonth + " " + lastmonthyear);
-        lastmonthvialsUsed.setText("" + stockissuedlastmonth + " vials");
+        lastmonthvialsUsed.setText("" + stockissuedlastmonth + " " + getString(R.string.vials));
         //////////////////////////////////////////////////////////////////////////////////////////
 
         //////////////////////2nd last month///////////////////////////////////////////////////////////
@@ -196,7 +199,7 @@ public class PlanningStockFragment extends Fragment {
         int stockissued2ndlastmonth = -1 * getStockIssuedIntimeFrame(startof2ndLastMonth, startofLastMonth);
 
         secondlastmonthlabel.setText(secondlastmonth + " " + secondlastmonthyear);
-        secondlastmonthvialsUsed.setText("" + stockissued2ndlastmonth + " vials");
+        secondlastmonthvialsUsed.setText("" + stockissued2ndlastmonth + " " + getString(R.string.vials));
         //////////////////////////////////////////////////////////////////////////////////////////
 
         //////////////////////3rd last month///////////////////////////////////////////////////////////
@@ -206,11 +209,11 @@ public class PlanningStockFragment extends Fragment {
         int stockissued3rdlastmonth = -1 * getStockIssuedIntimeFrame(startof3rdLastMonth, startof2ndLastMonth);
 
         thirdmonthlabel.setText(thirdlastmonth + " " + thirdlastmonthyear);
-        thirdmonthvialsUsed.setText("" + stockissued3rdlastmonth + " vials");
+        thirdmonthvialsUsed.setText("" + stockissued3rdlastmonth + " " + getString(R.string.vials));
         //////////////////////////////////////////////////////////////////////////////////////////
 
         int threemonthaveragevalue = (int) Math.ceil((double) (stockissuedlastmonth + stockissued2ndlastmonth + stockissued3rdlastmonth) / 3);
-        threemonthaverage.setText(threemonthaveragevalue + " vials");
+        threemonthaverage.setText(threemonthaveragevalue + " " + getString(R.string.vials));
     }
 
     private int getStockIssuedIntimeFrame(DateTime startofLastMonth, DateTime startofthismonth) {
@@ -237,9 +240,10 @@ public class PlanningStockFragment extends Fragment {
 
     private void getValueForStock(View view) {
         TextView stockvalue = (TextView) view.findViewById(R.id.vials);
-        stockvalue.setText("" + StockLibrary.getInstance().getStockRepository().getCurrentStockNumber(((StockControlActivity) getActivity()).stockType) + " vials");
+        stockvalue.setText("" + StockLibrary.getInstance().getStockRepository().getCurrentStockNumber(((StockControlActivity) getActivity()).stockType) + " " + getString(R.string.vials));
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void createTitle(View view) {
         TextView titleview = (TextView) view.findViewById(R.id.name);
         TextView graphtitletext = (TextView) view.findViewById(R.id.graph_label_text);
@@ -250,15 +254,20 @@ public class PlanningStockFragment extends Fragment {
 
         String vaccineName = ((StockControlActivity) getActivity()).stockType.getName();
 
-        titleview.setText(vaccineName + " Planning");
-        graphtitletext.setText("3 month " + vaccineName + " stock levels");
-        current_stock_label.setText("Current " + vaccineName + " stock: ");
-        avg_vacc_waste_rate_label.setText("Average " + vaccineName + " waste rate: ");
-        due_vacc_description.setText("Calculated from current active children that will be due for " + vaccineName + " next month.");
-        lastthreemonthstocktitle.setText("3 month " + vaccineName + " stock used");
+        try {
+            titleview.setText(String.format(getString(R.string.stock_planning_title), vaccineName));
+            graphtitletext.setText(String.format(getString(R.string.vaccine_stock_levels), vaccineName));
+            current_stock_label.setText(String.format(getString(R.string.current_vaccine_stock), vaccineName));
+            avg_vacc_waste_rate_label.setText(String.format(getString(R.string.average_vaccine_waste_rate), vaccineName));
+            due_vacc_description.setText(String.format(getString(R.string.vaccine_due_next_month_text), vaccineName));
+            lastthreemonthstocktitle.setText(String.format(getString(R.string.vaccine_stock_used), vaccineName));
 
-        DateTime NextMonth = new DateTime(System.currentTimeMillis()).plusMonths(1);
-        ((TextView) view.findViewById(R.id.due_vacc_next_month_label)).setText("Due " + vaccineName + " next month " + NextMonth.monthOfYear().getAsShortText() + " " + NextMonth.year().getAsShortText() + ": ");
+            DateTime NextMonth = new DateTime(System.currentTimeMillis()).plusMonths(1);
+            ((TextView) view.findViewById(R.id.due_vacc_next_month_label)).setText(
+                    String.format(getString(R.string.vaccine_due_next_month), vaccineName, NextMonth.monthOfYear().getAsShortText(), NextMonth.year().getAsShortText()));
+        } catch (Exception e) {
+            Timber.e(e, "Error while formatting language strings");
+        }
     }
 
     private LineGraphSeries<DataPoint> createGraphDataAndView(View view) {

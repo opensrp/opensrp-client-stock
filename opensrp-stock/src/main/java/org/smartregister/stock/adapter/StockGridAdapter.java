@@ -54,8 +54,8 @@ public class StockGridAdapter extends BaseAdapter {
             int currentvials = stockRepository.getBalanceFromNameAndDate(stockType.getName(), System.currentTimeMillis());
 
             name.setText(stockType.getName());
-            doses.setText("" + currentvials * stockType.getQuantity() + " doses");
-            vials.setText("" + currentvials + " vials");
+            doses.setText("" + currentvials * stockType.getQuantity() + " " + context.getResources().getString(R.string.doses));
+            vials.setText("" + currentvials + " " + context.getResources().getString(R.string.vials));
 
             gridView.setOnClickListener(new View.OnClickListener() {
                 @Override

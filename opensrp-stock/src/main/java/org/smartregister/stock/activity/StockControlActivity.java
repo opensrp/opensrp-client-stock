@@ -51,7 +51,7 @@ public class StockControlActivity extends AppCompatActivity {
             }
         });
 
-        ((TextView) toolbar.findViewById(R.id.title)).setText("Stock Control > " + stockType.getName());
+        ((TextView) toolbar.findViewById(R.id.title)).setText(getString(R.string.stock_title) + " > " + stockType.getName());
 
         setSupportActionBar(toolbar);
 
@@ -142,9 +142,9 @@ public class StockControlActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Current Stock";
+                    return getString(R.string.current_stock);
                 case 1:
-                    return "Stock Planning";
+                    return getString(R.string.stock_planning);
                 default:
                     return null;
             }

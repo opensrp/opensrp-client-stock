@@ -1,5 +1,6 @@
 package org.smartregister.stock.activity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import timber.log.Timber;
 
 /**
  * Created by keyman on 11/04/2017.
@@ -71,8 +74,8 @@ public class StockJsonFormActivity extends JsonFormActivity {
             try {
                 JSONObject step1 = form.getJSONObject(JsonFormConstants.FIRST_STEP_NAME);
                 String title = (step1.has("title")) ? step1.getString("title") : null;
-                if (!TextUtils.isEmpty(title) && (title.contains("Stock Issued") || title.contains("Stock Loss/Adjustment")
-                        || title.contains("Stock Received"))) {
+                if (!TextUtils.isEmpty(title) && (title.contains(getString(R.string.stock_issued)) || title.contains(getString(R.string.stock_loss))
+                        || title.contains(getString(R.string.stock_received)))) {
                     if (step1.has(JsonFormConstants.FIELDS)) {
                         JSONArray fields = step1.getJSONArray(JsonFormConstants.FIELDS);
 
@@ -184,8 +187,8 @@ public class StockJsonFormActivity extends JsonFormActivity {
     private void stockDateEnteredInIssuedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
-            if (object.getString("title").contains("Stock Issued")) {
-                String vaccineName = object.getString("title").replace("Stock Issued", "").trim();
+            if (object.getString("title").contains(getString(R.string.stock_issued))) {
+                String vaccineName = object.getString("title").replace(getString(R.string.stock_issued), "").trim();
                 StockTypeRepository vaccineTypeRepository = StockLibrary.getInstance().getStockTypeRepository();
                 int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccineName);
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
@@ -290,7 +293,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
     private void stockVialsEnteredInIssuedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
-            if (object.getString("title").contains("Stock Issued")) {
+            if (object.getString("title").contains(getString(R.string.stock_issued))) {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Vials_Issued")) {
                     if (balanceTextView == null) {
@@ -308,7 +311,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     int newBalance = 0;
                     Date encounterDate = new Date();
                     String wastedvials = "0";
-                    String vaccineName = object.getString("title").replace("Stock Issued", "").trim();
+                    String vaccineName = object.getString("title").replace(getString(R.string.stock_issued), "").trim();
                     int existingbalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                     JSONArray fields = object.getJSONArray("fields");
                     for (int i = 0; i < fields.length(); i++) {
@@ -362,6 +365,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
         }
     }
 
+    @SuppressLint("StringFormatInvalid")
     public void refreshDosesWasted(MaterialEditText issuedVials, int currentBalanceVaccineUsed, int vialsWasted, int dosesPerVial) {
         int vialsIssued = 0;
         if (issuedVials != null && issuedVials.getText() != null && !issuedVials.getText().toString().trim().equals("")) {
@@ -372,17 +376,26 @@ public class StockJsonFormActivity extends JsonFormActivity {
             }
         }
         int wastedDoses = calculateDosesWasted(currentBalanceVaccineUsed, vialsIssued, vialsWasted, dosesPerVial);
-        stockJsonFormFragment.getLabelViewFromTag("Doses_wasted", "Total wasted doses: " + wastedDoses + " doses");
+        try {
+            stockJsonFormFragment.getLabelViewFromTag("Doses_wasted", String.format(getString(R.string.total_wasted_doses), wastedDoses));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
     }
 
+    @SuppressLint("StringFormatInvalid")
     public void refreshVialsBalance(String vaccineName, int newBalance) {
-        stockJsonFormFragment.getLabelViewFromTag("Vials_Balance", "New " + vaccineName + " balance: " + newBalance + " vials");
+        try {
+            stockJsonFormFragment.getLabelViewFromTag("Vials_Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, newBalance));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
     }
 
     private void stockWastedVialsEnteredInIssuedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
-            if (object.getString("title").contains("Stock Issued")) {
+            if (object.getString("title").contains(getString(R.string.stock_issued))) {
                 StockRepository str = StockLibrary.getInstance().getStockRepository();
                 if (key.equalsIgnoreCase("Vials_Wasted")) {
                     if (balanceTextView == null) {
@@ -400,7 +413,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     Date encounterDate = new Date();
                     String vialsvalue = "";
                     String wastedvials = value;
-                    String vaccineName = object.getString("title").replace("Stock Issued", "").trim();
+                    String vaccineName = object.getString("title").replace(getString(R.string.stock_issued), "").trim();
                     int existingbalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
 
                     JSONArray fields = object.getJSONArray("fields");
@@ -457,17 +470,18 @@ public class StockJsonFormActivity extends JsonFormActivity {
         }
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void stockDateEnteredInReceivedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
-            if (object.getString("title").contains("Stock Received")
+            if (object.getString("title").contains(getString(R.string.stock_received))
                     && key.equalsIgnoreCase("Date_Stock_Received")
                     && value != null && !value.equalsIgnoreCase("")) {
                 String label = "";
                 int currentBalance = 0;
                 int displaybalance = 0;
                 String vialsvalue = "";
-                String vaccineName = object.getString("title").replace("Stock Received", "").trim();
+                String vaccineName = object.getString("title").replace(getString(R.string.stock_received), "").trim();
                 JSONArray fields = object.getJSONArray("fields");
                 for (int i = 0; i < fields.length(); i++) {
                     JSONObject questions = fields.getJSONObject(i);
@@ -491,15 +505,17 @@ public class StockJsonFormActivity extends JsonFormActivity {
                         }
                         if (vialsvalue != null && !vialsvalue.equalsIgnoreCase("") && StringUtils.isNumeric(vialsvalue)) {
                             displaybalance = currentBalance + Integer.parseInt(vialsvalue);
-//                                if (balancetextview != null) {
-//                                    balancetextview.setErrorColor(getResources().getColor(R.color.dark_grey));
-//                                    balancetextview.setError("New balance : " + displaybalance);
-//                                }
-                            stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
-
+//                            if (balanceTextView != null) {
+//                                balanceTextView.setErrorColor(getResources().getColor(R.color.dark_grey));
+//                                balanceTextView.setError("New balance : " + displaybalance);
+//                            }
+                            try {
+                                stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
+                            } catch (Exception e) {
+                                Timber.e(e, "Error formatting language string");
+                            }
                         } else {
                             stockJsonFormFragment.getLabelViewFromTag("Balance", "");
-
                         }
                     }
                 }
@@ -512,7 +528,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
     private void stockVialsEnteredInReceivedForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
-            if (object.getString("title").contains("Stock Received")) {
+            if (object.getString("title").contains(getString(R.string.stock_received))) {
                 if (key.equalsIgnoreCase("Vials_Received") && value != null && !value.equalsIgnoreCase("")) {
 //                    if(balancetextview == null) {
 //                        ArrayList<View> views = new ArrayList<>(getFormDataViews());
@@ -528,7 +544,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     String label = "";
                     int currentBalance = 0;
                     int displaybalance = 0;
-                    String vaccineName = object.getString("title").replace("Stock Received", "").trim();
+                    String vaccineName = object.getString("title").replace(getString(R.string.stock_received), "").trim();
                     JSONArray fields = object.getJSONArray("fields");
                     for (int i = 0; i < fields.length(); i++) {
                         JSONObject questions = fields.getJSONObject(i);
@@ -549,7 +565,11 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
                             if (StringUtils.isNotBlank(value) && StringUtils.isNumeric(value)) {
                                 displaybalance = currentBalance + Integer.parseInt(value);
-                                stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
+                                try {
+                                    stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
+                                } catch (Exception e) {
+                                    Timber.e(e, "Error formatting language string");
+                                }
                             } else {
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                             }
@@ -567,13 +587,13 @@ public class StockJsonFormActivity extends JsonFormActivity {
     private void stockDateEnteredInAdjustmentForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
-            if (object.getString("title").contains("Stock Loss/Adjustment") &&
+            if (object.getString("title").contains(getString(R.string.stock_loss)) &&
                     key.equalsIgnoreCase("Date_Stock_loss_adjustment") && value != null && !value.equalsIgnoreCase("")) {
                 String label = "";
                 int currentBalance = 0;
                 int displaybalance = 0;
                 String vialsvalue = "";
-                String vaccineName = object.getString("title").replace("Stock Loss/Adjustment", "").trim();
+                String vaccineName = object.getString("title").replace(getString(R.string.stock_loss), "").trim();
                 JSONArray fields = object.getJSONArray("fields");
                 for (int i = 0; i < fields.length(); i++) {
                     JSONObject questions = fields.getJSONObject(i);
@@ -599,9 +619,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             displaybalance = currentBalance + Integer.parseInt(vialsvalue);
                             if (balanceTextView != null && displaybalance < 0) {
                                 balanceTextView.addValidator(negativeBalanceValidator);
-                            } else if (balanceTextView != null && displaybalance >= 0)
+                            } else if (balanceTextView != null && displaybalance >= 0) {
                                 balanceTextView.getValidators().remove(negativeBalanceValidator);
-                            stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
+                            }
+                            try {
+                                stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
+                            } catch (Exception e) {
+                                Timber.e(e, "Error formatting language string");
+                            }
                         } else {
                             stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                         }
@@ -616,7 +641,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
     private void stockVialsEnteredInAdjustmentForm(String key, String value) {
         JSONObject object = getStep("step1");
         try {
-            if (object.getString("title").contains("Stock Loss/Adjustment")) {
+            if (object.getString("title").contains(getString(R.string.stock_loss))) {
                 if (key.equalsIgnoreCase("Vials_Adjustment") && value != null && !value.equalsIgnoreCase("")) {
                     if (balanceTextView == null) {
                         ArrayList<View> views = new ArrayList<>(getFormDataViews());
@@ -631,7 +656,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     String label = "";
                     int currentBalance = 0;
                     int displaybalance = 0;
-                    String vaccineName = object.getString("title").replace("Stock Loss/Adjustment", "").trim();
+                    String vaccineName = object.getString("title").replace(getString(R.string.stock_loss), "").trim();
                     JSONArray fields = object.getJSONArray("fields");
                     for (int i = 0; i < fields.length(); i++) {
                         JSONObject questions = fields.getJSONObject(i);
@@ -653,9 +678,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                 displaybalance = currentBalance + Integer.parseInt(value);
                                 if (balanceTextView != null && displaybalance < 0) {
                                     balanceTextView.addValidator(negativeBalanceValidator);
-                                } else if (balanceTextView != null && displaybalance >= 0)
+                                } else if (balanceTextView != null && displaybalance >= 0) {
                                     balanceTextView.getValidators().remove(negativeBalanceValidator);
-                                stockJsonFormFragment.getLabelViewFromTag("Balance", "New " + vaccineName + " balance: " + displaybalance + " vials");
+                                }
+                                try {
+                                    stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
+                                } catch (Exception e) {
+                                    Timber.e(e, "Error formatting language string");
+                                }
                             } else {
                                 stockJsonFormFragment.getLabelViewFromTag("Balance", "");
                             }
