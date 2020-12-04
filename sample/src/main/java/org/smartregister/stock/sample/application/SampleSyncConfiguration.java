@@ -1,4 +1,4 @@
-package org.smartregister.stock.sample.configuration;
+package org.smartregister.stock.sample.application;
 
 import org.smartregister.SyncConfiguration;
 import org.smartregister.SyncFilter;
