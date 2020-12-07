@@ -22,8 +22,8 @@
     <string name="negative_balance">لا يمكن أن يكون الرصيد الجديد سالبًا.</string>
     <string name="negative_adjustment">d$1% لا يمكن ضبط المخزون بأكثر من المخزون المتوفر</string>
     <string name="vials">vials</string>
-    <string name="vials_formatted">\u200Fقوارير d$1%</string>
-    <string name="doses">\u200Fجرعات d$1%</string>
+    <string name="vials_formatted">قوارير d$1%</string>
+    <string name="doses">جرعات d$1%</string>
     <string name="current_stock">المخزون الحالي</string>
     <string name="stock_planning">تخطيط المخزون</string>
     <string name="stock">مخزون</string>
