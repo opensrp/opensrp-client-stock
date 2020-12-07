@@ -14,6 +14,8 @@ import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.StockType;
 import org.smartregister.stock.repository.StockRepository;
 
+import java.util.Locale;
+
 import timber.log.Timber;
 
 import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
@@ -60,8 +62,9 @@ public class StockGridAdapter extends BaseAdapter {
             name.setText(stockType.getName());
 
             try {
-                doses.setText(String.format(context.getResources().getString(R.string.doses), currentvials * stockType.getQuantity()));
-                vials.setText(String.format(context.getResources().getString(R.string.vials_formatted), currentvials));
+                Timber.d("DOSES STRING: " + context.getResources().getString(R.string.doses));
+                doses.setText(String.format(Locale.ENGLISH, context.getResources().getString(R.string.doses), currentvials * stockType.getQuantity()));
+                vials.setText(String.format(Locale.ENGLISH, context.getResources().getString(R.string.vials_formatted), currentvials));
             } catch (Exception e) {
                 Timber.e(e, "Error formatting language string");
             }

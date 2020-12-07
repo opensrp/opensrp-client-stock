@@ -21,8 +21,8 @@
     <string name="stock_type_id_key">vaccine_type_id</string>
     <string name="negative_balance">Le nouveau solde ne peut pas être négatif.</string>
     <string name="negative_adjustment">Impossible d\'ajuster le stock de plus que le stock disponible %1d</string>
-    <string name="vials">%1$s flacons</string>
-    <string name="vials_formatted">flacons</string>
+    <string name="vials">flacons</string>
+    <string name="vials_formatted">%1$s flacons</string>
     <string name="doses">%1$s doses</string>
     <string name="current_stock">Stock actuel</string>
     <string name="stock_planning">Planification des stocks</string>
