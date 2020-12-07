@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -20,10 +19,11 @@ import org.smartregister.stock.R;
 import org.smartregister.stock.domain.StockType;
 import org.smartregister.stock.fragment.CurrentStock;
 import org.smartregister.stock.fragment.PlanningStockFragment;
+import org.smartregister.view.activity.MultiLanguageActivity;
 
 import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
 
-public class StockControlActivity extends AppCompatActivity {
+public class StockControlActivity extends MultiLanguageActivity {
 
     /**
      * The {@link ViewPager} that will host the section contents.
