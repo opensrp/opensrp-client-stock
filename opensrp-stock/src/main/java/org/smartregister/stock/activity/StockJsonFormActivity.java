@@ -286,8 +286,12 @@ public class StockJsonFormActivity extends JsonFormActivity {
     }
 
     private void displayChildrenVialsUsed(int childrenVaccinated, int vialsUsed, int vialsWasted) {
-        stockJsonFormFragment.getLabelViewFromTag("Children_Vaccinated_Count", "Children vaccinated on this date: " + childrenVaccinated);
-        stockJsonFormFragment.getLabelViewFromTag("Vials_Issued_Count", "Estimated vials issued on this date: " + vialsUsed);
+        try {
+            stockJsonFormFragment.getLabelViewFromTag("Children_Vaccinated_Count", String.format(getString(R.string.children_vaccinated), childrenVaccinated));
+            stockJsonFormFragment.getLabelViewFromTag("Vials_Issued_Count", String.format(getString(R.string.estimated_vials_issued), vialsUsed));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
     }
 
     private void stockVialsEnteredInIssuedForm(String key, String value) {
@@ -709,5 +713,19 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
     public void addLabel(View view) {
         labels.add(view);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        try {
+            confirmCloseTitle = getString(R.string.confirm_form_close);
+            confirmCloseMessage = this.getString(R.string.confirm_form_close_explanation);
+            setConfirmCloseTitle(confirmCloseTitle);
+            setConfirmCloseMessage(confirmCloseMessage);
+        } catch (Exception e) {
+            Timber.e(e.toString());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.smartregister.stock.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.StockType;
 import org.smartregister.stock.repository.StockRepository;
+
+import timber.log.Timber;
 
 import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
 
@@ -31,6 +34,7 @@ public class StockGridAdapter extends BaseAdapter {
         this.controlActivity = controlActivity;
     }
 
+    @SuppressLint({"StringFormatInvalid", "StringFormatMatches"})
     public View getView(int position, View convertView, ViewGroup parent) {
 
         final LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,8 +58,13 @@ public class StockGridAdapter extends BaseAdapter {
             int currentvials = stockRepository.getBalanceFromNameAndDate(stockType.getName(), System.currentTimeMillis());
 
             name.setText(stockType.getName());
-            doses.setText("" + currentvials * stockType.getQuantity() + " " + context.getResources().getString(R.string.doses));
-            vials.setText("" + currentvials + " " + context.getResources().getString(R.string.vials));
+
+            try {
+                doses.setText(String.format(context.getResources().getString(R.string.doses), currentvials * stockType.getQuantity()));
+                vials.setText(String.format(context.getResources().getString(R.string.vials_formatted), currentvials));
+            } catch (Exception e) {
+                Timber.e(e, "Error formatting language string");
+            }
 
             gridView.setOnClickListener(new View.OnClickListener() {
                 @Override

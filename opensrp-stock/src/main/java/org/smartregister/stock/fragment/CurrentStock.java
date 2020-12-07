@@ -1,5 +1,6 @@
 package org.smartregister.stock.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +43,8 @@ import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Date;
+
+import timber.log.Timber;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -168,9 +171,14 @@ public class CurrentStock extends Fragment implements
         return view;
     }
 
+    @SuppressLint({"StringFormatInvalid", "StringFormatMatches"})
     private void getValueForStock(View view) {
         TextView stockvalue = (TextView) view.findViewById(R.id.vials);
-        stockvalue.setText("" + stockRepository.getCurrentStockNumber(((StockControlActivity) getActivity()).stockType) + " " + this.getString(R.string.vials));
+        try {
+            stockvalue.setText(String.format(view.getResources().getString(R.string.vials_formatted), stockRepository.getCurrentStockNumber(((StockControlActivity) getActivity()).stockType)));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
     }
 
     private void onInitialization() {
