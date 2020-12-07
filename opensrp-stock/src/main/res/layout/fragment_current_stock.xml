@@ -26,7 +26,7 @@
                 style="@style/CustomFontTextViewStyle.ClientList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="M/MR Stock: "
+                android:text="@string/mmr_stock"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/bottom_text_size" />
 
@@ -36,7 +36,7 @@
                 fontVariant="light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="14 vials"
+                android:text="@string/vials_14"
                 android:textColor="@color/bluetext"
                 android:textSize="@dimen/bottom_text_size" />
 
@@ -58,7 +58,7 @@
                 android:drawableLeft="@drawable/stock_plus"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
-                android:text=" Received"
+                android:text=" @string/received"
                 android:textAllCaps="false"
                 android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
                 android:textColor="#767676"
@@ -76,7 +76,7 @@
                 android:paddingLeft="30dp"
                 android:paddingEnd="20dp"
                 android:paddingRight="30dp"
-                android:text="Issued"
+                android:text="@string/issued"
                 android:textAllCaps="false"
                 android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
                 android:textColor="#767676"
@@ -94,7 +94,7 @@
                 android:paddingLeft="30dp"
                 android:paddingEnd="20dp"
                 android:paddingRight="30dp"
-                android:text="  Loss/Adj"
+                android:text="@string/loss_adj"
                 android:textAllCaps="false"
                 android:textAppearance="@style/CustomFontTextViewStyle.ListView.Medium.NoPadding"
                 android:textColor="#767676"
@@ -124,7 +124,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="2.5"
-                android:text="Date"
+                android:text="@string/date"
                 android:textColor="@color/dim_foreground_material_light"
                 android:textSize="18sp" />
 
@@ -137,7 +137,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="2"
-                android:text="To/From"
+                android:text="@string/to_from"
                 android:textColor="@color/dim_foreground_material_light"
                 android:textSize="18sp" />
 
@@ -150,7 +150,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="2.5"
-                android:text="Received (+)"
+                android:text="@string/received_plus"
                 android:textColor="@color/dim_foreground_material_light"
                 android:textSize="18sp" />
 
@@ -163,7 +163,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="2"
-                android:text="Issued (-)"
+                android:text="@string/issued_minus"
                 android:textColor="@color/dim_foreground_material_light"
                 android:textSize="18sp" />
 
@@ -176,7 +176,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="2.25"
-                android:text="Loss/Adj"
+                android:text="@string/loss_adj"
                 android:textColor="@color/dim_foreground_material_light"
                 android:textSize="18sp" />
 
@@ -191,7 +191,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_weight="1.76"
                 android:gravity="right"
-                android:text="Balance"
+                android:text="@string/balance"
                 android:textColor="@color/dim_foreground_material_light"
                 android:textSize="18sp" />
 

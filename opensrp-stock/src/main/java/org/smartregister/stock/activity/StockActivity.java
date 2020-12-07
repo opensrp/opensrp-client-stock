@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.GridView;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -13,13 +12,14 @@ import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.adapter.StockGridAdapter;
 import org.smartregister.stock.domain.StockType;
+import org.smartregister.view.activity.MultiLanguageActivity;
 
 import java.util.ArrayList;
 
 /**
  * Created by raihan on 5/23/17.
  */
-public abstract class StockActivity extends AppCompatActivity {
+public abstract class StockActivity extends MultiLanguageActivity {
     private GridView stockGrid;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
