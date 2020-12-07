@@ -65,4 +65,5 @@
     <string name="new_vaccine_balance">توازن جديد s$1%: قارورة d$2%</string>
     <string name="children_vaccinated">تم تطعيم الأطفال في هذا التاريخ: %1$d</string>
     <string name="estimated_vials_issued">القوارير المقدرة الصادرة في هذا التاريخ: %1$d</string>
+    <string name="stock_quantity_error">لا يمكن أن تكون القوارير المستخدمة أكثر من قوارير في المخزون. سجل المخزون المستلم للمتابعة.</string>
 </resources>

@@ -371,7 +371,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             && !value.trim().equals("") && !value.trim().equals("0")
                             && (usedQuantity > receivedQuantity)) {
 
-                        String errorMessage = "Vials used cannot be more than vials in stock. Record received stock to proceed.";
+                        String errorMessage = getString(R.string.stock_quantity_error);
                         balanceTextView.addValidator(new StockQuantityValidator(errorMessage, receivedQuantity, usedQuantity));
                         balanceTextView.setError(errorMessage);
                     } else {
@@ -499,7 +499,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             && !value.trim().equals("") && !value.trim().equals("0")
                             && (usedQuantity > receivedQuantity)) {
 
-                        String errorMessage = "Vials used cannot be more than vials in stock. Record received stock to proceed.";
+                        String errorMessage = getString(R.string.stock_quantity_error);
                         vialsWasted.addValidator(new StockQuantityValidator(errorMessage, str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()), usedQuantity));
                         vialsWasted.setError(errorMessage);
                     } else {
