@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">OpenSRP Client Stock</string>
     <string name="stock_title">مراقبة المخزون</string>
+    <string name="stock_title_formatted">d$1% مراقبة المخزون</string>
     <string name="section_format">d$1% :مرحبا العالم من القسم</string>
     <string name="navigation_drawer_open">افتح درج التنقل</string>
     <string name="navigation_drawer_close">أغلق درج التنقل</string>
@@ -26,7 +27,7 @@
     <string name="doses">جرعات %1$d</string>
     <string name="current_stock">المخزون الحالي</string>
     <string name="stock_planning">تخطيط المخزون</string>
-    <string name="stock">مخزون</string>
+    <string name="stock">s$1% مخزون</string>
     <string name="stock_issued">تم إصدار الأسهم</string>
     <string name="stock_received">تلقى المخزون</string>
     <string name="stock_loss">خسارة / تعديل المخزون</string>

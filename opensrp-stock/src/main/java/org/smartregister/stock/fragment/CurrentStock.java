@@ -129,6 +129,7 @@ public class CurrentStock extends Fragment implements
         }*/
     }
 
+    @SuppressLint("StringFormatInvalid")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -144,8 +145,12 @@ public class CurrentStock extends Fragment implements
         Button issued = (Button) view.findViewById(R.id.issued);
         Button adjustment = (Button) view.findViewById(R.id.loss_adj);
 
-        TextView vaccine_name = (TextView) view.findViewById(R.id.name);
-        vaccine_name.setText(((StockControlActivity) getActivity()).stockType.getName() + " " + getString(R.string.stock) + ": ");
+        TextView vaccineName = (TextView) view.findViewById(R.id.name);
+        try {
+            vaccineName.setText(String.format(getString(R.string.stock), ((StockControlActivity) getActivity()).stockType.getName()));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
 
         received.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">OpenSRP Client Stock</string>
     <string name="stock_title">Stock Control</string>
+    <string name="stock_title_formatted">Stock Control > %1$s</string>
     <string name="section_format">Section: %1$d</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -27,7 +28,7 @@
     <string name="doses">%1$s doses</string>
     <string name="current_stock">Current Stock</string>
     <string name="stock_planning">Stock Planning</string>
-    <string name="stock">Stock</string>
+    <string name="stock">%1$s Stock: </string>
     <string name="stock_issued">Stock Issued</string>
     <string name="stock_received">Stock Received</string>
     <string name="stock_loss">Stock Loss/Adjustment</string>

@@ -1,5 +1,6 @@
 package org.smartregister.stock.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ import org.smartregister.stock.fragment.CurrentStock;
 import org.smartregister.stock.fragment.PlanningStockFragment;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
+import timber.log.Timber;
+
 import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
 
 public class StockControlActivity extends MultiLanguageActivity {
@@ -31,6 +34,7 @@ public class StockControlActivity extends MultiLanguageActivity {
     public StockType stockType;
     public PlanningStockFragment planningStockFragment;
 
+    @SuppressLint("StringFormatInvalid")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +55,11 @@ public class StockControlActivity extends MultiLanguageActivity {
             }
         });
 
-        ((TextView) toolbar.findViewById(R.id.title)).setText(getString(R.string.stock_title) + " > " + stockType.getName());
+        try {
+            ((TextView) toolbar.findViewById(R.id.title)).setText(String.format(getString(R.string.stock_title_formatted), stockType.getName()));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
 
         setSupportActionBar(toolbar);
 
