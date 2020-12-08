@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rengwuxian.materialedittext.validation.METValidator;
 import com.vijay.jsonwizard.activities.JsonFormActivity;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.validators.edittext.MinNumericValidator;
@@ -352,16 +353,30 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     } else {
                         refreshVialsBalance(vaccineName, existingbalance);
                     }
-                    int vialsused = 0;
+                    int vialsUsed = 0;
                     StockTypeRepository vaccineTypeRepository = StockLibrary.getInstance().getStockTypeRepository();
                     int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccineName);
                     if (currentBalanceVaccineUsed % dosesPerVial == 0) {
-                        vialsused = currentBalanceVaccineUsed / dosesPerVial;
+                        vialsUsed = currentBalanceVaccineUsed / dosesPerVial;
                     } else if (currentBalanceVaccineUsed != 0) {
-                        vialsused = (currentBalanceVaccineUsed / dosesPerVial) + 1;
+                        vialsUsed = (currentBalanceVaccineUsed / dosesPerVial) + 1;
                     }
                     refreshDosesWasted(balanceTextView, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
-                    displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, Integer.parseInt(wastedvials));
+                    displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsUsed, Integer.parseInt(wastedvials));
+
+                    int receivedQuantity = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
+                    int usedQuantity = vialsUsed + Integer.parseInt(wastedvials);
+
+                    if (balanceTextView != null
+                            && !value.trim().equals("") && !value.trim().equals("0")
+                            && (usedQuantity > receivedQuantity)) {
+
+                        String errorMessage = getString(R.string.stock_quantity_error);
+                        balanceTextView.addValidator(new StockQuantityValidator(errorMessage, receivedQuantity, usedQuantity));
+                        balanceTextView.setError(errorMessage);
+                    } else {
+                        balanceTextView.setError("");
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -415,10 +430,10 @@ public class StockJsonFormActivity extends JsonFormActivity {
                     int currentBalanceVaccineUsed = 0;
                     int newBalance = 0;
                     Date encounterDate = new Date();
-                    String vialsvalue = "";
-                    String wastedvials = value;
+                    String vialsValue = "";
+                    String wastedVials = value;
                     String vaccineName = object.getString("title").replace(getString(R.string.stock_issued), "").trim();
-                    int existingbalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
+                    int existingBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
 
                     JSONArray fields = object.getJSONArray("fields");
                     for (int i = 0; i < fields.length(); i++) {
@@ -433,40 +448,63 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                     }
                                 }
 
-                                existingbalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
+                                existingBalance = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
                                 StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
                                 currentBalanceVaccineUsed = stockExternalRepository.getVaccinesUsedToday(encounterDate.getTime(), checkIfMeasles(vaccineName.toLowerCase()));
                             } else if (questions.getString("key").equalsIgnoreCase("Vials_Issued")) {
                                 if (questions.has("value")) {
                                     if (!StringUtils.isBlank(questions.getString("value")) && StringUtils.isNumeric(questions.getString("value"))) {
-                                        vialsvalue = questions.getString("value");
+                                        vialsValue = questions.getString("value");
                                     }
                                 } else {
-                                    vialsvalue = "0";
+                                    vialsValue = "0";
                                 }
                             }
                         }
                     }
-                    refreshVialsBalance(vaccineName, existingbalance);
-                    if (wastedvials == null || StringUtils.isBlank(wastedvials)) {
-                        wastedvials = "0";
+                    refreshVialsBalance(vaccineName, existingBalance);
+                    if (wastedVials == null || StringUtils.isBlank(wastedVials)) {
+                        wastedVials = "0";
                     }
-                    if (vialsvalue != null && !StringUtils.isBlank(vialsvalue) && StringUtils.isNumeric(wastedvials)) {
-                        newBalance = existingbalance - Integer.parseInt(vialsvalue) - Integer.parseInt(wastedvials);
+                    if (vialsValue != null && !StringUtils.isBlank(vialsValue) && StringUtils.isNumeric(wastedVials)) {
+                        newBalance = existingBalance - Integer.parseInt(vialsValue) - Integer.parseInt(wastedVials);
                         refreshVialsBalance(vaccineName, newBalance);
                     } else {
-                        refreshVialsBalance(vaccineName, existingbalance);
+                        refreshVialsBalance(vaccineName, existingBalance);
                     }
-                    int vialsused = 0;
+                    int vialsUsed = 0;
                     StockTypeRepository vaccine_typesRepository = StockLibrary.getInstance().getStockTypeRepository();
                     int dosesPerVial = vaccine_typesRepository.getDosesPerVial(vaccineName);
                     if (currentBalanceVaccineUsed % dosesPerVial == 0) {
-                        vialsused = currentBalanceVaccineUsed / dosesPerVial;
+                        vialsUsed = currentBalanceVaccineUsed / dosesPerVial;
                     } else if (currentBalanceVaccineUsed != 0) {
-                        vialsused = (currentBalanceVaccineUsed / dosesPerVial) + 1;
+                        vialsUsed = (currentBalanceVaccineUsed / dosesPerVial) + 1;
                     }
-                    displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsused, Integer.parseInt(wastedvials));
-                    refreshDosesWasted(balanceTextView, currentBalanceVaccineUsed, Integer.parseInt(wastedvials), dosesPerVial);
+                    displayChildrenVialsUsed(currentBalanceVaccineUsed, vialsUsed, Integer.parseInt(wastedVials));
+                    refreshDosesWasted(balanceTextView, currentBalanceVaccineUsed, Integer.parseInt(wastedVials), dosesPerVial);
+
+                    int receivedQuantity = str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime());
+                    int usedQuantity = vialsUsed + Integer.parseInt(wastedVials);
+
+                    MaterialEditText vialsWasted = null;
+                    ArrayList<View> views = new ArrayList<>(getFormDataViews());
+
+                    for (int i = 0; i < views.size(); i++) {
+                        if (views.get(i) instanceof MaterialEditText && ((String) views.get(i).getTag(R.id.key)).equalsIgnoreCase("Vials_Wasted")) {
+                            vialsWasted = (MaterialEditText) views.get(i);
+                        }
+                    }
+
+                    if (vialsWasted != null
+                            && !value.trim().equals("") && !value.trim().equals("0")
+                            && (usedQuantity > receivedQuantity)) {
+
+                        String errorMessage = getString(R.string.stock_quantity_error);
+                        vialsWasted.addValidator(new StockQuantityValidator(errorMessage, str.getBalanceFromNameAndDate(vaccineName, encounterDate.getTime()), usedQuantity));
+                        vialsWasted.setError(errorMessage);
+                    } else {
+                        vialsWasted.setError("");
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -726,6 +764,33 @@ public class StockJsonFormActivity extends JsonFormActivity {
             setConfirmCloseMessage(confirmCloseMessage);
         } catch (Exception e) {
             Timber.e(e.toString());
+        }
+    }
+
+    class StockQuantityValidator extends METValidator {
+
+        private int receivedQuantity;
+        private int usedQuantity;
+
+        public StockQuantityValidator(@NonNull String errorMessage, int receivedQuantity, int usedQuantity) {
+            super(errorMessage);
+            this.receivedQuantity = receivedQuantity;
+            this.usedQuantity = usedQuantity;
+        }
+
+        @Override
+        public boolean isValid(@NonNull CharSequence charSequence, boolean b) {
+            boolean isValid = true;
+
+            if (StringUtils.isBlank(charSequence)) {
+                return isValid;
+            }
+
+            if (usedQuantity > receivedQuantity) {
+                isValid = false;
+            }
+
+            return isValid;
         }
     }
 }

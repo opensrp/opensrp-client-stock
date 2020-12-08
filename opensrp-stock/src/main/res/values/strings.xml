@@ -66,4 +66,5 @@
     <string name="new_vaccine_balance">New %1$s balance: %2$d vials</string>
     <string name="children_vaccinated">Children vaccinated on this date: %1$d</string>
     <string name="estimated_vials_issued">Estimated vials issued on this date: %1$d</string>
+    <string name="stock_quantity_error">Vials used cannot be more than vials in stock. Record received stock to proceed.</string>
 </resources>
