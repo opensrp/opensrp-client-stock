@@ -106,7 +106,7 @@
         "hint": "Actual number of [vaccine] vials issued",
         "v_min": {
           "value": "1",
-          "err": "issued vials must be greater than 0"
+          "err": "Issued vials must be greater than 0"
         },
         "v_numeric_integer": {
           "value": "true",
@@ -170,7 +170,7 @@
         "hint": "Number of wasted vials (e.g. damaged vials)",
         "v_min": {
           "value": "0",
-          "err": "value cannot be less than zero"
+          "err": "Value cannot be less than zero"
         },
         "v_numeric_integer": {
           "value": "true",

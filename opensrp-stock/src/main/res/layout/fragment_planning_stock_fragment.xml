@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="25dp"
-                android:text="M/MR Stock: "
+                android:text="@string/mmr_stock"
                 android:textColor="@color/background_floating_material_dark"
                 android:textSize="@dimen/bottom_text_size" />
 
@@ -36,7 +36,7 @@
                 style="@style/CustomFontTextViewStyle.ClientList.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="14 vials"
+                android:text="@string/vials_14"
                 android:textColor="@color/background_floating_material_dark"
                 android:textSize="20sp" />
 
@@ -79,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="3 month stck used"
+                    android:text="@string/three_month_stock_used"
                     android:textColor="@color/background_floating_material_dark"
                     android:textSize="20sp" />
 
@@ -97,7 +97,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3.5"
-                        android:text="14 vials"
+                        android:text="@string/vials_14"
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
@@ -108,7 +108,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="14 vials"
+                        android:text="@string/vials_14"
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
@@ -129,7 +129,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3.5"
-                        android:text="14 vials"
+                        android:text="@string/vials_14"
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
@@ -140,7 +140,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="14 vials"
+                        android:text="@string/vials_14"
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
@@ -161,7 +161,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3.5"
-                        android:text="14 vials"
+                        android:text="@string/vials_14"
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
@@ -172,7 +172,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="14 vials"
+                        android:text="@string/vials_14"
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
@@ -193,7 +193,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3.5"
-                        android:text="3 month average"
+                        android:text="@string/three_month_average"
                         android:textColor="@color/client_list_grey"
                         android:textIsSelectable="false"
                         android:textSize="18sp" />
@@ -232,7 +232,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="M/MR Stock: "
+                    android:text="@string/mmr_stock"
                     android:textColor="@color/background_floating_material_dark"
                     android:textSize="20sp" />
 
@@ -243,7 +243,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="14 vials"
+                    android:text="@string/vials_14"
                     android:textColor="@color/bluetext"
                     android:textSize="20sp" />
 
@@ -266,7 +266,7 @@
                     style="@style/CustomFontTextViewStyle.ClientList.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Number of active children"
+                    android:text="@string/active_children"
                     android:textColor="@color/background_floating_material_dark"
                     android:textSize="20sp" />
 
@@ -291,7 +291,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Age"
+                        android:text="@string/active_children_age"
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -302,7 +302,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Last Month"
+                        android:text="@string/active_children_last_month"
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -313,7 +313,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="This Month"
+                        android:text="@string/active_children_this_month"
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -324,7 +324,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Difference"
+                        android:text="@string/active_children_difference"
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -343,7 +343,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="0 - 11 months"
+                        android:text="@string/months_0_to_11"
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp" />
 
@@ -391,7 +391,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="12 - 59 months"
+                        android:text="@string/months_12_to_59"
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp" />
 
@@ -440,7 +440,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Total"
+                        android:text="@string/total"
                         android:textColor="@color/client_list_grey"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -503,7 +503,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="Due MMR Next month April 2017 :"
+                    android:text="@string/due_mmr_next_month"
                     android:textColor="@color/background_floating_material_dark"
                     android:textSize="20sp" />
 
@@ -514,7 +514,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="14 vials"
+                    android:text="@string/vials_14"
                     android:textColor="@color/bluetext"
                     android:textSize="20sp" />
 
@@ -525,7 +525,7 @@
                 style="@style/CustomFontTextViewStyle.ClientList.Light.twoline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Calculated from current active children that will be due for M/MR next month"
+                android:text=""
                 android:textColor="@color/client_list_grey"
                 android:textSize="18sp" />
 
@@ -549,7 +549,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="Average M/MR waste rate :"
+                    android:text="@string/average_mmr_waste_rate"
                     android:textColor="@color/background_floating_material_dark"
                     android:textSize="20sp" />
 

@@ -25,7 +25,7 @@ public class SampleApplication extends DrishtiApplication {
 
         context.updateApplicationContext(getApplicationContext());
         //Initialize Modules
-        CoreLibrary.init(context);
+        CoreLibrary.init(context, new SampleSyncConfiguration());
         //Initialize and pass optional stock helper repository for external db functions
         StockLibrary.init(context, getRepository(), new StockHelperRepository(getRepository()));
 

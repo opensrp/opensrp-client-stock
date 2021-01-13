@@ -1,5 +1,6 @@
 package org.smartregister.stock.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +43,8 @@ import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Date;
+
+import timber.log.Timber;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -126,6 +129,7 @@ public class CurrentStock extends Fragment implements
         }*/
     }
 
+    @SuppressLint("StringFormatInvalid")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -141,8 +145,12 @@ public class CurrentStock extends Fragment implements
         Button issued = (Button) view.findViewById(R.id.issued);
         Button adjustment = (Button) view.findViewById(R.id.loss_adj);
 
-        TextView vaccine_name = (TextView) view.findViewById(R.id.name);
-        vaccine_name.setText(((StockControlActivity) getActivity()).stockType.getName() + " Stock: ");
+        TextView vaccineName = (TextView) view.findViewById(R.id.name);
+        try {
+            vaccineName.setText(String.format(getString(R.string.stock), ((StockControlActivity) getActivity()).stockType.getName()));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
 
         received.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,9 +176,14 @@ public class CurrentStock extends Fragment implements
         return view;
     }
 
+    @SuppressLint({"StringFormatInvalid", "StringFormatMatches"})
     private void getValueForStock(View view) {
         TextView stockvalue = (TextView) view.findViewById(R.id.vials);
-        stockvalue.setText("" + stockRepository.getCurrentStockNumber(((StockControlActivity) getActivity()).stockType) + " vials");
+        try {
+            stockvalue.setText(String.format(view.getResources().getString(R.string.vials_formatted), stockRepository.getCurrentStockNumber(((StockControlActivity) getActivity()).stockType)));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
     }
 
     private void onInitialization() {
@@ -267,13 +280,13 @@ public class CurrentStock extends Fragment implements
                     JSONObject jsonForm = new JSONObject(jsonString);
                     JSONObject step = jsonForm.getJSONObject("step1");
                     String FormTitle = step.getString("title");
-                    if (FormTitle.contains("Stock Issued")) {
+                    if (FormTitle.contains(getString(R.string.stock_issued))) {
                         processStockIssued(jsonString);
                     }
-                    if (FormTitle.contains("Stock Received")) {
+                    if (FormTitle.contains(getString(R.string.stock_received))) {
                         processStockReceived(jsonString);
                     }
-                    if (FormTitle.contains("Stock Loss/Adjustment")) {
+                    if (FormTitle.contains(getString(R.string.stock_loss))) {
                         processStockLossAdjustment(jsonString);
                     }
                 } catch (Exception e) {

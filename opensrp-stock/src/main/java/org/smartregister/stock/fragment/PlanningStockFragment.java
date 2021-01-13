@@ -1,5 +1,6 @@
 package org.smartregister.stock.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
@@ -36,6 +37,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -146,71 +149,93 @@ public class PlanningStockFragment extends Fragment {
         vaccinesDueNextMonth(view);
     }
 
+    @SuppressLint({"StringFormatInvalid", "StringFormatMatches"})
     private void vaccinesDueNextMonth(View view) {
-        int dosespervial = ((StockControlActivity) getActivity()).stockType.getQuantity();
-        ((TextView) view.findViewById(R.id.due_vacc_next_month_value)).setText("" + (int) Math.ceil((double) processVaccinesDueNextMonth() / dosespervial) + " vials");
+        int dosesPerVial = ((StockControlActivity) getActivity()).stockType.getQuantity();
+        try {
+            ((TextView) view.findViewById(R.id.due_vacc_next_month_value)).setText(String.format(getString(R.string.vials_formatted), (int) Math.ceil((double) processVaccinesDueNextMonth() / dosesPerVial)));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
     }
 
     private void wasteRateCalculate(View view) {
         double wastepercent = 0.0;
         StockExternalRepository stockExternalRepository = StockLibrary.getInstance().getStockExternalRepository();
-        int vaccinegiven = stockExternalRepository.getVaccinesUsedUntilDate(System.currentTimeMillis(), ((StockControlActivity) getActivity()).stockType.getName().toLowerCase().trim());
-        int vaccineissued = -1 * getStockIssuedIntimeFrame(DateTime.now().yearOfEra().withMinimumValue(), DateTime.now()) * (((StockControlActivity) getActivity()).stockType.getQuantity());
-        if (vaccinegiven == 0 || vaccinegiven > vaccineissued) {
+        int vaccineGiven = stockExternalRepository.getVaccinesUsedUntilDate(System.currentTimeMillis(), ((StockControlActivity) getActivity()).stockType.getName().toLowerCase().trim());
+        int vaccineIssued = -1 * getStockIssuedIntimeFrame(DateTime.now().yearOfEra().withMinimumValue(), DateTime.now()) * (((StockControlActivity) getActivity()).stockType.getQuantity());
+        if (vaccineGiven == 0 || vaccineGiven > vaccineIssued) {
             wastepercent = 0.0;
         } else {
-            wastepercent = (1 - ((double) vaccinegiven / vaccineissued)) * 100;
+            wastepercent = (1 - ((double) vaccineGiven / vaccineIssued)) * 100;
         }
         DecimalFormat df = new DecimalFormat("####0");
         ((TextView) view.findViewById(R.id.avg_vacc_waste_rate_value)).setText("" + df.format(Math.ceil(wastepercent)) + "%");
     }
 
+    @SuppressLint("StringFormatMatches")
     private void getLastThreeMonthStockIssued(View view) {
-        TextView lastmonthlabel = (TextView) view.findViewById(R.id.month1);
-        TextView lastmonthvialsUsed = (TextView) view.findViewById(R.id.month1vials);
-        TextView secondlastmonthlabel = (TextView) view.findViewById(R.id.month2);
-        TextView secondlastmonthvialsUsed = (TextView) view.findViewById(R.id.month2vials);
-        TextView thirdmonthlabel = (TextView) view.findViewById(R.id.month3);
-        TextView thirdmonthvialsUsed = (TextView) view.findViewById(R.id.month3vials);
-        TextView threemonthaverage = (TextView) view.findViewById(R.id.month3average);
+        TextView lastMonthLabel = (TextView) view.findViewById(R.id.month1);
+        TextView lastMonthVialsUsed = (TextView) view.findViewById(R.id.month1vials);
+        TextView secondLastMonthLabel = (TextView) view.findViewById(R.id.month2);
+        TextView secondLastMonthVialsUsed = (TextView) view.findViewById(R.id.month2vials);
+        TextView thirdMonthLabel = (TextView) view.findViewById(R.id.month3);
+        TextView thirdMonthVialsUsed = (TextView) view.findViewById(R.id.month3vials);
+        TextView threeMonthAverage = (TextView) view.findViewById(R.id.month3average);
 
         DateTime today = new DateTime(System.currentTimeMillis());
-        DateTime startofthismonth = today.dayOfMonth().withMinimumValue();
+        DateTime startOfThisMonth = today.dayOfMonth().withMinimumValue();
 
         //////////////////////last month///////////////////////////////////////////////////////////
-        DateTime startofLastMonth = today.minusMonths(1).dayOfMonth().withMinimumValue();
-        String lastmonth = startofLastMonth.monthOfYear().getAsShortText();
-        String lastmonthyear = startofLastMonth.year().getAsShortText();
+        DateTime startOfLastMonth = today.minusMonths(1).dayOfMonth().withMinimumValue();
+        String lastMonth = startOfLastMonth.monthOfYear().getAsShortText();
+        String lastMonthYear = startOfLastMonth.year().getAsShortText();
 
-        int stockissuedlastmonth = -1 * getStockIssuedIntimeFrame(startofLastMonth, startofthismonth);
+        int stockIssuedLastMonth = -1 * getStockIssuedIntimeFrame(startOfLastMonth, startOfThisMonth);
 
-        lastmonthlabel.setText(lastmonth + " " + lastmonthyear);
-        lastmonthvialsUsed.setText("" + stockissuedlastmonth + " vials");
+        lastMonthLabel.setText(lastMonth + " " + lastMonthYear);
+        try {
+            lastMonthVialsUsed.setText(String.format(getString(R.string.vials_formatted), stockIssuedLastMonth));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
         //////////////////////////////////////////////////////////////////////////////////////////
 
         //////////////////////2nd last month///////////////////////////////////////////////////////////
-        DateTime startof2ndLastMonth = startofLastMonth.minusDays(1).dayOfMonth().withMinimumValue();
-        String secondlastmonth = startof2ndLastMonth.monthOfYear().getAsShortText();
-        String secondlastmonthyear = startof2ndLastMonth.year().getAsShortText();
+        DateTime startOf2ndLastMonth = startOfLastMonth.minusDays(1).dayOfMonth().withMinimumValue();
+        String secondLastMonth = startOf2ndLastMonth.monthOfYear().getAsShortText();
+        String secondLastMonthYear = startOf2ndLastMonth.year().getAsShortText();
 
-        int stockissued2ndlastmonth = -1 * getStockIssuedIntimeFrame(startof2ndLastMonth, startofLastMonth);
+        int stockIssued2ndLastMonth = -1 * getStockIssuedIntimeFrame(startOf2ndLastMonth, startOfLastMonth);
 
-        secondlastmonthlabel.setText(secondlastmonth + " " + secondlastmonthyear);
-        secondlastmonthvialsUsed.setText("" + stockissued2ndlastmonth + " vials");
+        secondLastMonthLabel.setText(secondLastMonth + " " + secondLastMonthYear);
+        try {
+            secondLastMonthVialsUsed.setText(String.format(getString(R.string.vials_formatted), stockIssued2ndLastMonth));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
         //////////////////////////////////////////////////////////////////////////////////////////
 
         //////////////////////3rd last month///////////////////////////////////////////////////////////
-        DateTime startof3rdLastMonth = startof2ndLastMonth.minusDays(1).dayOfMonth().withMinimumValue();
-        String thirdlastmonth = startof3rdLastMonth.monthOfYear().getAsShortText();
-        String thirdlastmonthyear = startof3rdLastMonth.year().getAsShortText();
-        int stockissued3rdlastmonth = -1 * getStockIssuedIntimeFrame(startof3rdLastMonth, startof2ndLastMonth);
+        DateTime startOf3rdLastMonth = startOf2ndLastMonth.minusDays(1).dayOfMonth().withMinimumValue();
+        String thirdLastMonth = startOf3rdLastMonth.monthOfYear().getAsShortText();
+        String thirdLastMonthYear = startOf3rdLastMonth.year().getAsShortText();
+        int stockIssued3rdLastMonth = -1 * getStockIssuedIntimeFrame(startOf3rdLastMonth, startOf2ndLastMonth);
 
-        thirdmonthlabel.setText(thirdlastmonth + " " + thirdlastmonthyear);
-        thirdmonthvialsUsed.setText("" + stockissued3rdlastmonth + " vials");
+        thirdMonthLabel.setText(thirdLastMonth + " " + thirdLastMonthYear);
+        try {
+            thirdMonthVialsUsed.setText(String.format(getString(R.string.vials_formatted), stockIssued3rdLastMonth));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
         //////////////////////////////////////////////////////////////////////////////////////////
 
-        int threemonthaveragevalue = (int) Math.ceil((double) (stockissuedlastmonth + stockissued2ndlastmonth + stockissued3rdlastmonth) / 3);
-        threemonthaverage.setText(threemonthaveragevalue + " vials");
+        int threeMonthAverageValue = (int) Math.ceil((double) (stockIssuedLastMonth + stockIssued2ndLastMonth + stockIssued3rdLastMonth) / 3);
+        try {
+            threeMonthAverage.setText(String.format(getString(R.string.vials_formatted), threeMonthAverageValue));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
     }
 
     private int getStockIssuedIntimeFrame(DateTime startofLastMonth, DateTime startofthismonth) {
@@ -235,41 +260,52 @@ public class PlanningStockFragment extends Fragment {
         return sum;
     }
 
+    @SuppressLint("StringFormatMatches")
     private void getValueForStock(View view) {
-        TextView stockvalue = (TextView) view.findViewById(R.id.vials);
-        stockvalue.setText("" + StockLibrary.getInstance().getStockRepository().getCurrentStockNumber(((StockControlActivity) getActivity()).stockType) + " vials");
+        TextView stockValue = (TextView) view.findViewById(R.id.vials);
+        try {
+            stockValue.setText(String.format(getString(R.string.vials_formatted), StockLibrary.getInstance().getStockRepository().getCurrentStockNumber(((StockControlActivity) getActivity()).stockType)));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void createTitle(View view) {
-        TextView titleview = (TextView) view.findViewById(R.id.name);
-        TextView graphtitletext = (TextView) view.findViewById(R.id.graph_label_text);
-        TextView current_stock_label = (TextView) view.findViewById(R.id.current_stock);
-        TextView avg_vacc_waste_rate_label = (TextView) view.findViewById(R.id.avg_vacc_waste_rate_label);
-        TextView due_vacc_description = (TextView) view.findViewById(R.id.due_vacc_description);
-        TextView lastthreemonthstocktitle = (TextView) view.findViewById(R.id.last_three_months_stock_title);
+        TextView titleView = (TextView) view.findViewById(R.id.name);
+        TextView graphTitleText = (TextView) view.findViewById(R.id.graph_label_text);
+        TextView currentStockLabel = (TextView) view.findViewById(R.id.current_stock);
+        TextView avgVaccineWasteRateLabel = (TextView) view.findViewById(R.id.avg_vacc_waste_rate_label);
+        TextView dueVaccineDescription = (TextView) view.findViewById(R.id.due_vacc_description);
+        TextView lastThreeMonthStockTitle = (TextView) view.findViewById(R.id.last_three_months_stock_title);
 
         String vaccineName = ((StockControlActivity) getActivity()).stockType.getName();
 
-        titleview.setText(vaccineName + " Planning");
-        graphtitletext.setText("3 month " + vaccineName + " stock levels");
-        current_stock_label.setText("Current " + vaccineName + " stock: ");
-        avg_vacc_waste_rate_label.setText("Average " + vaccineName + " waste rate: ");
-        due_vacc_description.setText("Calculated from current active children that will be due for " + vaccineName + " next month.");
-        lastthreemonthstocktitle.setText("3 month " + vaccineName + " stock used");
+        try {
+            titleView.setText(String.format(getString(R.string.stock_planning_title), vaccineName));
+            graphTitleText.setText(String.format(getString(R.string.vaccine_stock_levels), vaccineName));
+            currentStockLabel.setText(String.format(getString(R.string.current_vaccine_stock), vaccineName));
+            avgVaccineWasteRateLabel.setText(String.format(getString(R.string.average_vaccine_waste_rate), vaccineName));
+            dueVaccineDescription.setText(String.format(getString(R.string.vaccine_due_next_month_text), vaccineName));
+            lastThreeMonthStockTitle.setText(String.format(getString(R.string.vaccine_stock_used), vaccineName));
 
-        DateTime NextMonth = new DateTime(System.currentTimeMillis()).plusMonths(1);
-        ((TextView) view.findViewById(R.id.due_vacc_next_month_label)).setText("Due " + vaccineName + " next month " + NextMonth.monthOfYear().getAsShortText() + " " + NextMonth.year().getAsShortText() + ": ");
+            DateTime NextMonth = new DateTime(System.currentTimeMillis()).plusMonths(1);
+            ((TextView) view.findViewById(R.id.due_vacc_next_month_label)).setText(
+                    String.format(getString(R.string.vaccine_due_next_month), vaccineName, NextMonth.monthOfYear().getAsShortText(), NextMonth.year().getAsShortText()));
+        } catch (Exception e) {
+            Timber.e(e, "Error while formatting language strings");
+        }
     }
 
     private LineGraphSeries<DataPoint> createGraphDataAndView(View view) {
         DateTime now = new DateTime(System.currentTimeMillis());
-        DateTime threemonthEarlierIterator = now.minusMonths(3).withTimeAtStartOfDay();
-        ArrayList<DataPoint> datapointsforgraphs = new ArrayList<>();
-        while (threemonthEarlierIterator.isBefore(now)) {
+        DateTime threeMonthEarlierIterator = now.minusMonths(3).withTimeAtStartOfDay();
+        ArrayList<DataPoint> dataPointsForGraphs = new ArrayList<>();
+        while (threeMonthEarlierIterator.isBefore(now)) {
             Repository repo = StockLibrary.getInstance().getRepository();
             net.sqlcipher.database.SQLiteDatabase db = repo.getReadableDatabase();
 
-            Cursor c = db.rawQuery("Select sum(value) from stocks where " + StockRepository.DATE_CREATED + " <= " + threemonthEarlierIterator.toDate().getTime() + " and " + StockRepository.STOCK_TYPE_ID + " = " + ((StockControlActivity) getActivity()).stockType.getId(), null);
+            Cursor c = db.rawQuery("Select sum(value) from stocks where " + StockRepository.DATE_CREATED + " <= " + threeMonthEarlierIterator.toDate().getTime() + " and " + StockRepository.STOCK_TYPE_ID + " = " + ((StockControlActivity) getActivity()).stockType.getId(), null);
             String stockvalue = "0";
             if (c.getCount() > 0) {
                 c.moveToFirst();
@@ -279,12 +315,12 @@ public class PlanningStockFragment extends Fragment {
             } else {
                 c.close();
             }
-            datapointsforgraphs.add(new DataPoint(threemonthEarlierIterator.toDate(), Double.parseDouble(stockvalue)));
-            threemonthEarlierIterator = threemonthEarlierIterator.plusDays(1);
+            dataPointsForGraphs.add(new DataPoint(threeMonthEarlierIterator.toDate(), Double.parseDouble(stockvalue)));
+            threeMonthEarlierIterator = threeMonthEarlierIterator.plusDays(1);
         }
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(
-                datapointsforgraphs.toArray(new DataPoint[datapointsforgraphs.size()])
+                dataPointsForGraphs.toArray(new DataPoint[dataPointsForGraphs.size()])
         );
         GraphView graph = (GraphView) view.findViewById(R.id.graph);
 
@@ -312,18 +348,18 @@ public class PlanningStockFragment extends Fragment {
     }
 
     private ArrayList<JSONObject> readvaccineFileAndReturnVaccinesofSameType(String vaccinetypename) {
-        ArrayList<JSONObject> vaccinesofsametype = new ArrayList<>();
-        String vaccinejsonstring = StockUtils.getSupportedVaccines(getActivity());
+        ArrayList<JSONObject> vaccinesOfSameType = new ArrayList<>();
+        String vaccineJsonString = StockUtils.getSupportedVaccines(getActivity());
         try {
-            JSONArray vaccineentry = new JSONArray(vaccinejsonstring);
+            JSONArray vaccineEntry = new JSONArray(vaccineJsonString);
 
-            for (int i = 0; i < vaccineentry.length(); i++) {
-                JSONObject objectatindex = vaccineentry.getJSONObject(i);
+            for (int i = 0; i < vaccineEntry.length(); i++) {
+                JSONObject objectatindex = vaccineEntry.getJSONObject(i);
                 if (objectatindex.has("vaccines")) {
                     JSONArray vaccinearray = objectatindex.getJSONArray("vaccines");
                     for (int j = 0; j < vaccinearray.length(); j++) {
                         if (vaccinearray.getJSONObject(j).has("type") && vaccinearray.getJSONObject(j).getString("type").equalsIgnoreCase(vaccinetypename)) {
-                            vaccinesofsametype.add(vaccinearray.getJSONObject(j));
+                            vaccinesOfSameType.add(vaccinearray.getJSONObject(j));
                         }
                     }
                 }
@@ -331,7 +367,7 @@ public class PlanningStockFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return vaccinesofsametype;
+        return vaccinesOfSameType;
     }
 
     private void createActiveChildrenStatsView(View view) {

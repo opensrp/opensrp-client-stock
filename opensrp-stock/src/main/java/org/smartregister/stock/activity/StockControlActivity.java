@@ -1,5 +1,6 @@
 package org.smartregister.stock.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -20,10 +20,13 @@ import org.smartregister.stock.R;
 import org.smartregister.stock.domain.StockType;
 import org.smartregister.stock.fragment.CurrentStock;
 import org.smartregister.stock.fragment.PlanningStockFragment;
+import org.smartregister.view.activity.MultiLanguageActivity;
+
+import timber.log.Timber;
 
 import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
 
-public class StockControlActivity extends AppCompatActivity {
+public class StockControlActivity extends MultiLanguageActivity {
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -31,6 +34,7 @@ public class StockControlActivity extends AppCompatActivity {
     public StockType stockType;
     public PlanningStockFragment planningStockFragment;
 
+    @SuppressLint("StringFormatInvalid")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +55,11 @@ public class StockControlActivity extends AppCompatActivity {
             }
         });
 
-        ((TextView) toolbar.findViewById(R.id.title)).setText("Stock Control > " + stockType.getName());
+        try {
+            ((TextView) toolbar.findViewById(R.id.title)).setText(String.format(getString(R.string.stock_title_formatted), stockType.getName()));
+        } catch (Exception e) {
+            Timber.e(e, "Error formatting language string");
+        }
 
         setSupportActionBar(toolbar);
 
@@ -142,9 +150,9 @@ public class StockControlActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Current Stock";
+                    return getString(R.string.current_stock);
                 case 1:
-                    return "Stock Planning";
+                    return getString(R.string.stock_planning);
                 default:
                     return null;
             }

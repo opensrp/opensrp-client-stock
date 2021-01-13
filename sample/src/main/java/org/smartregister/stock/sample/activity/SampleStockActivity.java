@@ -67,7 +67,7 @@ public class SampleStockActivity extends StockActivity {
             }
         });
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Stock Control");
+        toolbar.setTitle(getString(R.string.stock_title));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
