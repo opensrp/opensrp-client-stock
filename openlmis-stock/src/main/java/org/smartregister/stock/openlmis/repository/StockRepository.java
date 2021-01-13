@@ -31,6 +31,7 @@ import static org.smartregister.stock.repository.StockRepository.DATE_UPDATED;
 import static org.smartregister.stock.repository.StockRepository.ID_COLUMN;
 import static org.smartregister.stock.repository.StockRepository.LOCATION_ID;
 import static org.smartregister.stock.repository.StockRepository.PROVIDER_ID;
+import static org.smartregister.stock.repository.StockRepository.STOCK_TABLE_NAME;
 import static org.smartregister.stock.repository.StockRepository.STOCK_TYPE_ID;
 import static org.smartregister.stock.repository.StockRepository.SYNC_STATUS;
 import static org.smartregister.stock.repository.StockRepository.TEAM_ID;
@@ -38,7 +39,6 @@ import static org.smartregister.stock.repository.StockRepository.TEAM_NAME;
 import static org.smartregister.stock.repository.StockRepository.TO_FROM;
 import static org.smartregister.stock.repository.StockRepository.TRANSACTION_TYPE;
 import static org.smartregister.stock.repository.StockRepository.VALUE;
-import static org.smartregister.stock.repository.StockRepository.STOCK_TABLE_NAME;
 
 /**
  * Created by samuelgithengi on 26/7/18.
@@ -103,7 +103,7 @@ public class StockRepository extends BaseRepository {
         contentValues.put(TRANSACTION_TYPE, stock.getTransactionType());
         contentValues.put(PROGRAM_ID, stock.getProgramId());
         contentValues.put(VALUE, stock.getValue());
-        contentValues.put(DATE_CREATED, stock.getDateCreated());
+        contentValues.put(DATE_CREATED, stock.getDateCreated() != null ? stock.getDateCreated().getMillis() : System.currentTimeMillis());
         contentValues.put(TO_FROM, stock.getToFrom());
         contentValues.put(SYNC_STATUS, stock.getSyncStatus());
         contentValues.put(DATE_UPDATED, stock.getUpdatedAt());
@@ -117,7 +117,7 @@ public class StockRepository extends BaseRepository {
         contentValues.put(VVM_STATUS, stock.getVvmStatus());
         contentValues.put(ORDERABLE_ID, stock.getOrderableId());
         contentValues.put(FACILITY_ID, stock.getFacilityId());
-        if (stock.getId() != null) {
+        if (stock.getId() == null || "-1".equals(stock.getId())) {
             getWritableDatabase().update(STOCK_TABLE_NAME, contentValues, ID_COLUMN + "=?", new String[]{stock.getId().toString()});
         } else if (exists(stock.getIdentifier())) {
             getWritableDatabase().update(STOCK_TABLE_NAME, contentValues, IDENTIFIER + "=?", new String[]{stock.getIdentifier()});
@@ -329,7 +329,7 @@ public class StockRepository extends BaseRepository {
     }
 
     private Stock createStock(Cursor cursor) {
-        Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
+        Stock stock = new Stock(cursor.getString(cursor.getColumnIndex(ID_COLUMN)),
                 cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
                 cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
                 cursor.getInt(cursor.getColumnIndex(VALUE)),

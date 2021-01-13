@@ -3,13 +3,18 @@ package org.smartregister.stock.helper;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.Context;
+import android.content.Intent;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.reflect.TypeToken;
 
 import org.smartregister.AllConstants;
 import org.smartregister.CoreLibrary;
 import org.smartregister.domain.DownloadStatus;
+import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Response;
+import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.ImageRepository;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.StockLibrary;
@@ -58,32 +63,30 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
 
     public void pullStockTypeFromServer() {
         if (!NetworkUtils.isNetworkAvailable()) {
-            //complete(FetchStatus.noConnection);
-            return;
-        }
-
-        if (!syncUtils.verifyAuthorization()) {
-            try {
-                syncUtils.logoutUser();
-            } catch (AuthenticatorException | OperationCanceledException | IOException e) {
-                Timber.e(e);
-            }
+            sendSyncStatusBroadcastMessage(FetchStatus.noConnection);
         } else {
-//            SyncProgress syncProgress = new SyncProgress();
-//            syncProgress.setSyncEntity(Constants.ARG_STOCK_TYPE);
-//            sendSyncProgressBroadcast(syncProgress,context);
-            String baseUrl = getFormattedBaseUrl();
-            Response<String> response = httpAgent.fetch(String.format("%s%s", baseUrl, SYNC_URL));
-            if (response.payload() != null) {
-                saveAllStockTypes(response.payload());
-                if (stockSyncConfiguration.shouldFetchStockTypeImages()) {
-                    downloadStockTypeImages();
+            if (!syncUtils.verifyAuthorization()) {
+                try {
+                    syncUtils.logoutUser();
+                } catch (AuthenticatorException | OperationCanceledException | IOException e) {
+                    Timber.e(e);
+                }
+            } else {
+                sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
+                String baseUrl = getFormattedBaseUrl();
+                Response<String> response = httpAgent.fetch(String.format("%s%s", baseUrl, SYNC_URL));
+                if (response != null && response.payload() != null) {
+                    saveAllStockTypes(response.payload());
+                    if (stockSyncConfiguration.shouldFetchStockTypeImages()) {
+                        downloadStockTypeImages();
+                    }
+                    sendSyncStatusBroadcastMessage(FetchStatus.fetched);
                 }
             }
         }
     }
 
-    public void saveAllStockTypes(String payload) {
+    public void saveAllStockTypes(@NonNull String payload) {
         List<StockType> stockTypes = gson.fromJson(payload, new TypeToken<List<StockType>>() {
         }.getType());
         stockTypeRepository.batchInsertStockTypes(stockTypes);
@@ -98,19 +101,19 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
                     Constants.MEDIA_URL, photoId);
 
             String fileName = Constants.PRODUCT_IMAGE + "_" + stockType.getUniqueId();
-            Map<String, String> map = new HashMap<>();
-            Response<DownloadStatus> status = httpAgent.downloadFromURL(photoUrl, fileName, map);
+            Map<String, String> detailsMap = new HashMap<>();
+            Response<DownloadStatus> status = httpAgent.downloadFromURL(photoUrl, fileName, detailsMap);
             DownloadStatus downloadStatus = status.payload();
             if (downloadStatus == downloadStatus.downloaded) {
-                stockTypeRepository.updatePhotoLocation(stockType.getId(), map.get(AllConstants.DownloadFileConstants.FILE_PATH));
-//                ProfileImage profileImage = new ProfileImage();
-//                profileImage.setEntityID(String.valueOf(stockType.getUniqueId()));
-//                profileImage.setImageid(String.valueOf(stockType.getUniqueId()));
-//                profileImage.setSyncStatus(TYPE_Synced);
-//                profileImage.setFilecategory(Constants.PRODUCT_IMAGE);
-//                profileImage.setFilepath(map.get(AllConstants.DownloadFileConstants.FILE_PATH));
-//                imageRepository.add(profileImage);
+                stockTypeRepository.updatePhotoLocation(stockType.getId(), detailsMap.get(AllConstants.DownloadFileConstants.FILE_PATH));
             }
         }
+    }
+
+    private void sendSyncStatusBroadcastMessage(@NonNull FetchStatus fetchStatus) {
+        Intent intent = new Intent();
+        intent.setAction(SyncStatusBroadcastReceiver.ACTION_SYNC_STATUS);
+        intent.putExtra(SyncStatusBroadcastReceiver.EXTRA_FETCH_STATUS, fetchStatus);
+        context.sendBroadcast(intent);
     }
 }

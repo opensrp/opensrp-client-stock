@@ -3,8 +3,12 @@ package org.smartregister.stock.util;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +48,23 @@ public class StockUtils {
 
     public static String getSupportedVaccines(Context context) {
         return Utils.readAssetContents(context, VACCINES_JSON_FILE);
+    }
+
+    public static DateTime getDateTimeFromString(@Nullable String date) {
+        if (StringUtils.isNotBlank(date)) {
+            try {
+                Long aLong = Long.parseLong(date);
+                return new DateTime(aLong);
+            } catch (NumberFormatException e) {
+                try {
+                    return new DateTime(date);
+                } catch (IllegalArgumentException illegalArgumentException) {
+                    return null;
+                }
+            }
+        } else {
+            return null;
+        }
     }
 
     //Testing

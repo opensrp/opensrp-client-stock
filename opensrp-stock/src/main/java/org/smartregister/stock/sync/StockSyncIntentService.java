@@ -6,31 +6,42 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.google.gson.reflect.TypeToken;
-
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.AllConstants;
 import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Response;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.R;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.configuration.StockSyncConfiguration;
 import org.smartregister.stock.domain.Stock;
-import org.smartregister.stock.domain.StockResponse;
-import org.smartregister.stock.repository.StockRepository;
-import org.smartregister.stock.util.GsonUtil;
 import org.smartregister.stock.helper.StockSyncServiceHelper;
+import org.smartregister.stock.repository.StockRepository;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
+import static org.smartregister.stock.repository.StockRepository.DELIVERY_DATE;
+import static org.smartregister.stock.util.Constants.StockResponseKey.ACCOUNTABILITY_END_DATE;
+import static org.smartregister.stock.util.Constants.StockResponseKey.CUSTOM_PROPERTIES;
+import static org.smartregister.stock.util.Constants.StockResponseKey.DONOR;
+import static org.smartregister.stock.util.Constants.StockResponseKey.ID;
+import static org.smartregister.stock.util.Constants.StockResponseKey.IDENTIFIER;
+import static org.smartregister.stock.util.Constants.StockResponseKey.LOCATION_ID;
+import static org.smartregister.stock.util.Constants.StockResponseKey.SERIAL_NUMBER;
+import static org.smartregister.stock.util.Constants.StockResponseKey.SERVER_VERSION;
+import static org.smartregister.stock.util.Constants.StockResponseKey.TYPE;
+import static org.smartregister.stock.util.Constants.StockResponseKey.VERSION;
 import static org.smartregister.util.Log.logError;
 
 /**
@@ -101,33 +112,43 @@ public class StockSyncIntentService extends IntentService {
         while (true) {
             long timestamp = preferences.getLong(LAST_STOCK_SYNC, 0);
             String timeStampString = String.valueOf(timestamp);
-            String uri = getSyncUrl(baseUrl, timeStampString);
-            Response<String> response = httpAgent.fetch(uri);
+            String url = getSyncUrl(baseUrl, timeStampString);
+            Map<String, String> syncParams = new HashMap<>();
+            syncParams.put(AllConstants.SERVER_VERSION, timeStampString);
+            Response<String> response = stockSyncConfiguration.syncStockByPost() ? httpAgent.postWithJsonResponse(url, stockSyncConfiguration.stockSyncRequestBody(syncParams)) : httpAgent.fetch(url);
             if (response.isFailure()) {
                 logError("Stock pull failed.");
                 return;
             }
             String jsonPayload = response.payload();
             List<Stock> stockItems = getStockFromPayload(jsonPayload);
+            if (stockItems == null || stockItems.isEmpty()) {
+                return;
+            }
             Long highestTimestamp = getHighestTimestampFromStockPayLoad(stockItems);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(LAST_STOCK_SYNC, highestTimestamp);
             editor.commit();
-            if (stockItems.isEmpty()) {
-                return;
-            } else {
-                stockSyncServiceHelper.batchInsertStocks(stockItems);
-            }
+            stockSyncServiceHelper.batchInsertStocks(stockItems);
         }
     }
 
     protected String getSyncUrl(String baseUrl, String timeStampString) {
-        return MessageFormat.format("{0}/{1}?serverVersion={2}{3}",
-                baseUrl,
-                STOCK_SYNC_PATH,
-                timeStampString,
-                stockSyncConfiguration.getStockSyncParams()
-        );
+        String url = "";
+        if (stockSyncConfiguration.syncStockByPost()) {
+            url = MessageFormat.format("{0}/{1}",
+                    baseUrl,
+                    STOCK_SYNC_PATH
+            );
+        } else {
+            url = MessageFormat.format("{0}/{1}?serverVersion={2}{3}",
+                    baseUrl,
+                    STOCK_SYNC_PATH,
+                    timeStampString,
+                    stockSyncConfiguration.getStockSyncParams()
+            );
+        }
+        return url;
     }
 
     private Long getHighestTimestampFromStockPayLoad(List<Stock> stocks) {
@@ -145,14 +166,44 @@ public class StockSyncIntentService extends IntentService {
     }
 
     public List<Stock> getStockFromPayload(String jsonPayload) {
+        return createStockResponse(jsonPayload);
+    }
+
+    private List<Stock> createStockResponse(String jsonPayload) {
+        List<Stock> stocks = new ArrayList<>();
         try {
-            StockResponse stockResponse = GsonUtil.getGson().fromJson(jsonPayload, new TypeToken<StockResponse>() {
-            }.getType());
-            return stockResponse.getStocks();
-        } catch (Exception e) {
+            JSONObject stockJsonObject = new JSONObject(jsonPayload);
+            if (stockJsonObject.has(context.getString(R.string.stocks_key))) {
+                JSONArray stockArray = stockJsonObject.getJSONArray(context.getString(R.string.stocks_key));
+                for (int i = 0; i < stockArray.length(); i++) {
+                    JSONObject stockObject = stockArray.getJSONObject(i);
+                    Stock stock = new Stock("-1",
+                            stockObject.optString(context.getString(R.string.transaction_type_key)),
+                            stockObject.optString(context.getString(R.string.providerid_key)),
+                            stockObject.optInt(context.getString(R.string.value_key)),
+                            stockObject.optLong(context.getString(R.string.date_created_key)),
+                            stockObject.optString(context.getString(R.string.to_from_key)),
+                            BaseRepository.TYPE_Synced,
+                            stockObject.optLong(context.getString(R.string.date_updated_key)),
+                            stockObject.optString(context.getString(R.string.stock_type_id_key)));
+                    stock.setIdentifier(stockObject.optString(IDENTIFIER));
+                    stock.setLocationId(stockObject.optString(LOCATION_ID));
+                    stock.setStockId(stockObject.optString(ID));
+                    stock.setCustomProperties(stockObject.optString(CUSTOM_PROPERTIES));
+                    stock.setServerVersion(stockObject.optLong(SERVER_VERSION));
+                    stock.setVersion(stockObject.optLong(VERSION));
+                    stock.setType(stockObject.optString(TYPE));
+                    stock.setDonor(stockObject.optString(DONOR));
+                    stock.setDeliveryDate(stockObject.optString(DELIVERY_DATE));
+                    stock.setAccountabilityEndDate(stockObject.optString(ACCOUNTABILITY_END_DATE));
+                    stock.setSerialNumber(stockObject.optString(SERIAL_NUMBER));
+                    stocks.add(stock);
+                }
+            }
+        } catch (JSONException e) {
             Timber.e(e);
         }
-        return new ArrayList<>();
+        return stocks;
     }
 
     private void pushStockToServer() {

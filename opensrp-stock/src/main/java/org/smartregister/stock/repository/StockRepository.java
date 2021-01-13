@@ -8,9 +8,11 @@ import androidx.annotation.NonNull;
 
 import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.smartregister.domain.StockAndProductDetails;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Stock;
@@ -99,7 +101,7 @@ public class StockRepository extends BaseRepository {
         sqLiteDatabase.beginTransaction();
         for (Stock stock : stocks) {
             stock.setSyncStatus(TYPE_SYNCED);
-            stock.setUpdatedAt(System.currentTimeMillis());
+            stock.setDateUpdated(System.currentTimeMillis());
             ContentValues contentValues = createValuesFor(stock);
             if (!stockIds.contains(stock.getStockId())) {
                 sqLiteDatabase.insert(STOCK_TABLE_NAME, null, contentValues);
@@ -150,17 +152,17 @@ public class StockRepository extends BaseRepository {
                 stock.setSyncStatus(TYPE_UNSYNCED);
             }
 
-            if (stock.getUpdatedAt() == null) {
-                stock.setUpdatedAt(Calendar.getInstance().getTimeInMillis());
+            if (stock.getDateUpdated() == null) {
+                stock.setDateUpdated(Calendar.getInstance().getTimeInMillis());
             }
 
             SQLiteDatabase database = getWritableDatabase();
-            if (stock.getId() == null) {
-                stock.setId(database.insert(STOCK_TABLE_NAME, null, createValuesFor(stock)));
+            if (stock.getId() == null || "-1".equals(stock.getId())) {
+                stock.setId(String.valueOf(database.insert(STOCK_TABLE_NAME, null, createValuesFor(stock))));
             } else {
                 //mark the stock as unsynced for processing as an updated stock
                 String idSelection = ID_COLUMN + " = ?";
-                database.update(STOCK_TABLE_NAME, createValuesFor(stock), idSelection, new String[]{stock.getId().toString()});
+                database.update(STOCK_TABLE_NAME, createValuesFor(stock), idSelection, new String[]{stock.getId()});
             }
         } catch (Exception e) {
             Timber.e(e);
@@ -169,15 +171,15 @@ public class StockRepository extends BaseRepository {
 
     private ContentValues createValuesFor(Stock stock) {
         ContentValues values = new ContentValues();
-        values.put(ID_COLUMN, stock.getId());
-        values.put(STOCK_TYPE_ID, stock.getStockTypeId() == null ? stock.getIdentifier() : "0");
+        values.put(ID_COLUMN, (stock.getId() != null && "-1".equals(stock.getId())) ? null : stock.getId());
+        values.put(STOCK_TYPE_ID, String.valueOf(stock.getStockTypeId() == null ? stock.getIdentifier() : "0"));
         values.put(TRANSACTION_TYPE, stock.getTransactionType());
         values.put(PROVIDER_ID, stock.getProviderid());
         values.put(VALUE, stock.getValue());
-        values.put(DATE_CREATED, stock.getDateCreated() != null ? stock.getDateCreated() : System.currentTimeMillis());
+        values.put(DATE_CREATED, stock.getDateCreated() != null ? stock.getDateCreated().getMillis() : System.currentTimeMillis());
         values.put(TO_FROM, stock.getToFrom());
         values.put(SYNC_STATUS, stock.getSyncStatus());
-        values.put(DATE_UPDATED, stock.getUpdatedAt() != null ? stock.getUpdatedAt() : System.currentTimeMillis());
+        values.put(DATE_UPDATED, stock.getDateUpdated() != null ? stock.getDateUpdated() : System.currentTimeMillis());
         values.put(IDENTIFIER, stock.getIdentifier());
         values.put(LOCATION_ID, stock.getLocationId());
         values.put(STOCK_ID, stock.getStockId());
@@ -185,10 +187,10 @@ public class StockRepository extends BaseRepository {
         values.put(SERVER_VERSION, stock.getServerVersion());
         values.put(VERSION, stock.getVersion());
         values.put(DONOR, stock.getDonor());
-        values.put(ACCOUNTABILITY_END_DATE, stock.getAccountabilityEndDate());
+        values.put(ACCOUNTABILITY_END_DATE, stock.getAccountabilityEndDate() != null ? stock.getAccountabilityEndDate().getTime() : null);
         values.put(SERIAL_NUMBER, stock.getSerialNumber());
         values.put(TYPE, stock.getType());
-        values.put(DELIVERY_DATE, stock.getDeliveryDate());
+        values.put(DELIVERY_DATE, stock.getDeliveryDate() != null ? stock.getDeliveryDate().getTime() : null);
         return values;
     }
 
@@ -241,7 +243,7 @@ public class StockRepository extends BaseRepository {
     }
 
     public Stock readAllStockforCursorAdapter(Cursor cursor) {
-        Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
+        Stock stock = new Stock(cursor.getString(cursor.getColumnIndex(ID_COLUMN)),
                 cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
                 cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
                 cursor.getInt(cursor.getColumnIndex(VALUE)),
@@ -269,27 +271,7 @@ public class StockRepository extends BaseRepository {
         try {
             if (cursor != null) {
                 while (cursor.moveToNext()) {
-                    Stock stock = new Stock(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
-                            cursor.getString(cursor.getColumnIndex(TRANSACTION_TYPE)),
-                            cursor.getString(cursor.getColumnIndex(PROVIDER_ID)),
-                            cursor.getInt(cursor.getColumnIndex(VALUE)),
-                            cursor.getLong(cursor.getColumnIndex(DATE_CREATED)),
-                            cursor.getString(cursor.getColumnIndex(TO_FROM)),
-                            cursor.getString(cursor.getColumnIndex(SYNC_STATUS)),
-                            cursor.getLong(cursor.getColumnIndex(DATE_UPDATED)),
-                            cursor.getString(cursor.getColumnIndex(STOCK_TYPE_ID))
-                    );
-                    stock.setLocationId(cursor.getString(cursor.getColumnIndex(LOCATION_ID)));
-                    stock.setIdentifier(cursor.getString(cursor.getColumnIndex(IDENTIFIER)));
-                    stock.setStockId(cursor.getString(cursor.getColumnIndex(STOCK_ID)));
-                    stock.setCustomProperties(cursor.getString(cursor.getColumnIndex(CUSTOM_PROPERTIES)));
-                    stock.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
-                    stock.setVersion(cursor.getLong(cursor.getColumnIndex(VERSION)));
-                    stock.setType(cursor.getString(cursor.getColumnIndex(TYPE)));
-                    stock.setDonor(cursor.getString(cursor.getColumnIndex(DONOR)));
-                    stock.setDeliveryDate(cursor.getString(cursor.getColumnIndex(DELIVERY_DATE)));
-                    stock.setAccountabilityEndDate(cursor.getString(cursor.getColumnIndex(ACCOUNTABILITY_END_DATE)));
-                    stock.setSerialNumber(cursor.getString(cursor.getColumnIndex(SERIAL_NUMBER)));
+                    Stock stock = readAllStockforCursorAdapter(cursor);
                     stocks.add(stock);
                 }
             }
@@ -399,6 +381,29 @@ public class StockRepository extends BaseRepository {
             c.close();
         }
         return Integer.parseInt(stockValue);
+    }
+
+    public StockAndProductDetails findStockWithStockTypeByStockId(String stockId) {
+        StockAndProductDetails stockAndProductDetails = null;
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        String query = "SELECT * FROM " + STOCK_TABLE_NAME
+                + " LEFT JOIN " + StockTypeRepository.STOCK_TYPE_TABLE_NAME + " ON " + STOCK_TABLE_NAME + "." + IDENTIFIER + " = " + StockTypeRepository.STOCK_TYPE_TABLE_NAME + "." + StockTypeRepository.UNIQUE_ID
+                + " WHERE " + STOCK_TABLE_NAME + "." + STOCK_ID + " = ? limit 1";
+
+        try (Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{stockId})) {
+            if (cursor != null && cursor.moveToNext()) {
+                stockAndProductDetails = readStockAndProductDetails(cursor);
+            }
+        } catch (SQLiteException e) {
+            Timber.e(e);
+        }
+        return stockAndProductDetails;
+    }
+
+    private StockAndProductDetails readStockAndProductDetails(Cursor cursor) {
+        Stock stock = readAllStockforCursorAdapter(cursor);
+        StockType stockType = StockLibrary.getInstance().getStockTypeRepository().readStockType(cursor);
+        return new StockAndProductDetails(stock, stockType);
     }
 
     public static void migrateFromOldStockRepository(SQLiteDatabase database, String oldTableName) {

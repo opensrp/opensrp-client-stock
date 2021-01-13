@@ -53,7 +53,7 @@ public class StockTransactionAdapter extends RecyclerView.Adapter<StockTransacti
     public void onBindViewHolder(@NonNull StockTransactionsViewHolder holder, int position) {
         StockWrapper stockWrapper = stockTransactions.get(position);
         Stock stock = stockWrapper.getStock();
-        holder.getDateTextView().setText(dateFormatter.format(new Date(stock.getDateCreated())));
+        holder.getDateTextView().setText(dateFormatter.format(stock.getDateCreated() != null ? stock.getDateCreated().toDate() : new Date()));
         holder.getToFromTextView().setText(stockWrapper.getFacility());
         holder.getLotCodeTextView().setText(stockWrapper.getLotCode());
         holder.getBalanceTextView().setText(String.valueOf(stockWrapper.getStockBalance()));

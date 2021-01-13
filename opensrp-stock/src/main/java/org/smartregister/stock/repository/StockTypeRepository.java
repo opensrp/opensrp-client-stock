@@ -108,7 +108,7 @@ public class StockTypeRepository extends BaseRepository {
         try (Cursor mCursor = getReadableDatabase().rawQuery(query, stockTypeUniqueIds.toArray(new Long[0]))) {
             if (mCursor != null) {
                 while (mCursor.moveToNext()) {
-                    tempStockTypeUniqueIds.add(mCursor.getLong(0));
+                    tempStockTypeUniqueIds.add(mCursor.getLong(mCursor.getColumnIndex(UNIQUE_ID)));
                 }
             }
         } catch (SQLException e) {
@@ -179,22 +179,7 @@ public class StockTypeRepository extends BaseRepository {
         try {
             if (cursor != null) {
                 while (cursor.moveToNext()) {
-                    StockType stockType = new StockType(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
-                            cursor.getInt(cursor.getColumnIndex(QUANTITY)),
-                            cursor.getString(cursor.getColumnIndex(NAME)),
-                            cursor.getString(cursor.getColumnIndex(OPENMRS_PARENT_ENTITIY_ID)),
-                            cursor.getString(cursor.getColumnIndex(OPENMRS_DATE_CONCEPT_ID)),
-                            cursor.getString(cursor.getColumnIndex(OPENMRS_QUANTITY_CONCEPT_ID))
-                    );
-                    stockType.setAccountabilityPeriod(cursor.getString(cursor.getColumnIndex(ACCOUNTABILITY_PERIOD)));
-                    stockType.setAppropriateUsage(cursor.getString(cursor.getColumnIndex(APPROPRIATE_USAGE)));
-                    stockType.setAvailability(cursor.getString(cursor.getColumnIndex(AVAILABILITY)));
-                    stockType.setCondition(cursor.getString(cursor.getColumnIndex(CONDITION)));
-                    stockType.setIsAttractiveItem(cursor.getString(cursor.getColumnIndex(IS_ATTRACTIVE_ITEM)));
-                    stockType.setMaterialNumber(cursor.getString(cursor.getColumnIndex(MATERIAL_NUMBER)));
-                    stockType.setUniqueId(cursor.getLong(cursor.getColumnIndex(UNIQUE_ID)));
-                    stockType.setPhotoUrl(cursor.getString(cursor.getColumnIndex(PHOTO_URL)));
-                    stockType.setPhotoFileLocation(cursor.getString(cursor.getColumnIndex(PHOTO_FILE_LOCATION)));
+                    StockType stockType = readStockType(cursor);
                     stocks.add(stockType);
                 }
             }
@@ -207,6 +192,27 @@ public class StockTypeRepository extends BaseRepository {
         return stocks;
     }
 
+    public StockType readStockType(Cursor cursor) {
+        StockType stockType = new StockType(cursor.getLong(cursor.getColumnIndex(ID_COLUMN)),
+                cursor.getInt(cursor.getColumnIndex(QUANTITY)),
+                cursor.getString(cursor.getColumnIndex(NAME)),
+                cursor.getString(cursor.getColumnIndex(OPENMRS_PARENT_ENTITIY_ID)),
+                cursor.getString(cursor.getColumnIndex(OPENMRS_DATE_CONCEPT_ID)),
+                cursor.getString(cursor.getColumnIndex(OPENMRS_QUANTITY_CONCEPT_ID))
+        );
+        stockType.setProductName(cursor.getString(cursor.getColumnIndex(NAME)));
+        stockType.setAccountabilityPeriod(cursor.getInt(cursor.getColumnIndex(ACCOUNTABILITY_PERIOD)));
+        stockType.setAppropriateUsage(cursor.getString(cursor.getColumnIndex(APPROPRIATE_USAGE)));
+        stockType.setAvailability(cursor.getString(cursor.getColumnIndex(AVAILABILITY)));
+        stockType.setCondition(cursor.getString(cursor.getColumnIndex(CONDITION)));
+        stockType.setIsAttractiveItem(Boolean.valueOf(cursor.getString(cursor.getColumnIndex(IS_ATTRACTIVE_ITEM))));
+        stockType.setMaterialNumber(cursor.getString(cursor.getColumnIndex(MATERIAL_NUMBER)));
+        stockType.setUniqueId(cursor.getLong(cursor.getColumnIndex(UNIQUE_ID)));
+        stockType.setPhotoURL(cursor.getString(cursor.getColumnIndex(PHOTO_URL)));
+        stockType.setPhotoFileLocation(cursor.getString(cursor.getColumnIndex(PHOTO_FILE_LOCATION)));
+        return stockType;
+    }
+
     public void updatePhotoLocation(Long id, String location) {
         SQLiteDatabase database = getWritableDatabase();
         database.execSQL("UPDATE " + STOCK_TYPE_TABLE_NAME + " SET " + PHOTO_FILE_LOCATION + " = ? " +
@@ -216,7 +222,7 @@ public class StockTypeRepository extends BaseRepository {
     private ContentValues createValuesFor(@NonNull StockType stockType) {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, stockType.getId());
-        values.put(NAME, stockType.getName());
+        values.put(NAME, StringUtils.isBlank(stockType.getName()) ? stockType.getProductName() : stockType.getName());
         values.put(QUANTITY, stockType.getQuantity());
         values.put(ACCOUNTABILITY_PERIOD, stockType.getAccountabilityPeriod());
         values.put(APPROPRIATE_USAGE, stockType.getAppropriateUsage());
@@ -225,7 +231,7 @@ public class StockTypeRepository extends BaseRepository {
         values.put(CONDITION, stockType.getCondition());
         values.put(MATERIAL_NUMBER, stockType.getMaterialNumber());
         values.put(UNIQUE_ID, stockType.getUniqueId());
-        values.put(PHOTO_URL, StringUtils.isNotBlank(stockType.getPhotoUrl()) ? stockType.getPhotoUrl() : null);
+        values.put(PHOTO_URL, StringUtils.isNotBlank(stockType.getPhotoURL()) ? stockType.getPhotoURL() : null);
         values.put(OPENMRS_DATE_CONCEPT_ID, stockType.getOpenmrsDateConceptId());
         values.put(OPENMRS_QUANTITY_CONCEPT_ID, stockType.getOpenmrsQuantityConceptId());
         values.put(OPENMRS_PARENT_ENTITIY_ID, stockType.getOpenmrsParentEntityId());
