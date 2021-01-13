@@ -26,5 +26,6 @@ public class Constants {
         String SERIAL_NUMBER = "serialNumber";
         String IDENTIFIER = "identifier";
         String LOCATION_ID = "locationId";
+        String LOCATIONS = "locations";
     }
 }
