@@ -72,22 +72,24 @@ public class StockTypeRepository extends BaseRepository {
     }
 
     public void batchInsertStockTypes(@Nullable List<StockType> stockTypes) {
-        Set<Long> stockTypeIdsFromResponse = getStockTypeUniqueIdsFromResponse(stockTypes);
-        Set<Long> stockTypeIds = populateStockTypeUniqueIds(stockTypeIdsFromResponse);
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        sqLiteDatabase.beginTransaction();
-        for (StockType stockType : stockTypes) {
-            ContentValues contentValues = createValuesFor(stockType);
-            if (!stockTypeIds.contains(stockType.getUniqueId())) {
-                sqLiteDatabase.insert(STOCK_TYPE_TABLE_NAME, null, contentValues);
-            } else {
-                String idSelection = UNIQUE_ID + " = ?";
-                contentValues.remove(ID_COLUMN);
-                sqLiteDatabase.update(STOCK_TYPE_TABLE_NAME, contentValues, idSelection, new String[]{stockType.getUniqueId().toString()});
+        if (stockTypes != null) {
+            Set<Long> stockTypeIdsFromResponse = getStockTypeUniqueIdsFromResponse(stockTypes);
+            Set<Long> stockTypeIds = populateStockTypeUniqueIds(stockTypeIdsFromResponse);
+            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+            sqLiteDatabase.beginTransaction();
+            for (StockType stockType : stockTypes) {
+                ContentValues contentValues = createValuesFor(stockType);
+                if (!stockTypeIds.contains(stockType.getUniqueId())) {
+                    sqLiteDatabase.insert(STOCK_TYPE_TABLE_NAME, null, contentValues);
+                } else {
+                    String idSelection = UNIQUE_ID + " = ?";
+                    contentValues.remove(ID_COLUMN);
+                    sqLiteDatabase.update(STOCK_TYPE_TABLE_NAME, contentValues, idSelection, new String[]{stockType.getUniqueId().toString()});
+                }
             }
+            sqLiteDatabase.setTransactionSuccessful();
+            sqLiteDatabase.endTransaction();
         }
-        sqLiteDatabase.setTransactionSuccessful();
-        sqLiteDatabase.endTransaction();
     }
 
     private Set<Long> getStockTypeUniqueIdsFromResponse(@NonNull List<StockType> stockTypes) {
@@ -101,7 +103,7 @@ public class StockTypeRepository extends BaseRepository {
         return stockTypeUniqueIds;
     }
 
-    private Set<Long> populateStockTypeUniqueIds(@NonNull Set<Long> stockTypeUniqueIds) {
+    protected Set<Long> populateStockTypeUniqueIds(@NonNull Set<Long> stockTypeUniqueIds) {
         Set<Long> tempStockTypeUniqueIds = new HashSet<>();
         String query = "SELECT " + UNIQUE_ID + " FROM " + STOCK_TYPE_TABLE_NAME +
                 " WHERE " + UNIQUE_ID + " IN ( " + StringUtils.repeat("?", ", ", stockTypeUniqueIds.size()) + ")";

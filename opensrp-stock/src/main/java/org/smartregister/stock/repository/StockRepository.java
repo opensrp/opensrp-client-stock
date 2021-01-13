@@ -126,7 +126,7 @@ public class StockRepository extends BaseRepository {
         return stockIds;
     }
 
-    private Set<String> populateStockIds(@NonNull Set<String> stockIds) {
+    protected Set<String> populateStockIds(@NonNull Set<String> stockIds) {
         Set<String> tempStockIds = new HashSet<>();
         String query = "SELECT " + STOCK_ID + " FROM " + STOCK_TABLE_NAME +
                 " WHERE " + STOCK_ID + " IN ( " + StringUtils.repeat("?", ", ", stockIds.size()) + ")";

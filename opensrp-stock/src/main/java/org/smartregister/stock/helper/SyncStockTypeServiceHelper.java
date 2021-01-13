@@ -15,7 +15,6 @@ import org.smartregister.domain.DownloadStatus;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Response;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
-import org.smartregister.repository.ImageRepository;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.configuration.StockSyncConfiguration;
@@ -38,7 +37,6 @@ import static org.smartregister.stock.sync.StockTypeIntentService.SYNC_URL;
 import static org.smartregister.util.JsonFormUtils.gson;
 
 public class SyncStockTypeServiceHelper extends BaseHelper {
-    private ImageRepository imageRepository;
     private StockTypeRepository stockTypeRepository;
     private HTTPAgent httpAgent;
     private StockSyncConfiguration stockSyncConfiguration;
@@ -57,12 +55,11 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
         syncUtils = new SyncUtils(context);
         httpAgent = coreLibrary.context().getHttpAgent();
         stockTypeRepository = stockLibrary.getStockTypeRepository();
-        imageRepository = coreLibrary.context().imageRepository();
         stockSyncConfiguration = stockLibrary.getStockSyncConfiguration();
     }
 
     public void pullStockTypeFromServer() {
-        if (!NetworkUtils.isNetworkAvailable()) {
+        if (isNetworkAvailable()) {
             sendSyncStatusBroadcastMessage(FetchStatus.noConnection);
         } else {
             if (!syncUtils.verifyAuthorization()) {
@@ -84,6 +81,10 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
                 }
             }
         }
+    }
+
+    protected boolean isNetworkAvailable() {
+        return !NetworkUtils.isNetworkAvailable();
     }
 
     public void saveAllStockTypes(@NonNull String payload) {

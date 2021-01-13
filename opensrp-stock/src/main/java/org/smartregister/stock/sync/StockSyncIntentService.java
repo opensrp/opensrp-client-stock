@@ -113,7 +113,7 @@ public class StockSyncIntentService extends IntentService {
             long timestamp = preferences.getLong(LAST_STOCK_SYNC, 0);
             String timeStampString = String.valueOf(timestamp);
             String url = getSyncUrl(baseUrl, timeStampString);
-            Map<String, String> syncParams = new HashMap<>();
+            Map<String, Object> syncParams = new HashMap<>();
             syncParams.put(AllConstants.SERVER_VERSION, timeStampString);
             Response<String> response = stockSyncConfiguration.syncStockByPost() ? httpAgent.postWithJsonResponse(url, stockSyncConfiguration.stockSyncRequestBody(syncParams)) : httpAgent.fetch(url);
             if (response.isFailure()) {

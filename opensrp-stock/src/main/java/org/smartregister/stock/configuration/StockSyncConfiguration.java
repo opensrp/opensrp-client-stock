@@ -80,10 +80,10 @@ public class StockSyncConfiguration {
      * @param syncParams
      * @return
      */
-    public String stockSyncRequestBody(Map<String, String> syncParams) {
+    public String stockSyncRequestBody(Map<String, Object> syncParams) {
         JSONObject jsonObjectRequestBody = new JSONObject();
         try {
-            for (Map.Entry<String, String> entry : syncParams.entrySet()) {
+            for (Map.Entry<String, Object> entry : syncParams.entrySet()) {
                 jsonObjectRequestBody.put(entry.getKey(), entry.getValue());
             }
         } catch (JSONException e) {
