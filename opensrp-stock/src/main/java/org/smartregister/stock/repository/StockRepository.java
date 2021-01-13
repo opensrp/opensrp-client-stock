@@ -157,7 +157,7 @@ public class StockRepository extends BaseRepository {
             }
 
             SQLiteDatabase database = getWritableDatabase();
-            if (stock.getId() == null || "-1".equals(stock.getId())) {
+            if (stock.getId() == null) {
                 stock.setId(String.valueOf(database.insert(STOCK_TABLE_NAME, null, createValuesFor(stock))));
             } else {
                 //mark the stock as unsynced for processing as an updated stock
@@ -171,7 +171,7 @@ public class StockRepository extends BaseRepository {
 
     private ContentValues createValuesFor(Stock stock) {
         ContentValues values = new ContentValues();
-        values.put(ID_COLUMN, (stock.getId() != null && "-1".equals(stock.getId())) ? null : stock.getId());
+        values.put(ID_COLUMN, stock.getId());
         values.put(STOCK_TYPE_ID, String.valueOf(stock.getStockTypeId() == null ? stock.getIdentifier() : "0"));
         values.put(TRANSACTION_TYPE, stock.getTransactionType());
         values.put(PROVIDER_ID, stock.getProviderid());

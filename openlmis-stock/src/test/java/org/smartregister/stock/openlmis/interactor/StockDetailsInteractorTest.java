@@ -109,13 +109,13 @@ public class StockDetailsInteractorTest extends BaseUnitTest {
     public void testGetStockByTradeItem() {
         List<Stock> expected = new ArrayList<>();
         String tradeItemId = UUID.randomUUID().toString();
-        expected.add(new Stock(119l, Stock.issued, "tester11", -12, 0l,
+        expected.add(new Stock("119", Stock.issued, "tester11", -12, 0l,
                 "HO", "unsynched", 120l, tradeItemId));
         when(stockDetailsInteractor.getStockByTradeItem(tradeItemId)).thenReturn(expected);
         List<Stock> stockList = stockDetailsInteractor.getStockByTradeItem(tradeItemId);
         verify(stockRepository).getStockByTradeItem(tradeItemId);
         assertEquals(1, stockList.size());
-        assertEquals(119l, stockList.get(0).getId().longValue());
+        assertEquals("119", stockList.get(0).getId());
         assertEquals(Stock.issued, stockList.get(0).getTransactionType());
         assertEquals(tradeItemId, stockList.get(0).getStockTypeId());
         assertEquals(-12, stockList.get(0).getValue());
@@ -140,7 +140,7 @@ public class StockDetailsInteractorTest extends BaseUnitTest {
     @Test
     public void testAddStock() {
         String tradeItemId = UUID.randomUUID().toString();
-        Stock stock = new Stock(119l, Stock.issued, "tester11", -12, 0l,
+        Stock stock = new Stock("119", Stock.issued, "tester11", -12, 0l,
                 "HO", "unsynched", 120l, tradeItemId);
         stockDetailsInteractor.addStock(stock);
         verify(stockRepository).addOrUpdate(stock);

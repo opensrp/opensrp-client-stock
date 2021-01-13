@@ -78,7 +78,7 @@ public class StockRepositoryTest extends BaseRepositoryTest {
         assertNull(stockList.get(0).getTeam());
 
         long updateTimestamp = System.currentTimeMillis();
-        stock.setUpdatedAt(updateTimestamp);
+        stock.setDateUpdated(updateTimestamp);
         stock.setValue(24);
         stock.setTeam("ATeam");
         stock.setId(stockList.get(0).getId());

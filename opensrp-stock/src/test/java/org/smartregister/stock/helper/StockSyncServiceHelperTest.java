@@ -45,7 +45,7 @@ public class StockSyncServiceHelperTest extends BaseUnitTest {
     public void testBatchInsertStocksShouldUseDefaultLogicIfConfigIsFalse() {
         ReflectionHelpers.setStaticField(StockLibrary.class, "instance", stockLibrary);
 
-        Stock stock = new Stock("-1", "", "", 0, 4343444l, "", "", 4343444l, "");
+        Stock stock = new Stock(null, "", "", 0, 4343444l, "", "", 4343444l, "");
 
         doReturn(true).when(stockSyncConfiguration).useDefaultStockExistenceCheck();
 
@@ -62,7 +62,7 @@ public class StockSyncServiceHelperTest extends BaseUnitTest {
     public void testBatchInsertStocksShouldUseDefaultLogicIfConfigIsTrue() {
         ReflectionHelpers.setStaticField(StockLibrary.class, "instance", stockLibrary);
 
-        Stock stock = new Stock("-1", "", "", 0, 4343444l, "", "", 4343444l, "");
+        Stock stock = new Stock(null, "", "", 0, 4343444l, "", "", 4343444l, "");
 
         doReturn(stockRepository).when(stockSyncServiceHelper).getStockRepository();
 

@@ -177,7 +177,7 @@ public class StockSyncIntentService extends IntentService {
                 JSONArray stockArray = stockJsonObject.getJSONArray(context.getString(R.string.stocks_key));
                 for (int i = 0; i < stockArray.length(); i++) {
                     JSONObject stockObject = stockArray.getJSONObject(i);
-                    Stock stock = new Stock("-1",
+                    Stock stock = new Stock(null,
                             stockObject.optString(context.getString(R.string.transaction_type_key)),
                             stockObject.optString(context.getString(R.string.providerid_key)),
                             stockObject.optInt(context.getString(R.string.value_key)),

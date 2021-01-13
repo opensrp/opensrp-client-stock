@@ -53,7 +53,7 @@ public class StockRepositoryTest extends BaseUnitTest {
 
     @Test
     public void testBatchInsertStockShouldInsertNewRecord() {
-        Stock stock = new Stock("-1", "", "", 0, 4343444l, "", "", 4343444l, "");
+        Stock stock = new Stock(null, "", "", 0, 4343444l, "", "", 4343444l, "");
 
         doReturn(sqLiteDatabase).when(stockRepository).getReadableDatabase();
         doReturn(sqLiteDatabase).when(stockRepository).getWritableDatabase();
@@ -76,7 +76,7 @@ public class StockRepositoryTest extends BaseUnitTest {
 
     @Test
     public void testBatchInsertStockShouldInsertUpdateExistingRecord() {
-        Stock stock = new Stock("-1", "", "", 0, 4343444l, "", "", 4343444l, "");
+        Stock stock = new Stock(null, "", "", 0, 4343444l, "", "", 4343444l, "");
         stock.setStockId(UUID.randomUUID().toString());
 
         doReturn(sqLiteDatabase).when(stockRepository).getReadableDatabase();

@@ -117,7 +117,7 @@ public class StockRepository extends BaseRepository {
         contentValues.put(VVM_STATUS, stock.getVvmStatus());
         contentValues.put(ORDERABLE_ID, stock.getOrderableId());
         contentValues.put(FACILITY_ID, stock.getFacilityId());
-        if (stock.getId() == null || "-1".equals(stock.getId())) {
+        if (stock.getId() != null) {
             getWritableDatabase().update(STOCK_TABLE_NAME, contentValues, ID_COLUMN + "=?", new String[]{stock.getId().toString()});
         } else if (exists(stock.getIdentifier())) {
             getWritableDatabase().update(STOCK_TABLE_NAME, contentValues, IDENTIFIER + "=?", new String[]{stock.getIdentifier()});

@@ -130,4 +130,23 @@ public class Stock extends org.smartregister.domain.Stock implements Serializabl
     public void setStockId(String stockId) {
         this.stockId = stockId;
     }
+
+    @Override
+    public String getId() {
+        String id = super.getId();
+        if ("-1".equals(id)) {
+            return null;
+        } else {
+            return id;
+        }
+    }
+
+    @Override
+    public void setId(String s) {
+        if (s == null) {
+            super.setId("-1");
+        } else {
+            super.setId(s);
+        }
+    }
 }

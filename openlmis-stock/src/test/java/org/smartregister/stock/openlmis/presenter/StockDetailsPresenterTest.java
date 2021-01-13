@@ -181,18 +181,18 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
         List<Stock> stockList = new ArrayList<>();
         long now = System.currentTimeMillis();
 
-        Stock stock = new Stock(1l, received, "tester11", 50, now,
+        Stock stock = new Stock("1", received, "tester11", 50, now,
                 "wareHouse123", "unsynched", now, tradeItemId);
         stock.setLotId(lotId);
         stockList.add(stock);
 
-        stock = new Stock(2l, issued, "tester11", -12, now,
+        stock = new Stock("2", issued, "tester11", -12, now,
                 "HO", "unsynched", now, tradeItemId);
         stock.setLotId(lotId);
         stockList.add(stock);
 
 
-        stock = new Stock(3l, loss_adjustment, "tester11", -2, now,
+        stock = new Stock("3", loss_adjustment, "tester11", -2, now,
                 "HO", "unsynched", now, tradeItemId);
         stock.setLotId(lot2Id);
         stockList.add(stock);
@@ -206,7 +206,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
             assertEquals(tradeItemId, stockWrapper.getStock().getStockTypeId());
             if (stockWrapper.getStock().getLotId().equals(lotId)) {
                 assertEquals("LC2134K", stockWrapper.getLotCode());
-                if (stockWrapper.getStock().getId().equals(1l))
+                if (stockWrapper.getStock().getId().equals("1"))
                     assertEquals(100, stockWrapper.getStockBalance());
                 else
                     assertEquals(50, stockWrapper.getStockBalance());
@@ -268,7 +268,7 @@ public class StockDetailsPresenterTest extends BaseUnitTest {
             assertEquals(-2, stock.getValue());
             assertEquals("Transferred", stock.getReason());
             assertNull(stock.getToFrom());
-            assertEquals(stockDetailsPresenter.simpleDateFormat.parse("05-10-2018").getTime(), stock.getDateCreated().longValue());
+            assertEquals(stockDetailsPresenter.simpleDateFormat.parse("05-10-2018").getTime(), stock.getDateCreated().getMillis());
         }
     }
 
