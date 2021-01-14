@@ -111,6 +111,9 @@ public class StockSyncIntentService extends IntentService {
 
         while (true) {
             long timestamp = preferences.getLong(LAST_STOCK_SYNC, 0);
+            if (timestamp > 0) {
+                timestamp += 1;
+            }
             String timeStampString = String.valueOf(timestamp);
             String url = getSyncUrl(baseUrl, timeStampString);
             Map<String, Object> syncParams = new HashMap<>();

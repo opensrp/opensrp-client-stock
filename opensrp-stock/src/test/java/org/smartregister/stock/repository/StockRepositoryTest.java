@@ -54,6 +54,10 @@ public class StockRepositoryTest extends BaseUnitTest {
     @Test
     public void testBatchInsertStockShouldInsertNewRecord() {
         Stock stock = new Stock(null, "", "", 0, 4343444l, "", "", 4343444l, "");
+        stock.setCustomProperties("{sd =0}");
+        stock.setAccountabilityEndDate("2021-02-02T03:00:00.000+0300");
+        stock.setDeliveryDate("2021-02-02T03:00:00.000+0300");
+        stock.setDateCreated(1610614283338l);
 
         doReturn(sqLiteDatabase).when(stockRepository).getReadableDatabase();
         doReturn(sqLiteDatabase).when(stockRepository).getWritableDatabase();

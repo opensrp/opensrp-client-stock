@@ -1,13 +1,13 @@
 package org.smartregister.stock.domain;
 
-import com.google.gson.reflect.TypeToken;
+import androidx.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.smartregister.stock.util.GsonUtil;
 import org.smartregister.stock.util.StockUtils;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -115,12 +115,21 @@ public class Stock extends org.smartregister.domain.Stock implements Serializabl
         }
     }
 
-    public void setCustomProperties(String customProperties) {
-        if (StringUtils.isNotBlank(customProperties)) {
-            Map<String, String> propertiesMap = GsonUtil.getGsonWithTimeTypeConverter().fromJson(customProperties, new TypeToken<Map<String, String>>() {
-            }.getType());
-            setCustomProperties(propertiesMap);
+    public void setCustomProperties(@Nullable String customProperties) {
+        Map<String, String> map = new HashMap<>();
+        if (StringUtils.isNotBlank(customProperties) && customProperties.length() > 2) {
+            String temp = customProperties.substring(1, customProperties.length() - 1);
+            String[] tempArr = temp.split(",");
+            for (String s : tempArr) {
+                String[] items = StringUtils.stripAll(s.split("="));
+                if (items.length > 1) {
+                    String key = items[0];
+                    String value = items[1];
+                    map.put(key, value);
+                }
+            }
         }
+        setCustomProperties(map);
     }
 
     public String getStockId() {
