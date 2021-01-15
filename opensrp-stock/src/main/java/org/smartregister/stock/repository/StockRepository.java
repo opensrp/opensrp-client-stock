@@ -12,11 +12,14 @@ import net.sqlcipher.database.SQLiteException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.domain.StockAndProductDetails;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.StockLibrary;
 import org.smartregister.stock.domain.Stock;
 import org.smartregister.stock.domain.StockType;
+import org.smartregister.stock.util.GsonUtil;
 import org.smartregister.util.DatabaseMigrationUtils;
 
 import java.util.ArrayList;
@@ -402,8 +405,20 @@ public class StockRepository extends BaseRepository {
 
     private StockAndProductDetails readStockAndProductDetails(Cursor cursor) {
         Stock stock = readAllStockforCursorAdapter(cursor);
+        String stockString = GsonUtil.getGsonWithTimeTypeConverter().toJson(stock);
+        JSONObject stockJsonObject = null;
+        Stock updatedStock;
+        try {
+            stockJsonObject = new JSONObject(stockString);
+            stockJsonObject.put("id", stock.getStockId());
+            updatedStock = GsonUtil.getGsonWithTimeTypeConverter().fromJson(stockJsonObject.toString(), Stock.class);
+        } catch (JSONException e) {
+            Timber.e(e);
+            updatedStock = stock;
+        }
+        // change needed for PlanEvaluator logic
         StockType stockType = StockLibrary.getInstance().getStockTypeRepository().readStockType(cursor);
-        return new StockAndProductDetails(stock, stockType);
+        return new StockAndProductDetails(updatedStock, stockType);
     }
 
     public static void migrateFromOldStockRepository(SQLiteDatabase database, String oldTableName) {

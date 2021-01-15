@@ -122,8 +122,10 @@ public class StockRepositoryTest extends BaseUnitTest {
         ReflectionHelpers.setStaticField(StockLibrary.class, "instance", stockLibrary);
 
         doReturn(1).when(cursor).getColumnIndex(StockRepository.ID_COLUMN);
+        doReturn(2).when(cursor).getColumnIndex(StockRepository.STOCK_ID);
 
         doReturn("23").when(cursor).getString(1);
+        doReturn("234").when(cursor).getString(2);
 
         doReturn(sqLiteDatabase).when(stockRepository).getReadableDatabase();
 
@@ -134,5 +136,7 @@ public class StockRepositoryTest extends BaseUnitTest {
         StockAndProductDetails stockAndProductDetails = stockRepository.findStockWithStockTypeByStockId(stockId);
 
         assertNotNull(stockAndProductDetails);
+
+        assertEquals("234", stockAndProductDetails.getStock().getId());
     }
 }
