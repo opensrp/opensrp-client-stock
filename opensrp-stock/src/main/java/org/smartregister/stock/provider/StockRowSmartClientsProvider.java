@@ -16,8 +16,6 @@ import org.smartregister.view.dialog.ServiceModeOption;
 import org.smartregister.view.dialog.SortOption;
 import org.smartregister.view.viewholder.OnClickFormLauncher;
 
-import java.util.Date;
-
 
 /**
  * Created by Raihan  on 29-05-17.
@@ -59,7 +57,9 @@ public class StockRowSmartClientsProvider implements StockProviderForCursorAdapt
             loss_adj.setText("" + stock.getValue());
         }
 
-        date.setText(JsonFormUtils.dd_MM_yyyy.format(new Date(stock.getDateCreated())));
+        if (stock.getDateCreated() != null) {
+            date.setText(JsonFormUtils.dd_MM_yyyy.format(stock.getDateCreated().toDate()));
+        }
         to_from.setText(stock.getToFrom().replace("_", " "));
 
         balance.setText("" + (stock.getValue() + stockRepository.getBalanceBeforeCheck(stock)));
@@ -91,6 +91,4 @@ public class StockRowSmartClientsProvider implements StockProviderForCursorAdapt
     public LayoutInflater inflater() {
         return inflater;
     }
-
-
 }

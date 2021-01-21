@@ -12,4 +12,20 @@ public class Constants {
     public static final String STEPNAME = "stepName";
 
     public static final String NUMBER_PICKER = "number_picker";
+    public static final String MEDIA_URL = "multimedia/media";
+    public static final String PRODUCT_IMAGE = "product_image";
+
+    public interface StockResponseKey {
+        String ID = "id";
+        String CUSTOM_PROPERTIES = "customProperties";
+        String SERVER_VERSION = "serverVersion";
+        String TYPE = "type";
+        String VERSION = "version";
+        String DONOR = "donor";
+        String ACCOUNTABILITY_END_DATE = "accountabilityEndDate";
+        String SERIAL_NUMBER = "serialNumber";
+        String IDENTIFIER = "identifier";
+        String LOCATION_ID = "locationId";
+        String LOCATIONS = "locations";
+    }
 }

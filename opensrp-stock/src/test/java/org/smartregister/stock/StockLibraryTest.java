@@ -1,10 +1,12 @@
 package org.smartregister.stock;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
 import org.smartregister.repository.Repository;
 
@@ -36,5 +38,10 @@ public class StockLibraryTest extends BaseUnitTest {
     public void callingGetInstanceOfStockLibraryWithoutInitFirstThrowsIllegalStateException() {
         StockLibrary library = StockLibrary.getInstance();
         assertNull(library);
+    }
+
+    @After
+    public void tearDown() {
+        ReflectionHelpers.setStaticField(StockLibrary.class, "instance", null);
     }
 }

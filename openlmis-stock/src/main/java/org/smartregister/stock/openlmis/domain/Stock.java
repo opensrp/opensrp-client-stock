@@ -17,10 +17,7 @@ public class Stock extends org.smartregister.stock.domain.Stock {
 
     private String orderableId;
 
-
-    private String identifier;
-
-    public Stock(Long id, String transactionType, String providerid, int value, Long dateCreated,
+    public Stock(String id, String transactionType, String providerid, int value, Long dateCreated,
                  String toFrom, String syncStatus, Long dateUpdated, String tradeItemId) {
         super(id, transactionType, providerid, value, dateCreated, toFrom, syncStatus, dateUpdated,
                 tradeItemId);
@@ -72,13 +69,5 @@ public class Stock extends org.smartregister.stock.domain.Stock {
 
     public void setOrderableId(String orderableId) {
         this.orderableId = orderableId;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
     }
 }

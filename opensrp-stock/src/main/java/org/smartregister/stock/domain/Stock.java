@@ -1,46 +1,41 @@
 package org.smartregister.stock.domain;
 
+import androidx.annotation.Nullable;
+
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.smartregister.stock.util.StockUtils;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by samuelgithengi on 2/6/18.
  */
-public class Stock {
-    private Long id;
+public class Stock extends org.smartregister.domain.Stock implements Serializable {
     private String stockTypeId;
-    private String transactionType;
-    private String providerid;
-    private int value;
-    private Long dateCreated;
-    private String toFrom;
     private String syncStatus;
-    private Long dateUpdated;
-    private String locationId;
     private String childLocationId;
     private String team;
     private String teamId;
+    private String stockId;
 
     public static final String issued = "issued";
     public static final String received = "received";
     public static final String loss_adjustment = "loss_adjustment";
     public static final String stock_take = "stock_take";
 
-    public Stock(Long id, String transactionType, String providerid, int value, Long dateCreated, String toFrom, String syncStatus, Long dateUpdated, String stockTypeId) {
-        this.id = id;
-        this.transactionType = transactionType;
-        this.providerid = providerid;
-        this.value = value;
-        this.dateCreated = dateCreated;
-        this.toFrom = toFrom;
+    public Stock(String id, String transactionType, String providerid, int value, Long dateCreated, String toFrom, String syncStatus, Long dateUpdated, String stockTypeId) {
+        setId(id);
+        setTransactionType(transactionType);
+        setProviderid(providerid);
+        setValue(value);
+        setDateCreated(dateCreated);
+        setToFrom(toFrom);
         this.syncStatus = syncStatus;
-        this.dateUpdated = dateUpdated;
+        setDateUpdated(dateUpdated);
         this.stockTypeId = stockTypeId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getStockTypeId() {
@@ -51,68 +46,12 @@ public class Stock {
         this.stockTypeId = stockTypeId;
     }
 
-    public String getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(String transactionType) {
-        this.transactionType = transactionType;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public Long getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Long dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getToFrom() {
-        return toFrom;
-    }
-
-    public void setToFrom(String toFrom) {
-        this.toFrom = toFrom;
-    }
-
-    public Long getUpdatedAt() {
-        return dateUpdated;
-    }
-
-    public void setUpdatedAt(Long dateUpdated) {
-        this.dateUpdated = dateUpdated;
-    }
-
     public String getSyncStatus() {
         return syncStatus;
     }
 
     public void setSyncStatus(String sync_status) {
         this.syncStatus = sync_status;
-    }
-
-    public String getProviderid() {
-        return providerid;
-    }
-
-    public void setProviderid(String providerid) {
-        this.providerid = providerid;
-    }
-
-    public String getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
     }
 
     public String getChildLocationId() {
@@ -139,12 +78,8 @@ public class Stock {
         this.teamId = teamId;
     }
 
-    public Long getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(Long dateUpdated) {
-        this.dateUpdated = dateUpdated;
+    public Long getUpdatedAt() {
+        return getDateUpdated();
     }
 
     public static String getIssued() {
@@ -157,5 +92,70 @@ public class Stock {
 
     public static String getLossAdjusment() {
         return loss_adjustment;
+    }
+
+    public void setDeliveryDate(String deliveryDate) {
+        DateTime dateTime = StockUtils.getDateTimeFromString(deliveryDate);
+        if (dateTime != null) {
+            setDeliveryDate(dateTime.toDate());
+        }
+    }
+
+    public void setAccountabilityEndDate(String accountabilityEndDate) {
+        DateTime dateTime = StockUtils.getDateTimeFromString(accountabilityEndDate);
+        if (dateTime != null) {
+            setAccountabilityEndDate(dateTime.toDate());
+        }
+    }
+
+    public void setDateCreated(Long dateCreated) {
+        DateTime dateTime = StockUtils.getDateTimeFromString(String.valueOf(dateCreated));
+        if (dateTime != null) {
+            setDateCreated(dateTime);
+        }
+    }
+
+    public void setCustomProperties(@Nullable String customProperties) {
+        Map<String, String> map = new HashMap<>();
+        if (StringUtils.isNotBlank(customProperties) && customProperties.length() > 2) {
+            String temp = customProperties.substring(1, customProperties.length() - 1);
+            String[] tempArr = temp.split(",");
+            for (String s : tempArr) {
+                String[] items = StringUtils.stripAll(s.split("="));
+                if (items.length > 1) {
+                    String key = items[0];
+                    String value = items[1];
+                    map.put(key, value);
+                }
+            }
+        }
+        setCustomProperties(map);
+    }
+
+    public String getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(String stockId) {
+        this.stockId = stockId;
+    }
+
+    @Override
+    public String getId() {
+        String id = super.getId();
+        if ("-1".equals(id)) {
+            return null;
+        } else {
+            return id;
+        }
+    }
+
+    @Override
+    public void setId(String s) {
+        if (s == null) {
+            super.setId("-1");
+        } else {
+            super.setId(s);
+        }
     }
 }

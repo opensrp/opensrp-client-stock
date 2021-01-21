@@ -1,12 +1,14 @@
 package org.smartregister.stock.domain;
 
+import org.smartregister.domain.ProductCatalogue;
+
 import java.io.Serializable;
 
 /**
  * Created by samuelgithengi on 2/6/18.
  */
 
-public class StockType implements Serializable {
+public class StockType extends ProductCatalogue implements Serializable {
 
     private Long id;
     private int quantity;
@@ -14,6 +16,7 @@ public class StockType implements Serializable {
     private String openmrsParentEntityId;
     private String openmrsDateConceptId;
     private String openmrsQuantityConceptId;
+    private String photoFileLocation;
 
     public StockType(Long id, int quantity, String name, String openmrsParentEntityId, String openmrsDateConceptId, String openmrsQuantityConceptId) {
         this.id = id;
@@ -70,5 +73,17 @@ public class StockType implements Serializable {
 
     public void setOpenmrsDateConceptId(String openmrsDateConceptId) {
         this.openmrsDateConceptId = openmrsDateConceptId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPhotoFileLocation() {
+        return photoFileLocation;
+    }
+
+    public void setPhotoFileLocation(String photoFileLocation) {
+        this.photoFileLocation = photoFileLocation;
     }
 }
