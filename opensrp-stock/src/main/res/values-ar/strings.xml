@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OpenSRP Client Stock</string>
     <string name="stock_title">مراقبة المخزون</string>
@@ -7,6 +6,7 @@
     <string name="navigation_drawer_open">افتح درج التنقل</string>
     <string name="navigation_drawer_close">أغلق درج التنقل</string>
     <string name="title_activity_stock_control">StockControlActivity</string>
+
     <string name="url_separator">/</string>
     <string name="stocks_key">stocks</string>
     <string name="server_version_key">serverVersion</string>
@@ -22,6 +22,7 @@
     <string name="stock_type_id_key">vaccine_type_id</string>
     <string name="negative_balance">لا يمكن أن يكون الرصيد الجديد سالبًا.</string>
     <string name="negative_adjustment">d$1% لا يمكن ضبط المخزون بأكثر من المخزون المتوفر</string>
+
     <string name="vials">قوارير</string>
     <string name="vials_formatted">قوارير %1$d</string>
     <string name="doses">جرعات %1$d</string>
@@ -53,6 +54,7 @@
     <string name="vaccine_due_next_month">موعد التسليم s$1% الشهر القادم s$3% s$2%: </string>
     <string name="vaccine_due_next_month_text">محسوبة من الأطفال النشطين الحاليين والتي ستكون مستحقة لـ s$1% الشهر المقبل.</string>
     <string name="average_vaccine_waste_rate">متوسط معدل النفايات s$1%: </string>
+    <string name="mmr_stock"> :M/MR الأسهم</string>
     <string name="months_0_to_11">0 - 11 شهرًا</string>
     <string name="months_12_to_59">12 - 59 شهرًا</string>
     <string name="three_month_stock_used">تم استخدام الأسهم لمدة 3 أشهر</string>
@@ -60,7 +62,6 @@
     <string name="vials_14">14 قارورة</string>
     <string name="due_mmr_next_month"> :M/MR المستحق الشهر المقبل</string>
     <string name="average_mmr_waste_rate">متوسط معدل النفايات M/MR: </string>
-    <string name="mmr_stock"> :M/MR الأسهم</string>
     <string name="total_wasted_doses">إجمالي الجرعات المهدرة: d$1% جرعة</string>
     <string name="new_vaccine_balance">توازن جديد s$1%: قارورة d$2%</string>
     <string name="children_vaccinated">تم تطعيم الأطفال في هذا التاريخ: %1$d</string>
