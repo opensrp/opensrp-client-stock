@@ -14,6 +14,7 @@ public class Constants {
     public static final String NUMBER_PICKER = "number_picker";
     public static final String MEDIA_URL = "multimedia/media";
     public static final String PRODUCT_IMAGE = "product_image";
+    public static final String LAST_STOCK_TYPE_SYNC = "last_stock_type_sync";
 
     public interface StockResponseKey {
         String ID = "id";

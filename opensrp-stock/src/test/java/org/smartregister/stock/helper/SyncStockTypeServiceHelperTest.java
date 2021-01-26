@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
@@ -26,10 +28,12 @@ import org.smartregister.util.SyncUtils;
 import java.io.IOException;
 import java.util.Collections;
 
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -102,9 +106,15 @@ public class SyncStockTypeServiceHelperTest extends BaseUnitTest {
 
         String payload = "[{\"uniqueId\":7,\"productName\":\"TestUpload1\",\"isAttractiveItem\":false,\"materialNumber\":\"TestUpload1\",\"availability\":\"TestUpload1\",\"condition\":\"TestUpload1\",\"appropriateUsage\":\"TestUpload1\",\"accountabilityPeriod\":1,\"photoURL\":\"\"},{\"uniqueId\":9,\"productName\":\"Scale Mother-Child\",\"isAttractiveItem\":false,\"materialNumber\":\"S0141021\",\"availability\":\"Electronic scale for weighing adults and children, for use up to 250kg\",\"condition\":\"Supplied with customer-replaceable batteries. \",\"appropriateUsage\":\"Scale allows a child's weight to be measured while being held by an adult.\",\"accountabilityPeriod\":36,\"photoURL\":\"\",\"serverVersion\":4}]";
 
-        Response<String> response = new Response<>(ResponseStatus.success, payload);
+        doAnswer(new Answer() {
+            int count = -1;
 
-        doReturn(response).when(httpAgent).fetch(anyString());
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                count++;
+                return count == 0 ? new Response<>(ResponseStatus.success, payload) : new Response<>(ResponseStatus.failure, payload);
+            }
+        }).when(httpAgent).fetch(anyString());
 
         doReturn("").when(syncStockTypeServiceHelper).getFormattedBaseUrl();
 
@@ -116,7 +126,7 @@ public class SyncStockTypeServiceHelperTest extends BaseUnitTest {
 
         syncStockTypeServiceHelper.pullStockTypeFromServer();
 
-        verify(syncStockTypeServiceHelper).saveAllStockTypes(eq(payload));
+        verify(syncStockTypeServiceHelper).saveAllStockTypes(anyList());
 
         verify(syncStockTypeServiceHelper).downloadStockTypeImages();
     }
