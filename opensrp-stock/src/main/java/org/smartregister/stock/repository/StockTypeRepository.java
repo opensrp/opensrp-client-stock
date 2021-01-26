@@ -219,10 +219,10 @@ public class StockTypeRepository extends BaseRepository {
         return stockType;
     }
 
-    public void updatePhotoLocation(Long id, String location) {
+    public void updatePhotoLocation(Long uniqueId, String photoLocation) {
         SQLiteDatabase database = getWritableDatabase();
         database.execSQL("UPDATE " + STOCK_TYPE_TABLE_NAME + " SET " + PHOTO_FILE_LOCATION + " = ? " +
-                "WHERE " + ID_COLUMN + " = ?", new String[]{location, id.toString()});
+                "WHERE " + UNIQUE_ID + " = ?", new String[]{photoLocation, uniqueId.toString()});
     }
 
     private ContentValues createValuesFor(@NonNull StockType stockType) {

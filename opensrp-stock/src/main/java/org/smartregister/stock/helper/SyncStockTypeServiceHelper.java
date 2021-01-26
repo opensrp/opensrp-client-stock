@@ -91,9 +91,7 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
                             return;
                         }
                         saveAllStockTypes(stockTypes);
-                        if (stockSyncConfiguration.shouldFetchStockTypeImages()) {
-                            downloadStockTypeImages();
-                        }
+
                         sendSyncStatusBroadcastMessage(FetchStatus.fetched);
                         Long highestTimestamp = getHighestTimestampFromStockTypePayLoad(stockTypes);
                         SharedPreferences.Editor editor = preferences.edit();
@@ -124,10 +122,13 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
 
     public void saveAllStockTypes(@NonNull List<StockType> stockTypes) {
         stockTypeRepository.batchInsertStockTypes(stockTypes);
+
+        if (stockSyncConfiguration.shouldFetchStockTypeImages()) {
+            stockLibrary.getAppExecutors().networkIO().execute(() -> downloadStockTypeImages(stockTypes));
+        }
     }
 
-    public void downloadStockTypeImages() {
-        List<StockType> stockTypes = stockTypeRepository.findAllWithUnDownloadedPhoto();
+    public void downloadStockTypeImages(@NonNull List<StockType> stockTypes) {
         for (StockType stockType : stockTypes) {
             String photoId = String.valueOf(stockType.getUniqueId());
             String photoUrl = format("{0}/{1}/{2}",
@@ -139,7 +140,7 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
             Response<DownloadStatus> status = httpAgent.downloadFromURL(photoUrl, fileName, detailsMap);
             DownloadStatus downloadStatus = status.payload();
             if (downloadStatus == downloadStatus.downloaded) {
-                stockTypeRepository.updatePhotoLocation(stockType.getId(), detailsMap.get(AllConstants.DownloadFileConstants.FILE_PATH));
+                stockTypeRepository.updatePhotoLocation(stockType.getUniqueId(), detailsMap.get(AllConstants.DownloadFileConstants.FILE_PATH));
             }
         }
     }

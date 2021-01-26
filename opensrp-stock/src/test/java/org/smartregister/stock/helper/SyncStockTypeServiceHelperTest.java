@@ -100,6 +100,7 @@ public class SyncStockTypeServiceHelperTest extends BaseUnitTest {
 
     @Test
     public void testPullStockTypeFromServerShouldInvokeRequiredMethodsIfResponseNotEmpty() {
+
         SyncUtils syncUtilsSpy = spy(new SyncUtils(RuntimeEnvironment.application));
 
         ReflectionHelpers.setField(syncStockTypeServiceHelper, "syncUtils", syncUtilsSpy);
@@ -122,20 +123,17 @@ public class SyncStockTypeServiceHelperTest extends BaseUnitTest {
 
         doReturn(false).when(syncStockTypeServiceHelper).isNetworkAvailable();
 
-        doReturn(true).when(stockSyncConfiguration).shouldFetchStockTypeImages();
+        doReturn(false).when(stockSyncConfiguration).shouldFetchStockTypeImages();
 
         syncStockTypeServiceHelper.pullStockTypeFromServer();
 
         verify(syncStockTypeServiceHelper).saveAllStockTypes(anyList());
-
-        verify(syncStockTypeServiceHelper).downloadStockTypeImages();
     }
 
     @Test
-    public void testDownloadStockTypeImagesShouldFetchImagesOfStockTypes() {
+    public void testDownloadStockTypeImagesShouldFetchImagesOfStockTypes() throws InterruptedException {
         StockType stockType = new StockType(1l, 0, "", "", "", "");
         stockType.setUniqueId(2l);
-        doReturn(Collections.singletonList(stockType)).when(stockTypeRepository).findAllWithUnDownloadedPhoto();
 
         Response<DownloadStatus> response = new Response<>(ResponseStatus.success, DownloadStatus.downloaded);
 
@@ -147,9 +145,9 @@ public class SyncStockTypeServiceHelperTest extends BaseUnitTest {
 
         doReturn(true).when(stockSyncConfiguration).shouldFetchStockTypeImages();
 
-        syncStockTypeServiceHelper.downloadStockTypeImages();
+        syncStockTypeServiceHelper.downloadStockTypeImages(Collections.singletonList(stockType));
 
-        verify(stockTypeRepository).updatePhotoLocation(eq(stockType.getId()), isNull());
+        verify(stockTypeRepository).updatePhotoLocation(eq(stockType.getUniqueId()), isNull());
 
     }
 
