@@ -5,7 +5,6 @@ import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
@@ -27,6 +26,7 @@ import org.smartregister.stock.util.Constants;
 import org.smartregister.sync.helper.BaseHelper;
 import org.smartregister.util.NetworkUtils;
 import org.smartregister.util.SyncUtils;
+import org.smartregister.util.Utils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
                     Timber.e(e);
                 }
             } else {
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences preferences = Utils.getAllSharedPreferences().getPreferences();
                 while (true) {
                     long timestamp = preferences.getLong(Constants.LAST_STOCK_TYPE_SYNC, 0);
                     if (timestamp > 0) {
@@ -93,6 +93,7 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
                         saveAllStockTypes(stockTypes);
 
                         sendSyncStatusBroadcastMessage(FetchStatus.fetched);
+
                         Long highestTimestamp = getHighestTimestampFromStockTypePayLoad(stockTypes);
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putLong(Constants.LAST_STOCK_TYPE_SYNC, highestTimestamp);
