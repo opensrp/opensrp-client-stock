@@ -23,3 +23,5 @@ project.properties
 .settings
 build/
 opensrp-stock/reports/
+opensrp-stock/jacoco.exec
+openlmis-stock/jacoco.exec

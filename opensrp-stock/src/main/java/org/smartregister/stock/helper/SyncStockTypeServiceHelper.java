@@ -4,11 +4,13 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.AllConstants;
 import org.smartregister.CoreLibrary;
 import org.smartregister.domain.DownloadStatus;
@@ -24,6 +26,7 @@ import org.smartregister.stock.util.Constants;
 import org.smartregister.sync.helper.BaseHelper;
 import org.smartregister.util.NetworkUtils;
 import org.smartregister.util.SyncUtils;
+import org.smartregister.util.Utils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -69,32 +72,64 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
                     Timber.e(e);
                 }
             } else {
-                sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
-                String baseUrl = getFormattedBaseUrl();
-                Response<String> response = httpAgent.fetch(String.format("%s%s", baseUrl, SYNC_URL));
-                if (response != null && response.payload() != null) {
-                    saveAllStockTypes(response.payload());
-                    if (stockSyncConfiguration.shouldFetchStockTypeImages()) {
-                        downloadStockTypeImages();
+                SharedPreferences preferences = Utils.getAllSharedPreferences().getPreferences();
+                while (true) {
+                    long timestamp = preferences.getLong(Constants.LAST_STOCK_TYPE_SYNC, 0);
+                    if (timestamp > 0) {
+                        timestamp += 1;
                     }
-                    sendSyncStatusBroadcastMessage(FetchStatus.fetched);
+                    sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
+                    String baseUrl = getFormattedBaseUrl();
+                    Response<String> response = httpAgent.fetch(String.format("%s%s?serverVersion=%s", baseUrl, SYNC_URL, timestamp));
+                    if (response != null && response.payload() != null) {
+                        if (response.isFailure() || StringUtils.isBlank(response.payload())) {
+                            return;
+                        }
+                        List<StockType> stockTypes = gson.fromJson(response.payload(), new TypeToken<List<StockType>>() {
+                        }.getType());
+                        if (stockTypes == null || stockTypes.isEmpty()) {
+                            return;
+                        }
+                        saveAllStockTypes(stockTypes);
+
+                        sendSyncStatusBroadcastMessage(FetchStatus.fetched);
+
+                        Long highestTimestamp = getHighestTimestampFromStockTypePayLoad(stockTypes);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putLong(Constants.LAST_STOCK_TYPE_SYNC, highestTimestamp);
+                        editor.commit();
+                    } else {
+                        return;
+                    }
                 }
             }
         }
+    }
+
+    private Long getHighestTimestampFromStockTypePayLoad(List<StockType> stockTypes) {
+        Long maxServerVersion = 0L;
+        for (StockType stockType : stockTypes) {
+            Long serverVersion = stockType.getServerVersion();
+            if (serverVersion != null && serverVersion > maxServerVersion) {
+                maxServerVersion = serverVersion;
+            }
+        }
+        return maxServerVersion;
     }
 
     protected boolean isNetworkAvailable() {
         return !NetworkUtils.isNetworkAvailable();
     }
 
-    public void saveAllStockTypes(@NonNull String payload) {
-        List<StockType> stockTypes = gson.fromJson(payload, new TypeToken<List<StockType>>() {
-        }.getType());
+    public void saveAllStockTypes(@NonNull List<StockType> stockTypes) {
         stockTypeRepository.batchInsertStockTypes(stockTypes);
+
+        if (stockSyncConfiguration.shouldFetchStockTypeImages()) {
+            stockLibrary.getAppExecutors().networkIO().execute(() -> downloadStockTypeImages(stockTypes));
+        }
     }
 
-    public void downloadStockTypeImages() {
-        List<StockType> stockTypes = stockTypeRepository.findAllWithUnDownloadedPhoto();
+    public void downloadStockTypeImages(@NonNull List<StockType> stockTypes) {
         for (StockType stockType : stockTypes) {
             String photoId = String.valueOf(stockType.getUniqueId());
             String photoUrl = format("{0}/{1}/{2}",
@@ -106,7 +141,7 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
             Response<DownloadStatus> status = httpAgent.downloadFromURL(photoUrl, fileName, detailsMap);
             DownloadStatus downloadStatus = status.payload();
             if (downloadStatus == downloadStatus.downloaded) {
-                stockTypeRepository.updatePhotoLocation(stockType.getId(), detailsMap.get(AllConstants.DownloadFileConstants.FILE_PATH));
+                stockTypeRepository.updatePhotoLocation(stockType.getUniqueId(), detailsMap.get(AllConstants.DownloadFileConstants.FILE_PATH));
             }
         }
     }

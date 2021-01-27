@@ -45,6 +45,8 @@ public class StockTypeRepository extends BaseRepository {
     public static final String OPENMRS_QUANTITY_CONCEPT_ID = "openmrs_quantity_concept_id";
     public static final String PHOTO_URL = "photo_url";
     public static final String PHOTO_FILE_LOCATION = "photo_file_location";
+    public static final String SERVER_VERSION = "server_version";
+
 
     private static final String STOCK_TYPE_SQL = "CREATE TABLE stock_types (" +
             ID_COLUMN + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
@@ -59,12 +61,13 @@ public class StockTypeRepository extends BaseRepository {
             ACCOUNTABILITY_PERIOD + " VARCHAR NULL," +
             PHOTO_URL + " VARCHAR NULL," +
             PHOTO_FILE_LOCATION + " VARCHAR NULL," +
+            SERVER_VERSION + " INTEGER NULL," +
             OPENMRS_PARENT_ENTITIY_ID + " VARCHAR NULL," +
             OPENMRS_DATE_CONCEPT_ID + " VARCHAR NULL," +
             OPENMRS_QUANTITY_CONCEPT_ID + " VARCHAR)";
 
     public static final String[] STOCK_Type_TABLE_COLUMNS = {ID_COLUMN, UNIQUE_ID, QUANTITY, NAME, MATERIAL_NUMBER, IS_ATTRACTIVE_ITEM,
-            AVAILABILITY, CONDITION, APPROPRIATE_USAGE, ACCOUNTABILITY_PERIOD, OPENMRS_PARENT_ENTITIY_ID, OPENMRS_DATE_CONCEPT_ID,
+            AVAILABILITY, CONDITION, APPROPRIATE_USAGE, ACCOUNTABILITY_PERIOD, SERVER_VERSION, OPENMRS_PARENT_ENTITIY_ID, OPENMRS_DATE_CONCEPT_ID,
             OPENMRS_QUANTITY_CONCEPT_ID, PHOTO_URL, PHOTO_FILE_LOCATION};
 
     public static void createTable(SQLiteDatabase database) {
@@ -212,13 +215,14 @@ public class StockTypeRepository extends BaseRepository {
         stockType.setUniqueId(cursor.getLong(cursor.getColumnIndex(UNIQUE_ID)));
         stockType.setPhotoURL(cursor.getString(cursor.getColumnIndex(PHOTO_URL)));
         stockType.setPhotoFileLocation(cursor.getString(cursor.getColumnIndex(PHOTO_FILE_LOCATION)));
+        stockType.setServerVersion(cursor.getLong(cursor.getColumnIndex(SERVER_VERSION)));
         return stockType;
     }
 
-    public void updatePhotoLocation(Long id, String location) {
+    public void updatePhotoLocation(Long uniqueId, String photoLocation) {
         SQLiteDatabase database = getWritableDatabase();
         database.execSQL("UPDATE " + STOCK_TYPE_TABLE_NAME + " SET " + PHOTO_FILE_LOCATION + " = ? " +
-                "WHERE " + ID_COLUMN + " = ?", new String[]{location, id.toString()});
+                "WHERE " + UNIQUE_ID + " = ?", new String[]{photoLocation, uniqueId.toString()});
     }
 
     private ContentValues createValuesFor(@NonNull StockType stockType) {
@@ -234,6 +238,7 @@ public class StockTypeRepository extends BaseRepository {
         values.put(MATERIAL_NUMBER, stockType.getMaterialNumber());
         values.put(UNIQUE_ID, stockType.getUniqueId());
         values.put(PHOTO_URL, StringUtils.isNotBlank(stockType.getPhotoURL()) ? stockType.getPhotoURL() : null);
+        values.put(SERVER_VERSION, stockType.getServerVersion());
         values.put(OPENMRS_DATE_CONCEPT_ID, stockType.getOpenmrsDateConceptId());
         values.put(OPENMRS_QUANTITY_CONCEPT_ID, stockType.getOpenmrsQuantityConceptId());
         values.put(OPENMRS_PARENT_ENTITIY_ID, stockType.getOpenmrsParentEntityId());
@@ -262,6 +267,11 @@ public class StockTypeRepository extends BaseRepository {
                 return 0;
             }
         }
+    }
+
+    public static void migrationAddServerVersionColumn(@NonNull SQLiteDatabase
+                                                               sqLiteDatabase) {
+        DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, SERVER_VERSION, "INTEGER");
     }
 
     public static void migrationAdditionalProductProperties(@NonNull SQLiteDatabase
