@@ -152,7 +152,8 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
                         // Re-hide fields not relevant, since they will be enabled
                         if (!TextUtils.isEmpty(viewKey)) {
-                            refreshSkipLogic(viewKey, null, false);
+                            boolean isForNextStep = getmJSONObject().getJSONObject(stepName).has(JsonFormConstants.NEXT);
+                            refreshSkipLogic(viewKey, null, false, stepName, isForNextStep);
                         }
                     }
                 }

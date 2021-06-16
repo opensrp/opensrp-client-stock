@@ -113,7 +113,7 @@ dependencies {
 
     jarJar 'com.ibm.fhir:fhir-model:4.2.3'
 
-    implementation('org.smartregister:opensrp-client-native-form:1.14.6.1-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:2.1.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'recyclerview-v7'
         exclude group: 'org.jacoco', module: 'org.jacoco.agent'
@@ -123,7 +123,7 @@ dependencies {
         exclude group: 'androidx.core', module: 'core'
     }
 
-    api('org.smartregister:opensrp-client-core:4.1.6-SNAPSHOT@aar') {
+    api('org.smartregister:opensrp-client-core:4.3.7-SNAPSHOT@aar') {
         transitive true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.github.johnkil.print', module: 'print'

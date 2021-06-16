@@ -66,6 +66,7 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/INDEX.LIST'
         exclude 'androidsupportmultidexversion.txt'
         exclude("META-INF/*.kotlin_module")
     }

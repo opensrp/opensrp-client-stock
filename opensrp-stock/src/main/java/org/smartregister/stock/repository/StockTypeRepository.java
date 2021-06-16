@@ -277,6 +277,7 @@ public class StockTypeRepository extends BaseRepository {
     public static void migrationAdditionalProductProperties(@NonNull SQLiteDatabase
                                                                     sqLiteDatabase) {
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, MATERIAL_NUMBER, "VARCHAR");
+        DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, AVAILABILITY, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, APPROPRIATE_USAGE, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, IS_ATTRACTIVE_ITEM, "VARCHAR");
         DatabaseMigrationUtils.addColumnIfNotExists(sqLiteDatabase, STOCK_TYPE_TABLE_NAME, CONDITION, "VARCHAR");

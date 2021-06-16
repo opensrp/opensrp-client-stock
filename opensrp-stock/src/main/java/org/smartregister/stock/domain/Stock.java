@@ -7,8 +7,11 @@ import org.joda.time.DateTime;
 import org.smartregister.stock.util.StockUtils;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+
+import timber.log.Timber;
 
 /**
  * Created by samuelgithengi on 2/6/18.
@@ -36,6 +39,7 @@ public class Stock extends org.smartregister.domain.Stock implements Serializabl
         this.syncStatus = syncStatus;
         setDateUpdated(dateUpdated);
         this.stockTypeId = stockTypeId;
+        setDate_created(dateCreated);
     }
 
     public String getStockTypeId() {
@@ -141,21 +145,17 @@ public class Stock extends org.smartregister.domain.Stock implements Serializabl
     }
 
     @Override
-    public String getId() {
-        String id = super.getId();
-        if ("-1".equals(id)) {
-            return null;
-        } else {
-            return id;
-        }
-    }
-
-    @Override
     public void setId(String s) {
-        if (s == null) {
-            super.setId("-1");
-        } else {
+        try {
+            Field field = super.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredField("id");
+            field.setAccessible(true);
+            field.set(this, s);
+        } catch (NoSuchFieldException e) {
             super.setId(s);
+            Timber.e(e);
+        } catch (IllegalAccessException e) {
+            super.setId(s);
+            Timber.e(e);
         }
     }
 }
