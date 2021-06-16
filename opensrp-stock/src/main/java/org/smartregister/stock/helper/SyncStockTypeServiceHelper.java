@@ -74,10 +74,8 @@ public class SyncStockTypeServiceHelper extends BaseHelper {
             } else {
                 SharedPreferences preferences = Utils.getAllSharedPreferences().getPreferences();
                 while (true) {
-                    long timestamp = preferences.getLong(Constants.LAST_STOCK_TYPE_SYNC, 0);
-                    if (timestamp > 0) {
-                        timestamp += 1;
-                    }
+                    long timestamp = preferences.getLong(Constants.LAST_STOCK_TYPE_SYNC, 0) + 1;
+
                     sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
                     String baseUrl = getFormattedBaseUrl();
                     Response<String> response = httpAgent.fetch(String.format("%s%s?serverVersion=%s", baseUrl, SYNC_URL, timestamp));

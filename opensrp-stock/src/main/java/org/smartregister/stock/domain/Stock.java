@@ -39,6 +39,7 @@ public class Stock extends org.smartregister.domain.Stock implements Serializabl
         this.syncStatus = syncStatus;
         setDateUpdated(dateUpdated);
         this.stockTypeId = stockTypeId;
+        setDate_created(dateCreated);
     }
 
     public String getStockTypeId() {

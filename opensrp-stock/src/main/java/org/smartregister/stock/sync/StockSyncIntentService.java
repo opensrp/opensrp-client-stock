@@ -111,8 +111,10 @@ public class StockSyncIntentService extends IntentService {
 
         while (true) {
             long timestamp = preferences.getLong(LAST_STOCK_SYNC, 0);
-            if (timestamp > 0) {
-                timestamp += 1;
+            if (stockSyncConfiguration.syncStockByPost()) {
+                if (timestamp > 0) {
+                    timestamp += 1;
+                }
             }
             String timeStampString = String.valueOf(timestamp);
             String url = getSyncUrl(baseUrl, timeStampString);
@@ -255,7 +257,7 @@ public class StockSyncIntentService extends IntentService {
                 stock.put(context.getString(R.string.stock_type_id_key), stocks.get(i).getStockTypeId());
                 stock.put(context.getString(R.string.transaction_type_key), stocks.get(i).getTransactionType());
                 stock.put(context.getString(R.string.providerid_key), stocks.get(i).getProviderid());
-                stock.put(context.getString(R.string.date_created_key), stocks.get(i).getDateCreated());
+                stock.put(context.getString(R.string.date_created_key), stocks.get(i).getDate_created());
                 stock.put(context.getString(R.string.value_key), stocks.get(i).getValue());
                 stock.put(context.getString(R.string.to_from_key), stocks.get(i).getToFrom());
                 stock.put(context.getString(R.string.date_updated_key), stocks.get(i).getUpdatedAt());

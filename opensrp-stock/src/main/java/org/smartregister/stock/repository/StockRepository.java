@@ -172,7 +172,7 @@ public class StockRepository extends BaseRepository {
     private ContentValues createValuesFor(Stock stock) {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, stock.getId());
-        values.put(STOCK_TYPE_ID, String.valueOf(stock.getStockTypeId() == null ? stock.getIdentifier() : "0"));
+        values.put(STOCK_TYPE_ID, stock.getStockTypeId());
         values.put(TRANSACTION_TYPE, stock.getTransactionType());
         values.put(PROVIDER_ID, stock.getProviderid());
         values.put(VALUE, stock.getValue());
@@ -286,7 +286,7 @@ public class StockRepository extends BaseRepository {
 
     public int getBalanceBefore(Stock stock) {
         SQLiteDatabase database = getReadableDatabase();
-        Cursor c = database.rawQuery("Select sum(value) from stocks Where date_updated <" + stock.getUpdatedAt() + " and date_created <=" + new DateTime(stock.getDateCreated()).toDate().getTime() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
+        Cursor c = database.rawQuery("Select sum(value) from stocks Where date_updated <" + stock.getUpdatedAt() + " and date_created <=" + stock.getDate_created() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
         if (c.getCount() == 0) {
             c.close();
             return 0;
@@ -307,7 +307,7 @@ public class StockRepository extends BaseRepository {
         int sum = 0;
         SQLiteDatabase database = getReadableDatabase();
 
-        Cursor c = database.rawQuery("Select sum(value) from stocks Where date_created = " + stock.getDateCreated() + " and date_updated <" + stock.getUpdatedAt() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
+        Cursor c = database.rawQuery("Select sum(value) from stocks Where date_created = " + stock.getDate_created() + " and date_updated <" + stock.getUpdatedAt() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
         if (c.getCount() == 0) {
             sum = 0;
         } else {
@@ -319,7 +319,7 @@ public class StockRepository extends BaseRepository {
             }
         }
         c.close();
-        c = database.rawQuery("Select sum(value) from stocks Where date_created <" + stock.getDateCreated() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
+        c = database.rawQuery("Select sum(value) from stocks Where date_created <" + stock.getDate_created() + " and " + STOCK_TYPE_ID + " = " + stock.getStockTypeId(), null);
         if (c.getCount() == 0) {
             sum = sum + 0;
         } else {
