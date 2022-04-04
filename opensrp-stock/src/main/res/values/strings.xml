@@ -67,4 +67,11 @@
     <string name="children_vaccinated">Children vaccinated on this date: %1$d</string>
     <string name="estimated_vials_issued">Estimated vials issued on this date: %1$d</string>
     <string name="stock_quantity_error">Vials used cannot be more than vials in stock. Record received stock to proceed.</string>
+    <string name="stock_quantity_error_doses">Doses used cannot be more than doses in stock. Record received stock to proceed.</string>
+    <string name="note_current_control_doses">Note: stock numbers are in doses</string>
+    <string name="doses_unformatted">doses</string>
+    <string name="new_vaccine_balance_doses">New %1$s balance: %2$d doses</string>
+    <string name="estimated_doses_issued">Estimated doses issued on this date: %1$d</string>
+    <string name="doses_wasted_note_doses">Unused doses in issued doses + wasted doses</string>
+
 </resources>

@@ -1,5 +1,7 @@
 package org.smartregister.stock.adapter;
 
+import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +19,6 @@ import org.smartregister.stock.repository.StockRepository;
 import java.util.Locale;
 
 import timber.log.Timber;
-
-import static org.smartregister.stock.util.Constants.ARG_STOCK_TYPE;
 
 /**
  * Created by samuelgithengi on 2/19/18.
@@ -53,6 +53,8 @@ public class StockGridAdapter extends BaseAdapter {
             TextView name = (TextView) gridView.findViewById(R.id.vaccine_type_name);
             TextView doses = (TextView) gridView.findViewById(R.id.doses);
             TextView vials = (TextView) gridView.findViewById(R.id.vials);
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation())
+                vials.setVisibility(View.GONE);
 
             // set image based on selected text
             final StockType stockType = stockTypes[position];

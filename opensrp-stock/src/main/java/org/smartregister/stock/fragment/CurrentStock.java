@@ -1,5 +1,9 @@
 package org.smartregister.stock.fragment;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static java.text.MessageFormat.format;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -23,6 +27,8 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,16 +45,14 @@ import org.smartregister.stock.domain.Stock;
 import org.smartregister.stock.provider.StockRowSmartClientsProvider;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockTypeRepository;
+import org.smartregister.stock.util.Constants;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
+import org.smartregister.view.customcontrols.CustomFontTextView;
 
 import java.util.Date;
 
 import timber.log.Timber;
-
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static java.text.MessageFormat.format;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -180,7 +184,10 @@ public class CurrentStock extends Fragment implements
     private void getValueForStock(View view) {
         TextView stockvalue = (TextView) view.findViewById(R.id.vials);
         try {
-            stockvalue.setText(String.format(view.getResources().getString(R.string.vials_formatted), stockRepository.getCurrentStockNumber(((StockControlActivity) getActivity()).stockType)));
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation()) {
+                stockvalue.setText(String.format(view.getResources().getString(R.string.doses), stockRepository.getCurrentStockNumber(((StockControlActivity) getActivity()).stockType)));
+            } else
+                stockvalue.setText(String.format(view.getResources().getString(R.string.vials_formatted), stockRepository.getCurrentStockNumber(((StockControlActivity) getActivity()).stockType)));
         } catch (Exception e) {
             Timber.e(e, "Error formatting language string");
         }
@@ -247,13 +254,25 @@ public class CurrentStock extends Fragment implements
             JSONObject form = FormUtils.getInstance(getActivity().getApplicationContext()).getFormJson("stock_issued_form");
             String vaccineName = ((StockControlActivity) getActivity()).stockType.getName();
             String formMetadata = form.toString().replace("[vaccine]", vaccineName);
-            int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccineName);
-            formMetadata = formMetadata.replace("[number_of_doses]", String.valueOf(dosesPerVial));
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation())
+                formMetadata = getUpdateDosesWastedNote(formMetadata);
+            else {
+                int dosesPerVial = vaccineTypeRepository.getDosesPerVial(vaccineName);
+                formMetadata = formMetadata.replace("[number_of_doses]", String.valueOf(dosesPerVial));
+            }
             intent.putExtra("json", formMetadata);
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private String getUpdateDosesWastedNote(String formMetadata) throws JSONException{
+        JSONObject replacedForm = new JSONObject(formMetadata);
+        JSONArray fields = JsonFormUtils.fields(replacedForm);
+        JSONObject dosesWasttedNote = JsonFormUtils.getFieldJSONObject(fields, Constants.FormKey.DOSES_WASTED_NOTE);
+        dosesWasttedNote.put(JsonFormConstants.TEXT, getString(R.string.doses_wasted_note_doses));
+        return replacedForm.toString();
     }
 
     @Override
@@ -628,7 +647,12 @@ public class CurrentStock extends Fragment implements
 
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            toaddNote.addView(getActivity().getLayoutInflater().inflate(R.layout.current_stock_note, null), p);
+            View stockNoteView = getActivity().getLayoutInflater().inflate(R.layout.current_stock_note, null);
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation()) {
+                CustomFontTextView tvBalance = stockNoteView.findViewById(R.id.balance);
+                tvBalance.setText(getString(R.string.note_current_control_doses));
+            }
+            toaddNote.addView(stockNoteView, p);
 
             clientsView.addFooterView(toaddNote);
             refresh();

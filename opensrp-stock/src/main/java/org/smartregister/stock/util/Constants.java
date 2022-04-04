@@ -29,4 +29,12 @@ public class Constants {
         String LOCATION_ID = "locationId";
         String LOCATIONS = "locations";
     }
+
+    public static class FormKey {
+        public static final String DOSES_WASTED_NOTE = "Doses_Wasted_Note";
+    }
+
+    public static class AppProperties {
+        public static final String USE_ONLY_DOSES_FOR_CALCULATION = "use.only.doses.for.calculation";
+    }
 }

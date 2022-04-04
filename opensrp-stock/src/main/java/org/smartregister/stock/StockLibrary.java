@@ -6,6 +6,7 @@ import org.smartregister.stock.configuration.StockSyncConfiguration;
 import org.smartregister.stock.repository.StockExternalRepository;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockTypeRepository;
+import org.smartregister.stock.util.Constants;
 import org.smartregister.util.AppExecutors;
 
 /**
@@ -91,5 +92,9 @@ public class StockLibrary {
             stockSyncConfiguration = new StockSyncConfiguration();
         }
         return stockSyncConfiguration;
+    }
+
+    public boolean useOnlyDosesForCalculation() {
+        return StockLibrary.getInstance().getContext().getAppProperties().isTrue(Constants.AppProperties.USE_ONLY_DOSES_FOR_CALCULATION);
     }
 }

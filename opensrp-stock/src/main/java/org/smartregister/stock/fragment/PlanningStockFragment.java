@@ -153,7 +153,10 @@ public class PlanningStockFragment extends Fragment {
     private void vaccinesDueNextMonth(View view) {
         int dosesPerVial = ((StockControlActivity) getActivity()).stockType.getQuantity();
         try {
-            ((TextView) view.findViewById(R.id.due_vacc_next_month_value)).setText(String.format(getString(R.string.vials_formatted), (int) Math.ceil((double) processVaccinesDueNextMonth() / dosesPerVial)));
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation())
+                ((TextView) view.findViewById(R.id.due_vacc_next_month_value)).setText(String.format(getString(R.string.doses), (int) Math.ceil((double) processVaccinesDueNextMonth() / dosesPerVial)));
+            else
+                ((TextView) view.findViewById(R.id.due_vacc_next_month_value)).setText(String.format(getString(R.string.vials_formatted), (int) Math.ceil((double) processVaccinesDueNextMonth() / dosesPerVial)));
         } catch (Exception e) {
             Timber.e(e, "Error formatting language string");
         }
@@ -195,7 +198,10 @@ public class PlanningStockFragment extends Fragment {
 
         lastMonthLabel.setText(lastMonth + " " + lastMonthYear);
         try {
-            lastMonthVialsUsed.setText(String.format(getString(R.string.vials_formatted), stockIssuedLastMonth));
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation())
+                lastMonthVialsUsed.setText(String.format(getString(R.string.doses), stockIssuedLastMonth));
+            else
+                lastMonthVialsUsed.setText(String.format(getString(R.string.vials_formatted), stockIssuedLastMonth));
         } catch (Exception e) {
             Timber.e(e, "Error formatting language string");
         }
@@ -210,7 +216,10 @@ public class PlanningStockFragment extends Fragment {
 
         secondLastMonthLabel.setText(secondLastMonth + " " + secondLastMonthYear);
         try {
-            secondLastMonthVialsUsed.setText(String.format(getString(R.string.vials_formatted), stockIssued2ndLastMonth));
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation())
+                secondLastMonthVialsUsed.setText(String.format(getString(R.string.doses), stockIssued2ndLastMonth));
+            else
+                secondLastMonthVialsUsed.setText(String.format(getString(R.string.vials_formatted), stockIssued2ndLastMonth));
         } catch (Exception e) {
             Timber.e(e, "Error formatting language string");
         }
@@ -224,7 +233,10 @@ public class PlanningStockFragment extends Fragment {
 
         thirdMonthLabel.setText(thirdLastMonth + " " + thirdLastMonthYear);
         try {
-            thirdMonthVialsUsed.setText(String.format(getString(R.string.vials_formatted), stockIssued3rdLastMonth));
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation())
+                thirdMonthVialsUsed.setText(String.format(getString(R.string.doses), stockIssued3rdLastMonth));
+            else
+                thirdMonthVialsUsed.setText(String.format(getString(R.string.vials_formatted), stockIssued3rdLastMonth));
         } catch (Exception e) {
             Timber.e(e, "Error formatting language string");
         }
@@ -232,7 +244,10 @@ public class PlanningStockFragment extends Fragment {
 
         int threeMonthAverageValue = (int) Math.ceil((double) (stockIssuedLastMonth + stockIssued2ndLastMonth + stockIssued3rdLastMonth) / 3);
         try {
-            threeMonthAverage.setText(String.format(getString(R.string.vials_formatted), threeMonthAverageValue));
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation())
+                threeMonthAverage.setText(String.format(getString(R.string.doses), threeMonthAverageValue));
+            else
+                threeMonthAverage.setText(String.format(getString(R.string.vials_formatted), threeMonthAverageValue));
         } catch (Exception e) {
             Timber.e(e, "Error formatting language string");
         }
@@ -264,9 +279,12 @@ public class PlanningStockFragment extends Fragment {
     private void getValueForStock(View view) {
         TextView stockValue = (TextView) view.findViewById(R.id.vials);
         try {
-            stockValue.setText(String.format(getString(R.string.vials_formatted), StockLibrary.getInstance().getStockRepository().getCurrentStockNumber(((StockControlActivity) getActivity()).stockType)));
+            if (StockLibrary.getInstance().useOnlyDosesForCalculation())
+                stockValue.setText(String.format(getString(R.string.doses), StockLibrary.getInstance().getStockRepository().getCurrentStockNumber(((StockControlActivity) getActivity()).stockType)));
+            else
+                stockValue.setText(String.format(getString(R.string.vials_formatted), StockLibrary.getInstance().getStockRepository().getCurrentStockNumber(((StockControlActivity) getActivity()).stockType)));
         } catch (Exception e) {
-            Timber.e(e, "Error formatting language string");
+            Timber.e(e, "Errorformatting language string");
         }
     }
 
