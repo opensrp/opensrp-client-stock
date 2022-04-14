@@ -355,10 +355,10 @@ public class CurrentStock extends Fragment implements
             JSONArray fields = JsonFormUtils.fields(jsonForm);
             String dateStockReceived = JsonFormUtils.getFieldValue(fields, "Date_Stock_Received");
             String receivedStockFrom = JsonFormUtils.getFieldValue(fields, "Received_Stock_From");
-            if (receivedStockFrom.equalsIgnoreCase("DHO")) {
-                receivedStockFrom = JsonFormUtils.getFieldValue(fields, "Received_Stock_From");
-            } else {
+            if (receivedStockFrom.equalsIgnoreCase("Other")) {
                 receivedStockFrom = JsonFormUtils.getFieldValue(fields, "Received_Stock_From_Other");
+            } else {
+                receivedStockFrom = JsonFormUtils.getFieldValue(fields, "Received_Stock_From");
             }
             String vialsReceived = JsonFormUtils.getFieldValue(fields, "Vials_Received");
 
