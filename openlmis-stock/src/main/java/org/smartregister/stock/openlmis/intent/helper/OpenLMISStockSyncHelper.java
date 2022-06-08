@@ -2,12 +2,12 @@ package org.smartregister.stock.openlmis.intent.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.CoreLibrary;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
@@ -51,7 +51,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
     @Override
     protected String pullFromServer(String url) {
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences preferences = CoreLibrary.getInstance().context().allSharedPreferences().getPreferences();
 
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION_STOCK, 0);
         String timeStampString = String.valueOf(timestamp);
@@ -78,7 +78,7 @@ public class OpenLMISStockSyncHelper extends BaseSyncHelper {
         Long highestTimestamp = getHighestTimestampFromStockPayLoad(jsonPayload);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(PREV_SYNC_SERVER_VERSION_STOCK, highestTimestamp + 1);
-        editor.commit();
+        editor.apply();
         boolean isEmptyResponse = true;
         for (int j = 0; j < Stock_arrayList.size(); j++) {
             isEmptyResponse = false;

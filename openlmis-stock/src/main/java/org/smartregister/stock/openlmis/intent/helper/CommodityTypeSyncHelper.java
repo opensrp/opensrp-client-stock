@@ -2,11 +2,11 @@ package org.smartregister.stock.openlmis.intent.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.smartregister.CoreLibrary;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
@@ -42,7 +42,7 @@ public class CommodityTypeSyncHelper extends BaseSyncHelper {
     @Override
     protected String pullFromServer(String url) {
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences preferences = CoreLibrary.getInstance().context().allSharedPreferences().getPreferences();
         long timestamp = preferences.getLong(PREV_SYNC_SERVER_VERSION_COMMODITY_TYPE, 0);
         String timestampStr = String.valueOf(timestamp);
         String uri = MessageFormat.format("{0}/{1}?sync_server_version={2}",
@@ -87,7 +87,7 @@ public class CommodityTypeSyncHelper extends BaseSyncHelper {
         if (!isEmptyResponse) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(PREV_SYNC_SERVER_VERSION_COMMODITY_TYPE, highestTimeStamp + 1);
-            editor.commit();
+            editor.apply();
         }
         return isEmptyResponse;
     }

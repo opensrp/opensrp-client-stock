@@ -1,9 +1,9 @@
 package org.smartregister.stock.openlmis;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import org.smartregister.Context;
+import org.smartregister.CoreLibrary;
 import org.smartregister.repository.DrishtiRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.SettingsRepository;
@@ -192,34 +192,34 @@ public class OpenLMISLibrary {
 
     public String getFacilityTypeUuid() {
         if (preferences == null) {
-            preferences = PreferenceManager.getDefaultSharedPreferences(getApplication().getApplicationContext());
+            preferences = CoreLibrary.getInstance().context().allSharedPreferences().getPreferences();
         }
         return preferences.getString(FACILITY_TYPE_UUID, null);
     }
 
     public String getOpenlmisUuid() {
         if (preferences == null) {
-            preferences = PreferenceManager.getDefaultSharedPreferences(getApplication().getApplicationContext());
+            preferences = CoreLibrary.getInstance().context().allSharedPreferences().getPreferences();
         }
         return preferences.getString(OPENLMIS_UUID , null);
     }
 
     public void setFacilityTypeUuid(String facilityTypeUuid) {
         if (preferences == null) {
-            preferences = PreferenceManager.getDefaultSharedPreferences(getApplication().getApplicationContext());
+            preferences = CoreLibrary.getInstance().context().allSharedPreferences().getPreferences();
         }
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(FACILITY_TYPE_UUID, facilityTypeUuid);
-        editor.commit();
+        editor.apply();
     }
 
     public void setOpenlmisUuid(String openlmisUuid) {
         if (preferences == null) {
-            preferences = PreferenceManager.getDefaultSharedPreferences(getApplication().getApplicationContext());
+            preferences = CoreLibrary.getInstance().context().allSharedPreferences().getPreferences();
         }
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(OPENLMIS_UUID, openlmisUuid);
-        editor.commit();
+        editor.apply();
     }
 
     public StockTakeRepository getStockTakeRepository() {
