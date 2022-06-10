@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import timber.log.Timber;
 
@@ -152,6 +153,10 @@ public class StockRepository extends BaseRepository {
                 stock.setSyncStatus(TYPE_UNSYNCED);
             }
 
+            if (StringUtils.isBlank(stock.getIdentifier())) {
+                stock.setIdentifier(UUID.randomUUID().toString());
+            }
+
             if (stock.getDateUpdated() == null) {
                 stock.setDateUpdated(Calendar.getInstance().getTimeInMillis());
             }
@@ -231,9 +236,9 @@ public class StockRepository extends BaseRepository {
         return stocks;
     }
 
-    public List<Stock> findUniqueStock(String stock_type_id, String transaction_type, String providerid, String value, String date_created, String to_from) {
+    public List<Stock> findUniqueStock(String identifier, String stock_type_id, String transaction_type, String providerid, String value, String to_from) {
         List<Stock> stocks = new ArrayList<>();
-        try (Cursor cursor = getReadableDatabase().query(STOCK_TABLE_NAME, STOCK_TABLE_COLUMNS, STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + DATE_CREATED + " = ? AND " + TO_FROM + " = ?", new String[]{stock_type_id, transaction_type, providerid, value, date_created, to_from}, null, null, null, null)) {
+        try (Cursor cursor = getReadableDatabase().query(STOCK_TABLE_NAME, STOCK_TABLE_COLUMNS, IDENTIFIER + " = ? AND " + STOCK_TYPE_ID + " = ? AND " + TRANSACTION_TYPE + " = ? AND " + PROVIDER_ID + " = ? AND " + VALUE + " = ? AND " + TO_FROM + " = ?", new String[]{identifier, stock_type_id, transaction_type, providerid, value, to_from}, null, null, null, null)) {
             stocks = readAllstocks(cursor);
 
         } catch (Exception e) {
