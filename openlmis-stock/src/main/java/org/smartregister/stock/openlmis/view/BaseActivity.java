@@ -2,14 +2,13 @@ package org.smartregister.stock.openlmis.view;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.smartregister.CoreLibrary;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.openlmis.R;
 import org.smartregister.stock.openlmis.view.contract.BaseView;
@@ -32,8 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        allSharedPreferences = new AllSharedPreferences(preferences);
+        allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
     }
 
     public abstract int getLayoutView();

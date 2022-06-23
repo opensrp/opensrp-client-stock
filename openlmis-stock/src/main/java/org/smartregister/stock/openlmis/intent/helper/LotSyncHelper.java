@@ -2,11 +2,11 @@ package org.smartregister.stock.openlmis.intent.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.smartregister.CoreLibrary;
 import org.smartregister.service.ActionService;
 import org.smartregister.service.HTTPAgent;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
@@ -38,7 +38,7 @@ public class LotSyncHelper extends BaseSyncHelper {
 
     protected String pullFromServer(String url) {
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences preferences = CoreLibrary.getInstance().context().allSharedPreferences().getPreferences();
         String baseUrl = OpenLMISLibrary.getInstance().getContext().configuration().dristhiBaseURL();
         if (baseUrl.endsWith(context.getString(R.string.url_separator))) {
             baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf(context.getString(R.string.url_separator)));
@@ -83,7 +83,7 @@ public class LotSyncHelper extends BaseSyncHelper {
         if (!isEmptyResponse) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(PREV_SYNC_SERVER_VERSION_LOT, highestTimeStamp + 1);
-            editor.commit();
+            editor.apply();
         }
         return isEmptyResponse;
     }

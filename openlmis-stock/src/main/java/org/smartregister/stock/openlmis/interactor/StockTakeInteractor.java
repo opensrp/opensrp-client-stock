@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 
+import org.smartregister.CoreLibrary;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
@@ -130,7 +131,7 @@ public class StockTakeInteractor extends StockListBaseInteractor {
                 stock.setFacilityId(OpenLMISLibrary.getInstance().getOpenlmisUuid());
 
 
-                AllSharedPreferences sharedPreferences = OpenLMISLibrary.getInstance().getContext().allSharedPreferences();
+                AllSharedPreferences sharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
                 stock.setLocationId(sharedPreferences.fetchDefaultLocalityId(sharedPreferences.fetchRegisteredANM()));
                 stock.setTeam(sharedPreferences.fetchDefaultTeam(sharedPreferences.fetchRegisteredANM()));
                 stock.setTeamId(sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM()));

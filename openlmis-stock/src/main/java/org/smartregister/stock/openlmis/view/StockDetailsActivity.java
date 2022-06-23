@@ -3,9 +3,7 @@ package org.smartregister.stock.openlmis.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONObject;
+import org.smartregister.CoreLibrary;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.openlmis.OpenLMISLibrary;
 import org.smartregister.stock.openlmis.R;
@@ -191,8 +190,7 @@ public class StockDetailsActivity extends BaseActivity implements StockDetailsVi
         if (resultCode == Activity.RESULT_OK && data != null) {
             String jsonString = data.getStringExtra("json");
             android.util.Log.d("JSONResult", jsonString);
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
             stockDetailsPresenter.processFormJsonResult(jsonString, OpenLMISLibrary.getInstance().getOpenlmisUuid(), allSharedPreferences);
         }
     }
