@@ -25,6 +25,7 @@ import org.smartregister.stock.fragment.StockJsonFormFragment;
 import org.smartregister.stock.repository.StockExternalRepository;
 import org.smartregister.stock.repository.StockRepository;
 import org.smartregister.stock.repository.StockTypeRepository;
+import org.smartregister.stock.util.Constants;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
@@ -289,11 +290,11 @@ public class StockJsonFormActivity extends JsonFormActivity {
 
     private void displayChildrenVialsUsed(int childrenVaccinated, int vialsUsed, int vialsWasted) {
         try {
-            stockJsonFormFragment.getLabelViewFromTag("Children_Vaccinated_Count", String.format(getString(R.string.children_vaccinated), childrenVaccinated));
+            stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.CHILDREN_VACCINATED_COUNT, String.format(getString(R.string.children_vaccinated), childrenVaccinated));
             if (StockLibrary.getInstance().useOnlyDosesForCalculation())
-                stockJsonFormFragment.getLabelViewFromTag("Vials_Issued_Count", String.format(getString(R.string.estimated_doses_issued), vialsUsed));
+                stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.VIALS_ISSUED_COUNT, String.format(getString(R.string.estimated_doses_issued), vialsUsed));
             else
-                stockJsonFormFragment.getLabelViewFromTag("Vials_Issued_Count", String.format(getString(R.string.estimated_vials_issued), vialsUsed));
+                stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.VIALS_ISSUED_COUNT, String.format(getString(R.string.estimated_vials_issued), vialsUsed));
         } catch (Exception e) {
             Timber.e(e, "Error formatting language string");
         }
@@ -402,7 +403,7 @@ public class StockJsonFormActivity extends JsonFormActivity {
         }
         int wastedDoses = calculateDosesWasted(currentBalanceVaccineUsed, vialsIssued, vialsWasted, dosesPerVial);
         try {
-            stockJsonFormFragment.getLabelViewFromTag("Doses_wasted", String.format(getString(R.string.total_wasted_doses), wastedDoses));
+            stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.DOSES_WASTED, String.format(getString(R.string.total_wasted_doses), wastedDoses));
         } catch (Exception e) {
             Timber.e(e, "Error formatting language string");
         }
@@ -412,9 +413,9 @@ public class StockJsonFormActivity extends JsonFormActivity {
     public void refreshVialsBalance(String vaccineName, int newBalance) {
         try {
             if (StockLibrary.getInstance().useOnlyDosesForCalculation())
-                stockJsonFormFragment.getLabelViewFromTag("Vials_Balance", String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, newBalance));
+                stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.VIALS_BALANCE, String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, newBalance));
             else
-                stockJsonFormFragment.getLabelViewFromTag("Vials_Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, newBalance));
+                stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.VIALS_BALANCE, String.format(getString(R.string.new_vaccine_balance), vaccineName, newBalance));
         } catch (Exception e) {
             Timber.e(e, "Error formatting language string");
         }
@@ -564,14 +565,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
 //                            }
                             try {
                                 if (StockLibrary.getInstance().useOnlyDosesForCalculation())
-                                    stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, displaybalance));
+                                    stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, displaybalance));
                                 else
-                                    stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
+                                    stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
                             } catch (Exception e) {
                                 Timber.e(e, "Error formatting language string");
                             }
                         } else {
-                            stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                            stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, "");
                         }
                     }
                 }
@@ -623,19 +624,19 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                 displaybalance = currentBalance + Integer.parseInt(value);
                                 try {
                                     if (StockLibrary.getInstance().useOnlyDosesForCalculation())
-                                        stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, displaybalance));
+                                        stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, displaybalance));
                                     else
-                                        stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
+                                        stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
                                 } catch (Exception e) {
                                     Timber.e(e, "Error formatting language string");
                                 }
                             } else {
-                                stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                                stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, "");
                             }
                         }
                     }
                 } else {
-                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                    stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, "");
                 }
             }
         } catch (JSONException e) {
@@ -683,14 +684,14 @@ public class StockJsonFormActivity extends JsonFormActivity {
                             }
                             try {
                                 if (StockLibrary.getInstance().useOnlyDosesForCalculation())
-                                    stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, displaybalance));
+                                    stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, displaybalance));
                                 else
-                                    stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
+                                    stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
                             } catch (Exception e) {
                                 Timber.e(e, "Error formatting language string");
                             }
                         } else {
-                            stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                            stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, "");
                         }
                     }
                 }
@@ -745,19 +746,19 @@ public class StockJsonFormActivity extends JsonFormActivity {
                                 }
                                 try {
                                     if (StockLibrary.getInstance().useOnlyDosesForCalculation())
-                                        stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, displaybalance));
+                                        stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, String.format(getString(R.string.new_vaccine_balance_doses), vaccineName, displaybalance));
                                     else
-                                        stockJsonFormFragment.getLabelViewFromTag("Balance", String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
+                                        stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, String.format(getString(R.string.new_vaccine_balance), vaccineName, displaybalance));
                                 } catch (Exception e) {
                                     Timber.e(e, "Error formatting language string");
                                 }
                             } else {
-                                stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                                stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, "");
                             }
                         }
                     }
                 } else {
-                    stockJsonFormFragment.getLabelViewFromTag("Balance", "");
+                    stockJsonFormFragment.getLabelViewFromTag(Constants.FormKey.BALANCE, "");
                 }
             }
         } catch (JSONException e) {
