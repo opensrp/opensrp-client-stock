@@ -2,9 +2,10 @@ package org.smartregister.stock.openlmis.intent.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import static org.smartregister.stock.openlmis.util.Utils.sendSyncCompleteBroadCast;
+
+import org.smartregister.CoreLibrary;
 
 public abstract class BaseSyncHelper {
 
@@ -19,7 +20,7 @@ public abstract class BaseSyncHelper {
         if (response == null) {
             return;
         }
-        boolean isEmptyResponse = saveResponse(response, PreferenceManager.getDefaultSharedPreferences(context));
+        boolean isEmptyResponse = saveResponse(response, CoreLibrary.getInstance().context().allSharedPreferences().getPreferences());
         if (!isEmptyResponse) {
             sendSyncCompleteBroadCast(context);
         }

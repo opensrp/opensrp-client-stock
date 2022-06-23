@@ -3,10 +3,8 @@ package org.smartregister.stock.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.Context;
+import org.smartregister.CoreLibrary;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.stock.R;
@@ -311,8 +310,7 @@ public class CurrentStock extends Fragment implements
             }
 
             StockRepository str = StockLibrary.getInstance().getStockRepository();
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
 
             Date encounterDate = new Date();
             if (StringUtils.isNotBlank(dateStockReceived)) {
@@ -344,8 +342,7 @@ public class CurrentStock extends Fragment implements
             String vialsReceived = JsonFormUtils.getFieldValue(fields, "Vials_Received");
 
             StockRepository str = StockLibrary.getInstance().getStockRepository();
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
 
             Date encounterDate = new Date();
             if (StringUtils.isNotBlank(dateStockReceived)) {
@@ -381,8 +378,7 @@ public class CurrentStock extends Fragment implements
             }
 
             StockRepository str = StockLibrary.getInstance().getStockRepository();
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            AllSharedPreferences allSharedPreferences = new AllSharedPreferences(preferences);
+            AllSharedPreferences allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
 
             Date encounterDate = new Date();
             if (StringUtils.isNotBlank(dateStockReceived)) {
