@@ -253,7 +253,7 @@ public class StockSyncIntentService extends IntentService {
         for (int i = 0; i < stocks.size(); i++) {
             JSONObject stock = new JSONObject();
             try {
-                stock.put("identifier", stocks.get(i).getId());
+                stock.put(IDENTIFIER, stocks.get(i).getIdentifier());
                 stock.put(context.getString(R.string.stock_type_id_key), stocks.get(i).getStockTypeId());
                 stock.put(context.getString(R.string.transaction_type_key), stocks.get(i).getTransactionType());
                 stock.put(context.getString(R.string.providerid_key), stocks.get(i).getProviderid());

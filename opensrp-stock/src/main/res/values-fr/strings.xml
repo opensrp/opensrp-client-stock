@@ -67,4 +67,11 @@
     <string name="children_vaccinated">Enfants vaccinés à cette date: %1$d</string>
     <string name="estimated_vials_issued">Flacons estimés émis à cette date: %1$d</string>
     <string name="stock_quantity_error">Les flacons utilisés ne peuvent pas être plus que des flacons en stock. Enregistrez le stock reçu pour continuer.</string>
+    <string name="note_current_control_doses">Remarque : les numéros de stock sont en doses</string>
+    <string name="doses_unformatted">doses</string>
+    <string name="new_vaccine_balance_doses">Nouveau %1$s équilibre: doses %2$d</string>
+    <string name="doses_wasted_note_doses">Doses inutilisées en doses délivrées + doses gaspillées</string>
+    <string name="stock_quantity_error_doses">Les doses utilisées ne peuvent être supérieures aux doses en stock. Enregistrez le stock reçu pour continuer.</string>
+    <string name="estimated_doses_issued">Doses estimées délivrées à cette date : %1$d</string>
+
 </resources>

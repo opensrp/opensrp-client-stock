@@ -29,4 +29,17 @@ public class Constants {
         String LOCATION_ID = "locationId";
         String LOCATIONS = "locations";
     }
+
+    public static class FormKey {
+        public static final String DOSES_WASTED_NOTE = "Doses_Wasted_Note";
+        public static final String CHILDREN_VACCINATED_COUNT = "Children_Vaccinated_Count";
+        public static final String VIALS_ISSUED_COUNT = "Vials_Issued_Count";
+        public static final String DOSES_WASTED = "Doses_wasted";
+        public static final String VIALS_BALANCE = "Vials_Balance";
+        public static final String BALANCE = "Balance";
+    }
+
+    public static class AppProperties {
+        public static final String USE_ONLY_DOSES_FOR_CALCULATION = "use.only.doses.for.calculation";
+    }
 }

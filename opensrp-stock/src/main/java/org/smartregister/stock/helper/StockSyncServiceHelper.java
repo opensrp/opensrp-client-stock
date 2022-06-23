@@ -20,8 +20,8 @@ public class StockSyncServiceHelper {
     public void batchInsertStocks(List<Stock> stocks) {
         if (stockSyncConfiguration.useDefaultStockExistenceCheck()) {
             for (Stock fromServer : stocks) {
-                List<Stock> existingStock = getStockRepository().findUniqueStock(fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
-                        String.valueOf(fromServer.getValue()), String.valueOf(fromServer.getDateCreated()), fromServer.getToFrom());
+                List<Stock> existingStock = getStockRepository().findUniqueStock(fromServer.getIdentifier(), fromServer.getStockTypeId(), fromServer.getTransactionType(), fromServer.getProviderid(),
+                        String.valueOf(fromServer.getValue()), fromServer.getToFrom());
                 if (!existingStock.isEmpty()) {
                     for (Stock stock : existingStock) {
                         fromServer.setId(stock.getId());

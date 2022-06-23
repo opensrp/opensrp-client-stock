@@ -67,4 +67,11 @@
     <string name="children_vaccinated">تم تطعيم الأطفال في هذا التاريخ: %1$d</string>
     <string name="estimated_vials_issued">القوارير المقدرة الصادرة في هذا التاريخ: %1$d</string>
     <string name="stock_quantity_error">لا يمكن أن تكون القوارير المستخدمة أكثر من قوارير في المخزون. سجل المخزون المستلم للمتابعة.</string>
+    <string name="note_current_control_doses">ملاحظة: أرقام المخزون بالجرعات</string>
+    <string name="doses_unformatted">جرعات</string>
+    <string name="new_vaccine_balance_doses">توازن جديد s$1%: جرعات d$2%</string>
+    <string name="doses_wasted_note_doses">الجرعات غير المستعملة في الجرعات المسددة + الجرعات الضائعة</string>
+    <string name="stock_quantity_error_doses">لا يمكن أن تكون الجرعات المستخدمة أكثر من الجرعات الموجودة في المخزون. سجل المخزون المستلم للمتابعة.</string>
+    <string name="estimated_doses_issued">الجرعات المقدرة الصادرة في هذا التاريخ: %1$d</string>
+
 </resources>
